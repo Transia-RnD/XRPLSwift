@@ -225,7 +225,7 @@ public class XRPLedger: NSObject {
         
     }
     
-    public func getTrustLines(address: String, symbol: String) -> EventLoopFuture<XRPCurrency> {
+    public func getTrustLines(address: String, symbol: String, issuer: String) -> EventLoopFuture<XRPCurrency> {
         
         let promise = eventGroup.next().makePromise(of: XRPCurrency.self)
         
@@ -245,7 +245,8 @@ public class XRPLedger: NSObject {
                 let lines = info["lines"] as! [[String: AnyObject]]
                 for line in lines {
                     let currency = line["currency"] as! String
-                    if symbol == currency {
+                    let account = line["account"] as! String
+                    if symbol == currency && account == issuer {
                         let address = line["account"] as! String
                         let balance = line["balance"] as! String
                         let limit = line["limit"] as! String
