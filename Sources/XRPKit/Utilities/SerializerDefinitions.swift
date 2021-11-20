@@ -1542,6 +1542,16 @@ let serializerDefinitions = """
 "isSigningField": true,
 "type": "UInt64"
 }
+],
+[
+"HookOn",
+{
+"nth": 16,
+"isVLEncoded": false,
+"isSerialized": true,
+"isSigningField": true,
+"type": "UInt64"
+}
 ]
 ],
 "TRANSACTION_RESULTS": {
@@ -1668,7 +1678,8 @@ let serializerDefinitions = """
 "DepositPreauth": 19,
 "TrustSet": 20,
 "EnableAmendment": 100,
-"SetFee": 101
+"SetFee": 101,
+"SetHook": 22
 }
 }
 """

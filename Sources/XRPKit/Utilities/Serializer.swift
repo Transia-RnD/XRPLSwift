@@ -423,6 +423,10 @@ class Serializer {
         return int.bigEndian.data
     }
     
+    private func UInt64Bytes(_ int: UInt64) -> Data {
+        return int.bigEndian.data
+    }
+    
     // ========================
     // Core serialization logic
     // ========================
@@ -487,6 +491,9 @@ class Serializer {
             case "UInt32":
                 let int = fieldVal as! UInt32
                 return self.UInt32Bytes(int)
+            case "UInt64":
+                let int = fieldVal as! UInt64
+                return self.UInt64Bytes(int)
             default:
                 fatalError("Invalid field name")
             }
