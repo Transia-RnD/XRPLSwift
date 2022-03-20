@@ -323,3 +323,7 @@ class MyClass: XRPWebSocketDelegate {
 }
 
 ```
+
+
+https://github.com/XRPLF/xrpl-py/tree/master/xrpl/models/transactions
+https://github.com/XRPLF/xrpl-py/tree/master/tests/integration/transactions
