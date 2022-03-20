@@ -28,9 +28,9 @@ final class XRPKitTests: XCTestCase {
 //        ("testEscrowCreateCancel", testEscrowCreateCancel),
 //        ("testGetPendingEscrows", testGetPendingEscrows),
         ("testTransactionHistory", testTransactionHistory),
-        ("testDisableMaster", testDisableMaster),
+//        ("testDisableMaster", testDisableMaster),
         ("testGetSignerList", testGetSignerList),
-        ("testMultiSignEnableMaster", testMultiSignEnableMaster),
+//        ("testMultiSignEnableMaster", testMultiSignEnableMaster),
         ("testSignerListSet", testSignerListSet),
         ("testAccountID", testAccountID),
         ("testXAddress", testXAddress),
@@ -123,42 +123,42 @@ final class XRPKitTests: XCTestCase {
         
     }
     
-    func testMultiSignEnableMaster() {
-        let exp = expectation(description: "Loading stories")
-        let wallet = try! XRPSeedWallet(seed: "ssJip5pqECDQuG5tdSehaKicmkN4d")
-        let signer1 = try! XRPSeedWallet(seed: "shiZka2bSHQKw4CCcZNPFvvA2iAjR")
-        let signer2 = try! XRPSeedWallet(seed: "snqFfd21bfALXF1PDj1ymdQcr3Vhu")
-        let signer3 = try! XRPSeedWallet(seed: "sEdVWZmeUDgQdMEFKTK9kYVX71FKB7o")
-        let set = try! XRPAccountSet(wallet: wallet, clear: .asfDisableMaster)
-        set.ledger.url = .xrpl_rpc_Testnet
-        set.autofill()
-            .map({ (tx) in
-                let _tx = try! tx
-                .addMultiSignSignature(wallet: signer3)
-                .addMultiSignSignature(wallet: signer1)
-                .addMultiSignSignature(wallet: signer2)
-                .submit()
-                .map { (dict) in
-                        print(dict)
-                        exp.fulfill()
-                }
-            })
-            
-        waitForExpectations(timeout: 10)
-    }
+//    func testMultiSignEnableMaster() {
+//        let exp = expectation(description: "Loading stories")
+//        let wallet = try! XRPSeedWallet(seed: "ssJip5pqECDQuG5tdSehaKicmkN4d")
+//        let signer1 = try! XRPSeedWallet(seed: "shiZka2bSHQKw4CCcZNPFvvA2iAjR")
+//        let signer2 = try! XRPSeedWallet(seed: "snqFfd21bfALXF1PDj1ymdQcr3Vhu")
+//        let signer3 = try! XRPSeedWallet(seed: "sEdVWZmeUDgQdMEFKTK9kYVX71FKB7o")
+////        let set = try! XRPAccountSet(wallet: wallet, clear: .asfDisableMaster)
+////        set.ledger.url = .xrpl_rpc_Testnet
+//        set.autofill()
+//            .map({ (tx) in
+//                let _tx = try! tx
+//                .addMultiSignSignature(wallet: signer3)
+//                .addMultiSignSignature(wallet: signer1)
+//                .addMultiSignSignature(wallet: signer2)
+//                .submit()
+//                .map { (dict) in
+//                        print(dict)
+//                        exp.fulfill()
+//                }
+//            })
+//
+//        waitForExpectations(timeout: 10)
+//    }
     
-    func testDisableMaster() {
-        let exp = expectation(description: "Loading stories")
-        let wallet = try! XRPSeedWallet(seed: "ssJip5pqECDQuG5tdSehaKicmkN4d")
-        let set = XRPAccountSet(wallet: wallet, set: .asfDisableMaster)
-        set.ledger.url = .xrpl_rpc_Testnet
-        set.send()
-            .map { (dict) in
-            print(dict)
-            exp.fulfill()
-        }
-        waitForExpectations(timeout: 10)
-    }
+//    func testDisableMaster() {
+//        let exp = expectation(description: "Loading stories")
+//        let wallet = try! XRPSeedWallet(seed: "ssJip5pqECDQuG5tdSehaKicmkN4d")
+////        let set = XRPAccountSet(wallet: wallet, set: .asfDisableMaster)
+////        set.ledger.url = .xrpl_rpc_Testnet
+//        set.send()
+//            .map { (dict) in
+//            print(dict)
+//            exp.fulfill()
+//        }
+//        waitForExpectations(timeout: 10)
+//    }
     
     func testPing() {
         let exp = expectation(description: "Loading stories")

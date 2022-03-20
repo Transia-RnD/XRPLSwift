@@ -1,33 +1,34 @@
 //
-//  XRPAmount.swift
+//  IssuedCurrencyAmount.swift
+//  
 //
-//  Created by Mitch Lang on 5/23/19.
+//  Created by Denis Angell on 3/20/22.
 //
 
 import Foundation
 
-public enum XRPAmountError: Error {
+public enum AmountError: Error {
     case invalidAmount
 }
 
-public struct XRPAmount {
+public struct IssuedCurrencyAmount {
     
     private(set) var drops: Int!
     public var currency: String = "XRP"
     public var issuer: String?
     
-    public init(drops: Int, currency: String, issuer: String) throws {
-        if drops < 0 || drops > UInt64(100000000000000000) {
-            throw XRPAmountError.invalidAmount
+    public init(value: Int, currency: String, issuer: String) throws {
+        if value < 0 || value > UInt64(100000000000000000) {
+            throw AmountError.invalidAmount
         }
-        self.drops = drops
+        self.drops = value
         self.currency = currency
         self.issuer = issuer
     }
     
     public init(drops: Int) throws {
         if drops < 0 || drops > UInt64(100000000000000000) {
-            throw XRPAmountError.invalidAmount
+            throw AmountError.invalidAmount
         }
         self.drops = drops
     }
@@ -36,7 +37,7 @@ public struct XRPAmount {
         // removed commas
         let stripped = text.replacingOccurrences(of: ",", with: "")
         if !stripped.replacingOccurrences(of: ".", with: "").isNumber {
-            throw XRPAmountError.invalidAmount
+            throw AmountError.invalidAmount
         }
         // get parts
         var xrp = stripped
@@ -51,7 +52,7 @@ public struct XRPAmount {
         // combine parts
         let _drops = Int(xrp+drops)!
         if _drops < 0 || _drops > UInt64(100000000000000000) {
-            throw XRPAmountError.invalidAmount
+            throw AmountError.invalidAmount
         }
         self.drops = _drops
     }
@@ -59,7 +60,7 @@ public struct XRPAmount {
     public init(xrp: Double) throws {
         let _drops = Int(xrp*1000000)
         if _drops < 0 || _drops > UInt64(100000000000000000) {
-            throw XRPAmountError.invalidAmount
+            throw AmountError.invalidAmount
         }
         self.drops = _drops
     }
@@ -80,5 +81,11 @@ public struct XRPAmount {
     
     public func toXrp() -> Double {
         return Double(self.drops) / Double(1000000)
+    }
+}
+
+extension Double {
+    var clean: String {
+       return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
     }
 }
