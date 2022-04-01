@@ -1,7 +1,7 @@
 import XCTest
 
-import XRPKitTests
+import XRPLSwiftTests
 
 var tests = [XCTestCaseEntry]()
-tests += XRPKitTests.allTests()
+tests += XRPLSwiftTests.allTests()
 XCTMain(tests)
