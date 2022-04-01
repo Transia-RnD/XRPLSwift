@@ -38,7 +38,7 @@ public class NFTokenMint: XRPTransaction {
         }
         
         if let uri = uri {
-            _fields["URI"] = uri.data(using: String.Encoding.utf8)?.toHexString().uppercased()
+            _fields["URI"] = uri
         }
         
         super.init(wallet: wallet, fields: _fields)

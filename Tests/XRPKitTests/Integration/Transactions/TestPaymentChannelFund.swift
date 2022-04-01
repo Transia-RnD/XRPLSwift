@@ -1,5 +1,5 @@
 //
-//  TestNFTokenMint.swift
+//  TestPaymentChannelFund.swift
 //
 //
 //  Created by Denis Angell on 3/20/22.
@@ -8,26 +8,23 @@
 import XCTest
 @testable import XRPKit
 
-final class TestNFTokenMint: XCTestCase {
+final class TestPaymentChannelFund: XCTestCase {
 
     var xrpLedger: XRPLedger = XRPLedger(endpoint: .xrpl_rpc_Testnet)
-    
-    static var uri: String = "ipfs://QmUs97DuBbqmzm4F4FZpQcx9ssSM7TxwP1pPj1b7hxgaYM"
 
     func testBasicFunctionality() {
         // create the expectation
         let exp = expectation(description: "testBasicFunctionality")
-        
-        XCTAssert(TestNFTokenMint.uri.data(using: String.Encoding.utf8)?.toHexString().uppercased() == "697066733A2F2F516D5573393744754262716D7A6D344634465A70516378397373534D37547877503170506A31623768786761594D")
 
         // call my asynchronous method
-        let payment = NFTokenMint(
-            wallet: ReusableValues.wallet,
-            tokenTaxon: 0,
-            uri: TestNFTokenMint.uri.data(using: String.Encoding.utf8)?.toHexString().uppercased()
+        let amount = try! XRPAmount(drops: 1000000) // 1.0 XRP
+        let paymentChannel = PaymentChannelFund(
+            from: ReusableValues.wallet,
+            channel: ReusableValues.channelHex,
+            amount: amount
         )
-        payment.ledger.url = .xrpl_rpc_Testnet
-        _ = payment.send().always { response in
+        paymentChannel.ledger.url = .xrpl_rpc_Testnet
+        _ = paymentChannel.send().always { response in
             switch response {
             case .success(let result):
                 exp.fulfill()

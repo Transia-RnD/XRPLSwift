@@ -513,7 +513,8 @@ final class XRPKitTests: XCTestCase {
             let valid = try XRPSeedWallet.verify(
                 signature: messageSignature,
                 message: messageData.bytes,
-                publicKey: fromWallet.publicKey)
+                publicKey: fromWallet.publicKey
+            )
             XCTAssert(valid == true)
         } catch {
             XCTFail("Could not generate wallet")

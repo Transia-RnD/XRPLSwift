@@ -7,6 +7,8 @@
 
 import Foundation
 
+let HASH_CHANNEL_SIGN: [UInt8] = [0x43,0x4C,0x4D, 0x00]
+
 public enum SeedError: Error {
     case invalidSeed
 }
@@ -280,8 +282,20 @@ public class XRPSeedWallet: XRPWallet {
     
     public func sign(message: [UInt8]) -> [UInt8] {
         do {
-            let privateKey = [UInt8](Data(hex: self.privateKey))
-            return try SECP256K1.sign(message: message, privateKey: privateKey)
+            let algorithm = XRPSeedWallet.getSeedTypeFrom(publicKey: self.publicKey).algorithm
+            let signature = try algorithm.sign(message: message, privateKey: [UInt8](Data(hex: self.privateKey)))
+    
+            // verify signature
+            let verified = try algorithm.verify(
+                signature: signature,
+                message: message,
+                publicKey: [UInt8](Data(hex: self.publicKey))
+            )
+            if !verified {
+                fatalError()
+            }
+    
+            return signature
         } catch {
             print(error.localizedDescription)
             return []
@@ -290,11 +304,31 @@ public class XRPSeedWallet: XRPWallet {
     
     public static func verify(signature: [UInt8], message: [UInt8], publicKey: String) -> Bool {
         do {
-            let pubKey = [UInt8](Data(hex: publicKey))
-            return try SECP256K1.verify(signature: signature, message: message, publicKey: pubKey)
+            let algorithm = XRPSeedWallet.getSeedTypeFrom(publicKey: publicKey).algorithm
+            return try algorithm.verify(
+                signature: signature,
+                message: message,
+                publicKey: [UInt8](Data(hex: publicKey))
+            )
         } catch {
             print(error.localizedDescription)
             return false
         }
+    }
+    
+    public func encodeClaim(dict: [String: Any]) throws -> [UInt8] {
+        
+        guard let channel = dict["channel"] as? String else {
+            fatalError()
+        }
+        
+        guard let amount = dict["amount"] as? XRPAmount else {
+            fatalError()
+        }
+        
+        // add the prefix to the channel and amount
+        let data: [UInt8] = HASH_CHANNEL_SIGN + [UInt8](channel.hexadecimal!) + [UInt8](UInt64(amount.drops).bigEndian.data)
+        
+        return data
     }
 }

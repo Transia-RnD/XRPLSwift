@@ -234,7 +234,6 @@ class Serializer {
                     
                 }
             }
-            
             let ascii = codeString.data(using: .nonLossyASCII)!
             // standard currency codes: https://developers.ripple.com/currency-formats.html#standard-currency-codes
             // 8 bits type code (0x00)
@@ -245,6 +244,17 @@ class Serializer {
             return Data(repeating: 0, count: 12) + ascii + Data(repeating: 0, count: 5)
         } else if matches2.count != 0 {
             return Data(hex: codeString)
+        }
+        if codeString.count > 3 {
+            let ascii = codeString.data(using: .nonLossyASCII)!
+            // standard currency codes: https://developers.ripple.com/currency-formats.html#standard-currency-codes
+            // 8 bits type code (0x00)
+            // 88 bits reserved (0's)
+            // 24 bits ASCII
+            // 16 bits version (0x00)
+            // 24 bits reserved (0's)
+            print(Data(repeating: 0, count: 12) + ascii + Data(repeating: 0, count: 5))
+            return Data(repeating: 0, count: 12) + ascii + Data(repeating: 0, count: 5)
         }
         
         fatalError("invalid currency")
