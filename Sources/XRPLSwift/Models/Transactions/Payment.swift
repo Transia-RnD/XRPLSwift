@@ -7,9 +7,9 @@
 
 import Foundation
 
-public class Payment: XRPTransaction {
+public class Payment: Transaction {
     
-    public init(from wallet: XRPWallet, to address: XRPAddress, amount: XRPAmount, sourceTag : UInt32? = nil) {
+    public init(from wallet: Wallet, to address: Address, amount: Amount, sourceTag : UInt32? = nil) {
         var _fields: [String: Any] = [
             "TransactionType": "Payment",
             "Destination": address.rAddress,

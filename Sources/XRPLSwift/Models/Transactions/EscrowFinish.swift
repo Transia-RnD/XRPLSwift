@@ -1,5 +1,5 @@
 //
-//  XRPEscrowFinish.swift
+//  EscrowFinish.swift
 //  AnyCodable
 //
 //  Created by Mitch Lang on 2/5/20.
@@ -8,9 +8,9 @@
 import Foundation
 import NIO
 
-public class XRPEscrowFinish: XRPTransaction {
+public class EscrowFinish: Transaction {
     
-    public init(using wallet: XRPWallet, owner: String, offerSequence: UInt32) {
+    public init(using wallet: Wallet, owner: String, offerSequence: UInt32) {
         
         // dictionary containing partial transaction fields
         let _fields: [String:Any] = [

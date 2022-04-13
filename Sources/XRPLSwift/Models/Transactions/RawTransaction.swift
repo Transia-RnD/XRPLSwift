@@ -1,5 +1,5 @@
 //
-//  XRPRawTransaction.swift
+//  RawTransaction.swift
 //  AnyCodable
 //
 //  Created by Mitch Lang on 2/4/20.
@@ -12,16 +12,16 @@ import BigInt
 let HASH_TX_SIGN: [UInt8] = [0x53,0x54,0x58, 0x00]
 let HASH_TX_MULTISIGN: [UInt8] = [0x53,0x4D,0x54,0x00]
 
-public class XRPRawTransaction {
+public class RawTransaction {
     
     public internal(set) var fields: [String: Any] = [:]
-    public var ledger: XRPLedger = XRPLedger()
+    public var ledger: Ledger = Ledger()
     
     public init(fields: [String:Any]) {
         self.fields = enforceJSONTypes(fields: fields)
     }
     
-    public func addFields(sequence: Int, fee: XRPAmount, ledgerIndex: Int) {
+    public func addFields(sequence: Int, fee: Amount, ledgerIndex: Int) {
         let filledFields: [String: Any] = [
             "LastLedgerSequence": ledgerIndex,
             "Fee": "\(fee.drops!)",
@@ -30,7 +30,7 @@ public class XRPRawTransaction {
         self.fields = self.fields.merging(self.enforceJSONTypes(fields: filledFields)) { (_, new) in new }
     }
     
-    public func sign(wallet: XRPWallet) throws -> XRPRawTransaction {
+    public func sign(wallet: Wallet) throws -> RawTransaction {
         
         // make sure all fields are compatible
         self.fields = self.enforceJSONTypes(fields: self.fields)
@@ -45,7 +45,7 @@ public class XRPRawTransaction {
         let data: [UInt8] = HASH_TX_SIGN + blob
         
         // sign the prefixed blob
-        let algorithm = XRPSeedWallet.getSeedTypeFrom(publicKey: wallet.publicKey).algorithm
+        let algorithm = SeedWallet.getSeedTypeFrom(publicKey: wallet.publicKey).algorithm
         let signature = try algorithm.sign(message: data, privateKey: [UInt8](Data(hex: wallet.privateKey)))
         
         // verify signature
@@ -59,7 +59,7 @@ public class XRPRawTransaction {
         return self
     }
     
-    public func addMultiSignSignature(wallet: XRPWallet) throws -> XRPRawTransaction {
+    public func addMultiSignSignature(wallet: Wallet) throws -> RawTransaction {
         // make sure all fields are compatible
         self.fields = self.enforceJSONTypes(fields: self.fields)
         
@@ -73,7 +73,7 @@ public class XRPRawTransaction {
         let data: [UInt8] = HASH_TX_MULTISIGN + blob + wallet.accountID
         
         // sign the prefixed blob
-        let algorithm = XRPSeedWallet.getSeedTypeFrom(publicKey: wallet.publicKey).algorithm
+        let algorithm = SeedWallet.getSeedTypeFrom(publicKey: wallet.publicKey).algorithm
         let signature = try algorithm.sign(message: data, privateKey: [UInt8](Data(hex: wallet.privateKey)))
         
         // verify signature

@@ -10,7 +10,7 @@ import XCTest
 
 final class TestPaymentChannelClaim: XCTestCase {
 
-    var xrpLedger: XRPLedger = XRPLedger(endpoint: .xrpl_rpc_Testnet)
+    var xrpLedger: Ledger = Ledger(endpoint: .xrpl_rpc_Testnet)
 
     func testBasicFunctionality() {
         // create the expectation

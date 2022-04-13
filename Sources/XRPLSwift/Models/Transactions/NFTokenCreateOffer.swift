@@ -11,10 +11,10 @@ public enum NFTokenCreateOfferFlag: UInt32 {
     case tfSellToken = 1
 }
 
-public class NFTokenCreateOffer: XRPTransaction {
+public class NFTokenCreateOffer: Transaction {
     
     public init(
-        wallet: XRPWallet,
+        wallet: Wallet,
         tokenId: String,
         amount: Int,
         owner: String?,

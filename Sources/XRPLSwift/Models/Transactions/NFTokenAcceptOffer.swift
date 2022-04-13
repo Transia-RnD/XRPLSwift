@@ -7,10 +7,10 @@
 
 import Foundation
 
-public class NFTokenAcceptOffer: XRPTransaction {
+public class NFTokenAcceptOffer: Transaction {
     
     public init(
-        wallet: XRPWallet,
+        wallet: Wallet,
         sellOffer: String?,
         buyOffer: String?,
         brokerFee: String?

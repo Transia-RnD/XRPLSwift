@@ -12,9 +12,9 @@ public struct SignerEntry {
     var SignerWeight: Int
 }
 
-public class SignerListSet: XRPTransaction {
+public class SignerListSet: Transaction {
     
-    public init(wallet: XRPWallet, signerQuorum: UInt32, signerEntries: [XRPSignerEntry]) {
+    public init(wallet: Wallet, signerQuorum: UInt32, signerEntries: [SignerEntry]) {
         
         let signers = signerEntries.map { (signerEntry) -> NSDictionary in
             return NSDictionary(dictionary: [

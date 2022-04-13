@@ -6,12 +6,12 @@
 //
 import Foundation
 
-public class PaymentChannelCreate: XRPTransaction {
+public class PaymentChannelCreate: Transaction {
     
     public init(
-        from wallet: XRPWallet,
-        to address: XRPAddress,
-        amount: XRPAmount,
+        from wallet: Wallet,
+        to address: Address,
+        amount: Amount,
         settleDelay: Int,
         cancelAfter: Int? = nil,
         sourceTag : UInt32? = nil

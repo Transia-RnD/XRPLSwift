@@ -10,14 +10,14 @@ import XCTest
 
 final class TestPaymentChannelFund: XCTestCase {
 
-    var xrpLedger: XRPLedger = XRPLedger(endpoint: .xrpl_rpc_Testnet)
+    var xrpLedger: Ledger = Ledger(endpoint: .xrpl_rpc_Testnet)
 
     func testBasicFunctionality() {
         // create the expectation
         let exp = expectation(description: "testBasicFunctionality")
 
         // call my asynchronous method
-        let amount = try! XRPAmount(drops: 1000000) // 1.0 XRP
+        let amount = try! Amount(drops: 1000000) // 1.0 XRP
         let paymentChannel = PaymentChannelFund(
             from: ReusableValues.wallet,
             channel: ReusableValues.channelHex,

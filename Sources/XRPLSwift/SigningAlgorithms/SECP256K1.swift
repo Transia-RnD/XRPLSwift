@@ -27,7 +27,7 @@ public enum SECP256K1Error: Error {
 
 internal class SECP256K1: SigningAlgorithm {
     
-    static func deriveKeyPair(seed: [UInt8]) throws -> XRPKeyPair {
+    static func deriveKeyPair(seed: [UInt8]) throws -> KeyPair {
         
         // FIXME: NOT THE FULL DERIVATION PATH, SEE https://xrpl.org/cryptographic-keys.html#key-derivation
         
@@ -64,7 +64,7 @@ internal class SECP256K1: SigningAlgorithm {
         let masterPublicKeyHex = masterPublicKey.compressed.toHexString()
         secp256k1_context_destroy(ctx)
         
-        return XRPKeyPair(privateKey: finalMasterPrivateKey.toHexString(), publicKey: masterPublicKeyHex)
+        return KeyPair(privateKey: finalMasterPrivateKey.toHexString(), publicKey: masterPublicKeyHex)
         
     }
     

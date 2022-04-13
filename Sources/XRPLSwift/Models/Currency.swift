@@ -1,5 +1,5 @@
 //
-//  XRPCurrency.swift
+//  Currency.swift
 //  BigInt
 //
 //  Created by Mitch Lang on 2/3/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct XRPCurrency: Codable {
+public struct Currency: Codable {
     public var address: String
     public var balance: String
     public var currency: String

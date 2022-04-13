@@ -101,11 +101,11 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         throw AbstractRippleKeystoreError.invalidAccountError
     }
     
-    public func UNSAFE_getWallet(password: String, account: String) throws -> XRPSeedWallet {
+    public func UNSAFE_getWallet(password: String, account: String) throws -> SeedWallet {
         if self.addresses?.count == 1 && account == self.addresses?.last {
             guard let privateKey = try? self.getKeyData(password) else {throw AbstractRippleKeystoreError.invalidPasswordError}
             guard let string: String = String(data: privateKey, encoding: .utf8) else { throw AbstractRippleKeystoreError.invalidPasswordError }
-            return try XRPSeedWallet(seed: string)
+            return try SeedWallet(seed: string)
         }
         throw AbstractRippleKeystoreError.invalidAccountError
     }
@@ -138,14 +138,14 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
     }
     
     public init? (password: String = "xrp3swift", aesMode: String = "aes-128-cbc") throws {
-        guard var newPrivateKey = XRPSeedWallet().seed.data(using: .utf8) else {return nil}
+        guard var newPrivateKey = SeedWallet().seed.data(using: .utf8) else {return nil}
         defer {Data.zero(&newPrivateKey)}
         try encryptDataToStorage(password, keyData: newPrivateKey, aesMode: aesMode)
     }
     
     public init? (privateKey: Data, password: String = "xrp3swift", aesMode: String = "aes-128-cbc") throws {
         guard privateKey.count == 29 else {return nil}
-        guard let seed = String(data: privateKey, encoding: .utf8), XRPSeedWallet.validate(seed: seed) else {return nil}
+        guard let seed = String(data: privateKey, encoding: .utf8), SeedWallet.validate(seed: seed) else {return nil}
         try encryptDataToStorage(password, keyData: privateKey, aesMode: aesMode)
     }
     
@@ -169,7 +169,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         if aesCipher == nil { throw AbstractRippleKeystoreError.aesError }
         
         guard let seed = String(data: keyData!, encoding: .utf8) else {throw AbstractRippleKeystoreError.keyDerivationError}
-        guard let bytes = try? XRPSeedWallet.decode(seed: seed) else {throw AbstractRippleKeystoreError.noEntropyError}
+        guard let bytes = try? SeedWallet.decode(seed: seed) else {throw AbstractRippleKeystoreError.noEntropyError}
         guard let encryptedKey = try aesCipher?.encrypt(bytes) else {throw AbstractRippleKeystoreError.aesError}
         let encryptedKeyData = Data(encryptedKey)
         var dataForMAC = Data()
@@ -187,7 +187,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
             mac: mac.toHexString(),
             version: nil
         )
-        let wallet = try XRPSeedWallet(seed: seed)
+        let wallet = try SeedWallet(seed: seed)
         self.address = wallet.address
         let keystoreparams = RippleKeystoreParamsV3(address: wallet.address, crypto: crypto, id: UUID().uuidString.lowercased(), version: 3)
         self.keystoreParams = keystoreparams
@@ -275,7 +275,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         default:
             return nil
         }
-        let decryptedPKString = try XRPSeedWallet.encode(bytes: decryptedPK!)
+        let decryptedPKString = try SeedWallet.encode(bytes: decryptedPK!)
         guard decryptedPKString != nil else {return nil}
         return decryptedPKString?.data(using: .utf8)
     }

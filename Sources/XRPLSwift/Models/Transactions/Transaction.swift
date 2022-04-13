@@ -8,16 +8,16 @@
 import Foundation
 import NIO
 
-public class Transaction: XRPRawTransaction {
+public class Transaction: RawTransaction {
     
-    var wallet: XRPWallet
+    var wallet: Wallet
     
     @available(*, unavailable)
     override init(fields: [String:Any]) {
       fatalError()
     }
     
-    internal init(wallet: XRPWallet, fields: [String:Any]) {
+    internal init(wallet: Wallet, fields: [String:Any]) {
         self.wallet = wallet
         var _fields = fields
         _fields["Account"] = wallet.address
@@ -25,9 +25,9 @@ public class Transaction: XRPRawTransaction {
     }
     
     // autofills ledger sequence, fee, and sequence
-    func autofill() -> EventLoopFuture<XRPTransaction> {
+    func autofill() -> EventLoopFuture<Transaction> {
         
-        let promise = eventGroup.next().makePromise(of: XRPTransaction.self)
+        let promise = eventGroup.next().makePromise(of: Transaction.self)
 
         // network calls to retrive current account and ledger info
         _ = ledger.currentLedgerInfo().map { (ledgerInfo) in

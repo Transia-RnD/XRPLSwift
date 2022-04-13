@@ -1,5 +1,5 @@
 //
-//  XRPCurrentLedgerInfo.swift
+//  CurrentLedgerInfo.swift
 //  BigInt
 //
 //  Created by Mitch Lang on 2/3/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct XRPCurrentLedgerInfo {
+public struct CurrentLedgerInfo {
     
     public init(index: Int, minFee: Int, maxFee: Int) {
         self.index = index

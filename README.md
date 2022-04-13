@@ -28,7 +28,11 @@ XRPLSwift is a Swift SDK built for interacting with the XRP Ledger.  XRPLSwift s
 
 ## Author
 
-Transia-RnD, mitch.s.lang@gmail.com
+MitchLang009, mitch.s.lang@gmail.com
+
+## Co-Author
+
+Transia-RnD, dangell@transia.co
 
 ## License
 
@@ -77,9 +81,9 @@ contributions must compile on Linux.
 import XRPLSwift
 
 // create a completely new, randomly generated wallet
-let wallet = XRPSeedWallet() // defaults to secp256k1
-let wallet2 = XRPSeedWallet(type: .secp256k1)
-let wallet3 = XRPSeedWallet(type: .ed25519)
+let wallet = SeedWallet() // defaults to secp256k1
+let wallet2 = SeedWallet(type: .secp256k1)
+let wallet3 = SeedWallet(type: .ed25519)
 
 ```
 
@@ -90,7 +94,7 @@ let wallet3 = XRPSeedWallet(type: .ed25519)
 import XRPLSwift
 
 // generate a wallet from an existing seed
-let wallet = try! XRPSeedWallet(seed: "snsTnz4Wj8vFnWirNbp7tnhZyCqx9")
+let wallet = try! SeedWallet(seed: "snsTnz4Wj8vFnWirNbp7tnhZyCqx9")
 
 ```
 
@@ -101,7 +105,7 @@ let wallet = try! XRPSeedWallet(seed: "snsTnz4Wj8vFnWirNbp7tnhZyCqx9")
 import XRPLSwift
 
 let mnemonic = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
-let walletFromMnemonic = try! XRPMnemonicWallet(mnemonic: mnemonic)
+let walletFromMnemonic = try! MnemonicWallet(mnemonic: mnemonic)
 
 ```
 
@@ -110,7 +114,7 @@ let walletFromMnemonic = try! XRPMnemonicWallet(mnemonic: mnemonic)
 
 import XRPLSwift
 
-let wallet = XRPSeedWallet()
+let wallet = SeedWallet()
 
 print(wallet.address) // rJk1prBA4hzuK21VDK2vK2ep2PKGuFGnUD
 print(wallet.seed) // snsTnz4Wj8vFnWirNbp7tnhZyCqx9
@@ -128,14 +132,14 @@ import XRPLSwift
 let btc = "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2"
 let xrp = "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK"
 
-XRPSeedWallet.validate(address: btc) // returns false
-XRPSeedWallet.validate(address: xrp) // returns true
+SeedWallet.validate(address: btc) // returns false
+SeedWallet.validate(address: xrp) // returns true
 
 // Seed
 let seed = "shrKftFK3ZkMPkq4xe5wGB8HaNSLf"
 
-XRPSeedWallet.validate(seed: xrp) // returns false
-XRPSeedWallet.validate(seed: seed) // returns true
+SeedWallet.validate(seed: xrp) // returns false
+SeedWallet.validate(seed: seed) // returns true
 
 ```
 
@@ -146,11 +150,11 @@ XRPSeedWallet.validate(seed: seed) // returns true
 
 import XRPLSwift
 
-let wallet = try! XRPSeedWallet(seed: "shrKftFK3ZkMPkq4xe5wGB8HaNSLf")
-let amount = try! XRPAmount(drops: 100000000)
-let address = try! XRPAddress(rAddress: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK")
+let wallet = try! SeedWallet(seed: "shrKftFK3ZkMPkq4xe5wGB8HaNSLf")
+let amount = try! Amount(drops: 100000000)
+let address = try! Address(rAddress: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK")
 
-_ = XRPPayment(from: wallet, to: address, amount: amount).send().map { (result) in
+_ = Payment(from: wallet, to: address, amount: amount).send().map { (result) in
     print(result)
 }
 
@@ -161,7 +165,7 @@ _ = XRPPayment(from: wallet, to: address, amount: amount).send().map { (result) 
 
 import XRPLSwift
 
-let wallet = try! XRPSeedWallet(seed: "shrKftFK3ZkMPkq4xe5wGB8HaNSLf")
+let wallet = try! SeedWallet(seed: "shrKftFK3ZkMPkq4xe5wGB8HaNSLf")
 
 let fields: [String:Any] = [
     "TransactionType" : "Payment",
@@ -175,7 +179,7 @@ let fields: [String:Any] = [
 ]
 
 // create the transaction (offline)
-let transaction = XRPRawTransaction(fields: fields)
+let transaction = RawTransaction(fields: fields)
 
 // sign the transaction (offline)
 let signedTransaction = try! transaction.sign(wallet: wallet)
@@ -194,7 +198,7 @@ _ = signedTransaction.submit().map { (result) in
 
 import XRPLSwift
 
-let wallet = try! XRPSeedWallet(seed: "shrKftFK3ZkMPkq4xe5wGB8HaNSLf")
+let wallet = try! SeedWallet(seed: "shrKftFK3ZkMPkq4xe5wGB8HaNSLf")
 
 // dictionary containing partial transaction fields
 let partialFields: [String:Any] = [
@@ -205,7 +209,7 @@ let partialFields: [String:Any] = [
 ]
 
 // create the transaction from dictionary
-let partialTransaction = XRPTransaction(wallet: wallet, fields: partialFields)
+let partialTransaction = Transaction(wallet: wallet, fields: partialFields)
 
 // autofills missing transaction fields (online)
 // signs transaction (offline)
@@ -252,7 +256,7 @@ _ = partialTransaction.send().map { (txResult) in
 
 import XRPLSwift
 
-_ = XRPLedger.getBalance(address: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK").map { (amount) in
+_ = Ledger.getBalance(address: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK").map { (amount) in
     print(amount.prettyPrinted()) // 1,800.000000
 }
 
@@ -260,7 +264,7 @@ _ = XRPLedger.getBalance(address: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK").map { (a
 
 ## WebSocket Support
 
-WebSockets are only supported on Apple platforms through URLSessionWebSocketTask.  On Linux XRPLedger.ws is unavailable.  Support for Linux
+WebSockets are only supported on Apple platforms through URLSessionWebSocketTask.  On Linux Ledger.ws is unavailable.  Support for Linux
 will be possible with the availability of a WebSocket client library.
 
 More functionality to come.
@@ -270,14 +274,14 @@ More functionality to come.
 
 import XRPLSwift
 
-XRPLedger.ws.delegate = self // XRPWebSocketDelegate
-XRPLedger.ws.connect(url: .xrpl_ws_Devnet)
+Ledger.ws.delegate = self // WebSocketDelegate
+Ledger.ws.connect(url: .xrpl_ws_Devnet)
 let parameters: [String: Any] = [
     "id" : "test",
     "method" : "fee"
 ]
 let data = try! JSONSerialization.data(withJSONObject: parameters, options: [])
-XRPLedger.ws.send(data: data)
+Ledger.ws.send(data: data)
 
 ```
 
@@ -286,37 +290,37 @@ XRPLedger.ws.send(data: data)
 
 import XRPLSwift
 
-XRPLedger.ws.delegate = self // XRPWebSocketDelegate
-XRPLedger.ws.connect(url: .xrpl_ws_Devnet)
-XRPLedger.ws.subscribe(account: "r34XnDB2zS11NZ1wKJzpU1mjWExGVugTaQ")
+Ledger.ws.delegate = self // WebSocketDelegate
+Ledger.ws.connect(url: .xrpl_ws_Devnet)
+Ledger.ws.subscribe(account: "r34XnDB2zS11NZ1wKJzpU1mjWExGVugTaQ")
 
 ```
 
-### Responses/Streams and XRPWebSocketDelegate
+### Responses/Streams and WebSocketDelegate
 
 ```swift
 
 import XRPLSwift
 
-class MyClass: XRPWebSocketDelegate {
+class MyClass: WebSocketDelegate {
 
-    func onConnected(connection: XRPWebSocket) {
+    func onConnected(connection: WebSocket) {
         
     }
     
-    func onDisconnected(connection: XRPWebSocket, error: Error?) {
+    func onDisconnected(connection: WebSocket, error: Error?) {
         
     }
     
-    func onError(connection: XRPWebSocket, error: Error) {
+    func onError(connection: WebSocket, error: Error) {
         
     }
     
-    func onResponse(connection: XRPWebSocket, response: XRPWebSocketResponse) {
+    func onResponse(connection: WebSocket, response: WebSocketResponse) {
         
     }
     
-    func onStream(connection: XRPWebSocket, object: NSDictionary) {
+    func onStream(connection: WebSocket, object: NSDictionary) {
         
     }
     
@@ -325,6 +329,6 @@ class MyClass: XRPWebSocketDelegate {
 ```
 
 
-https://github.com/XRPLF/xrpl-py/tree/master/xrpl/models/transactions
-https://github.com/XRPLF/xrpl-py/tree/master/tests/integration/transactions
-https://github.com/xpring-eng/XpringKit/blob/8c71a0c21fba4a112fae47a3cec888bfc40bab98/XpringKit/XRP/ReliableSubmissionXRPClient.swift#L87
+https://github.com/LF/xrpl-py/tree/master/xrpl/models/transactions
+https://github.com/LF/xrpl-py/tree/master/tests/integration/transactions
+https://github.com/xpring-eng/XpringKit/blob/8c71a0c21fba4a112fae47a3cec888bfc40bab98/XpringKit/XRP/ReliableSubmissionClient.swift#L87

@@ -1,5 +1,5 @@
 //
-//  XRPTrustSet.swift
+//  TrustSet.swift
 //  AnyCodable
 //
 //  Created by Mitch Lang on 2/4/20.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-public class XRPTrustSet: XRPTransaction {
+public class TrustSet: Transaction {
     
-    public init(from wallet: XRPWallet, to address: XRPAddress, symbol: String, initialValue: XRPAmount) {
+    public init(from wallet: Wallet, to address: Address, symbol: String, initialValue: Amount) {
         let _fields: [String:Any] = [
             "TransactionType": "TrustSet",
             "LimitAmount": [

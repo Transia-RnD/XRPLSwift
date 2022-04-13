@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'XRPLSwift'
-  s.version          = '0.3.0'
-  s.summary          = 'Swift SDK for interacting with XRP Ledger'
+  s.version          = '0.9.9-beta.1'
+  s.summary          = 'A Swift library to interact with the XRP Ledger (L) blockchain'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://github.com/Transia-RnD/XRPLSwift'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Transia-RnD' => 'mitch.s.lang@gmail.com' }
+  s.author           = { 'Transia-RnD' => 'dangell@transia.co' }
   s.source           = { :git => 'https://github.com/Transia-RnD/XRPLSwift.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 

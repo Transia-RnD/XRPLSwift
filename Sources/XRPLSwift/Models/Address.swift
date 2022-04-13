@@ -54,10 +54,10 @@ public struct Address {
                 try self.init(rAddress: address, tag: tag)
                 isTest = true
             } else {
-                throw XRPAddressError.invalidAddress
+                throw AddressError.invalidAddress
             }
         } else {
-            throw XRPAddressError.checksumFails
+            throw AddressError.checksumFails
         }
     }
     
@@ -65,7 +65,7 @@ public struct Address {
         return self.rAddress
     }
     
-    public static func decodeXAddress(xAddress: String) throws -> XRPAddress {
+    public static func decodeXAddress(xAddress: String) throws -> Address {
         return try self.init(xAddress: xAddress)
     }
     

@@ -8,10 +8,10 @@ import Foundation
 
 class ED25519: SigningAlgorithm {
     
-    static func deriveKeyPair(seed: [UInt8]) throws -> XRPKeyPair {
+    static func deriveKeyPair(seed: [UInt8]) throws -> KeyPair {
         let privateKey = [UInt8](Data(seed).sha512().prefix(32))
         let publicKey = Ed25519.calcPublicKey(secretKey: privateKey)
-        return XRPKeyPair(privateKey: privateKey.toHexString(), publicKey: publicKey.toHexString())
+        return KeyPair(privateKey: privateKey.toHexString(), publicKey: publicKey.toHexString())
     }
     
     static func sign(message: [UInt8], privateKey: [UInt8]) throws -> [UInt8] {

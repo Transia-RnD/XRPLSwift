@@ -14,10 +14,10 @@ public enum NFTokenMintFlag: UInt32 {
     case tfTransferable = 8
 }
 
-public class NFTokenMint: XRPTransaction {
+public class NFTokenMint: Transaction {
     
     public init(
-        wallet: XRPWallet,
+        wallet: Wallet,
         tokenTaxon: Int,
         issuer: String? = nil,
         transferFee: Int? = nil,

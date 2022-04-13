@@ -1,5 +1,5 @@
 //
-//  XRPSetHook.swift
+//  SetHook.swift
 //  AnyCodable
 //
 //  Created by Mitch Lang on 2/4/20.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-public class XRPSetHook: XRPTransaction {
+public class SetHook: Transaction {
     
-    public init(on wallet: XRPWallet, binary: String) {
+    public init(on wallet: Wallet, binary: String) {
         let _fields: [String:Any] = [
             "TransactionType": "SetHook",
             "CreateCode": binary,

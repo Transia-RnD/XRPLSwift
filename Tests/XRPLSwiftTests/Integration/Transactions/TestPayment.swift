@@ -10,18 +10,18 @@ import XCTest
 
 final class TestPayment: XCTestCase {
 
-    var xrpLedger: XRPLedger = XRPLedger(endpoint: .xrpl_rpc_Testnet)
+    var xrpLedger: Ledger = Ledger(endpoint: .xrpl_rpc_Testnet)
 
-    static var wallet: XRPSeedWallet = try! XRPSeedWallet(seed: "sEdVLSxBzx6Xi9XTqYj6a88epDSETKR")
-    static var destination: XRPAddress = try! XRPAddress(rAddress: "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn")
+    static var wallet: SeedWallet = try! SeedWallet(seed: "sEdVLSxBzx6Xi9XTqYj6a88epDSETKR")
+    static var destination: Address = try! Address(rAddress: "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn")
     
     func testBasicFunctionality() {
         // create the expectation
         let exp = expectation(description: "testBasicFunctionality")
 
         // call my asynchronous method
-        let amount = try! XRPAmount(drops: 1000000) // 1.0 XRP
-        let payment = XRPPayment(
+        let amount = try! Amount(drops: 1000000) // 1.0 XRP
+        let payment = Payment(
             from: TestPayment.wallet,
             to: TestPayment.destination,
             amount: amount

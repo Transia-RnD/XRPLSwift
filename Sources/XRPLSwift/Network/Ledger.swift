@@ -12,15 +12,15 @@ enum LedgerError: Error {
     case runtimeError(String)
 }
 
-public class XRPLedger: NSObject {
+public class Ledger: NSObject {
     
     // WebSocket is always available through SPM
     // WebSocket is only available through CocoaPods on newer OS
 #if canImport(WebSocketKit)
-    public static var ws: XRPWebSocket = LinuxWebSocket()
+    public static var ws: XRPLWebSocket = LinuxWebSocket()
 #elseif !os(Linux)
     @available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
-    public static var ws: XRPWebSocket = AppleWebSocket()
+    public static var ws: XRPLWebSocket = AppleWebSocket()
 #endif
     
     // JSON-RPC
@@ -34,9 +34,9 @@ public class XRPLedger: NSObject {
         self.url = endpoint
     }
     
-    public func getTxs(account: String) -> EventLoopFuture<[XRPHistoricalTransaction]> {
+    public func getTxs(account: String) -> EventLoopFuture<[HistoricalTransaction]> {
         
-        let promise = eventGroup.next().makePromise(of: [XRPHistoricalTransaction].self)
+        let promise = eventGroup.next().makePromise(of: [HistoricalTransaction].self)
         
         let parameters: [String: Any] = [
             "method" : "account_tx",
@@ -64,7 +64,7 @@ public class XRPLedger: NSObject {
                     return validated && type == "Payment" && res == "tesSUCCESS"
                 })
                 
-                let transactions = filtered.map({ (dict) -> XRPHistoricalTransaction in
+                let transactions = filtered.map({ (dict) -> HistoricalTransaction in
                     let tx = dict["tx"] as! NSDictionary
                     let destination = tx["Destination"] as! String
                     let source = tx["Account"] as! String
@@ -73,7 +73,7 @@ public class XRPLedger: NSObject {
                     let date = Date(timeIntervalSince1970: 946684800+Double(timestamp))
                     let type = account == source ? "Sent" : "Received"
                     let address = account == source ? destination : source
-                    return XRPHistoricalTransaction(type: type, address: address, amount: try! XRPAmount(drops: Int(amount)!), date: date, raw: tx)
+                    return HistoricalTransaction(type: type, address: address, amount: try! Amount(drops: Int(amount)!), date: date, raw: tx)
                 })
                 promise.succeed(transactions.sorted(by: { (lh, rh) -> Bool in
                     lh.date > rh.date
@@ -91,9 +91,9 @@ public class XRPLedger: NSObject {
         
     }
     
-    public func getBalance(address: String) -> EventLoopFuture<XRPAmount> {
+    public func getBalance(address: String) -> EventLoopFuture<Amount> {
         
-        let promise = eventGroup.next().makePromise(of: XRPAmount.self)
+        let promise = eventGroup.next().makePromise(of: Amount.self)
         
         let parameters: [String: Any] = [
             "method" : "account_info",
@@ -110,7 +110,7 @@ public class XRPLedger: NSObject {
             if status != "error" {
                 let account = info["account_data"] as! NSDictionary
                 let balance = account["Balance"] as! String
-                let amount = try! XRPAmount(drops: Int(balance)!)
+                let amount = try! Amount(drops: Int(balance)!)
                 promise.succeed( amount)
             } else {
                 let errorMessage = info["error_message"] as! String
@@ -124,8 +124,8 @@ public class XRPLedger: NSObject {
         return promise.futureResult
     }
     
-    public func getAccountInfo(account: String) -> EventLoopFuture<XRPAccountInfo> {
-        let promise = eventGroup.next().makePromise(of: XRPAccountInfo.self)
+    public func getAccountInfo(account: String) -> EventLoopFuture<AccountInfo> {
+        let promise = eventGroup.next().makePromise(of: AccountInfo.self)
         let parameters: [String: Any] = [
             "method" : "account_info",
             "params": [
@@ -146,7 +146,7 @@ public class XRPLedger: NSObject {
                 let balance = account["Balance"] as! String
                 let address = account["Account"] as! String
                 let sequence = account["Sequence"] as! Int
-                let accountInfo = XRPAccountInfo(address: address, drops: Int(balance)!, sequence: sequence)
+                let accountInfo = AccountInfo(address: address, drops: Int(balance)!, sequence: sequence)
                 promise.succeed( accountInfo)
             } else {
                 let errorMessage = info["error_message"] as! String
@@ -225,9 +225,9 @@ public class XRPLedger: NSObject {
         
     }
     
-    public func getTrustLines(address: String, symbol: String, issuer: String) -> EventLoopFuture<XRPCurrency> {
+    public func getTrustLines(address: String, symbol: String, issuer: String) -> EventLoopFuture<Currency> {
         
-        let promise = eventGroup.next().makePromise(of: XRPCurrency.self)
+        let promise = eventGroup.next().makePromise(of: Currency.self)
         
         let parameters: [String: Any] = [
             "method" : "account_lines",
@@ -250,7 +250,7 @@ public class XRPLedger: NSObject {
                         let address = line["account"] as! String
                         let balance = line["balance"] as! String
                         let limit = line["limit"] as! String
-                        let currencyInfo = XRPCurrency(
+                        let currencyInfo = Currency(
                             address: address,
                             balance: balance,
                             currency: currency,
@@ -307,8 +307,8 @@ public class XRPLedger: NSObject {
 //
 //    }
     
-    public func currentLedgerInfo() -> EventLoopFuture<XRPCurrentLedgerInfo> {
-        let promise = eventGroup.next().makePromise(of: XRPCurrentLedgerInfo.self)
+    public func currentLedgerInfo() -> EventLoopFuture<CurrentLedgerInfo> {
+        let promise = eventGroup.next().makePromise(of: CurrentLedgerInfo.self)
         let parameters: [String: Any] = [
             "method" : "fee"
         ]
@@ -319,7 +319,7 @@ public class XRPLedger: NSObject {
             let min = drops["minimum_fee"] as! String
             let max = drops["median_fee"] as! String
             let ledger = info["ledger_current_index"] as! Int
-            let ledgerInfo = XRPCurrentLedgerInfo(index: ledger, minFee: Int(min)!, maxFee: Int(max)!)
+            let ledgerInfo = CurrentLedgerInfo(index: ledger, minFee: Int(min)!, maxFee: Int(max)!)
             promise.succeed( ledgerInfo)
         }.recover { (error) in
             promise.fail(error)

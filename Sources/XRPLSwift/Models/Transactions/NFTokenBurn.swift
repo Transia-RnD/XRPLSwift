@@ -7,10 +7,10 @@
 
 import Foundation
 
-public class NFTokenBurn: XRPTransaction {
+public class NFTokenBurn: Transaction {
     
     public init(
-        wallet: XRPWallet,
+        wallet: Wallet,
         tokenId: String
     ) {
         let _fields: [String:Any] = [

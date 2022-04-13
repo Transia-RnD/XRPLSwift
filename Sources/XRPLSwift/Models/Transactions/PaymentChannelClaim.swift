@@ -6,13 +6,13 @@
 //
 import Foundation
 
-public class PaymentChannelClaim: XRPTransaction {
+public class PaymentChannelClaim: Transaction {
     
     public init(
-        from wallet: XRPWallet,
+        from wallet: Wallet,
         channel: String,
-        balance: XRPAmount? = nil,
-        amount: XRPAmount? = nil,
+        balance: Amount? = nil,
+        amount: Amount? = nil,
         signature: String? = nil,
         publicKey: String? = nil,
         sourceTag : UInt32? = nil

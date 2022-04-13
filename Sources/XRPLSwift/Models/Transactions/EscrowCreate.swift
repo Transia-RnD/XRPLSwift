@@ -7,9 +7,9 @@
 
 import Foundation
 
-public class EscrowCreate: XRPTransaction {
+public class EscrowCreate: Transaction {
     
-    public init(from wallet: XRPWallet, to address: XRPAddress, amount: XRPAmount, finishAfter: Date, cancelAfter: Date?, sourceTag : UInt32? = nil) {
+    public init(from wallet: Wallet, to address: Address, amount: Amount, finishAfter: Date, cancelAfter: Date?, sourceTag : UInt32? = nil) {
         
         // dictionary containing partial transaction fields
         var _fields: [String:Any] = [

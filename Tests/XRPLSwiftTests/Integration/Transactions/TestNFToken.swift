@@ -10,7 +10,7 @@ import XCTest
 
 final class TestNFTokenMint: XCTestCase {
 
-    var xrpLedger: XRPLedger = XRPLedger(endpoint: .xrpl_rpc_Testnet)
+    var xrpLedger: Ledger = Ledger(endpoint: .xrpl_rpc_Testnet)
     
     static var uri: String = "ipfs://QmUs97DuBbqmzm4F4FZpQcx9ssSM7TxwP1pPj1b7hxgaYM"
 

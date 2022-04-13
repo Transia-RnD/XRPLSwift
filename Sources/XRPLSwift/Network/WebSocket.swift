@@ -1,26 +1,25 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Mitch Lang on 1/31/20.
 //
-
 import Foundation
 
-public protocol XRPWebSocketDelegate {
-    func onConnected(connection: XRPWebSocket)
-    func onDisconnected(connection: XRPWebSocket, error: Error?)
-    func onError(connection: XRPWebSocket, error: Error)
-    func onResponse(connection: XRPWebSocket, response: XRPWebSocketResponse)
-    func onStream(connection: XRPWebSocket, object: NSDictionary)
+public protocol XRPLWebSocketDelegate {
+    func onConnected(connection: XRPLWebSocket)
+    func onDisconnected(connection: XRPLWebSocket, error: Error?)
+    func onError(connection: XRPLWebSocket, error: Error)
+    func onResponse(connection: XRPLWebSocket, response: XRPLWebSocketResponse)
+    func onStream(connection: XRPLWebSocket, object: NSDictionary)
 }
 
-public protocol XRPWebSocket {
+public protocol XRPLWebSocket {
     func send(text: String)
     func send(data: Data)
     func connect(host: String, path: String)
     func disconnect()
-    var delegate: XRPWebSocketDelegate? {
+    var delegate: XRPLWebSocketDelegate? {
         get
         set
     }
@@ -30,10 +29,10 @@ public protocol XRPWebSocket {
 }
 
 class _WebSocket: NSObject  {
-    var delegate: XRPWebSocketDelegate?
+    var delegate: XRPLWebSocketDelegate?
     internal override init() {}
-    fileprivate func handleResponse(connection: XRPWebSocket, data: Data) {
-        if let response = try? JSONDecoder().decode(XRPWebSocketResponse.self, from: data) {
+    fileprivate func handleResponse(connection: XRPLWebSocket, data: Data) {
+        if let response = try? JSONDecoder().decode(XRPLWebSocketResponse.self, from: data) {
             self.delegate?.onResponse(connection: connection, response: response)
         } else if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
             self.delegate?.onStream(connection: connection, object: json)
@@ -46,7 +45,7 @@ class _WebSocket: NSObject  {
 
 import WebSocketKit
 
-class LinuxWebSocket: _WebSocket, XRPWebSocket {
+class LinuxWebSocket: _WebSocket, XRPLWebSocket {
     
     var ws: WebSocket!
     
@@ -118,7 +117,7 @@ class LinuxWebSocket: _WebSocket, XRPWebSocket {
 import Foundation
 
 @available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
-class AppleWebSocket: _WebSocket, XRPWebSocket, URLSessionWebSocketDelegate {
+class AppleWebSocket: _WebSocket, XRPLWebSocket, URLSessionWebSocketDelegate {
     
     var webSocketTask: URLSessionWebSocketTask!
     var urlSession: URLSession!
@@ -191,4 +190,3 @@ class AppleWebSocket: _WebSocket, XRPWebSocket, URLSessionWebSocketDelegate {
 }
 
 #endif
-

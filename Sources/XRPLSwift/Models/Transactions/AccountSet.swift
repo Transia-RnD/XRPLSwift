@@ -1,5 +1,5 @@
 //
-//  XRPDisableMaster.swift
+//  AccountSet.swift
 //  AnyCodable
 //
 //  Created by Mitch Lang on 2/10/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum XRPAccountSetFlag: UInt32 {
+public enum AccountSetFlag: UInt32 {
     case asfAccountTxId = 5
     case asfDefaultRipple = 8
     case asfDepositAuth = 9
@@ -20,12 +20,12 @@ public enum XRPAccountSetFlag: UInt32 {
     case asfAuthorizedMinter = 10
 }
 
-public class XRPAccountSet: XRPTransaction {
+public class AccountSet: Transaction {
     
     public init(
-        wallet: XRPWallet,
-        set: XRPAccountSetFlag?,
-        clear: XRPAccountSetFlag?,
+        wallet: Wallet,
+        set: AccountSetFlag?,
+        clear: AccountSetFlag?,
         domain: String?,
         emailHash: String?,
         transferRate: Int?,

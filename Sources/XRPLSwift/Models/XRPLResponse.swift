@@ -1,5 +1,5 @@
 //
-//  XRPLResponse.swift
+//  LResponse.swift
 //  BigInt
 //
 //  Created by Mitch Lang on 2/3/20.
@@ -9,14 +9,14 @@ import Foundation
 import AnyCodable
 
 
-//public struct XRPWebSocketResponse<T:Codable>: Codable {
+//public struct WebSocketResponse<T:Codable>: Codable {
 //    public var id: String
 //    public var status: String
 //    public var type: String
 //    public var result: T
 //}
 
-public struct XRPWebSocketResponse: Codable{
+public struct XRPLWebSocketResponse: Codable{
     public let id: String
     public let status: String
     public let type: String
@@ -41,6 +41,6 @@ public struct XRPWebSocketResponse: Codable{
     }
 }
 
-public struct XRPJsonRpcResponse<T> {
+public struct JsonRpcResponse<T> {
     public var result: T
 }

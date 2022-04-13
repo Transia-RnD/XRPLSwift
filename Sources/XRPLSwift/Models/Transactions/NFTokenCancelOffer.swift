@@ -7,10 +7,10 @@
 
 import Foundation
 
-public class NFTokenCancelOffer: XRPTransaction {
+public class NFTokenCancelOffer: Transaction {
     
     public init(
-        wallet: XRPWallet,
+        wallet: Wallet,
         tokenOffers: [String]
     ) {
         let _fields: [String:Any] = [

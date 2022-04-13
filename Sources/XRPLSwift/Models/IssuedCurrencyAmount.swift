@@ -7,10 +7,6 @@
 
 import Foundation
 
-public enum AmountError: Error {
-    case invalidAmount
-}
-
 public struct IssuedCurrencyAmount {
     
     private(set) var drops: Int!

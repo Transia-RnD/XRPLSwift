@@ -32,7 +32,7 @@ public enum SeedType {
 
 }
 
-public protocol XRPWallet {
+public protocol Wallet {
     var privateKey: String {get}
     var publicKey: String {get}
     var address: String {get}
@@ -43,7 +43,7 @@ public protocol XRPWallet {
     static func validate(address: String) -> Bool
 }
 
-extension XRPWallet {
+extension Wallet {
     public var accountID: [UInt8] {
         let accountID = RIPEMD160.hash(message: Data(hex: self.publicKey).sha256())
         return [UInt8](accountID)
@@ -96,7 +96,7 @@ extension XRPWallet {
     }
 }
 
-public class XRPMnemonicWallet: XRPWallet {
+public class MnemonicWallet: Wallet {
     
     public var privateKey: String
     public var publicKey: String
@@ -108,7 +108,7 @@ public class XRPMnemonicWallet: XRPWallet {
         try! self.init(mnemonic: mnemonic)
     }
     
-    /// Generates an XRPWallet from an mnemonic string.
+    /// Generates an Wallet from an mnemonic string.
     ///
     /// - Parameter mnemonic: mnemonic phrase .
     /// - Throws: SeedError
@@ -130,7 +130,7 @@ public class XRPMnemonicWallet: XRPWallet {
         
         var finalMasterPrivateKey = Data(repeating: 0x00, count: 33)
         finalMasterPrivateKey.replaceSubrange(1...firstPrivateKey.raw.count, with: firstPrivateKey.raw)
-        let address = XRPSeedWallet.deriveAddress(publicKey: firstPrivateKey.publicKey.hexadecimal)
+        let address = SeedWallet.deriveAddress(publicKey: firstPrivateKey.publicKey.hexadecimal)
         self.init(
             privateKey: finalMasterPrivateKey.hexadecimal,
             publicKey: firstPrivateKey.publicKey.hexadecimal,
@@ -146,13 +146,13 @@ public class XRPMnemonicWallet: XRPWallet {
         self.address = address
     }
     
-    public static func generateRandomMnemonicWallet() throws -> XRPWallet {
+    public static func generateRandomMnemonicWallet() throws -> Wallet {
         let mnemonic = try Bip39Mnemonic.create()
-        return try XRPMnemonicWallet(mnemonic: mnemonic)
+        return try MnemonicWallet(mnemonic: mnemonic)
     }
 }
 
-public class XRPSeedWallet: XRPWallet {
+public class SeedWallet: Wallet {
 
     public var privateKey: String
     public var publicKey: String
@@ -181,23 +181,23 @@ public class XRPSeedWallet: XRPWallet {
         case .ed25519:
             let keyPair = try! ED25519.deriveKeyPair(seed: entropy.bytes)
             let publicKey = [0xED] + keyPair.publicKey.hexadecimal!
-            let seed = try! XRPSeedWallet.encodeSeed(entropy: entropy, type: .ed25519)
-            let address = XRPSeedWallet.deriveAddress(publicKey: publicKey.toHexString())
+            let seed = try! SeedWallet.encodeSeed(entropy: entropy, type: .ed25519)
+            let address = SeedWallet.deriveAddress(publicKey: publicKey.toHexString())
             self.init(privateKey: keyPair.privateKey, publicKey: publicKey.toHexString(), seed: seed, address: address)
         case .secp256k1:
             let keyPair = try! SECP256K1.deriveKeyPair(seed: entropy.bytes)
-            let seed = try! XRPSeedWallet.encodeSeed(entropy: entropy, type: .secp256k1)
-            let address = XRPSeedWallet.deriveAddress(publicKey: keyPair.publicKey)
+            let seed = try! SeedWallet.encodeSeed(entropy: entropy, type: .secp256k1)
+            let address = SeedWallet.deriveAddress(publicKey: keyPair.publicKey)
             self.init(privateKey: keyPair.privateKey, publicKey: keyPair.publicKey, seed: seed, address: address)
         }
     }
 
-    /// Generates an XRPWallet from an existing family seed.
+    /// Generates an Wallet from an existing family seed.
     ///
     /// - Parameter seed: amily seed using XRP alphabet and standard format.
     /// - Throws: SeedError
     public convenience init(seed: String) throws {
-        guard let bytes = try XRPSeedWallet.decodeSeed(seed: seed) else {
+        guard let bytes = try SeedWallet.decodeSeed(seed: seed) else {
             throw SeedError.invalidSeed
         }
         let entropy = Entropy(bytes: bytes)
@@ -252,7 +252,7 @@ public class XRPSeedWallet: XRPWallet {
     ///
     public static func validate(seed: String) -> Bool {
         do {
-            if let _ = try XRPSeedWallet.decodeSeed(seed: seed) {
+            if let _ = try SeedWallet.decodeSeed(seed: seed) {
                 return true
             }
             return false
@@ -262,7 +262,7 @@ public class XRPSeedWallet: XRPWallet {
     }
     public static func decode(seed: String) throws -> [UInt8]? {
         do {
-            if let data = try XRPSeedWallet.decodeSeed(seed: seed) {
+            if let data = try SeedWallet.decodeSeed(seed: seed) {
                 return data
             }
             return nil
@@ -274,7 +274,7 @@ public class XRPSeedWallet: XRPWallet {
     public static func encode(bytes: [UInt8]) throws -> String? {
         do {
             let entropy = Entropy(bytes: bytes)
-            return try XRPSeedWallet.encodeSeed(entropy: entropy, type: .secp256k1)
+            return try SeedWallet.encodeSeed(entropy: entropy, type: .secp256k1)
         } catch {
             return nil
         }
@@ -282,7 +282,7 @@ public class XRPSeedWallet: XRPWallet {
     
     public func sign(message: [UInt8]) -> [UInt8] {
         do {
-            let algorithm = XRPSeedWallet.getSeedTypeFrom(publicKey: self.publicKey).algorithm
+            let algorithm = SeedWallet.getSeedTypeFrom(publicKey: self.publicKey).algorithm
             let signature = try algorithm.sign(message: message, privateKey: [UInt8](Data(hex: self.privateKey)))
     
             // verify signature
@@ -304,7 +304,7 @@ public class XRPSeedWallet: XRPWallet {
     
     public static func verify(signature: [UInt8], message: [UInt8], publicKey: String) -> Bool {
         do {
-            let algorithm = XRPSeedWallet.getSeedTypeFrom(publicKey: publicKey).algorithm
+            let algorithm = SeedWallet.getSeedTypeFrom(publicKey: publicKey).algorithm
             return try algorithm.verify(
                 signature: signature,
                 message: message,
@@ -322,7 +322,7 @@ public class XRPSeedWallet: XRPWallet {
             fatalError()
         }
         
-        guard let amount = dict["amount"] as? XRPAmount else {
+        guard let amount = dict["amount"] as? Amount else {
             fatalError()
         }
         

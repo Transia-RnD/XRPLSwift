@@ -136,7 +136,7 @@ public extension URL {
     static let xrpl_ws_Xumm = URL(string: "wss://xumm.app/")!
 }
 
-public enum XRPLHost: String {
+public enum LHost: String {
     case xrpl_rpc_MainNetS1 = "s1.ripple.com:51234"
     case xrpl_rpc_MainNetS2 = "s2.ripple.com:51234"
     case xrpl_rpc_Testnet = "s.altnet.rippletest.net:51234"
