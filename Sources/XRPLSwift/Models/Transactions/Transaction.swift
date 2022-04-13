@@ -1,5 +1,5 @@
 //
-//  XRPTransaction.swift
+//  Transaction.swift
 //  XRPLSwift
 //
 //  Created by Mitch Lang on 5/10/19.
@@ -8,7 +8,7 @@
 import Foundation
 import NIO
 
-public class XRPTransaction: XRPRawTransaction {
+public class Transaction: XRPRawTransaction {
     
     var wallet: XRPWallet
     

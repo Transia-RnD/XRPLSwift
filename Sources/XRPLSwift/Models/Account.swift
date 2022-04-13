@@ -1,5 +1,5 @@
 //
-//  XRPAccount.swift
+//  Account.swift
 //  BigInt
 //
 //  Created by Mitch Lang on 2/3/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct XRPAccount: Codable {
+public struct Account: Codable {
     public var address: String
     public var secret: String
     

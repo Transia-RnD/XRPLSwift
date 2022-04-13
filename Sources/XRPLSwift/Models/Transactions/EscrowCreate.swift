@@ -1,5 +1,5 @@
 //
-//  XRPEscrowCreate.swift
+//  EscrowCreate.swift
 //  AnyCodable
 //
 //  Created by Mitch Lang on 2/4/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class XRPEscrowCreate: XRPTransaction {
+public class EscrowCreate: XRPTransaction {
     
     public init(from wallet: XRPWallet, to address: XRPAddress, amount: XRPAmount, finishAfter: Date, cancelAfter: Date?, sourceTag : UInt32? = nil) {
         

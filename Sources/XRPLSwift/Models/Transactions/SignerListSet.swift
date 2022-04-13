@@ -1,5 +1,5 @@
 //
-//  XRPSignerListSet.swift
+//  SignerListSet.swift
 //  AnyCodable
 //
 //  Created by Mitch Lang on 2/10/20.
@@ -7,12 +7,12 @@
 
 import Foundation
 
-public struct XRPSignerEntry {
+public struct SignerEntry {
     var Account: String
     var SignerWeight: Int
 }
 
-public class XRPSignerListSet: XRPTransaction {
+public class SignerListSet: XRPTransaction {
     
     public init(wallet: XRPWallet, signerQuorum: UInt32, signerEntries: [XRPSignerEntry]) {
         

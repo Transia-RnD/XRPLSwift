@@ -1,5 +1,5 @@
 //
-//  XRPAddress.swift
+//  Address.swift
 //  AnyCodable
 //
 //  Created by Mitch Lang on 2/15/20.
@@ -7,22 +7,22 @@
 
 import Foundation
 
-public enum XRPAddressError: Error {
+public enum AddressError: Error {
     case invalidAddress
     case checksumFails
 }
 
-public struct XRPAddress {
+public struct Address {
     var rAddress: String
     var tag: UInt32?
     var isTest: Bool
     var xAddress: String {
-        return XRPAddress.encodeXAddress(rAddress: self.rAddress, tag: self.tag, test: self.isTest)
+        return Address.encodeXAddress(rAddress: self.rAddress, tag: self.tag, test: self.isTest)
     }
     
     public init(rAddress: String, tag: UInt32? = nil, isTest: Bool = false) throws {
-        if !XRPSeedWallet.validate(address: rAddress) {
-            throw XRPAddressError.invalidAddress
+        if !SeedWallet.validate(address: rAddress) {
+            throw AddressError.invalidAddress
         }
         self.rAddress = rAddress
         self.tag = tag
@@ -70,7 +70,7 @@ public struct XRPAddress {
     }
     
     public static func encodeXAddress(rAddress: String, tag: UInt32? = nil, test: Bool = false ) -> String {
-        let accountID = XRPSeedWallet.accountID(for: rAddress)
+        let accountID = SeedWallet.accountID(for: rAddress)
         let prefix: [UInt8] = test ? [0x04, 0x93] : [0x05, 0x44]
         let flags: [UInt8] = tag == nil ? [0x00] : [0x01]
         let tag = tag == nil ? [UInt8](UInt64(0).data) : [UInt8](UInt64(tag!).data)

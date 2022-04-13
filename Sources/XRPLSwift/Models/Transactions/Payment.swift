@@ -1,5 +1,5 @@
 //
-//  XRPPaymentTransaction.swift
+//  Payment.swift
 //  AnyCodable
 //
 //  Created by Mitch Lang on 2/4/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class XRPPayment: XRPTransaction {
+public class Payment: XRPTransaction {
     
     public init(from wallet: XRPWallet, to address: XRPAddress, amount: XRPAmount, sourceTag : UInt32? = nil) {
         var _fields: [String: Any] = [

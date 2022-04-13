@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct XRPKeyPair {
+struct KeyPair {
     var privateKey: String
     var publicKey: String
 }
