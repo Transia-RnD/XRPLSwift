@@ -1,5 +1,5 @@
 .build
 .swiftpm
-XRPKit.xcodeproj
+XRPLSwift.xcodeproj
 !.gitignore
 .DS_Store

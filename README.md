@@ -1,53 +1,57 @@
 <p align="center">
-  <a href="https://github.com/MitchLang009/XRPKit">
+  <a href="https://github.com/Transia-RnD/XRPLSwift">
       <img src="logo.png" width="256" height="256" align="middle">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://cocoapods.org/pods/XRPKit">
-    <img src="https://img.shields.io/cocoapods/v/XRPKit.svg?style=flat&label=version" alt="Version">
+  <a href="https://cocoapods.org/pods/XRPLSwift">
+    <img src="https://img.shields.io/cocoapods/v/XRPLSwift.svg?style=flat&label=version" alt="Version">
   </a>
-  <a href="https://github.com/MitchLang009/XRPKit">
-    <img src="https://img.shields.io/cocoapods/l/XRPKit.svg?style=flat" alt="License">
+  <a href="https://github.com/Transia-RnD/XRPLSwift">
+    <img src="https://img.shields.io/cocoapods/l/XRPLSwift.svg?style=flat" alt="License">
   </a>
-  <a href="https://github.com/MitchLang009/XRPKit">
+  <a href="https://github.com/Transia-RnD/XRPLSwift">
     <img src="https://img.shields.io/badge/platforms-macOS%20%7C%20iOS%20%7C%20watchOS%20%7C%20tvOS%20%7C%20Linux-lightgrey.svg" alt="Platform">
   </a>
-  <a href="https://cocoapods.org/pods/XRPKit">
+  <a href="https://cocoapods.org/pods/XRPLSwift">
     <img src="https://img.shields.io/badge/supports-CocoaPods%20%7C%20SwiftPM-green.svg" alt="CocoaPods and SPM compatible">
   </a>
-   <a href="https://github.com/MitchLang009/XRPKit">
-    <img src="https://travis-ci.org/MitchLang009/XRPKit.svg?branch=develop" alt="Travis Build Status">
+   <a href="https://github.com/Transia-RnD/XRPLSwift">
+    <img src="https://travis-ci.org/Transia-RnD/XRPLSwift.svg?branch=develop" alt="Travis Build Status">
   </a>
 </p>
 
-# XRPKit
+# XRPLSwift
 
-XRPKit is a Swift SDK built for interacting with the XRP Ledger.  XRPKit supports offline wallet creation, offline transaction creation/signing, and submitting transactions to the XRP ledger.  XRPKit supports both the secp256k1 and ed25519 algorithms.  XRPKit is available on iOS, macOS and Linux.  WIP - use at your own risk.
+XRPLSwift is a Swift SDK built for interacting with the XRP Ledger.  XRPLSwift supports offline wallet creation, offline transaction creation/signing, and submitting transactions to the XRP ledger.  XRPLSwift supports both the secp256k1 and ed25519 algorithms.  XRPLSwift is available on iOS, macOS and Linux.  WIP - use at your own risk.
 
 ## Author
 
 MitchLang009, mitch.s.lang@gmail.com
 
+## Co-Author
+
+Transia-RnD, dangell@transia.co
+
 ## License
 
-XRPKit is available under the MIT license. See the LICENSE file for more info.
+XRPLSwift is available under the MIT license. See the LICENSE file for more info.
 
 ## Installation
 
 #### CocoaPods
 
-XRPKit is available through [CocoaPods](https://cocoapods.org). To install
+XRPLSwift is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'XRPKit'
+pod 'XRPLSwift'
 ```
 #### Swift Package Manager
 
 You can use [The Swift Package Manager](https://swift.org/package-manager) to
-install `XRPKit` by adding it to your `Package.swift` file:
+install `XRPLSwift` by adding it to your `Package.swift` file:
 
 ```swift
 // swift-tools-version:5.1
@@ -56,7 +60,7 @@ import PackageDescription
 let package = Package(
     name: "YOUR_PROJECT_NAME",
     dependencies: [
-    .package(url: "https://github.com/MitchLang009/XRPKit.git", from: "0.3.0"),
+    .package(url: "https://github.com/Transia-RnD/XRPLSwift.git", from: "0.3.0"),
     ]
 )
 ```
@@ -74,12 +78,12 @@ contributions must compile on Linux.
 
 ```swift
 
-import XRPKit
+import XRPLSwift
 
 // create a completely new, randomly generated wallet
-let wallet = XRPSeedWallet() // defaults to secp256k1
-let wallet2 = XRPSeedWallet(type: .secp256k1)
-let wallet3 = XRPSeedWallet(type: .ed25519)
+let wallet = SeedWallet() // defaults to secp256k1
+let wallet2 = SeedWallet(type: .secp256k1)
+let wallet3 = SeedWallet(type: .ed25519)
 
 ```
 
@@ -87,10 +91,10 @@ let wallet3 = XRPSeedWallet(type: .ed25519)
 
 ```swift
 
-import XRPKit
+import XRPLSwift
 
 // generate a wallet from an existing seed
-let wallet = try! XRPSeedWallet(seed: "snsTnz4Wj8vFnWirNbp7tnhZyCqx9")
+let wallet = try! SeedWallet(seed: "snsTnz4Wj8vFnWirNbp7tnhZyCqx9")
 
 ```
 
@@ -98,19 +102,19 @@ let wallet = try! XRPSeedWallet(seed: "snsTnz4Wj8vFnWirNbp7tnhZyCqx9")
 
 ```swift
 
-import XRPKit
+import XRPLSwift
 
 let mnemonic = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
-let walletFromMnemonic = try! XRPMnemonicWallet(mnemonic: mnemonic)
+let walletFromMnemonic = try! MnemonicWallet(mnemonic: mnemonic)
 
 ```
 
 ### Wallet properties
 ```swift
 
-import XRPKit
+import XRPLSwift
 
-let wallet = XRPSeedWallet()
+let wallet = SeedWallet()
 
 print(wallet.address) // rJk1prBA4hzuK21VDK2vK2ep2PKGuFGnUD
 print(wallet.seed) // snsTnz4Wj8vFnWirNbp7tnhZyCqx9
@@ -122,20 +126,20 @@ print(wallet.privateKey) // 003FC03417669696AB4A406B494E6426092FD9A42C153E169A2B
 ### Validation
 ```swift
 
-import XRPKit
+import XRPLSwift
 
 // Address
 let btc = "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2"
 let xrp = "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK"
 
-XRPSeedWallet.validate(address: btc) // returns false
-XRPSeedWallet.validate(address: xrp) // returns true
+SeedWallet.validate(address: btc) // returns false
+SeedWallet.validate(address: xrp) // returns true
 
 // Seed
 let seed = "shrKftFK3ZkMPkq4xe5wGB8HaNSLf"
 
-XRPSeedWallet.validate(seed: xrp) // returns false
-XRPSeedWallet.validate(seed: seed) // returns true
+SeedWallet.validate(seed: xrp) // returns false
+SeedWallet.validate(seed: seed) // returns true
 
 ```
 
@@ -144,13 +148,13 @@ XRPSeedWallet.validate(seed: seed) // returns true
 ### Sending XRP
 ```swift
 
-import XRPKit
+import XRPLSwift
 
-let wallet = try! XRPSeedWallet(seed: "shrKftFK3ZkMPkq4xe5wGB8HaNSLf")
-let amount = try! XRPAmount(drops: 100000000)
-let address = try! XRPAddress(rAddress: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK")
+let wallet = try! SeedWallet(seed: "shrKftFK3ZkMPkq4xe5wGB8HaNSLf")
+let amount = try! Amount(drops: 100000000)
+let address = try! Address(rAddress: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK")
 
-_ = XRPPayment(from: wallet, to: address, amount: amount).send().map { (result) in
+_ = Payment(from: wallet, to: address, amount: amount).send().map { (result) in
     print(result)
 }
 
@@ -159,9 +163,9 @@ _ = XRPPayment(from: wallet, to: address, amount: amount).send().map { (result) 
 ### Sending XRP with custom fields
 ```swift
 
-import XRPKit
+import XRPLSwift
 
-let wallet = try! XRPSeedWallet(seed: "shrKftFK3ZkMPkq4xe5wGB8HaNSLf")
+let wallet = try! SeedWallet(seed: "shrKftFK3ZkMPkq4xe5wGB8HaNSLf")
 
 let fields: [String:Any] = [
     "TransactionType" : "Payment",
@@ -175,7 +179,7 @@ let fields: [String:Any] = [
 ]
 
 // create the transaction (offline)
-let transaction = XRPRawTransaction(fields: fields)
+let transaction = RawTransaction(fields: fields)
 
 // sign the transaction (offline)
 let signedTransaction = try! transaction.sign(wallet: wallet)
@@ -192,9 +196,9 @@ _ = signedTransaction.submit().map { (result) in
 
 ```swift
 
-import XRPKit
+import XRPLSwift
 
-let wallet = try! XRPSeedWallet(seed: "shrKftFK3ZkMPkq4xe5wGB8HaNSLf")
+let wallet = try! SeedWallet(seed: "shrKftFK3ZkMPkq4xe5wGB8HaNSLf")
 
 // dictionary containing partial transaction fields
 let partialFields: [String:Any] = [
@@ -205,7 +209,7 @@ let partialFields: [String:Any] = [
 ]
 
 // create the transaction from dictionary
-let partialTransaction = XRPTransaction(wallet: wallet, fields: partialFields)
+let partialTransaction = Transaction(wallet: wallet, fields: partialFields)
 
 // autofills missing transaction fields (online)
 // signs transaction (offline)
@@ -250,9 +254,9 @@ _ = partialTransaction.send().map { (txResult) in
 ### Check balance
 ```swift
 
-import XRPKit
+import XRPLSwift
 
-_ = XRPLedger.getBalance(address: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK").map { (amount) in
+_ = Ledger.getBalance(address: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK").map { (amount) in
     print(amount.prettyPrinted()) // 1,800.000000
 }
 
@@ -260,7 +264,7 @@ _ = XRPLedger.getBalance(address: "rPdCDje24q4EckPNMQ2fmUAMDoGCCu3eGK").map { (a
 
 ## WebSocket Support
 
-WebSockets are only supported on Apple platforms through URLSessionWebSocketTask.  On Linux XRPLedger.ws is unavailable.  Support for Linux
+WebSockets are only supported on Apple platforms through URLSessionWebSocketTask.  On Linux Ledger.ws is unavailable.  Support for Linux
 will be possible with the availability of a WebSocket client library.
 
 More functionality to come.
@@ -268,58 +272,63 @@ More functionality to come.
 ### Example Command
 ```swift
 
-import XRPKit
+import XRPLSwift
 
-XRPLedger.ws.delegate = self // XRPWebSocketDelegate
-XRPLedger.ws.connect(url: .xrpl_ws_Devnet)
+Ledger.ws.delegate = self // WebSocketDelegate
+Ledger.ws.connect(url: .xrpl_ws_Devnet)
 let parameters: [String: Any] = [
     "id" : "test",
     "method" : "fee"
 ]
 let data = try! JSONSerialization.data(withJSONObject: parameters, options: [])
-XRPLedger.ws.send(data: data)
+Ledger.ws.send(data: data)
 
 ```
 
 ### Transaction Stream Request
 ```swift
 
-import XRPKit
+import XRPLSwift
 
-XRPLedger.ws.delegate = self // XRPWebSocketDelegate
-XRPLedger.ws.connect(url: .xrpl_ws_Devnet)
-XRPLedger.ws.subscribe(account: "r34XnDB2zS11NZ1wKJzpU1mjWExGVugTaQ")
+Ledger.ws.delegate = self // WebSocketDelegate
+Ledger.ws.connect(url: .xrpl_ws_Devnet)
+Ledger.ws.subscribe(account: "r34XnDB2zS11NZ1wKJzpU1mjWExGVugTaQ")
 
 ```
 
-### Responses/Streams and XRPWebSocketDelegate
+### Responses/Streams and WebSocketDelegate
 
 ```swift
 
-import XRPKit
+import XRPLSwift
 
-class MyClass: XRPWebSocketDelegate {
+class MyClass: WebSocketDelegate {
 
-    func onConnected(connection: XRPWebSocket) {
+    func onConnected(connection: WebSocket) {
         
     }
     
-    func onDisconnected(connection: XRPWebSocket, error: Error?) {
+    func onDisconnected(connection: WebSocket, error: Error?) {
         
     }
     
-    func onError(connection: XRPWebSocket, error: Error) {
+    func onError(connection: WebSocket, error: Error) {
         
     }
     
-    func onResponse(connection: XRPWebSocket, response: XRPWebSocketResponse) {
+    func onResponse(connection: WebSocket, response: WebSocketResponse) {
         
     }
     
-    func onStream(connection: XRPWebSocket, object: NSDictionary) {
+    func onStream(connection: WebSocket, object: NSDictionary) {
         
     }
     
 }
 
 ```
+
+
+https://github.com/LF/xrpl-py/tree/master/xrpl/models/transactions
+https://github.com/LF/xrpl-py/tree/master/tests/integration/transactions
+https://github.com/xpring-eng/XpringKit/blob/8c71a0c21fba4a112fae47a3cec888bfc40bab98/XpringKit/XRP/ReliableSubmissionClient.swift#L87

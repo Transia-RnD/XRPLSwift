@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "XRPKit",
+    name: "XRPLSwift",
     platforms: [
         .macOS(.v10_15),
         .iOS(.v10),
@@ -14,8 +14,8 @@ let package = Package(
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
-            name: "XRPKit",
-            targets: ["XRPKit"]),
+            name: "XRPLSwift",
+            targets: ["XRPLSwift"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -32,10 +32,10 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
 //        .target(name: "secp256k1"),
         .target(
-            name: "XRPKit",
+            name: "XRPLSwift",
             dependencies: ["WebSocketKit","NIO", "AnyCodable", "secp256k1", "CryptoSwift", "BigInt"]),
         .testTarget(
-            name: "XRPKitTests",
-            dependencies: ["XRPKit"]),
+            name: "XRPLSwiftTests",
+            dependencies: ["XRPLSwift"]),
     ]
 )
