@@ -60,7 +60,7 @@ internal class SECP256K1: SigningAlgorithm {
         let masterPublicKey = try derivePublicKey(ctx: ctx, secretKey: masterPrivateKeyForDerivation.getPointer())
         
         // TODO: IDK WHY I HAVE TO DO THIS
-        _ = masterPrivateKeyForDerivation.getPointer()
+//        _ = masterPrivateKeyForDerivation.getPointer()
         let masterPublicKeyHex = masterPublicKey.compressed.toHexString()
         secp256k1_context_destroy(ctx)
         
@@ -120,8 +120,8 @@ internal class SECP256K1: SigningAlgorithm {
         }
         
         // TODO: IDK WHY I HAVE TO DO THIS
-        _ = _data.getPointer()
-        _ = _privateKey.getPointer()
+//        _ = _data.getPointer()
+//        _ = _privateKey.getPointer()
         
         var tmp: [UInt8] = Array(repeating: 0, count: 72)
         var size = tmp.count
@@ -150,7 +150,7 @@ internal class SECP256K1: SigningAlgorithm {
         }
         
         // TODO: IDK WHY I HAVE TO DO THIS
-        _ = _signatureData.getPointer()
+//        _ = _signatureData.getPointer()
         
         var pubKey = secp256k1_pubkey()
         let resultParsePublicKey = secp256k1_ec_pubkey_parse(
@@ -161,7 +161,7 @@ internal class SECP256K1: SigningAlgorithm {
         )
         
         // TODO: IDK WHY I HAVE TO DO THIS
-        _ = _pubKeyData.getPointer()
+//        _ = _pubKeyData.getPointer()
         
         if resultParsePublicKey == 0 {
             secp256k1_context_destroy(ctx)
@@ -171,7 +171,7 @@ internal class SECP256K1: SigningAlgorithm {
         let result = secp256k1_ecdsa_verify(ctx!, &sig, _msgDigest.getPointer(), &pubKey)
         
         // TODO: IDK WHY I HAVE TO DO THIS
-        _ = _msgDigest.getPointer()
+//        _ = _msgDigest.getPointer()
         
         secp256k1_context_destroy(ctx)
         
