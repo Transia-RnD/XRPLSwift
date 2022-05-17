@@ -7,7 +7,7 @@
 
 import Foundation
 
-let HASH_CHANNEL_SIGN: [UInt8] = [0x43,0x4C,0x4D, 0x00]
+let HASH_CHANNEL_SIGN: [UInt8] = [0x43, 0x4C, 0x4D, 0x00]
 
 public enum SeedError: Error {
     case invalidSeed
@@ -115,7 +115,6 @@ public class MnemonicWallet: Wallet {
     public convenience init(mnemonic: String, account: UInt32 = 0, change: UInt32 = 0, addressIndex: UInt32 = 0) throws {
         let seed = Bip39Mnemonic.createSeed(mnemonic: mnemonic)
         let privateKey = PrivateKey(seed: seed, coin: .bitcoin)
-        
         // BIP44 key derivation
         // m/44'
         let purpose = privateKey.derived(at: .hardened(44))

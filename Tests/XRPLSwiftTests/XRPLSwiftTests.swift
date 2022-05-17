@@ -462,6 +462,7 @@ final class XRPLSwiftTests: XCTestCase {
         XCTAssertEqual(wallet.publicKey, "031D68BC1A142E6766B2BDFB006CCFE135EF2E0E2E94ABB5CF5C9AB6104776FBAE")
         XCTAssertEqual(wallet.privateKey, "0090802A50AA84EFB6CDB225F17C27616EA94048C179142FECF03F4712A07EA7A4")
         XCTAssertEqual(Address.encodeXAddress(rAddress: wallet.address), "XVMFQQBMhdouRqhPMuawgBMN1AVFTofPAdRsXG5RkPtUPNQ")
+        XCTAssertEqual(wallet.address, "rHsMGQEkVNJmpGWs8XUBoTBiAAbwxZN5v3")
     }
     
     func testGenerateWalletFromMnemonicUsingDerivationPath() {
@@ -471,6 +472,13 @@ final class XRPLSwiftTests: XCTestCase {
         XCTAssertEqual(wallet.publicKey, "034ac49ef8112bb1e8fe9e4610aa24eb48bf6d8d5ddef36adc5b460829aedc61c0".uppercased())
         XCTAssertEqual(wallet.privateKey, "00" + "20adf2745186a58b30172626ed761042904610f42326897aca0a98840036b1a2".uppercased())
         XCTAssertEqual(wallet.address, "rf5UyN1ETEzfQKkD5mdcReQEd2gTk46wiz")
+        
+        let mnemonic1 = "recycle rocket rain scout rule loud pudding they panther advance acquire junk news trumpet bitter"
+        let wallet1 = try! MnemonicWallet(mnemonic: mnemonic1, account: 1, change: 0, addressIndex: 0)
+        
+        XCTAssertEqual(wallet1.publicKey, "034ac49ef8112bb1e8fe9e4610aa24eb48bf6d8d5ddef36adc5b460829aedc61c0".uppercased())
+        XCTAssertEqual(wallet1.privateKey, "00" + "20adf2745186a58b30172626ed761042904610f42326897aca0a98840036b1a2".uppercased())
+        XCTAssertEqual(wallet1.address, "rf5UyN1ETEzfQKkD5mdcReQEd2gTk46wiz")
     }
     
     func testGenerateWalletFromMnemonicInvalidMnemonic() {

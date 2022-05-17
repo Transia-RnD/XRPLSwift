@@ -46,7 +46,10 @@ internal struct PrivateKey {
     internal var publicKey: Data {
         var _data = raw
         let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_SIGN))!
-        let data = try! Data(SECP256K1.derivePublicKey(ctx: ctx, secretKey: _data.getPointer()).compressed)
+        let masterPublicKey = try! SECP256K1.derivePublicKey(ctx: ctx, secretKey: _data.getPointer())
+        // TODO: IDK WHY I HAVE TO DO THIS
+        _ = _data.getPointer()
+        let data = Data(masterPublicKey.compressed)
         secp256k1_context_destroy(ctx)
         return data
     }
@@ -85,7 +88,10 @@ internal struct PrivateKey {
         case .notHardened:
             var _data = raw
             let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_SIGN))!
-            data += try! Data(SECP256K1.derivePublicKey(ctx: ctx, secretKey: _data.getPointer()).compressed)
+            let pk = try! SECP256K1.derivePublicKey(ctx: ctx, secretKey: _data.getPointer())
+            data += try! Data(pk.compressed)
+            // TODO: IDK WHY I HAVE TO DO THIS
+            _ = _data.getPointer()
             secp256k1_context_destroy(ctx)
         }
         
