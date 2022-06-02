@@ -327,7 +327,55 @@ public class SeedWallet: Wallet {
         
         // add the prefix to the channel and amount
         let data: [UInt8] = HASH_CHANNEL_SIGN + [UInt8](channel.hexadecimal!) + [UInt8](UInt64(amount.drops).bigEndian.data)
-        
         return data
+    }
+    
+    
+    static func getBytes(
+        bytes: [UInt8],
+        start: Int,
+        end: Int
+    ) -> [UInt8] {
+        return [UInt8](bytes[start...end])
+    }
+    
+    public func decodeClaim(data: [UInt8]) throws -> ChannelClaim {
+        let channelHexBytes = SeedWallet.getBytes(bytes: data, start: 4, end: 35)
+        let amountBytes = SeedWallet.getBytes(bytes: data, start: 36, end: data.count - 1)
+        let amountInt: Int64 = amountBytes.reversed().withUnsafeBytes { $0.load(as: Int64.self) }
+        let channelString = channelHexBytes.toHexString().uppercased()
+        return ChannelClaim(amount: amountInt, channel: channelString)
+    }
+    
+    public static func verifyClaim(channelSig: ChannelSignature) -> Bool {
+        return SeedWallet.verify(
+            signature: channelSig.sigBytes,
+            message: channelSig.dataBytes,
+            publicKey: channelSig.pubKey
+        )
+    }
+}
+
+enum HexConvertError: Error {
+    case wrongInputStringLength
+    case wrongInputStringCharacters
+}
+
+extension StringProtocol {
+    func asHexArrayFromNonValidatedSource() -> [UInt8] {
+        var startIndex = self.startIndex
+        return stride(from: 0, to: count, by: 2).compactMap { _ in
+            let endIndex = index(startIndex, offsetBy: 2, limitedBy: self.endIndex) ?? self.endIndex
+            defer { startIndex = endIndex }
+            return UInt8(self[startIndex..<endIndex], radix: 16)
+        }
+    }
+
+    func asHexArray() throws -> [UInt8] {
+        if count % 2 != 0 { throw HexConvertError.wrongInputStringLength }
+        let characterSet = "0123456789ABCDEFabcdef"
+        let wrongCharacter = first { return !characterSet.contains($0) }
+        if wrongCharacter != nil { throw HexConvertError.wrongInputStringCharacters }
+        return asHexArrayFromNonValidatedSource()
     }
 }

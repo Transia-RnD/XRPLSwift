@@ -123,8 +123,8 @@ public extension URL {
     static let xrpl_rpc_MainNetS1 = URL(string: "https://s1.ripple.com:51234/")!
     static let xrpl_rpc_MainNetS2 = URL(string: "https://s2.ripple.com:51234/")!
     static let xrpl_rpc_Testnet = URL(string: "https://s.altnet.rippletest.net:51234/")!
-    static let xrpl_rpc_Xls20 = URL(string: "http://xls20-sandbox.rippletest.net:51234")!
-    static let xrpl_rpc_Hooknet = URL(string: "https://hooks-testnet.xrpl-labs.com/")!
+    static let xrpl_rpc_Xls20 = URL(string: "https://xls20-sandbox.rippletest.net:51234")!
+    static let xrpl_rpc_Hooknet = URL(string: "https://hooks-testnet-v2.xrpl-labs.com")!
     static let xrpl_rpc_Devnet = URL(string: "https://s.devnet.rippletest.net:51234/")!
     static let xrpl_rpc_Xumm = URL(string: "https://xumm.app/")!
     static let xrpl_ws_MainnetS1 = URL(string: "wss://s1.ripple.com/")!

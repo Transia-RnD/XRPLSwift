@@ -11,6 +11,7 @@ public class PaymentChannelCreate: Transaction {
     public init(
         from wallet: Wallet,
         to address: Address,
+        pubKey: String,
         amount: Amount,
         settleDelay: Int,
         cancelAfter: Int? = nil,
@@ -21,7 +22,7 @@ public class PaymentChannelCreate: Transaction {
         var _fields: [String:Any] = [
             "TransactionType": "PaymentChannelCreate",
             "SettleDelay": settleDelay,
-            "PublicKey": wallet.publicKey,
+            "PublicKey": pubKey,
             "Amount": String(amount.drops),
             "Destination": address.rAddress,
         ]
@@ -41,5 +42,4 @@ public class PaymentChannelCreate: Transaction {
         
         super.init(wallet: wallet, fields: _fields)
     }
-
 }

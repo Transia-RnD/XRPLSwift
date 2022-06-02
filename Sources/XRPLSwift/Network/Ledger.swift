@@ -274,38 +274,38 @@ public class Ledger: NSObject {
         
     }
     
-//    public static func getAccountChannels(account: String, address: String) -> EventLoopFuture<NSDictionary> {
-//
-//        let promise = eventGroup.next().makePromise(of: NSDictionary.self)
-//
-//        let parameters: [String: Any] = [
-//            "method" : "account_channels",
-//            "params": [
-//                [
-//                    "account" : account,
-//                    "destination_account": address,
-//                    "ledger_index": "validated",
-//                ]
-//            ]
-//        ]
-//        _ = HTTP.post(url: url, parameters: parameters).map { (result) in
-//            let JSON = result as! NSDictionary
-//            let info = JSON["result"] as! NSDictionary
-//            let status = info["status"] as! String
-//            if status != "error" {
-//                promise.succeed(info)
-//            } else {
-//                let errorMessage = info["error_message"] as! String
-//                let error = LedgerError.runtimeError(errorMessage)
-//                promise.fail(error)
-//            }
-//        }.recover { (error) in
-//            promise.fail(error)
-//        }
-//
-//        return promise.futureResult
-//
-//    }
+    public func getAccountChannels(account: String, destination: String) -> EventLoopFuture<NSDictionary> {
+
+        let promise = eventGroup.next().makePromise(of: NSDictionary.self)
+
+        let parameters: [String: Any] = [
+            "method" : "account_channels",
+            "params": [
+                [
+                    "account" : account,
+                    "destination_account": destination,
+                    "ledger_index": "validated",
+                ]
+            ]
+        ]
+        _ = HTTP.post(url: url, parameters: parameters).map { (result) in
+            let JSON = result as! NSDictionary
+            let info = JSON["result"] as! NSDictionary
+            let status = info["status"] as! String
+            if status != "error" {
+                promise.succeed(info)
+            } else {
+                let errorMessage = info["error_message"] as! String
+                let error = LedgerError.runtimeError(errorMessage)
+                promise.fail(error)
+            }
+        }.recover { (error) in
+            promise.fail(error)
+        }
+
+        return promise.futureResult
+
+    }
     
     public func currentLedgerInfo() -> EventLoopFuture<CurrentLedgerInfo> {
         let promise = eventGroup.next().makePromise(of: CurrentLedgerInfo.self)
@@ -341,6 +341,40 @@ public class Ledger: NSObject {
             let JSON = result as! NSDictionary
             let info = JSON["result"] as! NSDictionary
             promise.succeed( info)
+        }.recover { (error) in
+            promise.fail(error)
+        }
+        return promise.futureResult
+    }
+    
+    public func tx(hash: String) -> EventLoopFuture<XrplBaseTransaction> {
+        let promise = eventGroup.next().makePromise(of: XrplBaseTransaction.self)
+        let parameters: [String: Any] = [
+            "method" : "tx",
+            "params": [
+                [
+                    "transaction": hash
+                ]
+            ]
+        ]
+        _ = HTTP.post(url: url, parameters: parameters).map { (result) in
+            do {
+                let JSON = result as! NSDictionary
+                let info = JSON["result"] as! NSDictionary
+//                guard let validated = info["validated"] as? Int, validated == 1 else {
+//                    sleep(1)
+//                    let resp = self.tx(hash: hash).wait()
+//                    promise.succeed(resp)
+//                    return
+//                }
+//                let data = try JSONSerialization.data(withJSONObject: info, options: .prettyPrinted)
+//                let response = try? JSONDecoder().decode(XrplBaseTransaction.self, from: data)
+                let response = XrplBaseTransaction.fromDict(dict: info as! [String : AnyObject])
+                print(response)
+                promise.succeed(response!)
+            } catch {
+                promise.fail(error)
+            }
         }.recover { (error) in
             promise.fail(error)
         }

@@ -22,7 +22,7 @@ final class TestPaymentChannelClaim: XCTestCase {
             channel: ReusableValues.channelHex,
             balance: ReusableValues.amount,
             amount: ReusableValues.amount,
-            signature: ReusableValues.channelSig,
+            signature: ReusableValues.channelSigHex,
             publicKey: ReusableValues.channelPubkey
         )
         paymentChannel.ledger.url = .xrpl_rpc_Testnet
