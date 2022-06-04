@@ -1,5 +1,5 @@
 //
-//  TesOfferCreate.swift
+//  TestOfferCreate.swift
 //
 //
 //  Created by Denis Angell on 3/20/22.
@@ -8,7 +8,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TesOfferCreate: XCTestCase {
+final class TestOfferCreate: XCTestCase {
 
     var xrpLedger: Ledger = Ledger(endpoint: .xrpl_rpc_Testnet)
 

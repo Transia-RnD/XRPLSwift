@@ -21,8 +21,8 @@ final class TestPaymentChannelE2E: XCTestCase {
     
     func testPaymentChannelE2E() {
 //        channelCreate()
-        authorizeClaim(hash: txHash)
-        channelClaim()
+//        authorizeClaim(hash: txHash)
+//        channelClaim()
     }
     
     func authorizeClaim(hash: String) {
@@ -125,4 +125,29 @@ final class TestPaymentChannelE2E: XCTestCase {
         // wait three seconds for all outstanding expectations to be fulfilled
         waitForExpectations(timeout: 40)
     }
+    
+    func channelFund() {
+        // create the expectation
+        let exp = expectation(description: "testBasicFunctionality")
+
+        // call my asynchronous method
+        let amount = try! Amount(drops: 1000000) // 1.0 XRP
+        let paymentChannel = PaymentChannelFund(
+            from: ReusableValues.wallet,
+            channel: ReusableValues.channelHex,
+            amount: amount
+        )
+        paymentChannel.ledger.url = .xrpl_rpc_Testnet
+        _ = paymentChannel.send().always { response in
+            switch response {
+            case .success(let result):
+                exp.fulfill()
+            case .failure(let err):
+                XCTFail(err.localizedDescription)
+            }
+        }
+        // wait three seconds for all outstanding expectations to be fulfilled
+        waitForExpectations(timeout: 10)
+    }
+
 }

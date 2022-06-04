@@ -37,14 +37,13 @@ final class TestGetTx: XCTestCase {
         return nil
     }
     
-    func testChannelunctionality() {
+    func testChannelFunctionality() {
         // create the expectation
         let exp = expectation(description: "testBasicFunctionality")
 
         let hash: String = "B835D1E38C9581626A001157A142B392CBBB3C172A5E46411228184E83D51164"
         xrpLedger.url = .xrpl_rpc_Testnet
-        let data = try! xrpLedger.tx(hash: hash).wait()
-        guard let response = XrplBaseTransaction.fromDict(dict: data as! [String : AnyObject]) else { return }
+        let response = try! xrpLedger.tx(hash: hash).wait()
         let channelId = getChannelId(tx: response)
         XCTAssert(channelId == "A9FF7AB19A4F6F39825327AA3391047894F14ADF8D425B0F92943ACD7A5231B7")
         exp.fulfill()

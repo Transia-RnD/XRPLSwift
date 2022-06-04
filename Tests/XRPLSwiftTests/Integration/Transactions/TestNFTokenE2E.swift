@@ -21,7 +21,7 @@ final class TestNFTokenE2E: XCTestCase {
 //    4. Create Buy Offer #2
     
     func testNFTokenE2E() {
-        mintToken()
+//        mintToken()
 //        burnToken(nftokenId: nftokenId)
     }
 
