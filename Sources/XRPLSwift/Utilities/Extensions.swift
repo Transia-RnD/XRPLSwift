@@ -131,7 +131,7 @@ public extension URL {
     static let xrpl_ws_MainnetS2 = URL(string: "wss://s2.ripple.com/")!
     static let xrpl_ws_Testnet = URL(string: "wss://s.altnet.rippletest.net/")!
     static let xrpl_ws_Devnet = URL(string: "wss://s.devnet.rippletest.net/")!
-    static let xrpl_ws_Xls20 = URL(string: "wss://xls20-sandbox.rippletest.net:51234")!
+    static let xrpl_ws_Xls20 = URL(string: "wss://xls20-sandbox.rippletest.net:51233")!
     static let xrpl_ws_Hooknet = URL(string: "wss://hooks-testnet.xrpl-labs.com/")!
     static let xrpl_ws_Xumm = URL(string: "wss://xumm.app/")!
 }

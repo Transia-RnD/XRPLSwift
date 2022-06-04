@@ -351,6 +351,22 @@ public struct XrplTransactionMeta: Codable {
     }
 }
 
+
+/*
+ 
+ MINT TX
+ 
+ Account = radtouEofR55c92fy8xszfQPccjoGi68C3;
+ Fee = 10;
+ LastLedgerSequence = 28343139;
+ NFTokenTaxon = 0;
+ Sequence = 577;
+ SigningPubKey = EDA9E05E0C81D9EB1D346F8FD44D973BE3956757614731610CB6D8EC774C8D2A09;
+ TransactionType = NFTokenMint;
+ TxnSignature = C1BCC3CBC49D2460F9C139565C44D9783707766B24E255681C4DB2D399512E97FB0857B7878C34D3021AC7A9CDDAEDE5646642A4AFA92810900CB0B9FA2FF60D;
+ hash = 9218904E79064F92E0DAFC12C6878D10325AF6BF1FC4DE2095BEC9DEBB73C838;
+ 
+*/
 public struct XrplBaseTransaction: Codable {
     public var account: String
 //    public var amount: String
@@ -367,18 +383,18 @@ public struct XrplBaseTransaction: Codable {
 //    public var date: Int
     public var hash: String
 //    public var inLedger: Bool
-    public var ledgerIndex: Int
+    public var ledgerIndex: Int?
     public var meta: XrplTransactionMeta?
-    public var status: String
-    public var validated: Bool
+    public var status: String?
+    public var validated: Bool?
     
     public init(
         account: String,
         hash: String,
-        ledgerIndex: Int,
-        meta: XrplTransactionMeta?,
-        status: String,
-        validated: Bool
+        ledgerIndex: Int? = nil,
+        meta: XrplTransactionMeta? = nil,
+        status: String? = nil,
+        validated: Bool? = nil
     ) {
         self.account = account
         self.hash = hash
@@ -393,22 +409,27 @@ public struct XrplBaseTransaction: Codable {
     ) -> XrplBaseTransaction? {
         print(dict)
         guard let account = dict["Account"] as? String,
-              let hash = dict["hash"] as? String,
-              let ledgerIndex = dict["ledger_index"] as? Int,
-              let meta = dict["meta"] as? [String: AnyObject],
-              let status = dict["status"] as? String,
-              let validated = dict["validated"] as? Bool else {
+              let hash = dict["hash"] as? String else {
             return nil
         }
-        let mmeta = XrplTransactionMeta.fromDict(dict: meta)
-        return XrplBaseTransaction(
+        var clone: XrplBaseTransaction = XrplBaseTransaction(
             account: account,
-            hash: hash,
-            ledgerIndex: ledgerIndex,
-            meta: mmeta,
-            status: status,
-            validated: validated
+            hash: hash
         )
+        
+        if let ledgerIndex = dict["ledger_index"] as? Int {
+            clone.ledgerIndex = ledgerIndex
+        }
+        if let status = dict["status"] as? String {
+            clone.status = status
+        }
+        if let validated = dict["validated"] as? Bool {
+            clone.validated = validated
+        }
+        if let metaDict = dict["meta"] as? [String: AnyObject] {
+            clone.meta = XrplTransactionMeta.fromDict(dict: metaDict)
+        }
+        return clone
     }
     
     public func getChannelHex() -> String? {

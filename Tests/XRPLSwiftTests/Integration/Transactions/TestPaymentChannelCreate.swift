@@ -18,11 +18,10 @@ final class TestPaymentChannelCreate: XCTestCase {
 
         // call my asynchronous method
         let amount = try! Amount(drops: 1000000) // 1.0 XRP
-        let wallet = SeedWallet()
         let paymentChannel = PaymentChannelCreate(
             from: ReusableValues.wallet,
-            to: ReusableValues.destination,
-            pubKey: wallet.publicKey,
+            destination: ReusableValues.destination,
+            publicKey: ReusableValues.channelPubkey,
             amount: amount,
             settleDelay: 60
         )

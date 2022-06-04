@@ -646,7 +646,7 @@ let serializerDefinitions = """
       }
     ],
     [
-      "TokenID",
+      "NFTokenID",
       {
         "nth": 10,
         "isVLEncoded": false,
@@ -1636,7 +1636,7 @@ let serializerDefinitions = """
       }
     ],
     [
-      "TokenTaxon",
+      "NFTokenTaxon",
       {
         "nth": 42,
         "isVLEncoded": false,
@@ -1726,7 +1726,7 @@ let serializerDefinitions = """
       }
     ],
     [
-      "BuyOffer",
+      "NFTokenBuyOffer",
       {
         "nth": 28,
         "isVLEncoded": false,
@@ -1736,7 +1736,7 @@ let serializerDefinitions = """
       }
     ],
     [
-      "SellOffer",
+      "NFTokenSellOffer",
       {
         "nth": 29,
         "isVLEncoded": false,
