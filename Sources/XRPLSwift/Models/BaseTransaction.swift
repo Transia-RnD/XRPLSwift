@@ -434,12 +434,16 @@ public struct XrplBaseTransaction: Codable {
     
     public func getChannelHex() -> String? {
         guard let meta = meta,
-              let affectedNodes = meta.affectedNodes,
-              let x = affectedNodes.lastIndex(where: { $0.value() == "created" }),
-              let node = affectedNodes[x].get() as? CreatedNode, node.ledgerEntryType == .paychannel else {
+              let affectedNodes = meta.affectedNodes else {
             return nil
         }
-        return node.ledgerIndex
+        let x = affectedNodes.lastIndex(where: { $0.value() == "created" })
+        let node = affectedNodes[x!].get() as? CreatedNode
+        print("NODE: \(node)")
+        if node?.ledgerEntryType == .paychannel {
+            return node?.ledgerIndex
+        }
+        return nil
     }
 }
 

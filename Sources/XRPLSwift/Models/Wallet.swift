@@ -331,7 +331,7 @@ public class SeedWallet: Wallet {
     }
     
     
-    static func getBytes(
+    public static func getBytes(
         bytes: [UInt8],
         start: Int,
         end: Int
@@ -361,7 +361,7 @@ enum HexConvertError: Error {
     case wrongInputStringCharacters
 }
 
-extension StringProtocol {
+public extension StringProtocol {
     func asHexArrayFromNonValidatedSource() -> [UInt8] {
         var startIndex = self.startIndex
         return stride(from: 0, to: count, by: 2).compactMap { _ in

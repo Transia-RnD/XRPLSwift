@@ -39,5 +39,6 @@ enum TransactionType: String {
     case NFTokenAcceptOffer
     case EnableAmendment
     case SetFee
+    case SetHook
     case UNLModify
 }

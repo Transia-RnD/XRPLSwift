@@ -69,14 +69,6 @@ final class TestUnitWallet: XCTestCase {
         XCTAssert(amountInt == ReusableValues.drops)
     }
     
-    func testSome() {
-        let some = [UInt8](ReusableValues.destination.rAddress.bytes)
-        print(some)
-        print("ctax".bytes)
-        print("stax".bytes)
-        print(ReusableValues.destination.rAddress.bytes)
-    }
-    
     func testDecodeChannel() {
         let channelSig = ChannelSignature(
             pubKey: "",

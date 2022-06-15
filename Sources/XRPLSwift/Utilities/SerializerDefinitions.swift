@@ -56,23 +56,103 @@ let serializerDefinitions = """
   },
   "FIELDS": [
     [
-      "Generic",
+      "LedgerEntry",
       {
-        "nth": 0,
+        "nth": 1,
         "isVLEncoded": false,
         "isSerialized": false,
         "isSigningField": false,
-        "type": "Unknown"
+        "type": "LedgerEntry"
       }
     ],
     [
-      "Invalid",
+      "Transaction",
       {
-        "nth": -1,
+        "nth": 1,
         "isVLEncoded": false,
         "isSerialized": false,
         "isSigningField": false,
-        "type": "Unknown"
+        "type": "Transaction"
+      }
+    ],
+    [
+      "Validation",
+      {
+        "nth": 1,
+        "isVLEncoded": false,
+        "isSerialized": false,
+        "isSigningField": false,
+        "type": "Validation"
+      }
+    ],
+    [
+      "Metadata",
+      {
+        "nth": 1,
+        "isVLEncoded": false,
+        "isSerialized": false,
+        "isSigningField": false,
+        "type": "Validation"
+      }
+    ],
+    [
+      "CloseResolution",
+      {
+        "nth": 1,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt8"
+      }
+    ],
+    [
+      "Method",
+      {
+        "nth": 2,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt8"
+      }
+    ],
+    [
+      "TransactionResult",
+      {
+        "nth": 3,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt8"
+      }
+    ],
+    [
+      "TickSize",
+      {
+        "nth": 16,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt8"
+      }
+    ],
+    [
+      "UNLModifyDisabling",
+      {
+        "nth": 17,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt8"
+      }
+    ],
+    [
+      "HookResult",
+      {
+        "nth": 18,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt8"
       }
     ],
     [
@@ -109,6 +189,66 @@ let serializerDefinitions = """
       "TransferFee",
       {
         "nth": 4,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt16"
+      }
+    ],
+    [
+      "Version",
+      {
+        "nth": 16,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt16"
+      }
+    ],
+    [
+      "Version",
+      {
+        "nth": 16,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt16"
+      }
+    ],
+    [
+      "HookStateChangeCount",
+      {
+        "nth": 17,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt16"
+      }
+    ],
+    [
+      "HookEmitCount",
+      {
+        "nth": 18,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt16"
+      }
+    ],
+    [
+      "HookExecutionIndex",
+      {
+        "nth": 19,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt16"
+      }
+    ],
+    [
+      "HookApiVersion",
+      {
+        "nth": 21,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
@@ -326,16 +466,6 @@ let serializerDefinitions = """
       }
     ],
     [
-      "LoadFee",
-      {
-        "nth": 24,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt32"
-      }
-    ],
-    [
       "OfferSequence",
       {
         "nth": 25,
@@ -466,6 +596,96 @@ let serializerDefinitions = """
       }
     ],
     [
+      "SignerListID",
+      {
+        "nth": 38,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "SettleDelay",
+      {
+        "nth": 39,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "TicketCount",
+      {
+        "nth": 40,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "TicketSequence",
+      {
+        "nth": 41,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "NFTokenTaxon",
+      {
+        "nth": 42,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "MintedNFTokens",
+      {
+        "nth": 43,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "BurnedNFTokens",
+      {
+        "nth": 44,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "sfEmitGeneration",
+      {
+        "nth": 46,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt32"
+      }
+    ],
+    [
+      "HookStateCount",
+      {
+        "nth": 45,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt32"
+      }
+    ],
+    [
       "IndexNext",
       {
         "nth": 1,
@@ -546,6 +766,86 @@ let serializerDefinitions = """
       }
     ],
     [
+      "DestinationNode",
+      {
+        "nth": 9,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt64"
+      }
+    ],
+    [
+      "Cookie",
+      {
+        "nth": 10,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt64"
+      }
+    ],
+    [
+      "ServerVersion",
+      {
+        "nth": 11,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt64"
+      }
+    ],
+    [
+      "NFTokenOfferNode",
+      {
+        "nth": 12,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt64"
+      }
+    ],
+    [
+      "HookOn",
+      {
+        "nth": 16,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt64"
+      }
+    ],
+    [
+      "HookInstructionCount",
+      {
+        "nth": 17,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt64"
+      }
+    ],
+    [
+      "HookReturnCode",
+      {
+        "nth": 17,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt64"
+      }
+    ],
+    [
+      "ReferenceCount",
+      {
+        "nth": 17,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt64"
+      }
+    ],
+    [
       "EmailHash",
       {
         "nth": 1,
@@ -553,6 +853,46 @@ let serializerDefinitions = """
         "isSerialized": true,
         "isSigningField": true,
         "type": "Hash128"
+      }
+    ],
+    [
+      "TakerPaysCurrency",
+      {
+        "nth": 1,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash160"
+      }
+    ],
+    [
+      "TakerPaysIssuer",
+      {
+        "nth": 2,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash160"
+      }
+    ],
+    [
+      "TakerGetsCurrency",
+      {
+        "nth": 3,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash160"
+      }
+    ],
+    [
+      "TakerGetsIssuer",
+      {
+        "nth": 4,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash160"
       }
     ],
     [
@@ -656,6 +996,36 @@ let serializerDefinitions = """
       }
     ],
     [
+      "EmitParentTxnID",
+      {
+        "nth": 11,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": false, //?
+        "type": "Hash256"
+      }
+    ],
+    [
+      "EmitNonce",
+      {
+        "nth": 12,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": false, //?
+        "type": "Hash256"
+      }
+    ],
+    [
+      "EmitHookHash",
+      {
+        "nth": 13,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": false, //?
+        "type": "Hash256"
+      }
+    ],
+    [
       "BookDirectory",
       {
         "nth": 16,
@@ -696,16 +1066,6 @@ let serializerDefinitions = """
       }
     ],
     [
-      "TicketID",
-      {
-        "nth": 20,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Hash256"
-      }
-    ],
-    [
       "Digest",
       {
         "nth": 21,
@@ -716,22 +1076,122 @@ let serializerDefinitions = """
       }
     ],
     [
-      "hash",
+      "Channel",
       {
-        "nth": 257,
+        "nth": 22,
         "isVLEncoded": false,
-        "isSerialized": false,
-        "isSigningField": false,
+        "isSerialized": true,
+        "isSigningField": true,
         "type": "Hash256"
       }
     ],
     [
-      "index",
+      "ConsensusHash",
       {
-        "nth": 258,
+        "nth": 23,
         "isVLEncoded": false,
-        "isSerialized": false,
-        "isSigningField": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash256"
+      }
+    ],
+    [
+      "CheckID",
+      {
+        "nth": 24,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash256"
+      }
+    ],
+    [
+      "ValidatedHash",
+      {
+        "nth": 25,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash256"
+      }
+    ],
+    [
+      "PreviousPageMin",
+      {
+        "nth": 26,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash256"
+      }
+    ],
+    [
+      "NextPageMin",
+      {
+        "nth": 27,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash256"
+      }
+    ],
+    [
+      "NFTokenBuyOffer",
+      {
+        "nth": 28,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash256"
+      }
+    ],
+    [
+      "NFTokenSellOffer",
+      {
+        "nth": 29,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash256"
+      }
+    ],
+    [
+      "HookStateKey",
+      {
+        "nth": 30,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash256"
+      }
+    ],
+    [
+      "HookHash",
+      {
+        "nth": 31,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash256"
+      }
+    ],
+    [
+      "HookNamespace",
+      {
+        "nth": 32,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Hash256"
+      }
+    ],
+    [
+      "HookSetTxnID",
+      {
+        "nth": 33,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
         "type": "Hash256"
       }
     ],
@@ -866,7 +1326,7 @@ let serializerDefinitions = """
       }
     ],
     [
-      "BrokerFee",
+      "NFTokenBrokerFee",
       {
         "nth": 19,
         "isVLEncoded": false,
@@ -876,22 +1336,12 @@ let serializerDefinitions = """
       }
     ],
     [
-      "taker_gets_funded",
+      "HookCallbackFee",
       {
-        "nth": 258,
+        "nth": 20,
         "isVLEncoded": false,
-        "isSerialized": false,
-        "isSigningField": false,
-        "type": "Amount"
-      }
-    ],
-    [
-      "taker_pays_funded",
-      {
-        "nth": 259,
-        "isVLEncoded": false,
-        "isSerialized": false,
-        "isSigningField": false,
+        "isSerialized": true,
+        "isSigningField": true,
         "type": "Amount"
       }
     ],
@@ -1086,9 +1536,39 @@ let serializerDefinitions = """
       }
     ],
     [
-      "ValidatorToReEnable",
+      "HookStateData",
       {
-        "nth": 21,
+        "nth": 22,
+        "isVLEncoded": true,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Blob"
+      }
+    ],
+    [
+      "HookReturnString",
+      {
+        "nth": 23,
+        "isVLEncoded": true,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Blob"
+      }
+    ],
+    [
+      "HookParameterName",
+      {
+        "nth": 24,
+        "isVLEncoded": true,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Blob"
+      }
+    ],
+    [
+      "HookParameterValue",
+      {
+        "nth": 25,
         "isVLEncoded": true,
         "isSerialized": true,
         "isSigningField": true,
@@ -1156,16 +1636,6 @@ let serializerDefinitions = """
       }
     ],
     [
-      "Target",
-      {
-        "nth": 7,
-        "isVLEncoded": true,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "AccountID"
-      }
-    ],
-    [
       "RegularKey",
       {
         "nth": 8,
@@ -1176,7 +1646,7 @@ let serializerDefinitions = """
       }
     ],
     [
-      "Minter",
+      "NFTokenMinter",
       {
         "nth": 9,
         "isVLEncoded": true,
@@ -1186,13 +1656,83 @@ let serializerDefinitions = """
       }
     ],
     [
-      "ObjectEndMarker",
+      "EmitCallback",
+      {
+        "nth": 10,
+        "isVLEncoded": true,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "AccountID"
+      }
+    ],
+    [
+      "HookAccount",
+      {
+        "nth": 16,
+        "isVLEncoded": true,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "AccountID"
+      }
+    ],
+    [
+      "Indexes",
+      {
+        "nth": 1,
+        "isVLEncoded": true,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Vector256"
+      }
+    ],
+    [
+      "Hashes",
+      {
+        "nth": 2,
+        "isVLEncoded": true,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Vector256"
+      }
+    ],
+    [
+      "Amendments",
+      {
+        "nth": 3,
+        "isVLEncoded": true,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Vector256"
+      }
+    ],
+    [
+      "NFTokenOffers",
+      {
+        "nth": 4,
+        "isVLEncoded": true,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Vector256"
+      }
+    ],
+    [
+      "HookNamespaces",
+      {
+        "nth": 5,
+        "isVLEncoded": true,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Vector256"
+      }
+    ],
+    [
+      "Paths",
       {
         "nth": 1,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
-        "type": "STObject"
+        "type": "PathSet"
       }
     ],
     [
@@ -1296,9 +1836,29 @@ let serializerDefinitions = """
       }
     ],
     [
-      "NonFungibleToken",
+      "NFToken",
       {
         "nth": 12,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "STObject"
+      }
+    ],
+    [
+      "EmitDetails",
+      {
+        "nth": 13,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "STObject"
+      }
+    ],
+    [
+      "Hook",
+      {
+        "nth": 14,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
@@ -1336,13 +1896,53 @@ let serializerDefinitions = """
       }
     ],
     [
-      "ArrayEndMarker",
+      "EmittedTxn",
       {
-        "nth": 1,
+        "nth": 20,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
-        "type": "STArray"
+        "type": "STObject"
+      }
+    ],
+    [
+      "HookExecution",
+      {
+        "nth": 21,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "STObject"
+      }
+    ],
+    [
+      "HookDefinition",
+      {
+        "nth": 22,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "STObject"
+      }
+    ],
+    [
+      "HookParameter",
+      {
+        "nth": 23,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "STObject"
+      }
+    ],
+    [
+      "HookGrant",
+      {
+        "nth": 24,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "STObject"
       }
     ],
     [
@@ -1416,9 +2016,19 @@ let serializerDefinitions = """
       }
     ],
     [
-      "NonFungibleTokens",
+      "NFTokens",
       {
         "nth": 10,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "STArray"
+      }
+    ],
+    [
+      "Hooks",
+      {
+        "nth": 11,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
@@ -1446,259 +2056,69 @@ let serializerDefinitions = """
       }
     ],
     [
-      "CloseResolution",
+      "HookExecutions",
       {
-        "nth": 1,
+        "nth": 18,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
-        "type": "UInt8"
+        "type": "STArray"
       }
     ],
     [
-      "Method",
+      "HookParameters",
       {
-        "nth": 2,
+        "nth": 19,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
-        "type": "UInt8"
+        "type": "STArray"
       }
     ],
     [
-      "TransactionResult",
+      "HookGrants",
       {
-        "nth": 3,
+        "nth": 20,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
-        "type": "UInt8"
+        "type": "STArray"
       }
     ],
     [
-      "TakerPaysCurrency",
+      "Generic",
       {
-        "nth": 1,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Hash160"
-      }
-    ],
-    [
-      "TakerPaysIssuer",
-      {
-        "nth": 2,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Hash160"
-      }
-    ],
-    [
-      "TakerGetsCurrency",
-      {
-        "nth": 3,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Hash160"
-      }
-    ],
-    [
-      "TakerGetsIssuer",
-      {
-        "nth": 4,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Hash160"
-      }
-    ],
-    [
-      "Paths",
-      {
-        "nth": 1,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "PathSet"
-      }
-    ],
-    [
-      "Indexes",
-      {
-        "nth": 1,
-        "isVLEncoded": true,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Vector256"
-      }
-    ],
-    [
-      "Hashes",
-      {
-        "nth": 2,
-        "isVLEncoded": true,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Vector256"
-      }
-    ],
-    [
-      "Amendments",
-      {
-        "nth": 3,
-        "isVLEncoded": true,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Vector256"
-      }
-    ],
-    [
-      "TokenOffers",
-      {
-        "nth": 4,
-        "isVLEncoded": true,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Vector256"
-      }
-    ],
-    [
-      "Transaction",
-      {
-        "nth": 1,
+        "nth": 0,
         "isVLEncoded": false,
         "isSerialized": false,
         "isSigningField": false,
-        "type": "Transaction"
+        "type": "Unknown"
       }
     ],
     [
-      "LedgerEntry",
+      "Invalid",
       {
-        "nth": 1,
+        "nth": -1,
         "isVLEncoded": false,
         "isSerialized": false,
         "isSigningField": false,
-        "type": "LedgerEntry"
+        "type": "Unknown"
       }
     ],
     [
-      "Validation",
-      {
-        "nth": 1,
-        "isVLEncoded": false,
-        "isSerialized": false,
-        "isSigningField": false,
-        "type": "Validation"
-      }
-    ],
-    [
-      "SignerListID",
-      {
-        "nth": 38,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt32"
-      }
-    ],
-    [
-      "SettleDelay",
-      {
-        "nth": 39,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt32"
-      }
-    ],
-    [
-      "TicketCount",
-      {
-        "nth": 40,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt32"
-      }
-    ],
-    [
-      "TicketSequence",
-      {
-        "nth": 41,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt32"
-      }
-    ],
-    [
-      "NFTokenTaxon",
-      {
-        "nth": 42,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt32"
-      }
-    ],
-    [
-      "MintedTokens",
-      {
-        "nth": 43,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt32"
-      }
-    ],
-    [
-      "BurnedTokens",
-      {
-        "nth": 44,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt32"
-      }
-    ],
-    [
-      "Channel",
-      {
-        "nth": 22,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Hash256"
-      }
-    ],
-    [
-      "ConsensusHash",
-      {
-        "nth": 23,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Hash256"
-      }
-    ],
-    [
-      "CheckID",
+      "LoadFee",
       {
         "nth": 24,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
-        "type": "Hash256"
+        "type": "UInt32"
       }
     ],
     [
-      "ValidatedHash",
+      "TicketID",
       {
-        "nth": 25,
+        "nth": 20,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
@@ -1706,105 +2126,75 @@ let serializerDefinitions = """
       }
     ],
     [
-      "PreviousPageMin",
+      "hash",
       {
-        "nth": 26,
+        "nth": 257,
         "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
+        "isSerialized": false,
+        "isSigningField": false,
         "type": "Hash256"
       }
     ],
     [
-      "NextPageMin",
+      "index",
       {
-        "nth": 27,
+        "nth": 258,
         "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
+        "isSerialized": false,
+        "isSigningField": false,
         "type": "Hash256"
       }
     ],
     [
-      "NFTokenBuyOffer",
+      "taker_gets_funded",
       {
-        "nth": 28,
+        "nth": 258,
         "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Hash256"
+        "isSerialized": false,
+        "isSigningField": false,
+        "type": "Amount"
       }
     ],
     [
-      "NFTokenSellOffer",
+      "taker_pays_funded",
       {
-        "nth": 29,
+        "nth": 259,
         "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "Hash256"
+        "isSerialized": false,
+        "isSigningField": false,
+        "type": "Amount"
       }
     ],
     [
-      "TickSize",
+      "Target",
       {
-        "nth": 16,
-        "isVLEncoded": false,
+        "nth": 7,
+        "isVLEncoded": true,
         "isSerialized": true,
         "isSigningField": true,
-        "type": "UInt8"
+        "type": "AccountID"
       }
     ],
     [
-      "UNLModifyDisabling",
+      "ObjectEndMarker",
       {
-        "nth": 17,
+        "nth": 1,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
-        "type": "UInt8"
+        "type": "STObject"
       }
     ],
     [
-      "DestinationNode",
+      "ArrayEndMarker",
       {
-        "nth": 9,
+        "nth": 1,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
-        "type": "UInt64"
+        "type": "STArray"
       }
     ],
-    [
-      "Cookie",
-      {
-        "nth": 10,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt64"
-      }
-    ],
-    [
-      "ServerVersion",
-      {
-        "nth": 11,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt64"
-      }
-    ],
-    [
-      "OfferNode",
-      {
-        "nth": 12,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt64"
-      }
-    ]
   ],
   "TRANSACTION_RESULTS": {
     "telLOCAL_ERROR": -399,
@@ -1856,6 +2246,8 @@ let serializerDefinitions = """
     "temCANNOT_PREAUTH_SELF": -267,
     "temUNCERTAIN": -266,
     "temUNKNOWN": -265,
+    "temSEQ_AND_TICKET": -264,
+    "temBAD_NFTOKEN_TRANSFER_FEE": -263,
 
     "tefFAILURE": -199,
     "tefALREADY": -198,
@@ -1877,7 +2269,7 @@ let serializerDefinitions = """
     "tefINVARIANT_FAILED": -182,
     "tefTOO_BIG": -181,
     "tefNO_TICKET": -180,
-    "tefTOKEN_IS_NOT_TRANSFERABLE": -179,
+    "tefNFTOKEN_IS_NOT_TRANSFERABLE": -179,
 
     "terRETRY": -99,
     "terFUNDS_SPENT": -98,
@@ -1890,6 +2282,7 @@ let serializerDefinitions = """
     "terLAST": -91,
     "terNO_RIPPLE": -90,
     "terQUEUED": -89,
+    "terPRE_TICKET": -88,
 
     "tesSUCCESS": 0,
 
@@ -1933,10 +2326,10 @@ let serializerDefinitions = """
     "tecTOO_SOON": 152,
 
     "tecMAX_SEQUENCE_REACHED": 154,
-    "tecNO_SUITABLE_PAGE": 155,
-    "tecBUY_SELL_MISMATCH": 156,
-    "tecOFFER_TYPE_MISMATCH": 157,
-    "tecCANT_ACCEPT_OWN_OFFER": 158,
+    "tecNO_SUITABLE_NFTOKEN_PAGE": 155,
+    "tecNFTOKEN_BUY_SELL_MISMATCH": 156,
+    "tecNFTOKEN_OFFER_TYPE_MISMATCH": 157,
+    "tecCANT_ACCEPT_OWN_NFTOKEN_OFFER": 158,
     "tecINSUFFICIENT_FUNDS": 159,
     "tecOBJECT_NOT_FOUND": 160,
     "tecINSUFFICIENT_PAYMENT": 161,
@@ -1945,7 +2338,6 @@ let serializerDefinitions = """
   },
   "TRANSACTION_TYPES": {
     "Invalid": -1,
-
     "Payment": 0,
     "EscrowCreate": 1,
     "EscrowFinish": 2,
@@ -1968,6 +2360,7 @@ let serializerDefinitions = """
     "DepositPreauth": 19,
     "TrustSet": 20,
     "AccountDelete": 21,
+    "SetHook": 22,
     "NFTokenMint": 25,
     "NFTokenBurn": 26,
     "NFTokenCreateOffer": 27,

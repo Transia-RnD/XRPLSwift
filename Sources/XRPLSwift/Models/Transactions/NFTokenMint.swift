@@ -12,25 +12,25 @@ import Foundation
 public enum NFTokenMintFlag: UInt32 {
     // Transaction Flags for an NFTokenMint Transaction.
 
-    case tfBurnable = 1
+    case tfBurnable = 0x00000001
     /*
     If set, indicates that the minted token may be burned by the issuer even
     if the issuer does not currently hold the token. The current holder of
     the token may always burn it.
     */
     
-    case tfOnlyXrp = 2
+    case tfOnlyXrp = 0x00000002
     /*
     If set, indicates that the token may only be offered or sold for XRP.
     */
     
-    case tfTrustline = 4
+    case tfTrustline = 0x00000004
     /*
     If set, indicates that the issuer wants a trustline to be automatically
     created.
     */
     
-    case tfTransferable = 8
+    case tfTransferable = 0x00000008
     /*
     If set, indicates that this NFT can be transferred. This flag has no
     effect if the token is being transferred from the issuer or to the
