@@ -13,3 +13,10 @@ public enum XrplCodecError: Error {
     case checksumFails
     case unknownError(error: String)
 }
+
+public enum AddressCodecError: Error {
+    case invalidAddress
+    case unsupportedAddress
+    case checksumFails
+    case unknownError(error: String)
+}
