@@ -25,7 +25,7 @@ public class SetRegularKey: Transaction {
     
     public init(
         wallet: Wallet,
-        regularKey: String,
+        regularKey: String
     ) {
         
         self.regularKey = regularKey

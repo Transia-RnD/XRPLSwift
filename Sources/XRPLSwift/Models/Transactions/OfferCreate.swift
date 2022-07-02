@@ -102,7 +102,7 @@ public class OfferCreate: Transaction {
         
         // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
         // Sets the fields for the tx
-        let _fields: [String:Any] = [
+        var _fields: [String:Any] = [
             "TransactionType" : TransactionType.OfferCreate.rawValue,
             "TakerGets": takerGets,
             "TakerPays": takerPays,

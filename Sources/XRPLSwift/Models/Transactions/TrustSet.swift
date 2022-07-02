@@ -56,18 +56,16 @@ public class TrustSet: Transaction {
     public var qualityIn: Int?
 
     public var qualityOut: Int?
-
-    
     
     public init(
         from wallet: Wallet,
         limitAmount: IssuedCurrencyAmount
     ) {
-        limitAmount = limitAmount
+        self.limitAmount = limitAmount
         
         // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
         // Sets the fields for the tx
-        let _fields: [String:Any] = [
+        var _fields: [String:Any] = [
             "TransactionType": "TrustSet",
             "LimitAmount": [
                 "currency": limitAmount.currency,

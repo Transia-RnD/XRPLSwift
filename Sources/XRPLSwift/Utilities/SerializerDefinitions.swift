@@ -206,16 +206,6 @@ let serializerDefinitions = """
       }
     ],
     [
-      "Version",
-      {
-        "nth": 16,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt16"
-      }
-    ],
-    [
       "HookStateChangeCount",
       {
         "nth": 17,
@@ -248,7 +238,7 @@ let serializerDefinitions = """
     [
       "HookApiVersion",
       {
-        "nth": 21,
+        "nth": 20,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
@@ -466,6 +456,16 @@ let serializerDefinitions = """
       }
     ],
     [
+      "LoadFee",
+      {
+        "nth": 24,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt32"
+      }
+    ],
+    [
       "OfferSequence",
       {
         "nth": 25,
@@ -666,9 +666,9 @@ let serializerDefinitions = """
       }
     ],
     [
-      "sfEmitGeneration",
+      "HookStateCount",
       {
-        "nth": 46,
+        "nth": 45,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
@@ -676,9 +676,9 @@ let serializerDefinitions = """
       }
     ],
     [
-      "HookStateCount",
+      "EmitGeneration",
       {
-        "nth": 45,
+        "nth": 46,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
@@ -806,6 +806,16 @@ let serializerDefinitions = """
       }
     ],
     [
+      "EmitBurden",
+      {
+        "nth": 13,
+        "isVLEncoded": false,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "UInt64"
+      }
+    ],
+    [
       "HookOn",
       {
         "nth": 16,
@@ -828,7 +838,7 @@ let serializerDefinitions = """
     [
       "HookReturnCode",
       {
-        "nth": 17,
+        "nth": 19,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
@@ -838,7 +848,7 @@ let serializerDefinitions = """
     [
       "ReferenceCount",
       {
-        "nth": 17,
+        "nth": 19,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
@@ -1001,7 +1011,7 @@ let serializerDefinitions = """
         "nth": 11,
         "isVLEncoded": false,
         "isSerialized": true,
-        "isSigningField": false, //?
+        "isSigningField": true,
         "type": "Hash256"
       }
     ],
@@ -1011,7 +1021,7 @@ let serializerDefinitions = """
         "nth": 12,
         "isVLEncoded": false,
         "isSerialized": true,
-        "isSigningField": false, //?
+        "isSigningField": true,
         "type": "Hash256"
       }
     ],
@@ -1021,7 +1031,7 @@ let serializerDefinitions = """
         "nth": 13,
         "isVLEncoded": false,
         "isSerialized": true,
-        "isSigningField": false, //?
+        "isSigningField": true,
         "type": "Hash256"
       }
     ],
@@ -1529,6 +1539,16 @@ let serializerDefinitions = """
       "ValidatorToDisable",
       {
         "nth": 20,
+        "isVLEncoded": true,
+        "isSerialized": true,
+        "isSigningField": true,
+        "type": "Blob"
+      }
+    ],
+    [
+      "ValidatorToReEnable",
+      {
+        "nth": 21,
         "isVLEncoded": true,
         "isSerialized": true,
         "isSigningField": true,
@@ -2106,16 +2126,6 @@ let serializerDefinitions = """
       }
     ],
     [
-      "LoadFee",
-      {
-        "nth": 24,
-        "isVLEncoded": false,
-        "isSerialized": true,
-        "isSigningField": true,
-        "type": "UInt32"
-      }
-    ],
-    [
       "TicketID",
       {
         "nth": 20,
@@ -2194,7 +2204,7 @@ let serializerDefinitions = """
         "isSigningField": true,
         "type": "STArray"
       }
-    ],
+    ]
   ],
   "TRANSACTION_RESULTS": {
     "telLOCAL_ERROR": -399,

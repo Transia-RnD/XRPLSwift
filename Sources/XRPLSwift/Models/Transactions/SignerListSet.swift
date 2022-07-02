@@ -27,6 +27,7 @@ public class SignerListSet: Transaction {
     This field is required.
     :meta hide-value:
     */
+    public var signerEntries: [SignerEntry] = []
     
     public init(
         wallet: Wallet,

@@ -29,6 +29,8 @@ public enum SeedType {
             return SECP256K1.self
         }
     }
+    
+    static var types: [SeedType] { return [.ed25519, .secp256k1] }
 
 }
 
@@ -211,7 +213,7 @@ public class SeedWallet: Wallet {
         let versionEntropy: [UInt8] = version + entropy.bytes
         let check = [UInt8](Data(versionEntropy).sha256().sha256().prefix(through: 3))
         let versionEntropyCheck: [UInt8] = versionEntropy + check
-        return String(base58Encoding: Data(versionEntropyCheck), alphabet: Base58String.xrpAlphabet)
+        return String(base58Encoding: Data(versionEntropyCheck), alphabet: AddressCodecUtils.xrplAlphabet)
     }
 
     private static func decodeSeed(seed: String) throws -> [UInt8]? {

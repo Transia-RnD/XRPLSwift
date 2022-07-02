@@ -92,4 +92,19 @@ final class TestUnitWallet: XCTestCase {
         let verified = SeedWallet.verifyClaim(channelSig: channelSig)
         XCTAssert(verified == true)
     }
+    
+    func testSome() {
+//        let string: String = "ipfs://ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz09876543210987654321ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0987654321"
+//        let hex: String = "697066733A2F2F4142434445464748494A4B4C4D4E4F505152535455565758595A6162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F505152535455565758595A6162636465666768696A6B6C6D6E6F707172737475767778797A30393837363534333231303938373635343332314142434445464748494A4B4C4D4E4F505152535455565758595A6162636465666768696A6B6C6D6E6F707172737475767778797A30393837363534333231"
+//        let data: [UInt8] = try! hex.asHexArray()
+//        print(data)
+//        let bytes: [UInt8] = [0x69, 0x70, 0x66, 0x73, 0x3A, 0x2F, 0x2F]
+//        print(bytes)
+//        let verified = SeedWallet.verifyClaim(channelSig: channelSig)
+//        XCTAssert(verified == true)
+        
+        let hex1: String = "00090000E3E2649FB84DFB055036605B49DE305618BA72972DCBAB9D00000002"
+        let data1: [UInt8] = try! hex1.asHexArray()
+        print(data1)
+    }
 }

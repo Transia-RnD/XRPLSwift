@@ -10,11 +10,8 @@ import Foundation
 
 // https://github.com/XRPLF/xrpl-py/blob/master/xrpl/models/transactions/set_hook.py
 
-public enum AccountSetFlag: UInt32 {
+public enum HookFlag: UInt32 {
     case asfAccountTxId = 5
-    case asfDefaultRipple = 8
-    case asfDepositAuth = 9
-    case asfDisableMaster = 4
 }
 
 public class SetHook: Transaction {
@@ -29,12 +26,6 @@ public class SetHook: Transaction {
     <https://xrpl.org/sethook.html#accountset-flags>`_
     */
     
-    public var txnID: Int?
-    /*
-    Enable a specific `AccountSet Flag
-    <https://xrpl.org/sethook.html#accountset-flags>`_
-    */
-    
     public var namespace: String?
     /*
     Set the namespace of the hook. Must be hex-encoded. You can
@@ -44,23 +35,11 @@ public class SetHook: Transaction {
 
     public init(
         wallet: Wallet,
-        clearFlag: AccountSetFlag?,
-        setFlag: AccountSetFlag?,
-        domain: String?,
-        emailHash: String?,
-        messageKey: Int?,
-        transferRate: Int?,
-        tickSize: Int?,
-        nfTokenMinter: String?
+        stateKey: String?,
+        namespace: String?
     ) {
-        self.clearFlag = clearFlag
-        self.setFlag = setFlag
-        self.domain = domain
-        self.emailHash = emailHash
-        self.messageKey = messageKey
-        self.transferRate = transferRate
-        self.tickSize = tickSize
-        self.nfTokenMinter = nfTokenMinter
+        self.stateKey = stateKey
+        self.namespace = namespace
         
         // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
         // Sets the fields for the tx
