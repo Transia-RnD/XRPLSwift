@@ -60,7 +60,7 @@ internal struct PrivateKey {
         data += raw
         data += Data([UInt8(0x01)])
         data += data.sha256().sha256().prefix(4)
-        return String(base58Encoding: data, alphabet: Base58String.btcAlphabet)
+        return String(base58Encoding: data, alphabet: AddressCodecUtils.xrplAlphabet)
     }
     
     internal func get() -> String {
