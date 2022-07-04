@@ -374,7 +374,7 @@ public extension StringProtocol {
     }
 
     func asHexArray() throws -> [UInt8] {
-        if count % 2 != 0 { throw HexConvertError.wrongInputStringLength }
+//        if count % 2 != 0 { throw HexConvertError.wrongInputStringLength }
         let characterSet = "0123456789ABCDEFabcdef"
         let wrongCharacter = first { return !characterSet.contains($0) }
         if wrongCharacter != nil { throw HexConvertError.wrongInputStringCharacters }

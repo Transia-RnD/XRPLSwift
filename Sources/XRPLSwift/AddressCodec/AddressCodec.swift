@@ -107,8 +107,8 @@ public class AddressCodec {
     }
 
     public static func isValidXAddress(xAddress: String) -> Bool {
-        let result = try! self.xAddressToClassicAddress(xAddress: xAddress)
-        guard let _ = result["classicAddress"] as? String else {
+        let result = try? self.xAddressToClassicAddress(xAddress: xAddress)
+        guard let _ = result?["classicAddress"] as? String else {
             return false
         }
         return true

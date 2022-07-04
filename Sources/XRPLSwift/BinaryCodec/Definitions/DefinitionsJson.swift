@@ -1,5 +1,5 @@
 //
-//  SerializerDefinitions.swift
+//  DefinitionsJson.swift
 //  XRPLSwift
 //
 //  Created by Mitch Lang on 5/11/19.

@@ -56,8 +56,9 @@ public class XrplCodec {
         let prefixLength: Int = prefix.count
         let decoded = [UInt8](Data(base58Decoding: b58String, alphabet: AddressCodecUtils.xrplAlphabet)!)
         let versionEntropy = decoded.prefix(decoded.count-4)
+        print(prefix)
+        print([UInt8](versionEntropy[0...(prefixLength-1)]))
         if [UInt8](versionEntropy[0...(prefixLength-1)]) != prefix {
-            print("Provided prefix is incorrect")
             throw XrplCodecError.unknownError(error: "Provided prefix is incorrect")
         }
         return [UInt8](versionEntropy[prefixLength...])
