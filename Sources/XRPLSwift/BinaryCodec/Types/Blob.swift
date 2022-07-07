@@ -5,9 +5,9 @@
 //  Created by Denis Angell on 7/3/22.
 //
 
-import Foundation
-
 // https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/types/serialized_type.py
+
+import Foundation
 
 class Blob: SerializedType {
     /*

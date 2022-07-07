@@ -2,13 +2,13 @@
 //  AccountID.swift
 //
 //
-//  Created by Denis Angell on 7/2/22.
+//  Created by Denis Angell on 7/4/22.
 //
+
+// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/types/account_id.py
 
 import Foundation
 import CryptoSwift
-
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/types/serialized_type.py
 
 let HEX_REGEX: String = #"^[A-F0-9]{40}$"#
 
@@ -17,7 +17,7 @@ class AccountID: Hash160 {
     
     static var defaultAccountID: AccountID = AccountID(bytes: Data(bytes: [], count: 20).bytes)
     
-    init(bytes: [UInt8]?) {
+    init(bytes: [UInt8]? = nil) {
         super.init(bytes ?? AccountID.defaultAccountID.bytes)
     }
     
@@ -71,6 +71,7 @@ class AccountID: Hash160 {
      * @returns the base58 string for this AccountID
      */
     func toJson() -> String {
+        print(self.bytes)
         return try! XrplCodec.encodeClassicAddress(bytes: self.bytes)
     }
 }

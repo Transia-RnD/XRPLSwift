@@ -38,7 +38,9 @@ public class XrplCodec {
         length.
         */
         if bytes.count != expectedLength {
-            let errorMessage: String = "unexpected_payload_length: len(bytestring) does not match expected_length. Ensure that the bytes are a bytestring."
+            print("BYTES COUNT: \(bytes.count)")
+            print("EXP COUNT: \(expectedLength)")
+            let errorMessage: String = "unexpectedPayloadLength: `bytes.count` does not match expectedLength. Ensure that the bytes are a [UInt8]."
             throw XrplCodecError.unknownError(error: errorMessage)
         }
         let payload: [UInt8] = prefix + bytes

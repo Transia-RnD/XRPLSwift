@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Currency.swift
 //  
 //
 //  Created by Denis Angell on 7/4/22.
