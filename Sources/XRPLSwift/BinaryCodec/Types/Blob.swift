@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 7/3/22.
 //
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/types/serialized_type.py
+// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/types/blob.py
 
 import Foundation
 
@@ -14,7 +14,6 @@ class Blob: SerializedType {
      Codec for serializing and deserializing blob fields.
      See `Blob Fields <https://xrpl.org/serialization.html#blob-fields>`_
      */
-//    init() {}
     
     init(_ bytes: [UInt8]) {
         // Construct a new Blob type from a ``bytes`` value.
