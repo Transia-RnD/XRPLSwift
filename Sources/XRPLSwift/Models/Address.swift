@@ -9,7 +9,9 @@ import Foundation
 
 public enum AddressError: Error {
     case invalidAddress
+    case unsupportedAddress
     case checksumFails
+    case unknownError
 }
 
 public struct Address {
@@ -77,6 +79,6 @@ public struct Address {
         let concatenated = prefix + accountID + flags + tag
         let check = [UInt8](Data(concatenated).sha256().sha256().prefix(through: 3))
         let concatenatedCheck: [UInt8] = concatenated + check
-        return String(base58Encoding: Data(concatenatedCheck), alphabet: Base58String.xrpAlphabet)
+        return String(base58Encoding: Data(concatenatedCheck), alphabet: AddressCodecUtils.xrplAlphabet)
     }
 }

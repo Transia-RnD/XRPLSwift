@@ -326,6 +326,16 @@ class MyClass: WebSocketDelegate {
     
 }
 
+# Missing Features
+
+Account
+Offers
+NFTs
+Escrow
+Payment Channel
+Ledger
+MultiSign
+
 ```
 
 

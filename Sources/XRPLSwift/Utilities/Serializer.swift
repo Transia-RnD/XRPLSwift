@@ -12,10 +12,10 @@ import Foundation
 private struct Definitions {
     
     var TYPES: [String: Int]
-    var LEDGER_ENTRY_TYPES: [String : Int]
-    var FIELDS: [String:FieldInfo]
-    var TRANSACTION_RESULTS: [String : Int]
-    var TRANSACTION_TYPES: [String : Int]
+    var LEDGER_ENTRY_TYPES: [String: Int]
+    var FIELDS: [String: FieldInfo]
+    var TRANSACTION_RESULTS: [String: Int]
+    var TRANSACTION_TYPES: [String: Int]
     
     init(dict: [String:AnyObject]) {
         self.TYPES = dict["TYPES"] as! [String:Int]

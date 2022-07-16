@@ -39,6 +39,7 @@ class HTTP {
 //            }
             if let data = data {
                 do {
+//                    let response = try JSONDecoder().decode(RippleResponse.self, from: data)
                     let json = try JSONSerialization.jsonObject(with: data, options: [])
                     promise.succeed(json)
                 } catch {

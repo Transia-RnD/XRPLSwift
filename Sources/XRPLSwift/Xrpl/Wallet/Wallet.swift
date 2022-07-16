@@ -7,7 +7,7 @@
 
 import Foundation
 
-let HASH_CHANNEL_SIGN: [UInt8] = [0x43,0x4C,0x4D, 0x00]
+let HASH_CHANNEL_SIGN: [UInt8] = [0x43, 0x4C, 0x4D, 0x00]
 
 public enum SeedError: Error {
     case invalidSeed
@@ -29,6 +29,8 @@ public enum SeedType {
             return SECP256K1.self
         }
     }
+    
+    static var types: [SeedType] { return [.ed25519, .secp256k1] }
 
 }
 
@@ -115,7 +117,6 @@ public class MnemonicWallet: Wallet {
     public convenience init(mnemonic: String, account: UInt32 = 0, change: UInt32 = 0, addressIndex: UInt32 = 0) throws {
         let seed = Bip39Mnemonic.createSeed(mnemonic: mnemonic)
         let privateKey = PrivateKey(seed: seed, coin: .bitcoin)
-        
         // BIP44 key derivation
         // m/44'
         let purpose = privateKey.derived(at: .hardened(44))
@@ -212,7 +213,7 @@ public class SeedWallet: Wallet {
         let versionEntropy: [UInt8] = version + entropy.bytes
         let check = [UInt8](Data(versionEntropy).sha256().sha256().prefix(through: 3))
         let versionEntropyCheck: [UInt8] = versionEntropy + check
-        return String(base58Encoding: Data(versionEntropyCheck), alphabet: Base58String.xrpAlphabet)
+        return String(base58Encoding: Data(versionEntropyCheck), alphabet: AddressCodecUtils.xrplAlphabet)
     }
 
     private static func decodeSeed(seed: String) throws -> [UInt8]? {
@@ -328,7 +329,55 @@ public class SeedWallet: Wallet {
         
         // add the prefix to the channel and amount
         let data: [UInt8] = HASH_CHANNEL_SIGN + [UInt8](channel.hexadecimal!) + [UInt8](UInt64(amount.drops).bigEndian.data)
-        
         return data
+    }
+    
+    
+    public static func getBytes(
+        bytes: [UInt8],
+        start: Int,
+        end: Int
+    ) -> [UInt8] {
+        return [UInt8](bytes[start...end])
+    }
+    
+    public func decodeClaim(data: [UInt8]) throws -> ChannelClaim {
+        let channelHexBytes = SeedWallet.getBytes(bytes: data, start: 4, end: 35)
+        let amountBytes = SeedWallet.getBytes(bytes: data, start: 36, end: data.count - 1)
+        let amountInt: Int64 = amountBytes.reversed().withUnsafeBytes { $0.load(as: Int64.self) }
+        let channelString = channelHexBytes.toHexString().uppercased()
+        return ChannelClaim(amount: amountInt, channel: channelString)
+    }
+    
+    public static func verifyClaim(channelSig: ChannelSignature) -> Bool {
+        return SeedWallet.verify(
+            signature: channelSig.sigBytes,
+            message: channelSig.dataBytes,
+            publicKey: channelSig.pubKey
+        )
+    }
+}
+
+enum HexConvertError: Error {
+    case wrongInputStringLength
+    case wrongInputStringCharacters
+}
+
+public extension StringProtocol {
+    func asHexArrayFromNonValidatedSource() -> [UInt8] {
+        var startIndex = self.startIndex
+        return stride(from: 0, to: count, by: 2).compactMap { _ in
+            let endIndex = index(startIndex, offsetBy: 2, limitedBy: self.endIndex) ?? self.endIndex
+            defer { startIndex = endIndex }
+            return UInt8(self[startIndex..<endIndex], radix: 16)
+        }
+    }
+
+    func asHexArray() throws -> [UInt8] {
+        if count % 2 != 0 { throw HexConvertError.wrongInputStringLength }
+        let characterSet = "0123456789ABCDEFabcdef"
+        let wrongCharacter = first { return !characterSet.contains($0) }
+        if wrongCharacter != nil { throw HexConvertError.wrongInputStringCharacters }
+        return asHexArrayFromNonValidatedSource()
     }
 }
