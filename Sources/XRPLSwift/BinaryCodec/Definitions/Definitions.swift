@@ -172,4 +172,96 @@ public struct Definitions {
         */
         return definitions.FIELD_HEADER_NAME_MAP[fieldHeader]!
     }
+    
+    func getFieldInstance(fieldName: String) -> FieldInstance {
+        /*
+        Return a FieldInstance object for the given field name.
+        Args:
+            field_name: The name of the field to get a FieldInstance for.
+        Returns:
+            A FieldInstance object for the given field name.
+        */
+        let info: FieldInfo = definitions.FIELD_INFO_MAP[fieldName]!
+        let fieldHeader = getFieldHeaderFromName(fieldName: fieldName)
+        return FieldInstance(
+            fieldInfo: info,
+            fieldName: fieldName,
+            fieldHeader: fieldHeader
+        )
+    }
+
+
+    func getTransactionTypeCode(transactionType: String) -> Int {
+        /*
+        Return an integer representing the given transaction type string in an enum.
+        Args:
+            transaction_type: The name of the transaction type to get the enum value for.
+        Returns:
+            An integer representing the given transaction type string in an enum.
+        */
+        return definitions.TRANSACTION_TYPES[transactionType]!
+    }
+
+
+    func getTransactionTypeName(transactionType: Int) -> String {
+        /*
+        Return string representing the given transaction type from the enum.
+        Args:
+            transaction_type: The enum value of the transaction type.
+        Returns:
+            The string name of the transaction type.
+        */
+        return definitions.TRANSACTION_TYPES_REVERSE[transactionType]!
+    }
+
+
+    func getTransactionResultCode(transactionResultType: String) -> Int {
+        /*
+        Return an integer representing the given transaction result string in an enum.
+        Args:
+            transaction_result_type: The name of the transaction result type to get the
+                enum value for.
+        Returns:
+            An integer representing the given transaction result type string in an enum.
+        */
+        return definitions.TRANSACTION_RESULTS[transactionResultType]!
+    }
+
+
+    func getTransactionResultName(transactionResultType: Int) -> String {
+        /*
+        Return string representing the given transaction result type from the enum.
+        Args:
+            transaction_result_type: The enum value of the transaction result type.
+        Returns:
+            The string name of the transaction result type.
+        */
+        return definitions.TRANSACTION_RESULTS_REVERSE[transactionResultType]!
+    }
+
+
+    func getLedgerEntryTypeCode(ledgerEntryType: String) -> Int {
+        /*
+        Return an integer representing the given ledger entry type string in an enum.
+        Args:
+            ledger_entry_type: The name of the ledger entry type to get the enum value for.
+        Returns:
+            An integer representing the given ledger entry type string in an enum.
+        */
+        return definitions.LEDGER_ENTRY_TYPES[ledgerEntryType]!
+        
+    }
+
+
+    func getLedgerEntryTypeName(ledgerEntryType: Int) -> String {
+        /*
+        Return string representing the given ledger entry type from the enum.
+        Args:
+            ledger_entry_type: The enum value of the ledger entry type.
+        Returns:
+            The string name of the ledger entry type.
+        */
+        return definitions.LEDGER_ENTRY_TYPES_REVERSE[ledgerEntryType]!
+        
+    }
 }

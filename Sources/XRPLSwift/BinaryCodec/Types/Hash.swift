@@ -16,9 +16,13 @@ class Hash: SerializedType {
     init(_ bytes: [UInt8]) {
         self.width = bytes.count
         super.init(bytes: bytes)
-        //        if (this.bytes.byteLength !== (this.constructor as typeof Hash).width) {
-        //          throw new Error(`Invalid Hash length ${this.bytes.byteLength}`)
-        //        }
+    }
+    
+    func from(value: String) throws -> Hash {
+//        if value is String {
+//            throw BinaryError.unknownError(error: "Invalid type to construct a {cls.__name__}: expected str, received {value.__class__.__name__}.")
+//        }
+        return Hash(try! value.asHexArray())
     }
     
     /**

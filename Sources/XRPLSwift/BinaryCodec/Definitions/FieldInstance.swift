@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  FieldInstance.swift
 //  
 //
 //  Created by Denis Angell on 7/2/22.
@@ -9,7 +9,28 @@
 
 import Foundation
 
-func getTypeByName(name: String) -> SerializedType? {
+let Types: [String: SerializedType.Type] = [
+    "AccountID": AccountID.self,
+    "Amount": xAmount.self,
+    "Blob": Blob.self,
+    "Currency": xCurrency.self,
+    "Hash": Hash.self,
+    "Hash128": Hash128.self,
+    "Hash160": Hash160.self,
+    "Hash256": Hash256.self,
+//    "PathSet": PathSet.self,
+    "SerializedType": SerializedType.self,
+    "STArray": STArray.self,
+    "STObject": STObject.self,
+    "UInt": xUInt.self,
+    "UInt8": xUInt8.self,
+    "UInt16": xUInt16.self,
+    "UInt32": xUInt32.self,
+    "UInt64": xUInt64.self,
+    "Vector256": Vector256.self,
+]
+
+func getTypeByName(name: String) -> SerializedType.Type? {
     /*
     Convert the string name of a class to the class object itself.
     Args:
@@ -17,17 +38,9 @@ func getTypeByName(name: String) -> SerializedType? {
     Returns:
         The corresponding class object.
     */
-
-//    let typeMap: [String: SerializedType] = [:]
-//
-//    for (name, objectType) in types.dict {
-//        if name in types.all {
-//            typeMap["name"] = objectType
-//        }
-//    }
-//
-//    return typeMap[name]
-    return nil
+    var typeMap: [String: SerializedType.Type] = [:]
+    for (name, objectType) in Types { typeMap[name] = objectType.self }
+    return typeMap[name]
 }
 
 
@@ -41,7 +54,7 @@ class FieldInstance {
     public var name: String
     public var header: FieldHeader
     public var ordinal: Int
-    public var associatedType: SerializedType
+    public var associatedType: SerializedType.Type
 
     init(
         fieldInfo: FieldInfo,
@@ -62,6 +75,6 @@ class FieldInstance {
         self.name = fieldName
         self.header = fieldHeader
         self.ordinal = header.typeCode << 16 | nth
-        self.associatedType = getTypeByName(name: type)!
+        self.associatedType = getTypeByName(name: self.type)!
     }
 }

@@ -10,7 +10,7 @@
 import Foundation
 import CryptoSwift
 
-let HEX_REGEX: String = #"^[A-F0-9]{40}$"#
+internal let HEX_REGEX: String = #"^[A-F0-9]{40}$"#
 
 class AccountID: Hash160 {
     // The base class for all binary codec field types.
@@ -31,7 +31,7 @@ class AccountID: Hash160 {
         return value
     }
     
-    static func from(value: String) throws -> AccountID {
+    override func from(value: String) throws -> AccountID {
         if (type(of: value) != type(of: String.self)) {
             if (value.isEmpty) {
                 return AccountID(bytes: nil)
@@ -40,7 +40,7 @@ class AccountID: Hash160 {
             return (value.range(
                 of: HEX_REGEX,
                 options: .regularExpression
-            ) != nil) ? AccountID(bytes: try! value.asHexArray()) : try! self.fromBase58(value: value)
+            ) != nil) ? AccountID(bytes: try! value.asHexArray()) : try! AccountID.fromBase58(value: value)
         }
         throw BinaryError.unknownError(error: "Cannot construct AccountID from value given")
     }

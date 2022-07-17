@@ -98,7 +98,7 @@ public class BinaryParser {
     }
     
     // TODO: GUARD
-    public func end(customEnd: Int?) -> Bool {
+    public func end(customEnd: Int? = nil) -> Bool {
         return bytes.count == 0 || (customEnd != nil && bytes.count <= customEnd!)
     }
     
@@ -182,11 +182,11 @@ public class BinaryParser {
     /**
      * Get the type associated with a given field
      *
-     * @param field The field that you wan to get the type of
+     * @param field The field that you want to get the type of
      * @return The type associated with the given field
      */
-    func typeForField(field: FieldInstance) -> SerializedType {
-        return field.associatedType
+    func typeForField(field: FieldInstance) -> SerializedType.Type {
+        return field.associatedType.self
     }
     
     /**

@@ -21,7 +21,7 @@ class Hash160: Hash {
     static public var width: Int = 20
     static public var ZERO_160: Hash160 = Hash160(Data(bytes: [], count: Hash160.width).bytes)
     
-    override init(_ bytes: [UInt8]?) {
+    override init(_ bytes: [UInt8]? = nil) {
         super.init(bytes ?? Hash160.ZERO_160.bytes)
     }
 }

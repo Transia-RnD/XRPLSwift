@@ -138,7 +138,7 @@ public class BinarySerializer {
      * @param value a value of that type
      */
     func writeType(type: SerializedType, value: SerializedType) {
-        self.write(value: try! SerializedType.from(value: value))
+        self.write(value: try! SerializedType().from(value: value))
     }
     
     /**

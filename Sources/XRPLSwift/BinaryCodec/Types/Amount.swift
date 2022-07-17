@@ -9,12 +9,12 @@
 
 import Foundation
 
-public let MIN_IOU_EXPONENT: Int = -96
-public let MAX_IOU_EXPONENT: Int = 80
-public let MAX_IOU_PRECISION: Int = 16
-public let MAX_DROPS: Decimal = Decimal(string: "1e17")!
-public let MIN_XRP: Decimal = Decimal(string: "1e-6")!
-public let mask = Int(0x00000000ffffffff)
+internal let MIN_IOU_EXPONENT: Int = -96
+internal let MAX_IOU_EXPONENT: Int = 80
+internal let MAX_IOU_PRECISION: Int = 16
+internal let MAX_DROPS: Decimal = Decimal(string: "1e17")!
+internal let MIN_XRP: Decimal = Decimal(string: "1e-6")!
+internal let mask = Int(0x00000000ffffffff)
 
 func containsDecimal(string: String) -> Bool {
     // Returns True if the given string contains a decimal point character.
@@ -202,7 +202,7 @@ class xAmount: SerializedType {
     
     static var defaultAmount: xAmount = try! xAmount(bytes: "4000000000000000".asHexArray())
     
-    override init(bytes: [UInt8]?) {
+    override init(bytes: [UInt8]? = nil) {
         super.init(bytes: bytes ?? xAmount.defaultAmount.bytes)
     }
     

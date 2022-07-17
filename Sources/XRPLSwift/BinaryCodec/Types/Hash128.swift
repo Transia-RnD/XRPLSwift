@@ -21,7 +21,7 @@ class Hash128: Hash {
     static public var width: Int = 16
     static public var ZERO_128: Hash128 = Hash128(Data(bytes: [], count: Hash128.width).bytes)
     
-    override init(_ bytes: [UInt8]?) {
+    override init(_ bytes: [UInt8]? = nil) {
         super.init(bytes ?? Hash128.ZERO_128.bytes)
     }
 }

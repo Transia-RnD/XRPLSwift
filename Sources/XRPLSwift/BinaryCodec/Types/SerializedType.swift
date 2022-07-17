@@ -1,22 +1,22 @@
 //
-//  File.swift
+//  SerializedType.swift
 //  
 //
 //  Created by Denis Angell on 7/2/22.
 //
 
-import Foundation
-
 // https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/types/serialized_type.py
+
+import Foundation
 
 class SerializedType {
     // The base class for all binary codec field types.
     
     public var bytes: [UInt8] = []
     
-    init(bytes: [UInt8]) {
+    init(bytes: [UInt8]? = nil) {
         // Construct a new SerializedType.
-        self.bytes = bytes
+        self.bytes = bytes!
     }
     
     func fromParser(
@@ -28,20 +28,20 @@ class SerializedType {
         return self
     }
     
-//    static func from(value: SerializedType | JSON | bigInt.BigInteger) -> SerializedType {
-    static func from(value: SerializedType) throws -> SerializedType {
+    //    static func from(value: SerializedType | JSON | bigInt.BigInteger) -> SerializedType {
+    func from(value: SerializedType) throws -> SerializedType {
         throw BinaryError.notImplemented
         return try! self.from(value: value)
-  }
+    }
     
-//    func from(value: Data) -> Data {
-//        return value
-//    }
-//
-//    func from(value: String) -> Data {
-//        print("fromValue")
-//        return Data(hex: value)
-//    }
+    //    func from(value: Data) -> Data {
+    //        return value
+    //    }
+    //
+    //    func from(value: String) -> Data {
+    //        print("fromValue")
+    //        return Data(hex: value)
+    //    }
     
     func toBytesSink(list: BytesList) -> BytesList {
         /*

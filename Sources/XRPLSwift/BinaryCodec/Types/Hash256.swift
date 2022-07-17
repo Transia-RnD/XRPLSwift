@@ -21,7 +21,7 @@ class Hash256: Hash {
     static public var width: Int = 32
     static public var ZERO_256: Hash256 = Hash256(Data(bytes: [], count: Hash256.width).bytes)
     
-    override init(_ bytes: [UInt8]?) {
+    override init(_ bytes: [UInt8]? = nil) {
         super.init(bytes ?? Hash256.ZERO_256.bytes)
     }
 }

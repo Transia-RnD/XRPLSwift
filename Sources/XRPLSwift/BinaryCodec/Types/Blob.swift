@@ -15,9 +15,9 @@ class Blob: SerializedType {
      See `Blob Fields <https://xrpl.org/serialization.html#blob-fields>`_
      */
     
-    init(_ bytes: [UInt8]) {
+    init(_ bytes: [UInt8]? = nil) {
         // Construct a new Blob type from a ``bytes`` value.
-        super.init(bytes: bytes)
+        super.init(bytes: bytes ?? [])
     }
     
     override func fromParser(
@@ -45,11 +45,11 @@ class Blob: SerializedType {
          Raises:
          XRPLBinaryCodecException: If a Blob cannot be constructed.
          */
-//        if (type(of: value) != type(of: Blob.self)) {
-//            throw BinaryError.unknownError(error: "Invalid type to construct a Blob: expected String, received \(value.self.description).")
-//        }
-        
         if (type(of: value) != type(of: String.self)) {
+            throw BinaryError.unknownError(error: "Invalid type to construct a Blob: expected String, received \(value.self.description).")
+        }
+        
+        if (type(of: value) == type(of: String.self)) {
             return Blob(try! value.asHexArray())
         }
         throw BinaryError.unknownError(error: "Cannot construct Blob from value given")
