@@ -73,7 +73,7 @@ public class Ledger: NSObject {
                     let date = Date(timeIntervalSince1970: 946684800+Double(timestamp))
                     let type = account == source ? "Sent" : "Received"
                     let address = account == source ? destination : source
-                    return HistoricalTransaction(type: type, address: address, amount: try! Amount(drops: Int(amount)!), date: date, raw: tx)
+                    return HistoricalTransaction(type: type, address: address, amount: try! aAmount(drops: Int(amount)!), date: date, raw: tx)
                 })
                 promise.succeed(transactions.sorted(by: { (lh, rh) -> Bool in
                     lh.date > rh.date
@@ -91,9 +91,9 @@ public class Ledger: NSObject {
         
     }
     
-    public func getBalance(address: String) -> EventLoopFuture<Amount> {
+    public func getBalance(address: String) -> EventLoopFuture<aAmount> {
         
-        let promise = eventGroup.next().makePromise(of: Amount.self)
+        let promise = eventGroup.next().makePromise(of: aAmount.self)
         
         let parameters: [String: Any] = [
             "method" : "account_info",
@@ -110,7 +110,7 @@ public class Ledger: NSObject {
             if status != "error" {
                 let account = info["account_data"] as! NSDictionary
                 let balance = account["Balance"] as! String
-                let amount = try! Amount(drops: Int(balance)!)
+                let amount = try! aAmount(drops: Int(balance)!)
                 promise.succeed( amount)
             } else {
                 let errorMessage = info["error_message"] as! String
@@ -225,9 +225,9 @@ public class Ledger: NSObject {
         
     }
     
-    public func getTrustLines(address: String, symbol: String, issuer: String) -> EventLoopFuture<Currency> {
+    public func getTrustLines(address: String, symbol: String, issuer: String) -> EventLoopFuture<aCurrency> {
         
-        let promise = eventGroup.next().makePromise(of: Currency.self)
+        let promise = eventGroup.next().makePromise(of: aCurrency.self)
         
         let parameters: [String: Any] = [
             "method" : "account_lines",
@@ -250,7 +250,7 @@ public class Ledger: NSObject {
                         let address = line["account"] as! String
                         let balance = line["balance"] as! String
                         let limit = line["limit"] as! String
-                        let currencyInfo = Currency(
+                        let currencyInfo = aCurrency(
                             address: address,
                             balance: balance,
                             currency: currency,

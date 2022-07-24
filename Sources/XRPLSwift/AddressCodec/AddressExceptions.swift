@@ -16,6 +16,7 @@ public enum XrplCodecError: Error {
 
 public enum AddressCodecError: Error {
     case invalidAddress
+    case valueError
     case unsupportedAddress
     case checksumFails
     case unknownError(error: String)

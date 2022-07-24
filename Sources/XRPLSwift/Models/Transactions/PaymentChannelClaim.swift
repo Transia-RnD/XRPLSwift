@@ -56,13 +56,13 @@ public class PaymentChannelClaim: Transaction {
     :meta hide-value:
     */
 
-    public var balance: Amount?
+    public var balance: aAmount?
     /*
     The cumulative amount of XRP to have delivered through this channel after
     processing this claim. Required unless closing the channel.
     */
 
-    public var amount: Amount?
+    public var amount: aAmount?
     /*
     The cumulative amount of XRP that has been authorized to deliver by the
     attached claim signature. Required unless closing the channel.
@@ -86,8 +86,8 @@ public class PaymentChannelClaim: Transaction {
     public init(
         from wallet: Wallet,
         channel: String,
-        balance: Amount? = nil,
-        amount: Amount? = nil,
+        balance: aAmount? = nil,
+        amount: aAmount? = nil,
         signature: String? = nil,
         publicKey: String? = nil,
         sourceTag : UInt32? = nil  // TODO: Move this to the base tx

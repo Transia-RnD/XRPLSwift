@@ -50,7 +50,7 @@ public class Payment: Transaction {
      <http://xrpl.local/payment.html#creating-accounts>`_.
      */
     
-    public var amount: Amount
+    public var amount: aAmount
     /*
      The amount of currency to deliver. If the Partial Payment flag is set,
      deliver *up to* this amount instead. This field is required.
@@ -82,7 +82,7 @@ public class Payment: Transaction {
      omitted for XRP-to-XRP transactions.
      */
     
-    public var sendMax: Amount?
+    public var sendMax: aAmount?
     /*
      Maximum amount of source currency this transaction is allowed to cost,
      including `transfer fees <http://xrpl.local/transfer-fees.html>`_,
@@ -91,7 +91,7 @@ public class Payment: Transaction {
      or cross-issue payments. Must be omitted for XRP-to-XRP payments.
      */
     
-    public var deliverMin: Amount?
+    public var deliverMin: aAmount?
     /*
      Minimum amount of destination currency this transaction should deliver.
      Only valid if this is a partial payment. If omitted, any positive amount
@@ -100,13 +100,13 @@ public class Payment: Transaction {
     
     public init(
         from wallet: Wallet,
-        amount: Amount,
+        amount: aAmount,
         destination: String,
         destinationTag: UInt32? = nil,
         invoiceId: Int? = nil,
         paths: Int? = nil,
-        sendMax : Amount? = nil,
-        deliverMin : Amount? = nil
+        sendMax : aAmount? = nil,
+        deliverMin : aAmount? = nil
     ) {
         
         self.amount = amount

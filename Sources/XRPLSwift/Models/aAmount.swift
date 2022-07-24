@@ -10,7 +10,7 @@ public enum AmountError: Error {
     case invalidAmount
 }
 
-public struct Amount {
+public struct aAmount {
     
     private(set) var drops: Int!
     public var currency: String = "XRP"

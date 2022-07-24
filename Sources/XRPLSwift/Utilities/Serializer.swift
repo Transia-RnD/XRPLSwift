@@ -6,16 +6,15 @@
 //
 //  reference: https://github.com/ripple/xrpl-dev-portal/blob/master/content/_code-samples/tx-serialization/serialize.py
 //
-
 import Foundation
 
-private struct Definitions {
+private struct dDefinitions {
     
     var TYPES: [String: Int]
-    var LEDGER_ENTRY_TYPES: [String: Int]
-    var FIELDS: [String: FieldInfo]
-    var TRANSACTION_RESULTS: [String: Int]
-    var TRANSACTION_TYPES: [String: Int]
+    var LEDGER_ENTRY_TYPES: [String : Int]
+    var FIELDS: [String:FieldInfo]
+    var TRANSACTION_RESULTS: [String : Int]
+    var TRANSACTION_TYPES: [String : Int]
     
     init(dict: [String:AnyObject]) {
         self.TYPES = dict["TYPES"] as! [String:Int]
@@ -49,34 +48,34 @@ private struct TypeWrapper {
     var object: [String:Any]
 }
 
-private struct FieldInfo {
-    var nth: Int
-    var isVLEncoded: Bool
-    var isSerialized: Bool
-    var isSigningField: Bool
-    var type: String
-    
-    init(dict: NSDictionary) {
-        self.nth = dict["nth"] as! Int
-        self.isVLEncoded = dict["isVLEncoded"] as! Bool
-        self.isSerialized = dict["isSerialized"] as! Bool
-        self.isSigningField = dict["isSigningField"] as! Bool
-        self.type = dict["type"] as! String
-        
-    }
-}
+//private struct FieldInfo {
+//    var nth: Int
+//    var isVLEncoded: Bool
+//    var isSerialized: Bool
+//    var isSigningField: Bool
+//    var type: String
+//    
+//    init(dict: NSDictionary) {
+//        self.nth = dict["nth"] as! Int
+//        self.isVLEncoded = dict["isVLEncoded"] as! Bool
+//        self.isSerialized = dict["isSerialized"] as! Bool
+//        self.isSigningField = dict["isSigningField"] as! Bool
+//        self.type = dict["type"] as! String
+//        
+//    }
+//}
 
 class Serializer {
     
     // instance variables
-    private var definitions: Definitions!
+    private var definitions: dDefinitions!
     
     init() {
         do {
             let data: Data = serializerDefinitions.data(using: .utf8)!
             let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
             if let jsonResult = jsonResult as? [String:AnyObject] {
-                self.definitions = Definitions(dict: jsonResult)
+                self.definitions = dDefinitions(dict: jsonResult)
             }
         } catch {
             print(error.localizedDescription)

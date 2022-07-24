@@ -25,7 +25,7 @@ public class PaymentChannelFund: Transaction {
     :meta hide-value:
     */
 
-    public var amount: Amount
+    public var amount: aAmount
     /*
     The amount of XRP, in drops, to add to the channel. This field is
     required.
@@ -43,7 +43,7 @@ public class PaymentChannelFund: Transaction {
     public init(
         from wallet: Wallet,
         channel: String,
-        amount: Amount,
+        amount: aAmount,
         expiration: Int? = nil
     ) {
         self.channel = channel

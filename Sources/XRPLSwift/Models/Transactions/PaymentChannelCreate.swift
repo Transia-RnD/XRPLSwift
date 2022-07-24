@@ -18,7 +18,7 @@ public class PaymentChannelCreate: Transaction {
     channel.
     */
 
-    public var amount: Amount
+    public var amount: aAmount
     /*
     The amount of XRP, in drops, to set aside in this channel. This field is
     required.
@@ -68,7 +68,7 @@ public class PaymentChannelCreate: Transaction {
         destination: Address,
         destinationTag: Int? = nil,
         publicKey: String,
-        amount: Amount,
+        amount: aAmount,
         settleDelay: Int,
         cancelAfter: Int? = nil
     ) {

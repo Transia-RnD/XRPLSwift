@@ -22,5 +22,5 @@ final class ReusableValues: XCTestCase {
     public static var channelSigHex: String = "BE32A4C68D6BA4787264EEE760DEFFB4F05ADAC999BAF3AC63F4E9F542DF07FAE783FD707071879774A022E87A6A8849B666B6DDAA22361785224D36B7CBC406"
     public static var channelSigBytes: [UInt8] = [190, 50, 164, 198, 141, 107, 164, 120, 114, 100, 238, 231, 96, 222, 255, 180, 240, 90, 218, 201, 153, 186, 243, 172, 99, 244, 233, 245, 66, 223, 7, 250, 231, 131, 253, 112, 112, 113, 135, 151, 116, 160, 34, 232, 122, 106, 136, 73, 182, 102, 182, 221, 170, 34, 54, 23, 133, 34, 77, 54, 183, 203, 196, 6]
     public static var drops: UInt64 = 1000000
-    public static var amount = try! Amount(drops: 1000000) // 1.0 XRP
+    public static var amount = try! aAmount(drops: 1000000) // 1.0 XRP
 }

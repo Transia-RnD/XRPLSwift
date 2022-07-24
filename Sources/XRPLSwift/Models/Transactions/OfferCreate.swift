@@ -61,14 +61,14 @@ public class OfferCreate: Transaction {
     Offers can be partially fulfilled.
      */
 
-    public var takerGets: Amount
+    public var takerGets: aAmount
      /*
     The amount and type of currency being provided by the sender of this
     transaction. This field is required.
     :meta hide-value:
       */
 
-    public var takerPays: Amount
+    public var takerPays: aAmount
       /*
     The amount and type of currency the sender of this transaction wants in
     exchange for the full ``taker_gets`` amount. This field is required.
@@ -89,8 +89,8 @@ public class OfferCreate: Transaction {
     
     public init(
         wallet: Wallet,
-        takerGets: Amount,
-        takerPays: Amount,
+        takerGets: aAmount,
+        takerPays: aAmount,
         expiration: Int? = nil,
         offerSequence: Int? = nil
     ) {
