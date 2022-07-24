@@ -53,66 +53,64 @@ public class AddressCodec {
         return String(base58Encoding: Data(concatenatedCheck), alphabet: AddressCodecUtils.xrplAlphabet)
     }
 
-//    public static func xAddressToClassicAddress(
-//        xAddress: String
-//    ) throws -> [String: AnyObject] {
-//        let ( accountId, tag, isTest ) = decodeXAddress(xAddress: xAddress)
-////        let classicAddress = encodeAccountID(accountId)
-//        let classicAddress = "encodeAccountID(accountId)"
-//        return [
-//            "classicAddress": classicAddress as AnyObject,
-//            "tag": tag,
-//            "isTest": isTest,
-//        ]
-//    }
-//
-//    public static func decodeXAddress(xAddress: String) throws -> (String, UInt32, Bool) {
-//        let data = Data(base58Decoding: xAddress)!
-//        let check = data.suffix(4).bytes
-//
-//        let concatenated = data.prefix(31).bytes
-//        if check != [UInt8](Data(concatenated).sha256().sha256().prefix(through: 3)) {
-//            throw AddressError.unknownError
-//        }
-//        let flags = concatenated[22]
-//        let accountId = concatenated[2..<22]
-//        let tag: UInt32 = tagFromBuffer(concatenated)
-//        let isTest: Bool = isBufferForTestAddress(concatenated)
-//        return (accountId, tag, isTest)
-//    }
-//
-//    internal func isBufferForTestAddress(buf: Data) throws -> Bool {
-//        let decodedPrefix = buf[..<2]
-//        if Data(fromArray: [0x05, 0x44]) == decodedPrefix {
-//            return false
-//        }
-//        if Data(fromArray: [0x04, 0x93]) == decodedPrefix {
-//            return true
-//        }
-//        throw AddressError.invalidAddress
-//    }
-//
-//    internal func tagFromBuffer(buf: Data) throws -> UInt32 {
-//        let flags = buf[22]
-//        if (flags >= 2) {
-//            // No support for 64-bit tags at this time
-//            throw AddressError.unsupportedAddress
-//        }
-//        //        if flag == 1 {
-//        //            // Little-endian to big-endian
-//        //            return buf[23] + buf[24] * 0x100 + buf[25] * 0x10000 + buf[26] * 0x1000000
-//        //        }
-//        let tagBytes = buf[23...]
-//        let data = Data(tagBytes)
-//        let _tag: UInt64 = data.withUnsafeBytes { $0.pointee }
-//        let tag: UInt32? = flags == 0x00 ? nil : UInt32(String(_tag))!
-//        return tag!
-//    }
-//
-//    public static func isValidXAddress(xAddress: string) -> Bool {
-//        guard try! self.decodeXAddress(xAddress: xAddress) else {
-//            return false
-//        }
-//        return true
-//    }
+    public static func xAddressToClassicAddress(
+        xAddress: String
+    ) throws -> [String: AnyObject] {
+        let data = Data(base58Decoding: xAddress)!
+        let check = data.suffix(4).bytes
+
+        let concatenated = data.prefix(31).bytes
+        if check != [UInt8](Data(concatenated).sha256().sha256().prefix(through: 3)) {
+            throw AddressCodecError.invalidAddress
+        }
+        
+        let isTest: Bool = try self.isTestAddress(prefix: [UInt8](concatenated[..<2]))
+        
+        let tag: UInt32 = try self.tagFromBuffer(buf: concatenated)
+        
+        let classicAddressBytes: [UInt8] = [UInt8](concatenated[2..<22])
+        
+        let classicAddress = try XrplCodec.encodeClassicAddress(bytes: classicAddressBytes)
+        
+        return [
+            "classicAddress": classicAddress,
+            "tag": tag,
+            "isTest": isTest,
+        ] as [String: AnyObject]
+    }
+    
+    static func isTestAddress(prefix: [UInt8]) throws -> Bool {
+        if [0x05, 0x44] == prefix {
+            return false
+        }
+        if [0x04, 0x93] == prefix {
+            return true
+        }
+        throw AddressCodecError.invalidAddress
+    }
+
+    static func tagFromBuffer(buf: [UInt8]) throws -> UInt32 {
+        let flags = buf[22]
+        if (flags >= 2) {
+            // No support for 64-bit tags at this time
+            throw AddressCodecError.unsupportedAddress
+        }
+        //        if flag == 1 {
+        //            // Little-endian to big-endian
+        //            return buf[23] + buf[24] * 0x100 + buf[25] * 0x10000 + buf[26] * 0x1000000
+        //        }
+        let tagBytes = buf[23...]
+        let data = Data(tagBytes)
+        let _tag: UInt64 = data.withUnsafeBytes { $0.pointee }
+        let tag: UInt32? = flags == 0x00 ? nil : UInt32(String(_tag))!
+        return tag!
+    }
+
+    public static func isValidXAddress(xAddress: String) -> Bool {
+        let result = try! self.xAddressToClassicAddress(xAddress: xAddress)
+        guard let _ = result["classicAddress"] as? String else {
+            return false
+        }
+        return true
+    }
 }
