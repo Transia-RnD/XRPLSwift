@@ -11,46 +11,32 @@ import Foundation
 import CryptoSwift
 
 internal let HEX_REGEX: String = #"^[A-F0-9]{40}$"#
+internal let LENGTH20: Int = 20
 
 class AccountID: Hash160 {
-    // The base class for all binary codec field types.
     
-    static var defaultAccountID: AccountID = AccountID(bytes: Data(bytes: [], count: 20).bytes)
+    private let LENGTH: Int = 20
+    static var defaultAccountID: AccountID = AccountID([UInt8].init(repeating: 0x0, count: 20))
     
-    init(bytes: [UInt8]? = nil) {
+    override init(_ bytes: [UInt8]? = nil) {
         super.init(bytes ?? AccountID.defaultAccountID.bytes)
     }
     
-    /**
-     * Defines how to construct an AccountID
-     *
-     * @param value either an existing AccountID, a hex-string, or a base58 r-Address
-     * @returns an AccountID object
-     */
     static func from(value: AccountID) throws -> AccountID {
         return value
     }
     
-    override func from(value: String) throws -> AccountID {
-        if (type(of: value) != type(of: String.self)) {
-            if (value.isEmpty) {
-                return AccountID(bytes: nil)
-            }
-            
-            return (value.range(
-                of: HEX_REGEX,
-                options: .regularExpression
-            ) != nil) ? AccountID(bytes: try! value.asHexArray()) : try! AccountID.fromBase58(value: value)
+    override static func from(value: String) -> AccountID {
+        if (value.isEmpty) {
+            return AccountID(nil)
         }
-        throw BinaryError.unknownError(error: "Cannot construct AccountID from value given")
+        
+        return (value.range(
+            of: HEX_REGEX,
+            options: .regularExpression
+        ) != nil) ? AccountID(try! value.asHexArray()) : try! AccountID.fromBase58(value: value)
     }
     
-    /**
-     * Defines how to build an AccountID from a base58 r-Address
-     *
-     * @param value a base58 r-Address
-     * @returns an AccountID object
-     */
     static func fromBase58(value: String) throws -> AccountID {
         if AddressCodec.isValidXAddress(xAddress: value) {
             let classicDict: [String: AnyObject] = try! AddressCodec.xAddressToClassicAddress(xAddress: value)
@@ -59,19 +45,20 @@ class AccountID: Hash160 {
             if (tag != 0) {
               throw BinaryError.unknownError(error: "Only allowed to have tag on Account or Destination")
             }
-            return AccountID(bytes: try! XrplCodec.decodeClassicAddress(classicAddress: classic))
+            return AccountID(try! XrplCodec.decodeClassicAddress(classicAddress: classic))
         } else {
-            return AccountID(bytes: try! XrplCodec.decodeClassicAddress(classicAddress: value))
+            return AccountID(try! XrplCodec.decodeClassicAddress(classicAddress: value))
         }
     }
     
-    /**
-     * Overload of toJSON
-     *
-     * @returns the base58 string for this AccountID
-     */
-    func toJson() -> String {
-        print(self.bytes)
+    override func fromParser(
+        parser: BinaryParser,
+        hint: Int? = nil
+    ) -> AccountID {
+        return AccountID(try! parser.read(n: hint ?? LENGTH20))
+    }
+    
+    override func toJson() -> String {
         return try! XrplCodec.encodeClassicAddress(bytes: self.bytes)
     }
 }

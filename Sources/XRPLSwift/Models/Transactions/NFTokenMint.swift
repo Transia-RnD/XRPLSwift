@@ -121,9 +121,3 @@ public class NFTokenMint: Transaction {
         super.init(wallet: wallet, fields: _fields)
     }
 }
-
-extension Data {
-    func hexEncodedString() -> String {
-        return map { String(format: "%02hhx", $0) }.joined()
-    }
-}

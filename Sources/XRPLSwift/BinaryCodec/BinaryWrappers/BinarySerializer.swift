@@ -138,7 +138,7 @@ public class BinarySerializer {
      * @param value a value of that type
      */
     func writeType(type: SerializedType, value: SerializedType) {
-        self.write(value: try! SerializedType().from(value: value))
+        self.write(value: try! SerializedType.from(value: value))
     }
     
     /**
@@ -147,37 +147,16 @@ public class BinarySerializer {
      * @param bl BytesList to write to BinarySerializer
      */
     func writeBytesList(bl: BytesList) {
-        print("SING: \(self.sink.toHex())")
+//        print("SINK: \(self.sink.toHex())")
         bl.toBytesSink(list: self.sink)
     }
     
-//    func ncodeVariableLength(length: Int) -> Data {
-//        let contents = [UInt8](sink.toBytes())
-//        var vlLength = contents.count
-//        if vlLength <= 192 {
-//            let lengthByte = Data([UInt8(vlLength)])
-//            return lengthByte + contents
-//        } else if vlLength <= 12480 {
-//            vlLength -= 193
-//            let byte1 = UInt8Byte((vlLength >> 8) + 193)
-//            let byte2 = UInt8Byte(vlLength & 0xff)
-//            return byte1 + byte2 + contents
-//        } else if vlLength <= 918744 {
-//            vlLength -= 12481
-//            let byte1 = UInt8Byte(241 + (vlLength >> 16))
-//            let byte2 = UInt8Byte((vlLength >> 8) & 0xff)
-//            let byte3 = UInt8Byte(vlLength & 0xff)
-//            return byte1 + byte2 + byte3 + contents
-//        }
-//        fatalError("VariableLength field must be <= 918744 bytes long")
-//    }
-    
     func encodeVariableLength(length: Int) -> Data {
-        var lenBytes = Data(bytes: [], count: 3)
+        var lenBytes: Data = Data([UInt8].init(repeating: 0x0, count: 3))
         var len = length
         if length <= 192 {
             lenBytes[0] = UInt8(length)
-            return lenBytes[0...1]
+            return lenBytes[0..<1]
         } else if length <= 12480 {
             len -= 193
             lenBytes[0] = UInt8(193 + (len >> 8))
@@ -193,17 +172,17 @@ public class BinarySerializer {
         fatalError("VariableLength field must be <= 918744 bytes long")
     }
     
+    /*
+     Write a variable length encoded value to the BinarySerializer.
+     Args:
+     value: The SerializedType object to write to bytesink.
+     encode_value: Does not encode the value; just encodes `00` in its place.
+     Used in the UNLModify encoding workaround. The default is True.
+     */
     func writeLengthEncoded(
         value: SerializedType,
         isUnlModifyWorkaround: Bool = false
     ) {
-        /*
-         Write a variable length encoded value to the BinarySerializer.
-         Args:
-         value: The SerializedType object to write to bytesink.
-         encode_value: Does not encode the value; just encodes `00` in its place.
-         Used in the UNLModify encoding workaround. The default is True.
-         */
         let byteObject = BytesList()
         if !isUnlModifyWorkaround {
             _ = value.toBytesSink(list: byteObject)
@@ -212,42 +191,26 @@ public class BinarySerializer {
         self.writeBytesList(bl: byteObject)
     }
     
+    /*
+     Write field and value to the buffer.
+     Args:
+     field: The field to write to the buffer.
+     value: The value to write to the buffer.
+     is_unl_modify_workaround: Encode differently for UNLModify
+     pseudotransactions, due to a bug in rippled. Only True for the Account
+     field in UNLModify pseudotransactions. The default is False.
+     */
     func writeFieldAndValue(
         field: FieldInstance,
         value: SerializedType,
         isUNLModifyWorkaround: Bool = false
     ) {
-        /*
-         Write field and value to the buffer.
-         Args:
-         field: The field to write to the buffer.
-         value: The value to write to the buffer.
-         is_unl_modify_workaround: Encode differently for UNLModify
-         pseudotransactions, due to a bug in rippled. Only True for the Account
-         field in UNLModify pseudotransactions. The default is False.
-         */
-        //        sink += field.header.fieldCode.byteSwapped
-        //
-        //        if field.isVariableLengthEncoded {
-        //            writeLengthEncoded(value, not is_unl_modify_workaround)
-        //        } else {
-        //            sink += bytes(value)
-        //        }
-        print()
+        self.put(bytes: Data(field.header.toBytes()))
+        if field.isVLEncoded {
+            writeLengthEncoded(value: value, isUnlModifyWorkaround: isUNLModifyWorkaround)
+        } else {
+            self.put(bytes: Data(value.bytes))
+        }
     }
     
 }
-
-//extension Data {
-//
-//    init<T>(from value: T) {
-//        self = Swift.withUnsafeBytes(of: value) { Data($0) }
-//    }
-//
-//    func to<T>(type: T.Type) -> T? where T: ExpressibleByIntegerLiteral {
-//        var value: T = 0
-//        guard count >= MemoryLayout.size(ofValue: value) else { return nil }
-//        _ = Swift.withUnsafeMutableBytes(of: &value, { copyBytes(to: $0)} )
-//        return value
-//    }
-//}

@@ -26,7 +26,6 @@ let _CLASSIC_ADDRESS_LENGTH: Int = 20
 let _NODE_PUBLIC_KEY_LENGTH: Int = 33
 let _ACCOUNT_PUBLIC_KEY_LENGTH: Int = 33
 
-
 public class XrplCodec {
     
     public init() {}
@@ -56,10 +55,10 @@ public class XrplCodec {
         Returns the byte decoding of the base58-encoded string.
         */
         let prefixLength: Int = prefix.count
+        print(b58String)
         let decoded = [UInt8](Data(base58Decoding: b58String, alphabet: AddressCodecUtils.xrplAlphabet)!)
         let versionEntropy = decoded.prefix(decoded.count-4)
-        print(prefix)
-        print([UInt8](versionEntropy[0...(prefixLength-1)]))
+        print([UInt8](versionEntropy).toHexString().uppercased())
         if [UInt8](versionEntropy[0...(prefixLength-1)]) != prefix {
             throw XrplCodecError.unknownError(error: "Provided prefix is incorrect")
         }

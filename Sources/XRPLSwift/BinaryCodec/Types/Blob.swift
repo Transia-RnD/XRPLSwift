@@ -20,38 +20,39 @@ class Blob: SerializedType {
         super.init(bytes: bytes ?? [])
     }
     
+    /*
+     Construct a new Blob type from a BinaryParser.
+     Args:
+     parser: The parser to construct a Blob from.
+     Returns:
+     A new Blob.
+     */
     override func fromParser(
         parser: BinaryParser,
         hint: Int? = nil
     ) -> Blob {
-        /*
-         Construct a new Blob type from a BinaryParser.
-         Args:
-         parser: The parser to construct a Blob from.
-         Returns:
-         A new Blob.
-         */
         return Blob(try! parser.read(n: hint!))
-        
     }
     
+    /*
+     Construct a new Blob type from a number.
+     Args:
+     value: The value to construct a Blob from.
+     Returns:
+     A new Blob.
+     Raises:
+     XRPLBinaryCodecException: If a Blob cannot be constructed.
+     */
     static func from(value: String) throws -> Blob {
-        /*
-         Construct a new Blob type from a number.
-         Args:
-         value: The value to construct a Blob from.
-         Returns:
-         A new Blob.
-         Raises:
-         XRPLBinaryCodecException: If a Blob cannot be constructed.
-         */
-        if (type(of: value) != type(of: String.self)) {
-            throw BinaryError.unknownError(error: "Invalid type to construct a Blob: expected String, received \(value.self.description).")
-        }
+//        if (type(of: value) != type(of: String.self)) {
+//            throw BinaryError.unknownError(error: "Invalid type to construct a Blob: expected String, received \(value.self.description).")
+//        }
         
-        if (type(of: value) == type(of: String.self)) {
-            return Blob(try! value.asHexArray())
-        }
-        throw BinaryError.unknownError(error: "Cannot construct Blob from value given")
+//        if (type(of: value) == type(of: String.self)) {
+//            return Blob(try! value.asHexArray())
+//        }
+//        throw BinaryError.unknownError(error: "Cannot construct Blob from value given")
+        
+        return Blob(try! value.asHexArray())
     }
 }

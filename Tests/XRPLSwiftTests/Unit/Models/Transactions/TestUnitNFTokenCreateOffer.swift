@@ -15,7 +15,7 @@ final class TestUnitNFTokenOfferCreate: XCTestCase {
             from: ReusableValues.wallet,
             flags: .tfSellToken,
             nftokenId: ReusableValues.nftokenId,
-            amount: try! Amount(drops: 1),
+            amount: try! aAmount(drops: 1),
             expiration: 30,
             destination: ReusableValues.destination
             
@@ -31,7 +31,7 @@ final class TestUnitNFTokenOfferCreate: XCTestCase {
         let buyOfferTx = NFTokenCreateOffer(
             from: ReusableValues.wallet,
             nftokenId: ReusableValues.nftokenId,
-            amount: try! Amount(drops: 1),
+            amount: try! aAmount(drops: 1),
             owner: try! Address(rAddress: ReusableValues.wallet.address),
             expiration: 30,
             destination: ReusableValues.destination

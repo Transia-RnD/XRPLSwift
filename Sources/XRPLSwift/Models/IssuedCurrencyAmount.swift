@@ -9,6 +9,8 @@ import Foundation
 
 public struct IssuedCurrencyAmount {
     
+//    private(set) var value: String
+    
     private(set) var drops: Int!
     public var currency: String = "XRP"
     public var issuer: String?

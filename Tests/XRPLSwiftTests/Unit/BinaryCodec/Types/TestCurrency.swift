@@ -20,87 +20,86 @@ final class TestCurrency: XCTestCase {
     public let XRP_ISO: String = "XRP"
     public let USD_ISO: String = "USD"
     
-    func test_is_iso_code() {
+    func testIsIsoCode() {
         let validCode: String = "ABC"
         let validCodeNumeric: String = "123"
         let invalidCodeLong: String = "LONG"
         let invalidCodeShort: String = "NO"
         XCTAssertTrue(isIsoCode(value: validCode))
         XCTAssertTrue(isIsoCode(value: validCodeNumeric))
-        XCTAssertTrue(isIsoCode(value: invalidCodeLong))
-        XCTAssertTrue(isIsoCode(value: invalidCodeShort))
+        XCTAssertFalse(isIsoCode(value: invalidCodeLong))
+        XCTAssertFalse(isIsoCode(value: invalidCodeShort))
     }
 
-//    func test_is_hex() {
-//            # Valid = 40 char length and only valid hex chars
-//            valid_hex = "0000000000000000000000005553440000000000"
-//            invalid_hex_long = "0000000000000000000000005553440000000000123455"
-//            invalid_hex_short = "1234"
-//            invalid_hex_chars = "USD0000000000000000000005553440000000000"
-//            self.assertTrue(currency._is_hex(valid_hex))
-//            self.assertFalse(currency._is_hex(invalid_hex_long))
-//            self.assertFalse(currency._is_hex(invalid_hex_short))
-//            self.assertFalse(currency._is_hex(invalid_hex_chars))
+    func testIsHex() {
+        // Valid = 40 char length and only valid hex chars
+        let validHex: String = "0000000000000000000000005553440000000000"
+        let invalidHexLong: String = "0000000000000000000000005553440000000000123455"
+        let invalidHexShort: String = "1234"
+        let invalidHexChars: String = "USD0000000000000000000005553440000000000"
+        XCTAssertTrue(isHex(value: validHex))
+        XCTAssertFalse(isHex(value: invalidHexLong))
+        XCTAssertFalse(isHex(value: invalidHexShort))
+        XCTAssertFalse(isHex(value: invalidHexChars))
+    }
+
+    func testIsoToBytes() {
+        // Valid non-XRP
+        let usdIsoBytes = try! isoToBytes(iso: USD_ISO)
+        // convert bytes to hex string for comparison to expectation
+        XCTAssertEqual(usdIsoBytes.toHexString(), USD_HEX_CODE)
+
+        // Valid XRP
+        let xrpIsoBytes = try! isoToBytes(iso: XRP_ISO)
+        // convert bytes to hex string for comparison to expectation
+        XCTAssertEqual(xrpIsoBytes.toHexString(), XRP_HEX_CODE)
+
+        // Error case
+        let invalidIso: String = "INVALID"
+        XCTAssertThrowsError(try isoToBytes(iso: invalidIso))
+    }
+
+    func testConstructionFromHexStandard() {
+        // XRP case
+        let currencyObject: xCurrency = try! xCurrency.from(value: XRP_HEX_CODE)
+        XCTAssertEqual(currencyObject.toJson(), XRP_ISO)
+
+        // General case
+        let currencyObject1: xCurrency = try! xCurrency.from(value: USD_HEX_CODE)
+        XCTAssertEqual(currencyObject1.toJson(), USD_ISO)
+
+    }
+
+    func testConstructionFromIsoCodeStandard() {
+        // XRP case
+        let currencyObject: xCurrency = try! xCurrency.from(value: XRP_ISO)
+        XCTAssertEqual(currencyObject.toHex(), XRP_HEX_CODE)
+
+        // General case
+        let currencyObject1: xCurrency = try! xCurrency.from(value: USD_ISO)
+        XCTAssertEqual(currencyObject1.toHex(), USD_HEX_CODE)
+    }
+
+    func testConstructionFromHexNonstandard() {
+        let currencyObject: xCurrency = try! xCurrency.from(value: NONSTANDARD_HEX_CODE)
+        XCTAssertEqual(currencyObject.toJson(), NONSTANDARD_HEX_CODE)
+    }
+
+    // TODO: FIX THIS
+//    func testConstructionFromHexNonrecommended() {
+//        let currencyObject: xCurrency = try! xCurrency.from(value: NOT_RECOMMENDED_HEX_CODE)
+//        XCTAssertEqual(currencyObject.toJson(), NOT_RECOMMENDED_HEX_CODE)
 //    }
-//
-//    func test_iso_to_bytes() {
-//            # Valid non-XRP
-//            usd_iso_bytes = currency._iso_to_bytes(USD_ISO)
-//            # convert bytes to hex string for comparison to expectation
-//            self.assertEqual(usd_iso_bytes.hex(), USD_HEX_CODE)
-//
-//            # Valid XRP
-//            xrp_iso_bytes = currency._iso_to_bytes(XRP_ISO)
-//            # convert bytes to hex string for comparison to expectation
-//            self.assertEqual(xrp_iso_bytes.hex(), XRP_HEX_CODE)
-//
-//            # Error case
-//            invalid_iso = "INVALID"
-//            self.assertRaises(XRPLBinaryCodecException, currency._iso_to_bytes, invalid_iso)
+
+    // MARK: INVALID SWIFT IMPLEMENTATION
+//    func testRaisesInvalidValueType() {
+//        let invalidValue = [1, 2, 3]
+//        XCTAssertThrowsError(xCurrency.from(value: invalidValue))
 //    }
-//
-//    func test_construction_from_hex_standard() {
-//            # XRP case
-//            currency_object = currency.Currency.from_value(XRP_HEX_CODE)
-//            self.assertEqual(currency_object.to_json(), XRP_ISO)
-//
-//            # General case
-//            currency_object = currency.Currency.from_value(USD_HEX_CODE)
-//            self.assertEqual(currency_object.to_json(), USD_ISO)
-//
-//    }
-//
-//    func test_construction_from_iso_code_standard() {
-//            # XRP case
-//            currency_object = currency.Currency.from_value(XRP_ISO)
-//            self.assertEqual(currency_object.to_hex(), XRP_HEX_CODE)
-//
-//            # General case
-//            currency_object = currency.Currency.from_value(USD_ISO)
-//            self.assertEqual(currency_object.to_hex(), USD_HEX_CODE)
-//    }
-//
-//    func test_construction_from_hex_nonstandard() {
-//            currency_object = currency.Currency.from_value(NONSTANDARD_HEX_CODE)
-//            self.assertEqual(currency_object.to_json(), NONSTANDARD_HEX_CODE)
-//    }
-//
-//    func test_construction_from_hex_nonrecommended() {
-//            currency_object = currency.Currency.from_value(NOT_RECOMMENDED_HEX_CODE)
-//            self.assertEqual(currency_object.to_json(), NOT_RECOMMENDED_HEX_CODE)
-//    }
-//
-//    func test_raises_invalid_value_type() {
-//            invalid_value = [1, 2, 3]
-//            self.assertRaises(
-//                XRPLBinaryCodecException, currency.Currency.from_value, invalid_value
-//            )
-//    }
-//
-//    func test_raises_invalid_xrp_encoding() {
-//            self.assertRaises(
-//                XRPLBinaryCodecException, currency.Currency.from_value, ILLEGAL_XRP_HEX_CODE
-//            )
+
+    // TODO: FIX THIS
+//    func testRaisesInvalidXrpEncoding() {
+//        XCTAssertThrowsError(try xCurrency.from(value: ILLEGAL_XRP_HEX_CODE))
 //    }
 }
 

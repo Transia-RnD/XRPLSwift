@@ -22,7 +22,7 @@ class Vector256: SerializedType {
     func from(value: [String]) throws -> Vector256 {
         var byteList: [UInt8] = []
         for s in value {
-            byteList.append(contentsOf: try Hash256().from(value: s).bytes)
+            byteList.append(contentsOf: try Hash256.from(value: s).bytes)
         }
         return Vector256(bytes: byteList)
     }

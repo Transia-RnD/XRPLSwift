@@ -44,26 +44,27 @@ public struct FieldHeader: Hashable {
         
     }
 
-    func toBytes() -> [Int] {
+    func toBytes() -> [UInt8] {
         /*
         Get the bytes representation of a FieldHeader.
         Returns:
             The bytes representation of the FieldHeader.
         */
-        var header: [Int] = []
+        var header: [UInt8] = []
         if self.typeCode < 16 {
             if self.typeCode < 16 {
-                header.append(self.typeCode << 4 | self.fieldCode)
+                header.append(UInt8(self.typeCode << 4 | self.fieldCode))
             } else {
-                header.append(self.typeCode << 4)
-                header.append(self.fieldCode)
+                header.append(UInt8(self.typeCode) << 4)
+                header.append(UInt8(self.fieldCode))
             }
         } else if self.fieldCode < 16 {
-            header += [self.fieldCode, self.typeCode]
+            header += [UInt8(self.fieldCode), UInt8(self.typeCode)]
         } else {
-            header += [0, self.typeCode, self.fieldCode]
+            header += [0, UInt8(self.typeCode), UInt8(self.fieldCode)]
         }
-
+            
+        print(header)
         return header
     }
 }

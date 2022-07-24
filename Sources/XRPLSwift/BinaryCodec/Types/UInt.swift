@@ -12,8 +12,8 @@ import Foundation
 
 class xUInt: SerializedType {
     
-    override init(bytes: [UInt8]? = nil) {
-        super.init(bytes: bytes!)
+    init(_ bytes: [UInt8]) {
+        super.init(bytes: bytes)
     }
     
     func value() -> Int {
@@ -22,6 +22,11 @@ class xUInt: SerializedType {
         let value = Int(bigEndian: data.withUnsafeBytes { $0.pointee })
         return value
     }
+    
+//    class func from(value: Int) throws -> xUInt {
+//        return xUInt(try! value.asHexArray())
+//    }
+    
 }
 
 extension xUInt: Comparable {

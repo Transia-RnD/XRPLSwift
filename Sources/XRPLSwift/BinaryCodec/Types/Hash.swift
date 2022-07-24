@@ -13,12 +13,12 @@ import Foundation
 class Hash: SerializedType {
     public var width: Int
     
-    init(_ bytes: [UInt8]) {
-        self.width = bytes.count
-        super.init(bytes: bytes)
+    init(_ bytes: [UInt8]? = nil) {
+        self.width = bytes!.count
+        super.init(bytes: bytes ?? [])
     }
     
-    func from(value: String) throws -> Hash {
+    class func from(value: String) throws -> Hash {
 //        if value is String {
 //            throw BinaryError.unknownError(error: "Invalid type to construct a {cls.__name__}: expected str, received {value.__class__.__name__}.")
 //        }
@@ -57,6 +57,10 @@ class Hash: SerializedType {
     override func str() -> String {
         return self.toHex()
     }
+//    
+//    override func toJson() -> String {
+//        return self.toJson()
+//    }
     
     /**
        * Returns four bits at the specified depth within a hash

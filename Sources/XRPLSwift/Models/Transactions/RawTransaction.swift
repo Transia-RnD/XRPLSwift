@@ -21,7 +21,7 @@ public class RawTransaction {
         self.fields = enforceJSONTypes(fields: fields)
     }
     
-    public func addFields(sequence: Int, fee: Amount, ledgerIndex: Int) {
+    public func addFields(sequence: Int, fee: aAmount, ledgerIndex: Int) {
         let filledFields: [String: Any] = [
             "LastLedgerSequence": ledgerIndex,
             "Fee": "\(fee.drops!)",

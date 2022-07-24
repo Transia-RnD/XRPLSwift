@@ -14,9 +14,9 @@ class SerializedType {
     
     public var bytes: [UInt8] = []
     
-    init(bytes: [UInt8]? = nil) {
+    init(bytes: [UInt8]) {
         // Construct a new SerializedType.
-        self.bytes = bytes!
+        self.bytes = bytes
     }
     
     func fromParser(
@@ -25,11 +25,16 @@ class SerializedType {
         hint: Int?
     ) throws -> SerializedType {
         throw BinaryError.notImplemented
-        return self
+        return try! self.fromParser(parser: parser, hint: hint)
+    }
+    
+    func from(value: SerializedType) throws -> SerializedType {
+        throw BinaryError.notImplemented
+        return try! self.from(value: value)
     }
     
     //    static func from(value: SerializedType | JSON | bigInt.BigInteger) -> SerializedType {
-    func from(value: SerializedType) throws -> SerializedType {
+    class func from(value: SerializedType) throws -> SerializedType {
         throw BinaryError.notImplemented
         return try! self.from(value: value)
     }
@@ -62,6 +67,16 @@ class SerializedType {
         return bytes
     }
     
+    func toJson() -> [String: AnyObject] {
+        /*
+         Returns the JSON representation of a SerializedType.
+         If not overridden, returns hex string representation of bytes.
+         Returns:
+         The JSON representation of the SerializedType.
+         */
+        return [:]
+    }
+    
     func toJson() -> Any {
         /*
          Returns the JSON representation of a SerializedType.
@@ -71,6 +86,17 @@ class SerializedType {
          */
         return toHex()
     }
+    
+    func toJson() -> String {
+        /*
+         Returns the JSON representation of a SerializedType.
+         If not overridden, returns hex string representation of bytes.
+         Returns:
+         The JSON representation of the SerializedType.
+         */
+        return toHex()
+    }
+    
     
     func str() -> String {
         /*

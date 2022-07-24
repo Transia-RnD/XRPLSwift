@@ -42,7 +42,7 @@ public class NFTokenAcceptOffer: Transaction {
     and NFTokenBuyOffer must be specified.
     */
 
-    public var nftokenBrokerFee: Amount?
+    public var nftokenBrokerFee: aAmount?
     /*
     This field is only valid in brokered mode. It specifies the
     amount that the broker will keep as part of their fee for
@@ -66,7 +66,7 @@ public class NFTokenAcceptOffer: Transaction {
         from wallet: Wallet,
         nftokenSellOffer: String? = nil,
         nftokenBuyOffer: String? = nil,
-        nftokenBrokerFee: Amount? = nil
+        nftokenBrokerFee: aAmount? = nil
     ) {
         self.nftokenSellOffer = nftokenSellOffer
         self.nftokenBuyOffer = nftokenBuyOffer

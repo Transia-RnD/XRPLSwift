@@ -323,7 +323,7 @@ public class SeedWallet: Wallet {
             fatalError()
         }
         
-        guard let amount = dict["amount"] as? Amount else {
+        guard let amount = dict["amount"] as? aAmount else {
             fatalError()
         }
         

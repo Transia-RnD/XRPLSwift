@@ -17,50 +17,39 @@ class xUInt32: xUInt {
     See `UInt Fields <https://xrpl.org/serialization.html#uint-fields>`_
      */
     
-    static public var ZERO_32: xUInt32 = xUInt32(bytes: Data(bytes: [], count: WIDTH32).bytes)
+    static public var ZERO_32: xUInt32 = xUInt32([UInt8].init(repeating: 0x0, count: WIDTH32))
 
-    override init(bytes: [UInt8]? = nil) {
+    override init(_ bytes: [UInt8]? = nil) {
         // Construct a new xUInt32 type from a ``bytes`` value.
-        super.init(bytes: bytes ?? xUInt32.ZERO_32.bytes)
+        super.init(bytes ?? xUInt32.ZERO_32.bytes)
     }
 
-    func fromParser(
+    /*
+    Construct a new xUInt32 type from a BinaryParser.
+    Args:
+        parser: The parser to construct a xUInt32 from.
+    Returns:
+        A new xUInt32.
+    */
+    override func fromParser(
         parser: BinaryParser,
-        _lengthHint: Int? = nil
+        hint: Int? = nil
     ) -> xUInt32 {
-        /*
-        Construct a new xUInt32 type from a BinaryParser.
-        Args:
-            parser: The parser to construct a xUInt32 from.
-        Returns:
-            A new xUInt32.
-        */
-        return try! xUInt32(bytes: parser.read(n: WIDTH))
-        
+        return try! xUInt32(parser.read(n: WIDTH32))
     }
 
-    func from(value: Int) -> xUInt32 {
-        /*
-        Construct a new xUInt32 type from a number.
-        Args:
-            value: The value to construct a xUInt32 from.
-        Returns:
-            A new xUInt32.
-        Raises:
-            XRPLBinaryCodecException: If a xUInt32 cannot be constructed.
-        */
-//        if not isinstance(value, Int) {
-//            throw BinaryError.unknownError(error: "Invalid type to construct a UInt8: expected int, received \(value.__class__.__name__).")
-//
-//        }
-
-//        if isinstance(value, int) {
-//            let valueBytes = (value).toBytes(_WIDTH, byteorder="big", signed=false)
-//            return cls(value_bytes)
-//        }
-        return xUInt32(bytes: value.data.bytes)
-        
-//        throw BinaryError.unknownError(error: "Cannot construct UInt8 from given value")
+    /*
+    Construct a new xUInt32 type from a number.
+    Args:
+        value: The value to construct a xUInt32 from.
+    Returns:
+        A new xUInt32.
+    Raises:
+        XRPLBinaryCodecException: If a xUInt32 cannot be constructed.
+    */
+    class func from(value: Int) -> xUInt32 {
+        let valueBytes = Data(bytes: value.data.bytes, count: WIDTH32)
+        return xUInt32(valueBytes.bytes.reversed())
     }
 }
 

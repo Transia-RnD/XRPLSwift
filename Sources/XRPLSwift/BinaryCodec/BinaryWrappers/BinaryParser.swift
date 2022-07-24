@@ -108,8 +108,7 @@ public class BinaryParser {
      * @return The variable length bytes
      */
     func readVariableLength() -> [UInt8] {
-        return []
-        //        return read(n: Int(readVariableLengthLength()))
+        return try! read(n: readLengthPrefix())
     }
     
     /**
@@ -119,6 +118,7 @@ public class BinaryParser {
      */
     func readLengthPrefix() throws -> Int {
         let b1: Int = Int(self.readUInt8())
+        print(b1)
         if (b1 <= 192) {
             return b1
         } else if (b1 <= 240) {
@@ -137,26 +137,26 @@ public class BinaryParser {
      *
      * @return Field ordinal
      */
-    func readFieldOrdinal() throws -> UInt8 {
-        return 1
-        //        let type = readUInt8()
-        //        let nth = type & 15
-        //        type >>= 4
-        //
-        //        if (type === 0) {
-        //            type = readUInt8()
-        //            if (type === 0 || type < 16) {
-        //                throw BinaryError.unknownError(error: "Cannot read FieldOrdinal, type_code out of range")
-        //            }
-        //        }
-        //
-        //        if (nth === 0) {
-        //            nth = readUInt8()
-        //            if (nth === 0 || nth < 16) {
-        //                throw BinaryError.unknownError(error: "Cannot read FieldOrdinal, field_code out of range")
-        //            }
-        //        }
-        //        return (type << 16) | nth
+    func readFieldHeader() throws -> FieldHeader {
+        var type: UInt8 = readUInt8()
+        var nth = type & 15
+        type >>= 4
+
+        print("TYPE CODE: \(type)")
+        if type == 0 {
+            type = readUInt8()
+            if type == 0 || type < 16 {
+                throw BinaryError.unknownError(error: "Cannot read FieldOrdinal, type_code out of range")
+            }
+        }
+
+        if nth == 0 {
+            nth = readUInt8()
+            if nth == 0 || nth < 16 {
+                throw BinaryError.unknownError(error: "Cannot read FieldOrdinal, field_code out of range")
+            }
+        }
+        return FieldHeader(typeCode: Int(type), fieldCode: Int(nth))
     }
     
     /**
@@ -165,8 +165,9 @@ public class BinaryParser {
      * @return The field represented by the bytes at the head of the BinaryParser
      */
     func readField() -> FieldInstance {
-        return FieldInstance(fieldInfo: FieldInfo(dict: ["some": 1]), fieldName: "nil", fieldHeader: FieldHeader(typeCode: 1, fieldCode: 1))
-        //        return Field.fromString(self.readFieldOrdinal().toString())
+        let fieldHeader: FieldHeader = try! self.readFieldHeader()
+        let fieldName: String = Definitions().getFieldNameFromHeader(fieldHeader: fieldHeader)
+        return Definitions().getFieldInstance(fieldName: fieldName)
     }
     
     /**
@@ -195,20 +196,23 @@ public class BinaryParser {
      * @param field The field that you want to get the associated value for
      * @return The value associated with the given field
      */
-    func readFieldValue(field: FieldInstance) -> SerializedType? {
-        return nil
-        //        const type = typeForField(field)
-        //        if (!type) {
-        //            throw new Error(`unsupported: (${field.name}, ${field.type.name})`)
-        //        }
-        //        const sizeHint = field.isVariableLengthEncoded
-        //        ? this.readVariableLengthLength()
-        //        : undefined
-        //        const value = type.fromParser(this, sizeHint)
-        //        if (value === nil) {
-        //            throw BinaryParserError.unknownError(error: "fromParser for (\(field.name), \(field.type.name) -> nil ")
-        //        }
-        //        return value
+    func readFieldValue(field: FieldInstance) throws -> SerializedType? {
+        print("----------------------")
+        print("----------------------")
+        let av: AssociatedValue = AssociatedValue(field: field, parser: self)
+        print("NTH: \(field.nth)")
+        print("TYPE: \(field.type)")
+        print("ENCODED: \(field.isVLEncoded)")
+        let sizeHint: Int? = field.isVLEncoded
+        ? try self.readLengthPrefix()
+        : nil
+        print("HINT: \(sizeHint)")
+        let value: SerializedType = av.fromParser(hint: sizeHint ?? nil)!
+        if value.bytes.isEmpty {
+            throw BinaryError.unknownError(error: "fromParser for (\(field.name), \(field.type) -> nil ")
+        }
+        print("VALUE: \(value.toHex())")
+        return value
     }
     
     /**
@@ -218,6 +222,6 @@ public class BinaryParser {
      */
     func readFieldAndValue() -> (FieldInstance, SerializedType) {
         let field = readField()
-        return (field, readFieldValue(field: field)!)
+        return (field, try! readFieldValue(field: field)!)
     }
 }

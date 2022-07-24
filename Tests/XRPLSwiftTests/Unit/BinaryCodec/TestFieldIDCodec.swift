@@ -10,20 +10,20 @@ import XCTest
 
 final class TestFieldIDCodec: XCTestCase {
     
-    static let fieldTests: [String] = ["Sequence"]
+    static let fieldTests: [FieldTest] = DataDrivenFixtures().getFieldTests()
     
-//    func testEncode() {
-//        for test in self.fieldTests {
-//            let result: String = fieldIDCodec.encode(test.name).hex().upper()
-//            XCTAssertEqual(test.expectedHex, result)
-//        }
-//    }
-//    
-//    func testDecode() {
-//        for test in self.fieldTests {
-//            let result: String = fieldIDCodec.decode(test.expected_hex)
-//            XCTAssertEqual(test.name, result)
-//        }
-//    }
+    func testEncode() {
+        for test in TestFieldIDCodec.fieldTests {
+            let result: String = try! FieldIdCodec.encode(fieldName: test.name).toHexString().uppercased()
+            XCTAssertEqual(test.expectedHex, result)
+        }
+    }
+    
+    func testDecode() {
+        for test in TestFieldIDCodec.fieldTests {
+            let result: String = try! FieldIdCodec.decode(fieldId: test.expectedHex)
+            XCTAssertEqual(test.name, result)
+        }
+    }
 }
     

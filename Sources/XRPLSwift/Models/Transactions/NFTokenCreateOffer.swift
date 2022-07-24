@@ -34,7 +34,7 @@ public class NFTokenCreateOffer: Transaction {
     :meta hide-value:
     */
 
-    public var amount: Amount
+    public var amount: aAmount
     /*
     Indicates the amount expected or offered for the Token.
     The amount must be non-zero, except when this is a sell
@@ -76,7 +76,7 @@ public class NFTokenCreateOffer: Transaction {
         from wallet: Wallet,
         flags: NFTokenCreateOfferFlag? = nil,
         nftokenId: String,
-        amount: Amount,
+        amount: aAmount,
         owner: Address? = nil,
         expiration: Int? = nil,
         destination: Address? = nil

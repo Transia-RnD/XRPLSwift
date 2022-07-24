@@ -10,7 +10,7 @@ import Foundation
 public struct HistoricalTransaction {
     public var type: String
     public var address: String
-    public var amount: Amount
+    public var amount: aAmount
     public var date: Date
     public var raw: NSDictionary
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Currency: Codable {
+public struct aCurrency: Codable {
     public var address: String
     public var balance: String
     public var currency: String

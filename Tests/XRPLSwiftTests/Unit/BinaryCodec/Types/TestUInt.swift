@@ -12,9 +12,9 @@ import XCTest
 
 final class TestUInt: XCTestCase {
     func test_from_value() {
-        let value1 = xUInt8().from(value: 124)
-        let value2 = xUInt8().from(value: 123)
-        let value3 = xUInt8().from(value: 124)
+        let value1 = xUInt8.from(value: 124)
+        let value2 = xUInt8.from(value: 123)
+        let value3 = xUInt8.from(value: 124)
         
         XCTAssertGreaterThan(value1, value2)
         XCTAssertLessThan(value2, value1)
@@ -23,7 +23,7 @@ final class TestUInt: XCTestCase {
     }
 
     func testCompare() {
-        let value1: xUInt8 = xUInt8().from(value: 124)
+        let value1: xUInt8 = xUInt8.from(value: 124)
 //        XCTAssertEqual(value1, 124)
 //        XCTAssertLessThan(value1, 125)
 //        XCTAssertGreaterThan(value1, 123)
@@ -31,10 +31,10 @@ final class TestUInt: XCTestCase {
 //
     func testCompareDifferent() {
         let const: Int = 124
-        let uint8: xUInt8 = xUInt8().from(value: const)
-        let uint16: xUInt16 = xUInt16().from(value: const)
-        let uint32: xUInt32 = xUInt32().from(value:const)
-        let uint64: xUInt64 = xUInt64().from(value:const)
+        let uint8: xUInt8 = xUInt8.from(value: const)
+        let uint16: xUInt16 = xUInt16.from(value: const)
+        let uint32: xUInt32 = xUInt32.from(value:const)
+        let uint64: xUInt64 = xUInt64.from(value:const)
 
         XCTAssertEqual(uint8, uint16)
         XCTAssertEqual(uint16, uint32)

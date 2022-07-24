@@ -56,7 +56,10 @@ public class AddressCodec {
     public static func xAddressToClassicAddress(
         xAddress: String
     ) throws -> [String: AnyObject] {
-        let data = Data(base58Decoding: xAddress)!
+        print(xAddress)
+        guard let data = Data(base58Decoding: xAddress) else {
+            throw AddressCodecError.valueError
+        }
         let check = data.suffix(4).bytes
 
         let concatenated = data.prefix(31).bytes
@@ -107,10 +110,14 @@ public class AddressCodec {
     }
 
     public static func isValidXAddress(xAddress: String) -> Bool {
-        let result = try? self.xAddressToClassicAddress(xAddress: xAddress)
-        guard let _ = result?["classicAddress"] as? String else {
+        do {
+            let result = try? self.xAddressToClassicAddress(xAddress: xAddress)
+            guard let _ = result?["classicAddress"] as? String else {
+                return false
+            }
+            return true
+        } catch {
             return false
         }
-        return true
     }
 }
