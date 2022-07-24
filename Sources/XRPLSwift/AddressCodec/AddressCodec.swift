@@ -5,32 +5,9 @@
 //  Created by Denis Angell on 7/2/22.
 //
 
-import Foundation
-
 // https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/addresscodec/main.py
 
-//"classic_address_to_xaddress",
-//"decode_account_public_key",
-//"decode_classic_address",
-//"decode_node_public_key",
-//"decode_seed",
-//"encode_seed",
-//"encode_account_public_key",
-//"encode_classic_address",
-//"encode_node_public_key",
-//"is_valid_classic_address",
-//"is_valid_xaddress",
-//"SEED_LENGTH",
-//"xaddress_to_classic_address",
-//"XRPLAddressCodecException",
-//"XRPL_ALPHABET",
-
-//let PREFIX_BYTES = {
-//    // 5, 68
-//main: Buffer.from([0x05, 0x44]),
-//    // 4, 147
-//test: Buffer.from([0x04, 0x93]),
-//}
+import Foundation
 
 let MAX_32_BIT_UNSIGNED_INT: Int = 4294967295
 
@@ -43,10 +20,10 @@ public class AddressCodec {
         tag: UInt32? = nil,
         isTest: Bool = false
     ) throws -> String {
-        let accountID = SeedWallet.accountID(for: classicAddress)
-        let prefix: [UInt8] = isTest ? [0x04, 0x93] : [0x05, 0x44]
+        let accountID = try! XrplCodec.decodeClassicAddress(classicAddress: classicAddress)
         let flags: [UInt8] = tag == nil ? [0x00] : [0x01]
         let tag = tag == nil ? [UInt8](UInt64(0).data) : [UInt8](UInt64(tag!).data)
+        let prefix: [UInt8] = isTest ? [0x04, 0x93] : [0x05, 0x44]
         let concatenated = prefix + accountID + flags + tag
         let check = [UInt8](Data(concatenated).sha256().sha256().prefix(through: 3))
         let concatenatedCheck: [UInt8] = concatenated + check
@@ -106,13 +83,13 @@ public class AddressCodec {
         let data = Data(tagBytes)
         let _tag: UInt64 = data.withUnsafeBytes { $0.pointee }
         let tag: UInt32? = flags == 0x00 ? nil : UInt32(String(_tag))!
-        return tag!
+        return (tag != nil) ? tag! : 0
     }
 
     public static func isValidXAddress(xAddress: String) -> Bool {
         do {
-            let result = try? self.xAddressToClassicAddress(xAddress: xAddress)
-            guard let _ = result?["classicAddress"] as? String else {
+            let result = try self.xAddressToClassicAddress(xAddress: xAddress)
+            guard let _ = result["classicAddress"] as? String else {
                 return false
             }
             return true

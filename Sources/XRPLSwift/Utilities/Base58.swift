@@ -118,23 +118,23 @@ public enum Base58 {
 extension String {
 
     public init(base58Encoding bytes: Data, alphabet: [UInt8] = AddressCodecUtils.xrplAlphabet) {
-        var x = BigUInt(bytes)
+        var answer: [UInt8] = []
         let radix = BigUInt(alphabet.count)
-        
-        var answer = [UInt8]()
-        answer.reserveCapacity(bytes.count)
+        var integerBytes = BigUInt(Data(bytes))
 
-        while x > 0 {
-            let (quotient, modulus) = x.quotientAndRemainder(dividingBy: radix)
-            answer.append(alphabet[Int(modulus)])
-            x = quotient
+        while integerBytes > 0 {
+          let (quotient, remainder) = integerBytes.quotientAndRemainder(dividingBy: radix)
+          answer.insert(alphabet[Int(remainder)], at: 0)
+          integerBytes = quotient
         }
-        
-        let prefix = Array(bytes.prefix(while: {$0 == 0})).map { _ in alphabet[0] }
-        answer.append(contentsOf: prefix)
-        answer.reverse()
 
+        let prefix = Array(bytes.prefix { $0 == 0 }).map { _ in alphabet[0] }
+        answer.insert(contentsOf: prefix, at: 0)
+
+        // swiftlint:disable force_unwrapping
+        // Force unwrap as the given alphabet will always decode to UTF8.
         self = String(bytes: answer, encoding: String.Encoding.utf8)!
+        // swiftlint:enable force_unwrapping
     }
 
 }
