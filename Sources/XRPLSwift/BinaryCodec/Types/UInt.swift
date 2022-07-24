@@ -16,8 +16,8 @@ class xUInt: SerializedType {
         super.init(bytes: bytes)
     }
     
+    // TODO: REVIEW THIS: See Tests...
     func value() -> Int {
-//        int.from_bytes(self.buffer, byteorder="big", signed=False)
         let data = Data(self.bytes)
         let value = Int(bigEndian: data.withUnsafeBytes { $0.pointee })
         return value

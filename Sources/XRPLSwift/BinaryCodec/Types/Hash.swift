@@ -11,7 +11,8 @@ import Foundation
 
 
 class Hash: SerializedType {
-    public var width: Int
+    
+    internal var width: Int
     
     init(_ bytes: [UInt8]? = nil) {
         self.width = bytes!.count
@@ -19,10 +20,13 @@ class Hash: SerializedType {
     }
     
     class func from(value: String) throws -> Hash {
-//        if value is String {
-//            throw BinaryError.unknownError(error: "Invalid type to construct a {cls.__name__}: expected str, received {value.__class__.__name__}.")
-//        }
-        return Hash(try! value.asHexArray())
+        let bytes: [UInt8] = try value.asHexArray()
+        // TODO: Discuss workaround (Cannot access self in init aka self.getLength() doesnt work)
+        // WORKAROUND: If Hash ignore getLength Check.
+        if self != Hash.self && bytes.count != self.getLength() {
+            throw BinaryError.unknownError(error: "Invalid hash length \(bytes.count). Expected \(self.getLength())")
+        }
+        return Hash(bytes)
     }
     
     /**
@@ -77,6 +81,13 @@ class Hash: SerializedType {
           b = b & 0x0f
         }
         return Int(b)
+    }
+    
+    class func getLength() -> Int {
+        print("HERE")
+        return 0
+//        throw BinaryError.notImplemented
+//        return try self.getLength()
     }
     
 }

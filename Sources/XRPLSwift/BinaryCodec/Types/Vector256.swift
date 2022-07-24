@@ -19,7 +19,7 @@ class Vector256: SerializedType {
         super.init(bytes: bytes ?? Vector256.ZERO_256.bytes)
     }
     
-    func from(value: [String]) throws -> Vector256 {
+    static func from(value: [String]) throws -> Vector256 {
         var byteList: [UInt8] = []
         for s in value {
             byteList.append(contentsOf: try Hash256.from(value: s).bytes)

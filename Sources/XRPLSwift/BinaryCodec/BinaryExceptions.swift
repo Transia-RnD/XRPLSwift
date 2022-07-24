@@ -5,6 +5,8 @@
 //  Created by Denis Angell on 7/24/22.
 //
 
+// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/exceptions.py
+
 import Foundation
 
 public enum BinaryCodecExceptions: Error {

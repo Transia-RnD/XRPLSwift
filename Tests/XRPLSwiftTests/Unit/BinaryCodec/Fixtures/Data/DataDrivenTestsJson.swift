@@ -1,9 +1,11 @@
 //
-//  File.swift
+//  DataDrivenTestsJson.swift
 //  
 //
 //  Created by Denis Angell on 7/24/22.
 //
+
+// https://github.com/XRPLF/xrpl-py/blob/master/tests/unit/core/binarycodec/fixtures/data/data-driven-tests.json
 
 import Foundation
 

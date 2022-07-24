@@ -26,7 +26,7 @@ class AccountID: Hash160 {
         return value
     }
     
-    override static func from(value: String) -> AccountID {
+    override static func from(value: String) throws -> AccountID {
         if (value.isEmpty) {
             return AccountID(nil)
         }
@@ -34,7 +34,7 @@ class AccountID: Hash160 {
         return (value.range(
             of: HEX_REGEX,
             options: .regularExpression
-        ) != nil) ? AccountID(try! value.asHexArray()) : try! AccountID.fromBase58(value: value)
+        ) != nil) ? AccountID(try value.asHexArray()) : try AccountID.fromBase58(value: value)
     }
     
     static func fromBase58(value: String) throws -> AccountID {
@@ -45,9 +45,9 @@ class AccountID: Hash160 {
             if (tag != 0) {
               throw BinaryError.unknownError(error: "Only allowed to have tag on Account or Destination")
             }
-            return AccountID(try! XrplCodec.decodeClassicAddress(classicAddress: classic))
+            return AccountID(try XrplCodec.decodeClassicAddress(classicAddress: classic))
         } else {
-            return AccountID(try! XrplCodec.decodeClassicAddress(classicAddress: value))
+            return AccountID(try XrplCodec.decodeClassicAddress(classicAddress: value))
         }
     }
     

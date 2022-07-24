@@ -60,14 +60,14 @@ func isoToBytes(iso: String) throws -> [UInt8] {
     return [UInt8].init(repeating: 0x0, count: 12) + iso.bytes + [UInt8].init(repeating: 0x0, count: 5)
 }
 
-class xCurrency: Hash160 {
+class Currency: Hash160 {
     
-    static var defaultCurrency: xCurrency = xCurrency([UInt8].init(repeating: 0x0, count: 20))
+    static var defaultCurrency: Currency = Currency([UInt8].init(repeating: 0x0, count: 20))
     
     public var iso: String? = nil
     
     override init(_ bytes: [UInt8]? = nil) {
-        super.init(bytes ?? xCurrency.defaultCurrency.bytes)
+        super.init(bytes ?? Currency.defaultCurrency.bytes)
         
         print(self.bytes)
         let codeBytes: [UInt8] = [UInt8](self.bytes[12..<15])
@@ -85,18 +85,18 @@ class xCurrency: Hash160 {
         } else {
             print("ISO BYTES: \(codeBytes)")
 //            print("ISO HEX: \(try! isoCodeFromHex(value: codeBytes))")
-            self.iso = try! isoCodeFromHex(value: codeBytes)!
+            self.iso = try? isoCodeFromHex(value: codeBytes)
         }
     }
     
-    override static func from(value: String) throws -> xCurrency {
+    override static func from(value: String) throws -> Currency {
         if isIsoCode(value: value) {
             print("ISO")
-            return xCurrency(try isoToBytes(iso: value))
+            return Currency(try isoToBytes(iso: value))
         }
         if isHex(value: value) {
             print("HEX")
-            return xCurrency(try value.asHexArray())
+            return Currency(try value.asHexArray())
         }
         throw BinaryError.unknownError(error: "Unsupported Currency representation: \(value)")
     }
@@ -104,8 +104,8 @@ class xCurrency: Hash160 {
     override func fromParser(
         parser: BinaryParser,
         hint: Int? = nil
-    ) -> xCurrency {
-        return xCurrency(try! parser.read(n: hint ?? LENGTH20))
+    ) -> Currency {
+        return Currency(try! parser.read(n: hint ?? LENGTH20))
     }
     
     override func toJson() -> String {

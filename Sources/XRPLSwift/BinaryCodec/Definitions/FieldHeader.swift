@@ -52,7 +52,7 @@ public struct FieldHeader: Hashable {
         */
         var header: [UInt8] = []
         if self.typeCode < 16 {
-            if self.typeCode < 16 {
+            if self.fieldCode < 16 {
                 header.append(UInt8(self.typeCode << 4 | self.fieldCode))
             } else {
                 header.append(UInt8(self.typeCode) << 4)
@@ -63,8 +63,6 @@ public struct FieldHeader: Hashable {
         } else {
             header += [0, UInt8(self.typeCode), UInt8(self.fieldCode)]
         }
-            
-        print(header)
         return header
     }
 }

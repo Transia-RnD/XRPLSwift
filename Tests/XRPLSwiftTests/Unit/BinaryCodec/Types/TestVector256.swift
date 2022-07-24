@@ -19,17 +19,17 @@ final class TestVector256: XCTestCase {
     private let SERIALIZED: String = HASH1 + HASH2
     
     func testFromValue() {
-        let vector256Object: Vector256 = try! Vector256().from(value: HASH_LIST)
+        let vector256Object: Vector256 = try! Vector256.from(value: HASH_LIST)
         XCTAssertEqual(vector256Object.toHex(), SERIALIZED)
     }
     
     func testFromParser() {
-        let vector256Object: Vector256 = try! Vector256().from(value: HASH_LIST)
+        let vector256Object: Vector256 = try! Vector256.from(value: HASH_LIST)
         XCTAssertEqual(vector256Object.toHex(), SERIALIZED)
     }
     
     func testToJson() {
-        let vector256Object: Vector256 = try! Vector256().from(value: HASH_LIST)
+        let vector256Object: Vector256 = try! Vector256.from(value: HASH_LIST)
         XCTAssertEqual(try vector256Object.toJson(), HASH_LIST)
     }
     

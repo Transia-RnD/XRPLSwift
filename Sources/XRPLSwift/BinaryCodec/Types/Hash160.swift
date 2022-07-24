@@ -18,10 +18,14 @@ class Hash160: Hash {
     `See Hash Fields <https://xrpl.org/serialization.html#hash-fields>`_
     */
     
-    static public var width: Int = 20
-    static public var ZERO_160: Hash160 = Hash160(Data(bytes: [], count: Hash160.width).bytes)
+    static internal var WIDTH160: Int = 20
+    static public var ZERO_160: Hash160 = Hash160([UInt8].init(repeating: 0x0, count: Hash160.WIDTH160))
     
     override init(_ bytes: [UInt8]? = nil) {
         super.init(bytes ?? Hash160.ZERO_160.bytes)
+    }
+    
+    override class func getLength() -> Int {
+        return Hash160.WIDTH160
     }
 }

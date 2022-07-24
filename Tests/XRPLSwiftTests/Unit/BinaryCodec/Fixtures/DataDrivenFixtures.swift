@@ -5,17 +5,11 @@
 //  Created by Denis Angell on 7/24/22.
 //
 
+//
+
 import Foundation
 
-//_FILENAME = "./data/data-driven-tests.json"
-//dirname = os.path.dirname(__file__)
-//absolute_path = os.path.join(dirname, _FILENAME)
-//with open(absolute_path) as data_driven_tests:
-//    _FIXTURES_JSON = json.load(data_driven_tests)
-
-
 // top level keys: ['types', 'fields_tests', 'whole_objects', 'values_tests']
-//let FIXTURES_JSON = json.load(data_driven_tests)
 
 internal class DataDrivenFixtures {
     

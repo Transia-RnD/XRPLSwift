@@ -11,9 +11,9 @@ import Foundation
 
 let Types: [String: SerializedType.Type] = [
     "AccountID": AccountID.self,
-    "Amount": xAmount.self,
+    "Amount": Amount.self,
     "Blob": Blob.self,
-    "Currency": xCurrency.self,
+    "Currency": Currency.self,
     "Hash": Hash.self,
     "Hash128": Hash128.self,
     "Hash160": Hash160.self,

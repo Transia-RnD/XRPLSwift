@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 class Hash256: Hash {
     
     /*
@@ -18,10 +17,14 @@ class Hash256: Hash {
     `See Hash Fields <https://xrpl.org/serialization.html#hash-fields>`_
     */
     
-    static public var width: Int = 32
-    static public var ZERO_256: Hash256 = Hash256(Data(bytes: [], count: Hash256.width).bytes)
+    static internal var WIDTH256: Int = 32
+    static internal var ZERO_256: Hash256 = Hash256([UInt8].init(repeating: 0x0, count: Hash256.WIDTH256))
     
     override init(_ bytes: [UInt8]? = nil) {
         super.init(bytes ?? Hash256.ZERO_256.bytes)
+    }
+    
+    override class func getLength() -> Int {
+        return Hash256.WIDTH256
     }
 }

@@ -46,7 +46,7 @@ public class AddressCodec {
         
         let isTest: Bool = try self.isTestAddress(prefix: [UInt8](concatenated[..<2]))
         
-        let tag: UInt32 = try self.tagFromBuffer(buf: concatenated)
+        let tag: UInt32? = try self.tagFromBuffer(buf: concatenated)
         
         let classicAddressBytes: [UInt8] = [UInt8](concatenated[2..<22])
         
@@ -69,21 +69,21 @@ public class AddressCodec {
         throw AddressCodecError.invalidAddress
     }
 
-    static func tagFromBuffer(buf: [UInt8]) throws -> UInt32 {
+    static func tagFromBuffer(buf: [UInt8]) throws -> UInt32? {
         let flags = buf[22]
         if (flags >= 2) {
             // No support for 64-bit tags at this time
             throw AddressCodecError.unsupportedAddress
         }
-        //        if flag == 1 {
-        //            // Little-endian to big-endian
-        //            return buf[23] + buf[24] * 0x100 + buf[25] * 0x10000 + buf[26] * 0x1000000
-        //        }
+        if flags == 1 {
+            // Little-endian to big-endian
+            return UInt32(buf[23]) + UInt32(buf[24]) * UInt32(0x100) + UInt32(buf[25]) * UInt32(0x10000) + UInt32(buf[26]) * UInt32(0x1000000)
+        }
         let tagBytes = buf[23...]
         let data = Data(tagBytes)
         let _tag: UInt64 = data.withUnsafeBytes { $0.pointee }
         let tag: UInt32? = flags == 0x00 ? nil : UInt32(String(_tag))!
-        return (tag != nil) ? tag! : 0
+        return tag
     }
 
     public static func isValidXAddress(xAddress: String) -> Bool {

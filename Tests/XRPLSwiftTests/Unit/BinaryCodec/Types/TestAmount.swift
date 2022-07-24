@@ -113,7 +113,7 @@ final class TestAmount: XCTestCase {
 
     func testFromValueIssuedCurrency() {
         for (serialized, json) in IOU_CASES {
-            let amountObject: xAmount = try! xAmount.from(value: json)
+            let amountObject: Amount = try! Amount.from(value: json)
             print(amountObject.bytes)
             XCTAssertEqual(amountObject.toHex(), serialized)
         }
@@ -121,7 +121,7 @@ final class TestAmount: XCTestCase {
 
     func testFromValueXrp() {
         for (json, serialized) in XRP_CASES {
-            let amountObject: xAmount = try! xAmount.from(value: json)
+            let amountObject: Amount = try! Amount.from(value: json)
             XCTAssertEqual(amountObject.toHex(), serialized)
         }
     }
@@ -130,7 +130,7 @@ final class TestAmount: XCTestCase {
         for (serialized, json) in IOU_CASES {
             print("TESTING: \(serialized)")
             let parser: BinaryParser = BinaryParser(hex: serialized)
-            let amountObject: xAmount = try! xAmount().fromParser(parser: parser)
+            let amountObject: Amount = try! Amount().fromParser(parser: parser)
             let result: Any = amountObject.toJson()
             print(result)
             XCTAssertEqual(result as! [String: String], json)
@@ -140,7 +140,7 @@ final class TestAmount: XCTestCase {
     func testToJsonXrp() {
         for (json, serialized) in XRP_CASES {
             let parser: BinaryParser = BinaryParser(hex: serialized)
-            let amountObject: xAmount = try! xAmount().fromParser(parser: parser)
+            let amountObject: Amount = try! Amount().fromParser(parser: parser)
             let result: Any = amountObject.toJson()
             print(result)
             XCTAssertEqual(result as! String, json)

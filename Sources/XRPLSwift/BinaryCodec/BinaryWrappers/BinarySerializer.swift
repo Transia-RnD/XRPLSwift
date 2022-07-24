@@ -187,6 +187,8 @@ public class BinarySerializer {
         if !isUnlModifyWorkaround {
             _ = value.toBytesSink(list: byteObject)
         }
+        
+        print("VL PREFIX: \(encodeVariableLength(length: byteObject.getLength()).toHexString())")
         self.put(bytes: encodeVariableLength(length: byteObject.getLength()))
         self.writeBytesList(bl: byteObject)
     }
@@ -209,6 +211,7 @@ public class BinarySerializer {
         if field.isVLEncoded {
             writeLengthEncoded(value: value, isUnlModifyWorkaround: isUNLModifyWorkaround)
         } else {
+            print("NON VL PREFIX: \(field.header.toBytes().toHexString())")
             self.put(bytes: Data(value.bytes))
         }
     }

@@ -10,6 +10,8 @@
 import Foundation
 
 internal let WIDTH64: Int = 8  // 64 / 8
+internal let HEX_REGEX64: String = "^[a-fA-F0-9]{1,16}$"
+
 
 class xUInt64: xUInt {
     /*
@@ -47,9 +49,21 @@ class xUInt64: xUInt {
     Raises:
         XRPLBinaryCodecException: If a UInt8 cannot be constructed.
     */
-    class func from(value: Int) -> xUInt64 {
+    class func from(value: Int) throws -> xUInt64 {
+        if value < 0 {
+            throw BinaryError.unknownError(error: "\(value) must be an unsigned integer")
+        }
         let valueBytes = Data(bytes: value.data.bytes, count: WIDTH64)
         return xUInt64(valueBytes.bytes.reversed())
+    }
+    
+    class func from(value: String) throws -> xUInt64 {
+        let regex = try! NSRegularExpression(pattern: HEX_REGEX64)
+        let nsrange = NSRange(value.startIndex..<value.endIndex, in: value)
+        if regex.matches(in: value, range: nsrange).isEmpty {
+            throw BinaryError.unknownError(error: "\(value) is not a valid hex string")
+        }
+        return xUInt64(try value.padding(toLength: 16, withPad: "0", startingAt: 0).asHexArray())
     }
 }
 

@@ -5,6 +5,8 @@
 //  Created by Denis Angell on 7/24/22.
 //
 
+// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/field_id_codec.py
+
 import Foundation
 
 public class FieldIdCodec {
@@ -20,7 +22,6 @@ public class FieldIdCodec {
      */
     class func encode(fieldName: String) throws -> Data {
         let fieldHeader: FieldHeader = Definitions().getFieldHeaderFromName(fieldName: fieldName)
-        print(fieldHeader)
         return try self.encodeFieldId(fieldHeader: fieldHeader)
     }
     
@@ -46,10 +47,9 @@ public class FieldIdCodec {
         let typeCode = fieldHeader.typeCode
         let fieldCode = fieldHeader.fieldCode
         
-        //        if !(0 < fieldCode <= 255) || !(0 < typeCode <= 255) {
-        //            return Data()
-        ////            raise XRPLBinaryCodecException("Codes must be nonzero and fit in 1 byte.")
-        //        }
+        if !(0 < fieldCode || fieldCode <= 255) || !(0 < typeCode || typeCode <= 255) {
+            throw BinaryError.unknownError(error: "Codes must be nonzero and fit in 1 byte.")
+        }
         
         if typeCode < 16 && fieldCode < 16 {
             // high 4 bits is the type_code

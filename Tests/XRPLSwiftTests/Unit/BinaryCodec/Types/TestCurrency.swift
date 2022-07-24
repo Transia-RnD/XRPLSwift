@@ -61,45 +61,44 @@ final class TestCurrency: XCTestCase {
 
     func testConstructionFromHexStandard() {
         // XRP case
-        let currencyObject: xCurrency = try! xCurrency.from(value: XRP_HEX_CODE)
+        let currencyObject: Currency = try! Currency.from(value: XRP_HEX_CODE)
         XCTAssertEqual(currencyObject.toJson(), XRP_ISO)
 
         // General case
-        let currencyObject1: xCurrency = try! xCurrency.from(value: USD_HEX_CODE)
+        let currencyObject1: Currency = try! Currency.from(value: USD_HEX_CODE)
         XCTAssertEqual(currencyObject1.toJson(), USD_ISO)
 
     }
 
     func testConstructionFromIsoCodeStandard() {
         // XRP case
-        let currencyObject: xCurrency = try! xCurrency.from(value: XRP_ISO)
+        let currencyObject: Currency = try! Currency.from(value: XRP_ISO)
         XCTAssertEqual(currencyObject.toHex(), XRP_HEX_CODE)
 
         // General case
-        let currencyObject1: xCurrency = try! xCurrency.from(value: USD_ISO)
+        let currencyObject1: Currency = try! Currency.from(value: USD_ISO)
         XCTAssertEqual(currencyObject1.toHex(), USD_HEX_CODE)
     }
 
     func testConstructionFromHexNonstandard() {
-        let currencyObject: xCurrency = try! xCurrency.from(value: NONSTANDARD_HEX_CODE)
+        let currencyObject: Currency = try! Currency.from(value: NONSTANDARD_HEX_CODE)
         XCTAssertEqual(currencyObject.toJson(), NONSTANDARD_HEX_CODE)
     }
 
-    // TODO: FIX THIS
-//    func testConstructionFromHexNonrecommended() {
-//        let currencyObject: xCurrency = try! xCurrency.from(value: NOT_RECOMMENDED_HEX_CODE)
-//        XCTAssertEqual(currencyObject.toJson(), NOT_RECOMMENDED_HEX_CODE)
-//    }
+    func testConstructionFromHexNonrecommended() {
+        let currencyObject: Currency = try! Currency.from(value: NOT_RECOMMENDED_HEX_CODE)
+        XCTAssertEqual(currencyObject.toJson(), NOT_RECOMMENDED_HEX_CODE)
+    }
 
     // MARK: INVALID SWIFT IMPLEMENTATION
 //    func testRaisesInvalidValueType() {
 //        let invalidValue = [1, 2, 3]
-//        XCTAssertThrowsError(xCurrency.from(value: invalidValue))
+//        XCTAssertThrowsError(Currency.from(value: invalidValue))
 //    }
 
     // TODO: FIX THIS
-//    func testRaisesInvalidXrpEncoding() {
-//        XCTAssertThrowsError(try xCurrency.from(value: ILLEGAL_XRP_HEX_CODE))
-//    }
+    func testRaisesInvalidXrpEncoding() {
+        XCTAssertThrowsError(try Currency.from(value: ILLEGAL_XRP_HEX_CODE))
+    }
 }
 

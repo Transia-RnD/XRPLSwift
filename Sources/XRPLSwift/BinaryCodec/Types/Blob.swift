@@ -44,15 +44,6 @@ class Blob: SerializedType {
      XRPLBinaryCodecException: If a Blob cannot be constructed.
      */
     static func from(value: String) throws -> Blob {
-//        if (type(of: value) != type(of: String.self)) {
-//            throw BinaryError.unknownError(error: "Invalid type to construct a Blob: expected String, received \(value.self.description).")
-//        }
-        
-//        if (type(of: value) == type(of: String.self)) {
-//            return Blob(try! value.asHexArray())
-//        }
-//        throw BinaryError.unknownError(error: "Cannot construct Blob from value given")
-        
         return Blob(try! value.asHexArray())
     }
 }

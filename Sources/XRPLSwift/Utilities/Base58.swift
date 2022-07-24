@@ -156,7 +156,7 @@ extension Data {
         }
 
         let bytes = answer.serialize()
-        let preFix = Array(byteString.prefix { $0 == alphabet[0] }) == [0x72] ? [0x0] : Array(byteString.prefix { $0 == alphabet[0] })
+        let preFix: [UInt8] = Array(byteString.prefix { $0 == alphabet[0] }).map({ $0 == 114 ? 0 : $0})
         self = preFix + bytes
     }
 }

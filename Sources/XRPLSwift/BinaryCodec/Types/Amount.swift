@@ -221,35 +221,35 @@ func serializeIssuedCurrencyAmount(value: [String: String]) throws -> [UInt8] {
 //    print("AMOUNT BYTES: \(amountBytes.toHexString())")
 //    print(amountBytes.toHexString())
 //    print(value["currency"])
-    let currencyBytes: [UInt8] = try xCurrency.from(value: value["currency"]! as! String).toBytes()
+    let currencyBytes: [UInt8] = try Currency.from(value: value["currency"]!).toBytes()
 //    print("CUR BYTES: \(currencyBytes)")
-    let issuerBytes: [UInt8] = try AccountID.from(value: value["issuer"]! as! String).toBytes()
+    let issuerBytes: [UInt8] = try AccountID.from(value: value["issuer"]!).toBytes()
 //    print("ISSUER BYTES: \(issuerBytes)")
     return amountBytes + currencyBytes + issuerBytes
 }
 
 
-class xAmount: SerializedType {
+class Amount: SerializedType {
     
-    static var defaultAmount: xAmount = try! xAmount(bytes: "4000000000000000".asHexArray())
+    static var defaultAmount: Amount = try! Amount(bytes: "4000000000000000".asHexArray())
     
     override init(bytes: [UInt8]? = nil) {
-        super.init(bytes: bytes ?? xAmount.defaultAmount.bytes)
+        super.init(bytes: bytes ?? Amount.defaultAmount.bytes)
     }
     
-    static func from(value: String) throws -> xAmount {
-        return try xAmount(bytes: serializeXrpAmount(value: value))
+    static func from(value: String) throws -> Amount {
+        return try Amount(bytes: serializeXrpAmount(value: value))
     }
         
-    static func from(value: [String: String]) throws -> xAmount {
+    static func from(value: [String: String]) throws -> Amount {
 //        if IssuedCurrencyAmount.is_dict_of_model(value):
-        return try xAmount(bytes: serializeIssuedCurrencyAmount(value: value))
+        return try Amount(bytes: serializeIssuedCurrencyAmount(value: value))
     }
     
     override func fromParser(
         parser: BinaryParser,
         hint: Int? = nil
-    ) throws -> xAmount {
+    ) throws -> Amount {
 //        print(parser.bytes)
         let parserFirstByte = try parser.peek()
 //        print(parserFirstByte)
@@ -264,7 +264,7 @@ class xAmount: SerializedType {
             numBytes = NATIVE_AMOUNT_BYTE_LENGTH
         }
 //        print(numBytes)
-        return xAmount(bytes: try parser.read(n: numBytes))
+        return Amount(bytes: try parser.read(n: numBytes))
     }
 
     override func toJson() -> Any {
@@ -283,7 +283,7 @@ class xAmount: SerializedType {
         
         let parser: BinaryParser = BinaryParser(hex: self.toHex())
         let valueBytes: [UInt8] = try! parser.read(n: 8)
-        let currency: xCurrency = xCurrency().fromParser(parser: parser)
+        let currency: Currency = Currency().fromParser(parser: parser)
         let issuer: AccountID = AccountID().fromParser(parser: parser)
         print(issuer.toJson())
         let b1: UInt8 = valueBytes[0]

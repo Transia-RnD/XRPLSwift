@@ -67,7 +67,7 @@ class STArray: SerializedType {
             }
 
             var outer: [String: AnyObject] = [:]
-            let _result: [String: AnyObject] = STObject().fromParser(parser: parser).toJson()
+            let _result: [String: Any] = STObject().fromParser(parser: parser).toJson()
             outer[field.name] = _result as AnyObject
             result.append(outer)
         }

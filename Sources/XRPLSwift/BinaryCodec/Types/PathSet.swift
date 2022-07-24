@@ -34,7 +34,7 @@
 //}
 //
 //class PathStep: SerializedType {
-//    static func from(value: [String: String]) throws -> xAmount {
+//    static func from(value: [String: String]) throws -> Amount {
 //        let dataType: Int = 0x00
 //        let buffer = [UInt8] = []
 //        if let v = value["account"] as String {
@@ -117,7 +117,7 @@
 //class Path: SerializedType {
 //    // Class for serializing/deserializing Paths.
 //
-//    func from(value: [[[String: String]]]) throws -> xAmount {
+//    func from(value: [[[String: String]]]) throws -> Amount {
 //        let buffer: [UInt8] = []
 //        for dict in value {
 //            let pathstep = PathStep.from(value: dict)
@@ -155,7 +155,7 @@
 //}
 //
 //class PathSet: SerializedType {
-//    func from(value: [[[String: String]]]) throws -> xAmount {
+//    func from(value: [[[String: String]]]) throws -> Amount {
 //        if isPathSet(value: value) {
 //            let buffer: [UInt8] = []
 //            for pathDict in value {
