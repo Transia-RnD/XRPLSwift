@@ -135,7 +135,7 @@ final class TestXrplCodec: XCTestCase {
                 type: .secp256k1
             )
         } catch {
-            XCTAssertTrue(error is XrplCodecError, "Unexpected error type: \(type(of: error))")
+            XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
         }
     }
     
@@ -148,7 +148,7 @@ final class TestXrplCodec: XCTestCase {
                 type: .secp256k1
             )
         } catch {
-            XCTAssertTrue(error is XrplCodecError, "Unexpected error type: \(type(of: error))")
+            XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
         }
     }
     
@@ -179,7 +179,7 @@ final class TestXrplCodec: XCTestCase {
                 bytes: hexStringBytes
             )
         } catch {
-            XCTAssertTrue(error is XrplCodecError, "Unexpected error type: \(type(of: error))")
+            XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
         }
     }
     

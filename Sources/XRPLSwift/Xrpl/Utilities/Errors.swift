@@ -7,6 +7,16 @@
 
 import Foundation
 
+public enum XrplError: Error {
+    case noPromise(_ desc: String)
+    public var localizedDescription: String {
+        switch self {
+        case .noPromise(let desc):
+            return desc
+        }
+    }
+}
+
 public enum RippleError: Error {
     case transactionSerializationError
     case connectionError

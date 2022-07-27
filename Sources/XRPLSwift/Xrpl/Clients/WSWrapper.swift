@@ -1,9 +1,13 @@
 //
-//  File.swift
+//  WSWrapper.swift
 //
 //
 //  Created by Mitch Lang on 1/31/20.
+//  Updated by Denis Angell on 7/26/22.
 //
+
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/client/WSWrapper.ts
+
 import Foundation
 
 public protocol XRPLWebSocketDelegate {
@@ -46,6 +50,10 @@ class _WebSocket: NSObject  {
 import WebSocketKit
 
 class LinuxWebSocket: _WebSocket, XRPLWebSocket {
+    func subscribe(account: String) {
+        print()
+    }
+    
     
     var ws: WebSocket!
     
@@ -124,6 +132,8 @@ class AppleWebSocket: _WebSocket, XRPLWebSocket, URLSessionWebSocketDelegate {
     let delegateQueue = OperationQueue()
     var connected: Bool = false
     
+    var openRequests: [String: EventLoopFuture] = [:]
+    
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
         self.connected = true
         self.delegate?.onConnected(connection: self)
@@ -164,6 +174,16 @@ class AppleWebSocket: _WebSocket, XRPLWebSocket, URLSessionWebSocketDelegate {
                 }
                 
                 self.listen()
+            }
+        }
+    }
+    
+    func send(request: String) {
+        if self.connected {
+            webSocketTask.send(URLSessionWebSocketTask.Message.string(text)) { error in
+                if let error = error {
+                    self.delegate?.onError(connection: self, error: error)
+                }
             }
         }
     }

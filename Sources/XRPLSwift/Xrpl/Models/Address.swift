@@ -79,6 +79,6 @@ public struct Address {
         let concatenated = prefix + accountID + flags + tag
         let check = [UInt8](Data(concatenated).sha256().sha256().prefix(through: 3))
         let concatenatedCheck: [UInt8] = concatenated + check
-        return String(base58Encoding: Data(concatenatedCheck), alphabet: AddressCodecUtils.xrplAlphabet)
+        return String(base58Encoding: Data(concatenatedCheck))
     }
 }

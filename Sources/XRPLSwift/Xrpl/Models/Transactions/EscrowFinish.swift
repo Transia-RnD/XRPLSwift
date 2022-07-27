@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import NIO
+//import NIO
 
 public class EscrowFinish: Transaction {
     
