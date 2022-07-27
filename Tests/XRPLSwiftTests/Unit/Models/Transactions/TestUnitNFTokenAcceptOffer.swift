@@ -33,7 +33,7 @@ final class TestUnitNFTokenAcceptOffer: XCTestCase {
             from: ReusableValues.wallet,
             nftokenSellOffer: ReusableValues.nftokenSellOfferIndex,
             nftokenBuyOffer: ReusableValues.nftokenBuyOfferIndex,
-            nftokenBrokerFee: try! Amount(drops: 0)
+            nftokenBrokerFee: try! aAmount(drops: 0)
         )
         print(acceptBrokerTx)
         XCTAssert(acceptBrokerTx.nftokenSellOffer == ReusableValues.nftokenBuyOfferIndex)

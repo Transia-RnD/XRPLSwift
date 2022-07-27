@@ -47,7 +47,7 @@ final class TestPaymentChannelE2E: XCTestCase {
         // create the expectation
         let exp = expectation(description: "testBasicFunctionality")
         // call my asynchronous method
-        let amount = try! Amount(drops: 1000000) // 1.0 XRP
+        let amount = try! aAmount(drops: 1000000) // 1.0 XRP
         let paymentChannel = PaymentChannelCreate(
             from: ReusableValues.wallet,
             destination: ReusableValues.destination,
@@ -131,7 +131,7 @@ final class TestPaymentChannelE2E: XCTestCase {
         let exp = expectation(description: "testBasicFunctionality")
 
         // call my asynchronous method
-        let amount = try! Amount(drops: 1000000) // 1.0 XRP
+        let amount = try! aAmount(drops: 1000000) // 1.0 XRP
         let paymentChannel = PaymentChannelFund(
             from: ReusableValues.wallet,
             channel: ReusableValues.channelHex,
