@@ -22,7 +22,7 @@ import Foundation
 //import SignerList from './SignerList'
 //import Ticket from './Ticket'
 
-enum LedgerEntry: Codable {
+public enum LedgerEntry: Codable {
     case AccountRoot
     case Amendments
     case Check

@@ -5,7 +5,7 @@
 //  Created by Mitch Lang on 2/4/20.
 //
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/models/transactions/payment.py
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/payment.ts
 
 import Foundation
 
@@ -38,7 +38,7 @@ public enum PaymentFlag: UInt32 {
      */
 }
 
-public class Payment: Transaction {
+public class Payment: BaseTransaction {
     
     /*
      Represents a Payment <https://xrpl.org/payment.html>`_ transaction, which
@@ -50,39 +50,39 @@ public class Payment: Transaction {
      <http://xrpl.local/payment.html#creating-accounts>`_.
      */
     
-    public var amount: aAmount
+    public let amount: rAmount
     /*
      The amount of currency to deliver. If the Partial Payment flag is set,
      deliver *up to* this amount instead. This field is required.
      :meta hide-value:
      */
     
-    public var destination: String
+    public let destination: String
     /*
      The address of the account receiving the payment. This field is required.
      :meta hide-value:
      */
     
-    public var destinationTag: UInt32?
+    public let destinationTag: Int?
     /*
      An arbitrary `destination tag
      <https://xrpl.org/source-and-destination-tags.html>`_ that
      identifies the reason for the Payment, or a hosted recipient to pay.
      */
     
-    public var invoiceId: Int?
+    public let invoiceId: Int?
     /*
      Arbitrary 256-bit hash representing a specific reason or identifier for
      this Check.
      */
     
-    public var paths: Int?
+    public let paths: Int?
     /*
      Array of payment paths to be used (for a cross-currency payment). Must be
      omitted for XRP-to-XRP transactions.
      */
     
-    public var sendMax: aAmount?
+    public let sendMax: rAmount?
     /*
      Maximum amount of source currency this transaction is allowed to cost,
      including `transfer fees <http://xrpl.local/transfer-fees.html>`_,
@@ -91,7 +91,7 @@ public class Payment: Transaction {
      or cross-issue payments. Must be omitted for XRP-to-XRP payments.
      */
     
-    public var deliverMin: aAmount?
+    public let deliverMin: rAmount?
     /*
      Minimum amount of destination currency this transaction should deliver.
      Only valid if this is a partial payment. If omitted, any positive amount
@@ -99,14 +99,13 @@ public class Payment: Transaction {
      */
     
     public init(
-        from wallet: Wallet,
-        amount: aAmount,
+        amount: rAmount,
         destination: String,
-        destinationTag: UInt32? = nil,
+        destinationTag: Int? = nil,
         invoiceId: Int? = nil,
         paths: Int? = nil,
-        sendMax : aAmount? = nil,
-        deliverMin : aAmount? = nil
+        sendMax : rAmount? = nil,
+        deliverMin : rAmount? = nil
     ) {
         
         self.amount = amount
@@ -116,47 +115,40 @@ public class Payment: Transaction {
         self.paths = paths
         self.sendMax = sendMax
         self.deliverMin = deliverMin
-        
-        
-        // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
-        // Sets the fields for the tx
-        var _fields: [String: Any] = [
-            "TransactionType": TransactionType.Payment.rawValue,
-            "Destination": destination,
-            "Amount": String(amount.drops),
-            "Flags": UInt64(2147483648),
-        ]
-        
-        // For Currencies
-        if amount.currency != "XRP" {
-            _fields["Amount"] = [
-                "currency": amount.currency,
-                "value": amount.toXrp().clean,
-                "issuer": amount.issuer
-            ]
-        }
-        
-        if let destinationTag = destinationTag {
-            _fields["DestinationTag"] = destinationTag
-        }
-        
-        if let invoiceId = invoiceId {
-            _fields["InvoiceID"] = invoiceId
-        }
-        
-        if let paths = paths {
-            _fields["Paths"] = paths
-        }
-        
-        if let sendMax = sendMax {
-            _fields["SendMax"] = sendMax
-        }
-        
-        if let del = deliverMin {
-            _fields["DeliverMin"] = deliverMin
-        }
-        
-        super.init(wallet: wallet, fields: _fields)
+        super.init(account: "", transactionType: "Payment")
     }
     
+    enum CodingKeys: String, CodingKey {
+        case amount = "Amount"
+        case destination = "Destination"
+        case destinationTag = "DestinationTag"
+        case invoiceId = "InvoiceID"
+        case paths = "Paths"
+        case sendMax = "SendMax"
+        case deliverMin = "DeliverMin"
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        amount = try values.decode(rAmount.self, forKey: .amount)
+        destination = try values.decode(String.self, forKey: .destination)
+        destinationTag = try? values.decode(Int.self, forKey: .destinationTag)
+        invoiceId = try? values.decode(Int.self, forKey: .invoiceId)
+        paths = try? values.decode(Int.self, forKey: .paths)
+        sendMax = try? values.decode(rAmount.self, forKey: .sendMax)
+        deliverMin = try? values.decode(rAmount.self, forKey: .deliverMin)
+        try super.init(from: decoder)
+    }
+    
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        try values.encode(amount, forKey: .amount)
+        try values.encode(destination, forKey: .destination)
+        if let destinationTag = destinationTag { try values.encode(destinationTag, forKey: .destinationTag) }
+        if let invoiceId = invoiceId { try values.encode(invoiceId, forKey: .invoiceId) }
+        if let paths = paths { try values.encode(paths, forKey: .paths) }
+        if let sendMax = sendMax { try values.encode(sendMax, forKey: .sendMax) }
+        if let deliverMin = deliverMin { try values.encode(deliverMin, forKey: .deliverMin) }
+    }
 }

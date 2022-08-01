@@ -6,9 +6,9 @@
 //
 import Foundation
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/models/transactions/payment_channel_fund.py
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/paymentChannelFund.ts
 
-public class PaymentChannelFund: Transaction {
+public class PaymentChannelFund: BaseTransaction {
     
     /*
     Represents a `PaymentChannelFund <https://xrpl.org/paymentchannelfund.html>`_
@@ -25,7 +25,7 @@ public class PaymentChannelFund: Transaction {
     :meta hide-value:
     */
 
-    public var amount: aAmount
+    public var amount: rAmount
     /*
     The amount of XRP, in drops, to add to the channel. This field is
     required.
@@ -41,28 +41,37 @@ public class PaymentChannelFund: Transaction {
     */
     
     public init(
-        from wallet: Wallet,
         channel: String,
-        amount: aAmount,
+        amount: rAmount,
         expiration: Int? = nil
     ) {
         self.channel = channel
         self.amount = amount
         self.expiration = expiration
         
-        // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
-        // Sets the fields for the tx
-        var _fields: [String:Any] = [
-            "TransactionType": TransactionType.PaymentChannelFund.rawValue,
-            "Channel": channel,
-            "Amount": String(amount.drops),
-        ]
-        
-        if let expiration = expiration {
-            _fields["Expiration"] = expiration
-        }
-        
-        super.init(wallet: wallet, fields: _fields)
+        super.init(account: "", transactionType: "PaymentChannelFund")
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case channel = "Channel"
+        case amount = "Amount"
+        case expiration = "Expiration"
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        channel = try values.decode(String.self, forKey: .channel)
+        amount = try values.decode(rAmount.self, forKey: .amount)
+        expiration = try? values.decode(Int.self, forKey: .expiration)
+        try super.init(from: decoder)
+    }
+    
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        try values.encode(channel, forKey: .channel)
+        try values.encode(amount, forKey: .amount)
+        if let expiration = expiration { try values.encode(expiration, forKey: .expiration) }
     }
 
 }

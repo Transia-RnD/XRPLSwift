@@ -8,9 +8,9 @@
 
 import Foundation
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/models/transactions/account_delete.py
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/accountDelete.ts
 
-public class AccountDelete: Transaction {
+public class AccountDelete: BaseTransaction {
     
     /*
     Represents an `AccountDelete transaction
@@ -22,7 +22,7 @@ public class AccountDelete: Transaction {
     delete an account.
     */
     
-    public var destination: Address
+    public var destination: String
     /*
     The address of the account to which to send any remaining XRP.
     This field is required.
@@ -36,24 +36,33 @@ public class AccountDelete: Transaction {
     */
     
     public init(
-        from wallet: Wallet,
-        destination: Address,
-        destinationTag: Int?
+        destination: String,
+        destinationTag: Int? = nil
     ) {
+        // Required
         self.destination = destination
+        // Optional
         self.destinationTag = destinationTag
-        
-        // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
-        // Sets the fields for the tx
-        var _fields: [String:Any] = [
-            "TransactionType": TransactionType.AccountDelete.rawValue,
-            "Destination": destination
-        ]
-        
-        if let dTag = destinationTag {
-            _fields["DestinationTag"] = dTag
-        }
-        
-        super.init(wallet: wallet, fields: _fields)
+        super.init(account: "", transactionType: "AccountSet")
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case destination = "Destination"
+        case destinationTag = "DestinationTag"
+    }
+    
+    
+    required public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        destination = try values.decode(String.self, forKey: .destination)
+        destinationTag = try values.decode(Int.self, forKey: .destinationTag)
+        try super.init(from: decoder)
+    }
+    
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        try values.encode(destination, forKey: .destination)
+        if let destinationTag = destinationTag { try values.encode(destinationTag, forKey: .destinationTag) }
     }
 }

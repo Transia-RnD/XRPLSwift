@@ -7,9 +7,9 @@
 
 import Foundation
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/models/transactions/offer_cancel.py
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/offerCancel.ts
 
-public class OfferCancel: Transaction {
+public class OfferCancel: BaseTransaction {
     
     /*
     Represents an `OfferCancel <https://xrpl.org/offercancel.html>`_ transaction,
@@ -17,7 +17,7 @@ public class OfferCancel: Transaction {
     <https://xrpl.org/decentralized-exchange.html>`_.
     */
 
-    public var offerSequence: Int
+    public let offerSequence: Int
     /*
     The Sequence number (or Ticket number) of a previous OfferCreate
     transaction. If specified, cancel any Offer object in the ledger that was
@@ -25,20 +25,26 @@ public class OfferCancel: Transaction {
     specified does not exist.
     */
     
-    public init(
-        wallet: Wallet,
-        offerSequence: Int
-    ) {
+    public init(offerSequence: Int) {
         
         self.offerSequence = offerSequence
         
-        // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
-        // Sets the fields for the tx
-        let _fields: [String:Any] = [
-            "TransactionType" : TransactionType.NFTokenCancelOffer.rawValue,
-            "offerSequence": offerSequence
-        ]
-        
-        super.init(wallet: wallet, fields: _fields)
+        super.init(account: "", transactionType: "CancelOffer")
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case offerSequence = "OfferSequence"
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        offerSequence = try values.decode(Int.self, forKey: .offerSequence)
+        try super.init(from: decoder)
+    }
+    
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        try values.encode(offerSequence, forKey: .offerSequence)
     }
 }

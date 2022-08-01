@@ -7,6 +7,9 @@
 
 import Foundation
 import NIOCore
+import NIO
+
+let eventGroup = MultiThreadedEventLoopGroup(numberOfThreads: 4)
 
 //struct PromiseResolveMap {
 //    var resolve: (value?: void | PromiseLike<void>) => void
@@ -44,9 +47,9 @@ public class ConnectionManager {
      *
      * @returns A promise for resolving the connection.
      */
-    public func awaitConnection() async -> EventLoopPromise<Any> {
+    public func awaitConnection() async -> EventLoopFuture<Any> {
         let promise = eventGroup.next().makePromise(of: Any.self)
         self.promisesAwaitingConnection.append(promise)
-        return promise
+        return promise.futureResult
     }
 }

@@ -16,7 +16,7 @@ import Foundation
  *
  * @category Ledger Entries
  */
-open class DepositPreauth: BaseLedgerEntry {
+open class DepositPreauth_: BaseLedgerEntry {
     public var ledgerEntryType: String = "DepositPreauth"
     /** The account that granted the preauthorization. */
     public let account: String

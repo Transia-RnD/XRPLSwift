@@ -6,9 +6,9 @@
 //
 import Foundation
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/models/transactions/payment_channel_create.py
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/paymentChannelCreate.ts
 
-public class PaymentChannelCreate: Transaction {
+public class PaymentChannelCreate: BaseTransaction {
     
     /*
     Represents a `PaymentChannelCreate
@@ -18,14 +18,14 @@ public class PaymentChannelCreate: Transaction {
     channel.
     */
 
-    public var amount: aAmount
+    public var amount: rAmount
     /*
     The amount of XRP, in drops, to set aside in this channel. This field is
     required.
     :meta hide-value:
     */
 
-    public var destination: Address
+    public var destination: String
     /*
     The account that can receive XRP from this channel, also known as the
     "destination address" of the channel. Cannot be the same as the sender.
@@ -64,40 +64,50 @@ public class PaymentChannelCreate: Transaction {
     */
     
     public init(
-        from wallet: Wallet,
-        destination: Address,
-        destinationTag: Int? = nil,
-        publicKey: String,
-        amount: aAmount,
+        amount: rAmount,
+        destination: String,
         settleDelay: Int,
-        cancelAfter: Int? = nil
+        publicKey: String,
+        cancelAfter: Int? = nil,
+        destinationTag: Int? = nil
     ) {
-        self.destination = destination
-        self.destinationTag = destinationTag
-        self.publicKey = publicKey
         self.amount = amount
+        self.destination = destination
         self.settleDelay = settleDelay
+        self.publicKey = publicKey
         self.cancelAfter = cancelAfter
-        
-        // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
-        // Sets the fields for the tx
-        var _fields: [String:Any] = [
-            "TransactionType": TransactionType.PaymentChannelCreate.rawValue,
-            "SettleDelay": settleDelay,
-            "PublicKey": publicKey,
-            "Amount": String(amount.drops),
-            "Destination": destination.rAddress,
-        ]
-        
-        if let cancelAfter = cancelAfter {
-            assert(cancelAfter > settleDelay)
-            _fields["CancelAfter"] = cancelAfter
-        }
-        
-        if let destinationTag = destinationTag {
-            _fields["DestinationTag"] = destinationTag
-        }
-        
-        super.init(wallet: wallet, fields: _fields)
+        self.destinationTag = destinationTag
+        super.init(account: "", transactionType: "PaymentChannelCreate")
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case amount = "Amount"
+        case destination = "Destination"
+        case settleDelay = "SettleDelay"
+        case publicKey = "PublicKey"
+        case cancelAfter = "CancelAfter"
+        case destinationTag = "DestinationTag"
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        amount = try values.decode(rAmount.self, forKey: .amount)
+        destination = try values.decode(String.self, forKey: .destination)
+        settleDelay = try values.decode(Int.self, forKey: .settleDelay)
+        publicKey = try values.decode(String.self, forKey: .publicKey)
+        cancelAfter = try? values.decode(Int.self, forKey: .cancelAfter)
+        destinationTag = try? values.decode(Int.self, forKey: .destinationTag)
+        try super.init(from: decoder)
+    }
+    
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        try values.encode(amount, forKey: .amount)
+        try values.encode(destination, forKey: .destination)
+        try values.encode(settleDelay, forKey: .settleDelay)
+        try values.encode(publicKey, forKey: .publicKey)
+        if let cancelAfter = cancelAfter { try values.encode(cancelAfter, forKey: .cancelAfter) }
+        if let destinationTag = destinationTag { try values.encode(destinationTag, forKey: .destinationTag) }
     }
 }

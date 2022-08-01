@@ -8,7 +8,7 @@
 
 import Foundation
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/models/transactions/account_set.py
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/accountSet.ts
 
 let _MAX_TRANSFER_RATE: Int = 2000000000
 let _MIN_TRANSFER_RATE: Int = 1000000000
@@ -20,7 +20,7 @@ let _DISABLE_TICK_SIZE: Int = 0
 
 let _MAX_DOMAIN_LENGTH: Int = 256
 
-public enum AccountSetFlag: UInt32 {
+public enum AccountSetFlag: Int, Codable {
     /*
     There are several options which can be either enabled or disabled for an account.
     Account options are represented by different types of flags depending on the
@@ -76,53 +76,53 @@ public enum AccountSetFlag: UInt32 {
     /*Allow another account to mint and burn tokens on behalf of this account.*/
 }
 
-public class AccountSet: Transaction {
+public class AccountSet: BaseTransaction {
     /*
     Represents an `AccountSet transaction <https://xrpl.org/accountset.html>`_,
     which modifies the properties of an account in the XRP Ledger.
     */
-    
+
     public var clearFlag: AccountSetFlag?
     /*
     Disable a specific `AccountSet Flag
     <https://xrpl.org/accountset.html#accountset-flags>`_
     */
-    
+
     public var setFlag: AccountSetFlag?
     /*
     Enable a specific `AccountSet Flag
     <https://xrpl.org/accountset.html#accountset-flags>`_
     */
-    
+
     public var domain: String?
     /*
     Set the DNS domain of the account owner. Must be hex-encoded. You can
     use `xrpl.utils.str_to_hex` to convert a UTF-8 string to hex.
     */
-    
+
     public var emailHash: String?
     /*
     Set the MD5 Hash to be used for generating an avatar image for this
     account.
     */
-    
+
     public var messageKey: Int?
     // Set a public key for sending encrypted messages to this account.
-    
+
     public var transferRate: Int?
     /*
     Set the transfer fee to use for tokens issued by this account. See
     `TransferRate <https://xrpl.org/accountset.html#transferrate>`_ for
     details.
     */
-    
+
     public var tickSize: Int?
     /*
     Set the tick size to use when trading tokens issued by this account in
     the decentralized exchange. See `Tick Size
     <https://xrpl.org/ticksize.html>`_ for details.
     */
-    
+
     public var nfTokenMinter: String?
     /*
     Sets an alternate account that is allowed to mint NFTokens on this
@@ -149,44 +149,43 @@ public class AccountSet: Transaction {
         self.transferRate = transferRate
         self.tickSize = tickSize
         self.nfTokenMinter = nfTokenMinter
-        
-        // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
-        // Sets the fields for the tx
-        var _fields: [String:Any] = [
-            "TransactionType" : "AccountSet"
-        ]
-        if let clearFlag = clearFlag {
-            _fields["ClearFlag"] = clearFlag.rawValue
-        }
-        if let setFlag = setFlag {
-            _fields["SetFlag"] = setFlag.rawValue
-        }
-        
-        // TODO: Hex
-        if let domain = domain {
-            _fields["Domain"] = domain
-        }
-        
-        // TODO: Hex
-        if let emailHash = emailHash {
-            _fields["EmailHash"] = emailHash
-        }
-        
-        if let transferRate = transferRate {
-            _fields["TransferRate"] = transferRate
-        }
-        
-        if let tickSize = tickSize {
-            _fields["TickSize"] = tickSize
-        }
-        
-        if let nfTokenMinter = nfTokenMinter {
-            _fields["Minter"] = nfTokenMinter
-        }
-        
-        super.init(wallet: wallet, fields: _fields)
+        super.init(account: "", transactionType: "AccountSet")
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case clearFlag = "ClearFlag"
+        case setFlag = "SetFlag"
+        case domain = "Domain"
+        case emailHash = "EmailHash"
+        case transferRate = "TransferRate"
+        case tickSize = "TickSize"
+        case nfTokenMinter = "NFTokenMinter"
     }
     
+    required public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        clearFlag = try? values.decode(AccountSetFlag.self, forKey: .clearFlag)
+        setFlag = try? values.decode(AccountSetFlag.self, forKey: .setFlag)
+        domain = try? values.decode(String.self, forKey: .domain)
+        emailHash = try? values.decode(String.self, forKey: .emailHash)
+        transferRate = try? values.decode(Int.self, forKey: .transferRate)
+        tickSize = try? values.decode(Int.self, forKey: .tickSize)
+        nfTokenMinter = try? values.decode(String.self, forKey: .nfTokenMinter)
+        try super.init(from: decoder)
+    }
+    
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        if let clearFlag = clearFlag { try values.encode(clearFlag.rawValue, forKey: .clearFlag) }
+        if let setFlag = setFlag { try values.encode(setFlag.rawValue, forKey: .setFlag) }
+        if let domain = domain { try values.encode(domain, forKey: .domain) }
+        if let emailHash = emailHash { try values.encode(emailHash, forKey: .emailHash) }
+        if let transferRate = transferRate { try values.encode(transferRate, forKey: .transferRate) }
+        if let tickSize = tickSize { try values.encode(tickSize, forKey: .tickSize) }
+        if let nfTokenMinter = nfTokenMinter { try values.encode(nfTokenMinter, forKey: .nfTokenMinter) }
+    }
+
     // TODO:
     func _get_errors() -> [String: String?] {
         return [

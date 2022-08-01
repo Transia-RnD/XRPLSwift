@@ -5,26 +5,61 @@
 //  Created by Denis Angell on 7/26/22.
 //
 
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/common/index.ts
+
 import Foundation
+
+public enum AccountObjectType: String, Codable {
+    case check
+    case depositPreauth
+    case escrow
+    case offer
+    case paymentChannel
+    case signerList
+    case ticket
+    case state
+    
+    enum CodingKeys: String, CodingKey {
+        case check = "check"
+        case depositPreauth = "deposit_preauth"
+        case escrow = "escrow"
+        case offer = "offer"
+        case paymentChannel = "paymentChannel"
+        case signerList = "signerList"
+        case ticket = "ticket"
+        case state = "state"
+    }
+}
 
 public enum rLedgerIndex: Codable {
     case string(String) // ('validated' | 'closed' | 'current')
     case number(Int)
-    func get() -> Any? {
+}
+
+extension rLedgerIndex {
+
+    enum LedgerIndexCodingError: Error {
+        case decoding(String)
+    }
+
+    public init(from decoder: Decoder) throws {
+        if let value = try? String.init(from: decoder) {
+            self = .string(value)
+            return
+        }
+        if let value = try? Int.init(from: decoder) {
+            self = .number(value)
+            return
+        }
+        throw LedgerIndexCodingError.decoding("OOPS")
+    }
+
+    public func encode(to encoder: Encoder) throws {
         switch self {
         case .string(let string):
-            return string
+            try string.encode(to: encoder)
         case .number(let number):
-            return number
-        }
-    }
-    
-    func value() -> String? {
-        switch self {
-        case .string:
-            return "string"
-        case .number:
-            return "number"
+            try number.encode(to: encoder)
         }
     }
 }
@@ -38,15 +73,21 @@ protocol IssuedCurrency: Codable {
     var issuer: String { get set }
 }
 
-enum xCurrency {
+enum rCurrency {
     case xrp (XRP)
     case issuedCurrency (IssuedCurrency)
 }
 
-public struct xIssuedCurrencyAmount: IssuedCurrency, Codable {
-    var currency: String
-    var issuer: String
-    var value: String
+public struct rIssuedCurrencyAmount: IssuedCurrency, Codable {
+    public var currency: String
+    public var issuer: String
+    public var value: String
+    
+    enum CodingKeys: String, CodingKey {
+        case currency = "currency"
+        case issuer = "issuer"
+        case value = "value"
+    }
 }
 
 enum AmountType {
@@ -56,45 +97,140 @@ enum AmountType {
 
 public enum rAmount: Codable {
     case string(String)
-    case ic(xIssuedCurrencyAmount)
-    func get() -> Any? {
+    case ic(rIssuedCurrencyAmount)
+}
+
+extension rAmount {
+
+    enum rAmountCodingError: Error {
+        case decoding(String)
+    }
+
+    public init(from decoder: Decoder) throws {
+        print(decoder.self)
+        if let value = try? String.init(from: decoder) {
+            self = .string(value)
+            return
+        }
+        if let value = try? rIssuedCurrencyAmount.init(from: decoder) {
+            self = .ic(value)
+            return
+        }
+        throw rAmountCodingError.decoding("OOPS")
+    }
+
+    public func encode(to encoder: Encoder) throws {
         switch self {
         case .string(let string):
-            return string
+            try string.encode(to: encoder)
         case .ic(let ic):
-            return ic
-        }
-    }
-    
-    func value() -> String? {
-        switch self {
-        case .string:
-            return "string"
-        case .ic:
-            return "ic"
+            try ic.encode(to: encoder)
         }
     }
 }
-//
-//public struct rAmount: Codable {
-//    var bytes: [UInt8] = []
-//    var type: AmountType
-//
-//    init?(rawValue: Any) {
-//        if let rv = rawValue as? String {
-//            self.bytes = rv.bytes
-//        }
-//        if let rv = rawValue as? xIssuedCurrencyAmount {
-//            self.bytes = rv.value.bytes
-//        }
-//        return nil
-//    }
-//
-//    func rawValue() -> Any {
-//        switch self.type {
-//        case .string: return self.bytes.toHexString()
-//        case .ic: return Amount(bytes: self.bytes)
-//        }
-//    }
-//}
 
+public class BaseSigner: Codable {
+    public let account: String
+    public let txnSignature: String
+    public let signingPubKey: String
+    
+    enum CodingKeys: String, CodingKey {
+        case account = "Account"
+        case txnSignature = "TxnSignature"
+        case signingPubKey = "SigningPubKey"
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        account = try values.decode(String.self, forKey: .account)
+        txnSignature = try values.decode(String.self, forKey: .txnSignature)
+        signingPubKey = try values.decode(String.self, forKey: .signingPubKey)
+    }
+}
+
+public class Signer: Codable {
+    public let Signer: BaseSigner
+}
+
+public class BaseMemo: Codable {
+    public let memoData: String
+    public let memoType: String
+    public let memoFormat: String
+    
+    enum CodingKeys: String, CodingKey {
+        case memoData = "MemoData"
+        case memoType = "MemoType"
+        case memoFormat = "MemoFormat"
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        memoData = try values.decode(String.self, forKey: .memoData)
+        memoType = try values.decode(String.self, forKey: .memoType)
+        memoFormat = try values.decode(String.self, forKey: .memoFormat)
+    }
+}
+
+public class Memo: Codable {
+    public let Memo: BaseMemo
+}
+
+//export type StreamType =
+//  | 'consensus'
+//  | 'ledger'
+//  | 'manifests'
+//  | 'peer_status'
+//  | 'transactions'
+//  | 'transactions_proposed'
+//  | 'server'
+//  | 'validations'
+//
+//interface PathStep {
+//  account?: string
+//  currency?: string
+//  issuer?: string
+//}
+//
+//export type Path = PathStep[]
+//
+//export interface SignerEntry {
+//  SignerEntry: {
+//    Account: string
+//    SignerWeight: number
+//  }
+//}
+//
+///**
+// * This information is added to Transactions in request responses, but is not part
+// * of the canonical Transaction information on ledger. These fields are denoted with
+// * lowercase letters to indicate this in the rippled responses.
+// */
+//export interface ResponseOnlyTxInfo {
+//  /**
+//   * The date/time when this transaction was included in a validated ledger.
+//   */
+//  date?: number
+//  /**
+//   * An identifying hash value unique to this transaction, as a hex string.
+//   */
+//  hash?: string
+//  /**
+//   * The sequence number of the ledger that included this transaction.
+//   */
+//  ledger_index?: number
+//}
+//
+///**
+// * One offer that might be returned from either an {@link NFTBuyOffersRequest}
+// * or an {@link NFTSellOffersRequest}.
+// *
+// * @category Responses
+// */
+//export interface NFTOffer {
+//  amount: Amount
+//  flags: number
+//  nft_offer_index: string
+//  owner: string
+//  destination?: string
+//  expiration?: number
+//}

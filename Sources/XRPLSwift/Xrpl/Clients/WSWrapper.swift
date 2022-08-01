@@ -9,12 +9,15 @@
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/client/WSWrapper.ts
 
 import Foundation
+import NIO
+
+let socketGroup = MultiThreadedEventLoopGroup(numberOfThreads: 4)
 
 public protocol XRPLWebSocketDelegate {
     func onConnected(connection: XRPLWebSocket)
     func onDisconnected(connection: XRPLWebSocket, error: Error?)
     func onError(connection: XRPLWebSocket, error: Error)
-    func onResponse(connection: XRPLWebSocket, response: XRPLWebSocketResponse)
+    func onResponse(connection: XRPLWebSocket, response: BaseResponse<Any>)
     func onStream(connection: XRPLWebSocket, object: NSDictionary)
 }
 
@@ -36,12 +39,11 @@ class _WebSocket: NSObject  {
     var delegate: XRPLWebSocketDelegate?
     internal override init() {}
     fileprivate func handleResponse(connection: XRPLWebSocket, data: Data) {
-        if let response = try? JSONDecoder().decode(XRPLWebSocketResponse.self, from: data) {
-            self.delegate?.onResponse(connection: connection, response: response)
-        } else if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
-            self.delegate?.onStream(connection: connection, object: json)
-        }
-        
+//        if let response = try? JSONDecoder().decode(BaseResponse<Any>.self, from: data) {
+//            self.delegate?.onResponse(connection: connection, response: response)
+//        } else if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
+//            self.delegate?.onStream(connection: connection, object: json)
+//        }
     }
 }
 
@@ -70,8 +72,8 @@ class LinuxWebSocket: _WebSocket, XRPLWebSocket {
     }
     
     func connect(host: String) {
-        let client = WebSocketClient(eventLoopGroupProvider: .shared(eventGroup))
-                    try! client.connect(scheme: "wss", host: host, port: 443, onUpgrade: { (_ws) -> () in
+        let client = WebSocketClient(eventLoopGroupProvider: .shared(socketGroup))
+        try! client.connect(scheme: "wss", host: host, port: 443, onUpgrade: { (_ws) -> () in
             self.ws = _ws
         }).wait()
         self.delegate?.onConnected(connection: self)
@@ -89,7 +91,7 @@ class LinuxWebSocket: _WebSocket, XRPLWebSocket {
     }
     
     func connect(host: String, path: String) {
-        let client = WebSocketClient(eventLoopGroupProvider: .shared(eventGroup))
+        let client = WebSocketClient(eventLoopGroupProvider: .shared(socketGroup))
         try! client.connect(scheme: "wss", host: host, port: 443, path: path, onUpgrade: { (_ws) -> () in
             self.ws = _ws
             self.ws.onText { ws, text in

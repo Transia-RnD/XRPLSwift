@@ -5,11 +5,9 @@
 //  Created by Denis Angell on 7/27/22.
 //
 
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/ledger/Ledger.ts
+
 import Foundation
-
-//import { Transaction, TransactionMetadata } from '../transactions'
-
-//import LedgerEntry from './LedgerEntry'
 
 /**
  * A ledger is a block of transactions and shared state data. It has a unique
@@ -17,31 +15,31 @@ import Foundation
  *
  * @category Ledger Entries
  */
-struct BaseLedger: Codable {
+public class BaseLedger: Codable {
     /** The SHA-512Half of this ledger's state tree information. */
-    var accountHash: String
+    private let accountHash: String
     /** All the state information in this ledger. */
-    var accountState: [LedgerEntry]
+    public var accountState: [LedgerEntry]?
     /** A bit-map of flags relating to the closing of this ledger. */
-    var closeFlags: Int
+    public var closeFlags: Int
     /**
      * The approximate time this ledger version closed, as the number of seconds
      * since the Ripple Epoch of 2000-01-01 00:00:00. This value is rounded based
      * on the close_time_resolution.
      */
-    var closeTime: Int
+    public var closeTime: Int
     /**
      * The approximate time this ledger was closed, in human-readable format.
      * Always uses the UTC time zone.
      */
-    var closeTimeHuman: String
+    public var closeTimeHuman: String
     /**
      * An integer in the range [2,120] indicating the maximum number of seconds
      * by which the close_time could be rounded.
      */
     var closeTimeResolution: Int
     /** Whether or not this ledger has been closed. */
-    var aclosed: Bool
+    var closed: Bool
     /**
      * The SHA-512Half of this ledger version. This serves as a unique identifier
      * for this ledger and all its contents.
@@ -72,4 +70,29 @@ struct BaseLedger: Codable {
      */
     //    var transactions?: Array<Transaction & { metaData?: TransactionMetadata }>
     var transactions: [BaseTransaction]?
+    
+    enum CodingKeys: String, CodingKey {
+        case accountHash = "account_hash"
+        case accountState = "account_state"
+        case closeFlags = "close_flags"
+        case closeTime = "close_time"
+        case closeTimeHuman = "close_time_human"
+        case closeTimeResolution = "close_time_resolution"
+        case closed = "closed"
+        case ledgerHash = "ledger_hash"
+        case ledgerIndex = "ledger_index"
+        case parentCloseTime = "parent_close_time"
+        case parentHash = "parent_hash"
+        case totalCoins = "total_coins"
+        case transactionHash = "transaction_hash"
+        case transactions = "transactions"
+    }
+    
+//    required public init(from decoder: Decoder) throws {
+//        let values = try decoder.container(keyedBy: CodingKeys.self)
+//        accountHash = try values.decode(String.self, forKey: .accountHash)
+//        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
+//        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
+//        validated = try values.decode(Bool.self, forKey: .validated)
+//    }
 }

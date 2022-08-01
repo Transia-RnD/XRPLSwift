@@ -23,4 +23,21 @@ final class ReusableValues: XCTestCase {
     public static var channelSigBytes: [UInt8] = [190, 50, 164, 198, 141, 107, 164, 120, 114, 100, 238, 231, 96, 222, 255, 180, 240, 90, 218, 201, 153, 186, 243, 172, 99, 244, 233, 245, 66, 223, 7, 250, 231, 131, 253, 112, 112, 113, 135, 151, 116, 160, 34, 232, 122, 106, 136, 73, 182, 102, 182, 221, 170, 34, 54, 23, 133, 34, 77, 54, 183, 203, 196, 6]
     public static var drops: UInt64 = 1000000
     public static var amount = try! aAmount(drops: 1000000) // 1.0 XRP
+    
+    // NEW
+    public static let testServer: String = "s.altnet.rippletest.net"
+    public static let server: String = "s1.ripple.com"
+    public static let address: String = "radtouEofR55c92fy8xszfQPccjoGi68C3"
+    
+}
+
+
+struct MockAO {
+    public var normal: String = "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn"
+}
+
+
+final class MockRippled: XCTestCase {
+    public static let account_objects: MockAO = MockAO()
+    
 }

@@ -24,7 +24,7 @@ private let autofillEventGroup = MultiThreadedEventLoopGroup(numberOfThreads: 4)
  * Only used for multisigned transactions.
  * @returns The autofilled transaction.
  */
-public class AutoFill {
+public class AutoFillSugar {
     
     // Expire unconfirmed transactions after 20 ledger versions, approximately 1 minute, by default
     let LEDGER_OFFSET = 20

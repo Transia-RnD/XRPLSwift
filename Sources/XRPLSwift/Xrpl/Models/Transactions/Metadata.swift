@@ -1,9 +1,11 @@
 //
-//  File.swift
-//  
+//  Metadata.swift
+//
 //
 //  Created by Denis Angell on 7/27/22.
 //
+
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/metadata.ts
 
 import Foundation
 
@@ -37,7 +39,7 @@ public enum NewField: Codable {
 
 public struct rCreatedNode: Codable {
     
-    public var ledgerEntryType: LedgerEntryType
+    public var ledgerEntryType: rLedgerEntryType
     public var ledgerIndex: String
     public var newFields: [NewField]?
     

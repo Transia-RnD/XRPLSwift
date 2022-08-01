@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  XrplClient.swift
 //  
 //
 //  Created by Denis Angell on 7/27/22.
@@ -9,12 +9,13 @@
 
 import Foundation
 import NIO
+import AnyCodable
 
 public class ClientOptions: ConnectionUserOptions {
     public var feeCushion: Int?
     public var maxFeeXRP: String?
-//    public var proxy: String?
-//    public var timeout: Timer?
+    //    public var proxy: String?
+    //    public var timeout: Timer?
     
     init(
         feeCushion: Int? = nil,
@@ -61,25 +62,20 @@ private func getCollectKeyFromCommand(command: String) -> String? {
 
 func clamp(value: Int, min: Int, max: Int) -> Int {
     //  assert.ok(min <= max, "Illegal clamp bounds")
-//    return min(max(value, min), max)
+    //    return min(max(value, min), max)
     return 0
 }
 
 class MarkerRequest: BaseRequest {
-    var id: Int?
-    var command: String?
-    var apiVersion: Int?
     public var limit: Int?
     public var marker: String?
 }
 
-struct MarkerResult {
-    private var marker: String?
-}
+//struct MarkerResult {
+//    private var marker: String?
+//}
 
-class MarkerResponse: BaseResponse {
-    public var _result: MarkerResult?
-}
+class MarkerResponse: BaseResponse<Any> {}
 
 private let DEFAULT_FEE_CUSHION: Double = 1.2
 private let DEFAULT_MAX_FEE_XRP: String = "2"
@@ -88,6 +84,9 @@ private let MIN_LIMIT: Int = 10
 private let MAX_LIMIT: Int = 400
 
 private let NORMAL_DISCONNECT_CODE: Int = 1000
+
+//public typealias T = Any
+//public typealias R = Any
 
 class EventEmitter {
     
@@ -128,68 +127,73 @@ class XrplClient: EventEmitter {
      * @category Constructor
      */
     // eslint-disable-next-line max-lines-per-function -- okay because we have to set up all the connection handlers
-    public init(server: String, options: ClientOptions? = nil) {
-        //    super()
-        //    if (typeof server !== "string" || !/wss?(?:\+unix)?:\/\//u.exec(server)) {
-        //      throw new ValidationError(
-        //        "server URI must start with `wss://`, `ws://`, `wss+unix://`, or `ws+unix://`.",
-        //      )
-        //    }
+    public init(server: String, options: ClientOptions? = nil) throws {
+        
+        print(server.isValidWss)
+        if server.isValidWss {
+            throw XrplError.validation("server URI must start with `wss://`, `ws://`, `wss+unix://`, or `ws+unix://`.")
+        }
+        //        if (!/wss?(?:\+unix)?:\/\//u.exec(server)) {
+        //          throw new ValidationError(
+        //            "server URI must start with `wss://`, `ws://`, `wss+unix://`, or `ws+unix://`.",
+        //          )
+        //        }
         
         self.feeCushion = options?.feeCushion ?? Int(DEFAULT_FEE_CUSHION)
         self.maxFeeXRP = options?.maxFeeXRP ?? DEFAULT_MAX_FEE_XRP
         
         self.connection = Connection(url: server, options: options)
+        print(connection)
+        print("HERE")
+        //        self.connection.on("error", (errorCode, errorMessage, data) => {
+        //            self.emit("error", errorCode, errorMessage, data)
+        //        })
         
-//        self.connection.on("error", (errorCode, errorMessage, data) => {
-//            self.emit("error", errorCode, errorMessage, data)
-//        })
+        //        self.connection.on("connected", () => {
+        //            self.emit("connected")
+        //        })
         
-//        self.connection.on("connected", () => {
-//            self.emit("connected")
-//        })
-        
-//        self.connection.on("disconnected", (code: Int) => {
-//            let finalCode = code
-//            /*
-//             * 4000: Connection uses a 4000 code internally to indicate a manual disconnect/close
-//             * Since 4000 is a normal disconnect reason, we convert this to the standard exit code 1000
-//             */
-//            if (finalCode === INTENTIONAL_DISCONNECT_CODE) {
-//                finalCode = NORMAL_DISCONNECT_CODE
-//            }
-//            self.emit("disconnected", finalCode)
-//        })
-//
-//        self.connection.on("ledgerClosed", (ledger) => {
-//            self.emit("ledgerClosed", ledger)
-//        })
-//
-//        self.connection.on("transaction", (tx) => {
-//            // mutates `tx` to add warnings
-//            handleStreamPartialPayment(tx, self.connection.trace)
-//            self.emit("transaction", tx)
-//        })
-//
-//        self.connection.on("validationReceived", (validation) => {
-//            self.emit("validationReceived", validation)
-//        })
-//
-//        self.connection.on("manifestReceived", (manifest) => {
-//            self.emit("manifestReceived", manifest)
-//        })
-//
-//        self.connection.on("peerStatusChange", (status) => {
-//            self.emit("peerStatusChange", status)
-//        })
-//
-//        self.connection.on("consensusPhase", (consensus) => {
-//            self.emit("consensusPhase", consensus)
-//        })
-//
-//        self.connection.on("path_find", (path) => {
-//            self.emit("path_find", path)
-//        })
+        //        self.connection.on("disconnected", (code: Int) => {
+        //            let finalCode = code
+        //            /*
+        //             * 4000: Connection uses a 4000 code internally to indicate a manual disconnect/close
+        //             * Since 4000 is a normal disconnect reason, we convert this to the standard exit code 1000
+        //             */
+        //            if (finalCode === INTENTIONAL_DISCONNECT_CODE) {
+        //                finalCode = NORMAL_DISCONNECT_CODE
+        //            }
+        //            self.emit("disconnected", finalCode)
+        //        })
+        //
+        //        self.connection.on("ledgerClosed", (ledger) => {
+        //            self.emit("ledgerClosed", ledger)
+        //        })
+        //
+        //        self.connection.on("transaction", (tx) => {
+        //            // mutates `tx` to add warnings
+        //            handleStreamPartialPayment(tx, self.connection.trace)
+        //            self.emit("transaction", tx)
+        //        })
+        //
+        //        self.connection.on("validationReceived", (validation) => {
+        //            self.emit("validationReceived", validation)
+        //        })
+        //
+        //        self.connection.on("manifestReceived", (manifest) => {
+        //            self.emit("manifestReceived", manifest)
+        //        })
+        //
+        //        self.connection.on("peerStatusChange", (status) => {
+        //            self.emit("peerStatusChange", status)
+        //        })
+        //
+        //        self.connection.on("consensusPhase", (consensus) => {
+        //            self.emit("consensusPhase", consensus)
+        //        })
+        //
+        //        self.connection.on("path_find", (path) => {
+        //            self.emit("path_find", path)
+        //        })
     }
     
     /**
@@ -201,89 +205,110 @@ class XrplClient: EventEmitter {
     public func url() -> String {
         return self.connection.getUrl()
     }
-    //
-    //  /**
-    //   * @category Network
-    //   */
-    //  public async request(
-    //    r: AccountChannelsRequest,
-    //  ): Promise<AccountChannelsResponse>
-    //  public async request(
-    //    r: AccountCurrenciesRequest,
-    //  ): Promise<AccountCurrenciesResponse>
-    //  public async request(r: AccountInfoRequest): Promise<AccountInfoResponse>
-    //  public async request(r: AccountLinesRequest): Promise<AccountLinesResponse>
-    //  public async request(r: AccountNFTsRequest): Promise<AccountNFTsResponse>
-    //  public async request(
-    //    r: AccountObjectsRequest,
-    //  ): Promise<AccountObjectsResponse>
-    //  public async request(r: AccountOffersRequest): Promise<AccountOffersResponse>
-    //  public async request(r: AccountTxRequest): Promise<AccountTxResponse>
-    //  public async request(r: BookOffersRequest): Promise<BookOffersResponse>
-    //  public async request(r: ChannelVerifyRequest): Promise<ChannelVerifyResponse>
-    //  public async request(
-    //    r: DepositAuthorizedRequest,
-    //  ): Promise<DepositAuthorizedResponse>
-    //  public async request(r: FeeRequest): Promise<FeeResponse>
-    //  public async request(
-    //    r: GatewayBalancesRequest,
-    //  ): Promise<GatewayBalancesResponse>
-    //  public async request(r: LedgerRequest): Promise<LedgerResponse>
-    //  public async request(r: LedgerClosedRequest): Promise<LedgerClosedResponse>
-    //  public async request(r: LedgerCurrentRequest): Promise<LedgerCurrentResponse>
-    //  public async request(r: LedgerDataRequest): Promise<LedgerDataResponse>
-    //  public async request(r: LedgerEntryRequest): Promise<LedgerEntryResponse>
-    //  public async request(r: ManifestRequest): Promise<ManifestResponse>
-    //  public async request(r: NFTBuyOffersRequest): Promise<NFTBuyOffersResponse>
-    //  public async request(r: NFTSellOffersRequest): Promise<NFTSellOffersResponse>
-    //  public async request(r: NoRippleCheckRequest): Promise<NoRippleCheckResponse>
-    //  public async request(r: PathFindRequest): Promise<PathFindResponse>
-    //  public async request(r: PingRequest): Promise<PingResponse>
-    //  public async request(r: RandomRequest): Promise<RandomResponse>
-    //  public async request(
-    //    r: RipplePathFindRequest,
-    //  ): Promise<RipplePathFindResponse>
-    //  public async request(r: ServerInfoRequest): Promise<ServerInfoResponse>
-    //  public async request(r: ServerStateRequest): Promise<ServerStateResponse>
-    //  public async request(r: SubmitRequest): Promise<SubmitResponse>
-    //  public async request(
-    //    r: SubmitMultisignedRequest,
-    //  ): Promise<SubmitMultisignedResponse>
-    //  public request(r: SubscribeRequest): Promise<SubscribeResponse>
-    //  public request(r: UnsubscribeRequest): Promise<UnsubscribeResponse>
-    //  public async request(
-    //    r: TransactionEntryRequest,
-    //  ): Promise<TransactionEntryResponse>
-    //  public async request(r: TxRequest): Promise<TxResponse>
-    //  public async request<R extends BaseRequest, T extends BaseResponse>(
-    //    r: R,
-    //  ): Promise<T>
-    //  /**
-    //   * Makes a request to the client with the given command and
-    //   * additional request body parameters.
-    //   *
-    //   * @param req - Request to send to the server.
-    //   * @returns The response from the server.
-    //   * @category Network
-    //   */
-    //  public async request<R extends Request, T extends Response>(
-    //    req: R,
-    //  ): Promise<T> {
-    //    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Necessary for overloading
-    //    const response = (await this.connection.request({
-    //      ...req,
-    //      account: req.account
-    //        ? // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Must be string
-    //          ensureClassicAddress(req.account as string)
-    //        : undefined,
-    //    })) as T
-    //
-    //    // mutates `response` to add warnings
-    //    handlePartialPayment(req.command, response)
-    //
-    //    return response
-    //  }
-    //
+    
+      /**
+       * @category Network
+       */
+//      public async request(
+//        r: AccountChannelsRequest,
+//      ): Promise<AccountChannelsResponse>
+//      public async request(
+//        r: AccountCurrenciesRequest,
+//      ): Promise<AccountCurrenciesResponse>
+//      public async request(r: AccountInfoRequest) -> EventLoopFuture<AccountInfoResponse>
+//      public async request(r: AccountLinesRequest): EventLoopFuture<AccountLinesResponse>
+        public func request(r: AccountLinesRequest) async -> EventLoopFuture<AccountLinesResponse> {
+            return await request(r: r)
+        }
+//      public async request(r: AccountNFTsRequest): Promise<AccountNFTsResponse>
+//      public async request(
+//        r: AccountObjectsRequest,
+//      ): Promise<AccountObjectsResponse>
+//      public async request(r: AccountOffersRequest): Promise<AccountOffersResponse>
+//      public async request(r: AccountTxRequest): Promise<AccountTxResponse>
+//      public async request(r: BookOffersRequest): Promise<BookOffersResponse>
+//      public async request(r: ChannelVerifyRequest): Promise<ChannelVerifyResponse>
+//      public async request(
+//        r: DepositAuthorizedRequest,
+//      ): Promise<DepositAuthorizedResponse>
+//      public async request(r: FeeRequest): Promise<FeeResponse>
+//      public async request(
+//        r: GatewayBalancesRequest,
+//      ): Promise<GatewayBalancesResponse>
+//        public func request(r: LedgerRequest) async -> EventLoopFuture<LedgerResponse> {
+//            return await request(r: r)
+//        }
+//      public async request(r: LedgerClosedRequest): Promise<LedgerClosedResponse>
+//      public async request(r: LedgerCurrentRequest): Promise<LedgerCurrentResponse>
+//      public async request(r: LedgerDataRequest): Promise<LedgerDataResponse>
+//      public async request(r: LedgerEntryRequest): Promise<LedgerEntryResponse>
+//      public async request(r: ManifestRequest): Promise<ManifestResponse>
+//      public async request(r: NFTBuyOffersRequest): Promise<NFTBuyOffersResponse>
+//      public async request(r: NFTSellOffersRequest): Promise<NFTSellOffersResponse>
+//      public async request(r: NoRippleCheckRequest): Promise<NoRippleCheckResponse>
+//      public async request(r: PathFindRequest): Promise<PathFindResponse>
+//      public async request(r: PingRequest): Promise<PingResponse>
+//      public async request(r: RandomRequest): Promise<RandomResponse>
+//      public async request(
+//        r: RipplePathFindRequest,
+//      ): Promise<RipplePathFindResponse>
+//      public async request(r: ServerInfoRequest): Promise<ServerInfoResponse>
+//      public async request(r: ServerStateRequest): Promise<ServerStateResponse>
+//      public async request(r: SubmitRequest): Promise<SubmitResponse>
+//      public async request(
+//        r: SubmitMultisignedRequest,
+//      ): Promise<SubmitMultisignedResponse>
+//      public request(r: SubscribeRequest): Promise<SubscribeResponse>
+//      public request(r: UnsubscribeRequest): Promise<UnsubscribeResponse>
+//      public async request(
+//        r: TransactionEntryRequest,
+//      ): Promise<TransactionEntryResponse>
+//      public async request(r: TxRequest): Promise<TxResponse>
+    
+    public func request<R: BaseRequest>(_ rdict: R) async -> EventLoopFuture<Any> {
+        let data = try! JSONSerialization.data(withJSONObject: rdict, options: .prettyPrinted)
+        let decoder = JSONDecoder()
+        let base = try! decoder.decode(R.self, from: data)
+        return await request(req: base)!
+    }
+    
+    public func request<R: BaseRequest, T: BaseResponse<Any>>(r: R) async -> EventLoopFuture<T> {
+        return await request(r: r)
+    }
+    
+    /**
+     * Makes a request to the client with the given command and
+     * additional request body parameters.
+     *
+     * @param req - Request to send to the server.
+     * @returns The response from the server.
+     * @category Network
+     */
+    func ensureClassicAddress(_ account: String) -> String {
+        return account
+    }
+    
+    public func request<R: BaseRequest>(req: R) async -> EventLoopFuture<Any>? {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Necessary for overloading
+        //        print(req)
+        //        guard var requestDict = req as? [String: AnyObject] else {
+        //            print("DAMN")
+        //            print("SO")
+        //            return nil
+        //        }
+        //        if let account: String = requestDict["account"] as? String {
+        //            requestDict["account"] = ensureClassicAddress(account) as AnyObject
+        //        } else {
+        //            requestDict["account"] = nil
+        //        }
+        let response = await self.connection.request(request: req)
+        
+        //        // mutates `response` to add warnings
+        //        handlePartialPayment(req.command, response)
+        
+        return response
+    }
+    
     //  /**
     //   * @category Network
     //   */
@@ -483,8 +508,8 @@ class XrplClient: EventEmitter {
      * @returns A promise that resolves with a void value when a connection is established.
      * @category Network
      */
-    public func connect() async -> EventLoopPromise<Void> {
-        return await self.connection.connect()
+    public func connect() async throws -> EventLoopFuture<Any> {
+        return try await self.connection.connect()
     }
     
     /**
@@ -493,13 +518,13 @@ class XrplClient: EventEmitter {
      * @returns A promise that resolves with a void value when a connection is destroyed.
      * @category Network
      */
-//    public func disconnect() async -> EventLoopFuture<Void> {
-//        /*
-//         * backwards compatibility: connection.disconnect() can return a number, but
-//         * this method returns nothing. SO we await but don"t return any result.
-//         */
-//        await self.connection.disconnect()
-//    }
+    //    public func disconnect() async -> EventLoopFuture<Void> {
+    //        /*
+    //         * backwards compatibility: connection.disconnect() can return a number, but
+    //         * this method returns nothing. SO we await but don"t return any result.
+    //         */
+    //        await self.connection.disconnect()
+    //    }
     
     /**
      * Checks if the Client instance is connected to its rippled server.
@@ -511,47 +536,53 @@ class XrplClient: EventEmitter {
         return self.connection.isConnected()
     }
     
-    //  /**
-    //   * @category Core
-    //   */
-    //  public autofill = autofill
-    //
-    //  /**
-    //   * @category Core
-    //   */
-    //  public submit = submit
-    //  /**
-    //   * @category Core
-    //   */
-    //  public submitAndWait = submitAndWait
-    //
-    //  /**
-    //   * @deprecated Use autofill instead, provided for users familiar with v1
-    //   */
-    //  public prepareTransaction = autofill
-    //
-    //  /**
-    //   * @category Abstraction
-    //   */
-    //  public getXrpBalance = getXrpBalance
-    //
-    //  /**
-    //   * @category Abstraction
-    //   */
-    //  public getBalances = getBalances
-    //
-    //  /**
-    //   * @category Abstraction
-    //   */
-    //  public getOrderbook = getOrderbook
-    //
-    //  /**
-    //   * @category Abstraction
-    //   */
-    //  public getLedgerIndex = getLedgerIndex
-    //
-    //  /**
-    //   * @category Faucet
-    //   */
-    //  public fundWallet = fundWallet
+//    /**
+//     * @category Core
+//     */
+//    public autofill = autofill
+//    
+//    /**
+//     * @category Core
+//     */
+//    public submit = submit
+//    /**
+//     * @category Core
+//     */
+//    public submitAndWait = submitAndWait
+//    
+//    /**
+//     * @deprecated Use autofill instead, provided for users familiar with v1
+//     */
+//    public prepareTransaction = autofill
+//    
+//    /**
+//     * @category Abstraction
+//     */
+//    public getXrpBalance = getXrpBalance
+//    
+//    /**
+//     * @category Abstraction
+//     */
+//    public getBalances = getBalances
+//    
+//    /**
+//     * @category Abstraction
+//     */
+//    public getOrderbook = getOrderbook
+//    
+//    /**
+//     * @category Abstraction
+//     */
+//    public getLedgerIndex = getLedgerIndex
+//    
+//    /**
+//     * @category Faucet
+//     */
+//    public fundWallet = fundWallet
+}
+
+extension String {
+    var isValidWss: Bool {
+        return range(of: "^[wW]{3}+.[a-zA-Z]{3,}+.[a-z]{2,}", options: .regularExpression) != nil
+    }
 }

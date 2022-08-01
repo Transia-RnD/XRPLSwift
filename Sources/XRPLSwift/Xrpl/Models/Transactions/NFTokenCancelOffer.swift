@@ -7,22 +7,21 @@
 
 import Foundation
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/models/transactions/nftoken_cancel_offer.py
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/NFTokenCancelOffer.ts
 
-public class NFTokenCancelOffer: Transaction {
-    
-    /*
-    The NFTokenCancelOffer transaction deletes existing NFTokenOffer objects.
-    It is useful if you want to free up space on your account to lower your
-    reserve requirement.
-    The transaction can be executed by the account that originally created
-    the NFTokenOffer, the account in the `Recipient` field of the NFTokenOffer
-    (if present), or any account if the NFTokenOffer has an `Expiration` and
-    the NFTokenOffer has already expired.
-    */
 
-    public var nftokenOffers: [String]
-    /*
+/**
+The NFTokenCancelOffer transaction deletes existing NFTokenOffer objects.
+It is useful if you want to free up space on your account to lower your
+reserve requirement.
+The transaction can be executed by the account that originally created
+the NFTokenOffer, the account in the `Recipient` field of the NFTokenOffer
+(if present), or any account if the NFTokenOffer has an `Expiration` and
+the NFTokenOffer has already expired.
+*/
+public class NFTokenCancelOffer: BaseTransaction {
+
+    /**
     An array of identifiers of NFTokenOffer objects that should be cancelled
     by this transaction.
     It is an error if an entry in this list points to an
@@ -31,20 +30,29 @@ public class NFTokenCancelOffer: Transaction {
     does not exist. This field is required.
     :meta hide-value:
     */
+    public let nftokenOffers: [String]
     
     public init(
         from wallet: Wallet,
         nftokenOffers: [String]
     ) {
         self.nftokenOffers = nftokenOffers
-        
-        // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
-        // Sets the fields for the tx
-        let _fields: [String:Any] = [
-            "TransactionType" : TransactionType.NFTokenCancelOffer.rawValue,
-            "NFTokenOffers": nftokenOffers
-        ]
-        
-        super.init(wallet: wallet, fields: _fields)
+        super.init(account: "", transactionType: "NFTokenCancelOffer")
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case nftokenOffers = "NFTokenOffers"
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        nftokenOffers = try values.decode([String].self, forKey: .nftokenOffers)
+        try super.init(from: decoder)
+    }
+    
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        try values.encode(nftokenOffers, forKey: .nftokenOffers)
     }
 }

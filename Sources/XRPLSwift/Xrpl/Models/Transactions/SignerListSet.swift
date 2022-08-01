@@ -7,14 +7,14 @@
 
 import Foundation
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/models/transactions/signer_list_set.py
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/signerListSet.ts
 
-public struct SignerEntry {
-    var Account: String
-    var SignerWeight: Int
-}
+//public struct SignerEntry {
+//    var Account: String
+//    var SignerWeight: Int
+//}
 
-public class SignerListSet: Transaction {
+public class SignerListSet: BaseTransaction {
     /*
     Represents a `SignerListSet <https://xrpl.org/signerlistset.html>`_
     transaction, which creates, replaces, or removes a list of signers that
@@ -22,7 +22,7 @@ public class SignerListSet: Transaction {
     <https://xrpl.org/multi-signing.html>`_.
     */
 
-    public var signerQuorum: UInt32
+    public var signerQuorum: Int
     /*
     This field is required.
     :meta hide-value:
@@ -30,31 +30,31 @@ public class SignerListSet: Transaction {
     public var signerEntries: [SignerEntry] = []
     
     public init(
-        wallet: Wallet,
-        signerQuorum: UInt32,
+        signerQuorum: Int,
         signerEntries: [SignerEntry]
     ) {
         self.signerQuorum = signerQuorum
         self.signerEntries = signerEntries
-        
-        let signers = signerEntries.map { (signerEntry) -> NSDictionary in
-            return NSDictionary(dictionary: [
-                "SignerEntry" : NSDictionary(dictionary: [
-                    "Account" : signerEntry.Account,
-                    "SignerWeight" : signerEntry.SignerWeight,
-                ])
-            ])
-        }
-            
-        // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
-        // Sets the fields for the tx
-        let _fields: [String:Any] = [
-            "TransactionType": "SignerListSet",
-            "SignerQuorum": signerQuorum,
-            "SignerEntries": signers
-        ]
+        super.init(account: "", transactionType: "SignerListSet")
+    }
     
-        super.init(wallet: wallet, fields: _fields)
+    enum CodingKeys: String, CodingKey {
+        case signerQuorum = "SignerQuorum"
+        case signerEntries = "SignerEntries"
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        signerQuorum = try values.decode(Int.self, forKey: .signerQuorum)
+        signerEntries = try values.decode([SignerEntry].self, forKey: .signerEntries)
+        try super.init(from: decoder)
+    }
+    
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        try values.encode(signerQuorum, forKey: .signerQuorum)
+        try values.encode(signerEntries, forKey: .signerEntries)
     }
 
 }

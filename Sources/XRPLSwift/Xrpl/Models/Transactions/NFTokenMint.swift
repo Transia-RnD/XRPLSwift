@@ -7,48 +7,49 @@
 
 import Foundation
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/models/transactions/nftoken_mint.py
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/NFTokenMint.ts
 
+
+// Transaction Flags for an NFTokenMint Transaction.
 public enum NFTokenMintFlag: UInt32 {
-    // Transaction Flags for an NFTokenMint Transaction.
 
     case tfBurnable = 0x00000001
-    /*
+    /**
     If set, indicates that the minted token may be burned by the issuer even
     if the issuer does not currently hold the token. The current holder of
     the token may always burn it.
     */
     
     case tfOnlyXrp = 0x00000002
-    /*
+    /**
     If set, indicates that the token may only be offered or sold for XRP.
     */
     
     case tfTrustline = 0x00000004
-    /*
+    /**
     If set, indicates that the issuer wants a trustline to be automatically
     created.
     */
     
     case tfTransferable = 0x00000008
-    /*
+    /**
     If set, indicates that this NFT can be transferred. This flag has no
     effect if the token is being transferred from the issuer or to the
     issuer.
     */
 }
 
-public class NFTokenMint: Transaction {
-    
-    /*
-    The NFTokenMint transaction creates an NFToken object and adds it to the
-    relevant NFTokenPage object of the minter. If the transaction is
-    successful, the newly minted token will be owned by the minter account
-    specified by the transaction.
-    */
 
-    public var nftokenTaxon: Int
-    /*
+/**
+The NFTokenMint transaction creates an NFToken object and adds it to the
+relevant NFTokenPage object of the minter. If the transaction is
+successful, the newly minted token will be owned by the minter account
+specified by the transaction.
+*/
+public class NFTokenMint: BaseTransaction {
+
+    public let nftokenTaxon: Int
+    /**
     Indicates the taxon associated with this token. The taxon is generally a
     value chosen by the minter of the token and a given taxon may be used for
     multiple tokens. The implementation reserves taxon identifiers greater
@@ -57,8 +58,8 @@ public class NFTokenMint: Transaction {
     :meta hide-value:
     */
 
-    public var issuer: Address?
-    /*
+    public let issuer: String?
+    /**
     Indicates the account that should be the issuer of this token. This value
     is optional and should only be specified if the account executing the
     transaction is not the `Issuer` of the `NFToken` object. If it is
@@ -66,8 +67,8 @@ public class NFTokenMint: Transaction {
     field must match the `Account`, otherwise the transaction will fail.
     */
 
-    public var transferFee: Int?
-    /*
+    public let transferFee: Int?
+    /**
     Specifies the fee charged by the issuer for secondary sales of the Token,
     if such sales are allowed. Valid values for this field are between 0 and
     50000 inclusive, allowing transfer rates between 0.000% and 50.000% in
@@ -75,8 +76,8 @@ public class NFTokenMint: Transaction {
     `tfTransferable` flag is not set.
     */
 
-    public var uri: String?
-    /*
+    public let uri: String?
+    /**
     URI that points to the data and/or metadata associated with the NFT.
     This field need not be an HTTP or HTTPS URL; it could be an IPFS URI, a
     magnet link, immediate data encoded as an RFC2379 "data" URL, or even an
@@ -86,9 +87,8 @@ public class NFTokenMint: Transaction {
     */
     
     public init(
-        from wallet: Wallet,
         nftokenTaxon: Int,
-        issuer: Address? = nil,
+        issuer: String? = nil,
         transferFee: Int? = nil,
         uri: String? = nil
     ) {
@@ -97,27 +97,31 @@ public class NFTokenMint: Transaction {
         self.issuer = issuer
         self.transferFee = transferFee
         self.uri = uri
-        
-        // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
-        // Sets the fields for the tx
-        var _fields: [String:Any] = [
-            "TransactionType": TransactionType.NFTokenMint.rawValue,
-            "NFTokenTaxon": nftokenTaxon
-        ]
-        
-        if let issuer = issuer {
-            _fields["Issuer"] = issuer.rAddress
-        }
-        
-        // TODO: Hex
-        if let transferFee = transferFee {
-            _fields["TransferFee"] = transferFee
-        }
-        
-        if let uri = uri {
-            _fields["URI"] = uri
-        }
-        
-        super.init(wallet: wallet, fields: _fields)
+        super.init(account: "", transactionType: "NFTokenMint")
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case nftokenTaxon = "NFTokenTaxon"
+        case issuer = "Issuer"
+        case transferFee = "TransferFee"
+        case uri = "URI"
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        nftokenTaxon = try values.decode(Int.self, forKey: .nftokenTaxon)
+        issuer = try? values.decode(String.self, forKey: .issuer)
+        transferFee = try? values.decode(Int.self, forKey: .transferFee)
+        uri = try? values.decode(String.self, forKey: .uri)
+        try super.init(from: decoder)
+    }
+    
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        try values.encode(nftokenTaxon, forKey: .nftokenTaxon)
+        if let issuer = issuer { try values.encode(issuer, forKey: .issuer) }
+        if let transferFee = transferFee { try values.encode(transferFee, forKey: .transferFee) }
+        if let uri = uri { try values.encode(uri, forKey: .uri) }
     }
 }

@@ -323,13 +323,12 @@ public class SeedWallet: Wallet {
             fatalError()
         }
         
-        guard let amount = dict["amount"] as? aAmount else {
+        guard let amount = dict["amount"] as? rAmount else {
             fatalError()
         }
-        
         // add the prefix to the channel and amount
-        let data: [UInt8] = HASH_CHANNEL_SIGN + [UInt8](channel.hexadecimal!) + [UInt8](UInt64(amount.drops).bigEndian.data)
-        return data
+//        let data: [UInt8] = HASH_CHANNEL_SIGN + [UInt8](channel.hexadecimal!) + [UInt8](UInt64(amount).bigEndian.data)
+        return []
     }
     
     

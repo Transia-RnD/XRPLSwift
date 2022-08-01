@@ -6,7 +6,7 @@
 //
 import Foundation
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/models/transactions/payment_channel_claim.py
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/paymentChannelClaim.ts
 
 
 public enum PaymentChannelClaimFlag: UInt32 {
@@ -39,7 +39,7 @@ public enum PaymentChannelClaimFlag: UInt32 {
     */
 }
 
-public class PaymentChannelClaim: Transaction {
+public class PaymentChannelClaim: BaseTransaction {
     
     /*
     Represents a `PaymentChannelClaim <https://xrpl.org/paymentchannelclaim.html>`_
@@ -56,13 +56,13 @@ public class PaymentChannelClaim: Transaction {
     :meta hide-value:
     */
 
-    public var balance: aAmount?
+    public var balance: rAmount?
     /*
     The cumulative amount of XRP to have delivered through this channel after
     processing this claim. Required unless closing the channel.
     */
 
-    public var amount: aAmount?
+    public var amount: rAmount?
     /*
     The cumulative amount of XRP that has been authorized to deliver by the
     attached claim signature. Required unless closing the channel.
@@ -84,49 +84,47 @@ public class PaymentChannelClaim: Transaction {
     */
     
     public init(
-        from wallet: Wallet,
         channel: String,
-        balance: aAmount? = nil,
-        amount: aAmount? = nil,
+        balance: rAmount? = nil,
+        amount: rAmount? = nil,
         signature: String? = nil,
-        publicKey: String? = nil,
-        sourceTag : UInt32? = nil  // TODO: Move this to the base tx
+        publicKey: String? = nil
     ) {
-        
         self.channel = channel
         self.balance = balance
         self.amount = amount
         self.signature = signature
         self.publicKey = publicKey
         
-        // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
-        // Sets the fields for the tx
-        var _fields: [String:Any] = [
-            "TransactionType": "PaymentChannelClaim",
-            "Channel": channel,
-        ]
-        
-        if amount != nil {
-            _fields["Amount"] = String(amount!.drops)
-        }
-        
-        if balance != nil {
-            _fields["Balance"] = String(balance!.drops)
-        }
-        
-        if signature != nil {
-            _fields["Signature"] = signature
-        }
-        
-        if publicKey != nil {
-            _fields["PublicKey"] = publicKey
-        }
-        
-        if let sourceTag = sourceTag {
-            _fields["SourceTag"] = sourceTag
-        }
-        
-        super.init(wallet: wallet, fields: _fields)
+        super.init(account: "", transactionType: "PaymentChannelClaim")
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case channel = "Channel"
+        case balance = "Balance"
+        case amount = "Amount"
+        case signature = "Signature"
+        case publicKey = "PublicKey"
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        channel = try values.decode(String.self, forKey: .channel)
+        balance = try? values.decode(rAmount.self, forKey: .balance)
+        amount = try? values.decode(rAmount.self, forKey: .amount)
+        signature = try? values.decode(String.self, forKey: .signature)
+        publicKey = try? values.decode(String.self, forKey: .publicKey)
+        try super.init(from: decoder)
+    }
+    
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        try values.encode(channel, forKey: .channel)
+        if let balance = balance { try values.encode(balance, forKey: .balance) }
+        if let amount = amount { try values.encode(amount, forKey: .amount) }
+        if let signature = signature { try values.encode(signature, forKey: .signature) }
+        if let publicKey = publicKey { try values.encode(publicKey, forKey: .publicKey) }
     }
 
 }

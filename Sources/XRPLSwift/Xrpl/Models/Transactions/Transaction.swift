@@ -1,101 +1,198 @@
 //
-//  File.swift
-//  
+//  Transaction.swift
+//
 //
 //  Created by Denis Angell on 7/27/22.
 //
 
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/transaction.ts
+
 import Foundation
 
-/* eslint-disable complexity -- verifies 19 tx types hence a lot of checks needed */
-/* eslint-disable max-lines-per-function -- need to work with a lot of Tx verifications */
-
-//import _ from 'lodash'
-//import { encode, decode } from 'ripple-binary-codec'
-//
-//import { ValidationError } from '../../errors'
-//import { setTransactionFlagsToNumber } from '../utils/flags'
-//
-//import { AccountDelete, validateAccountDelete } from './accountDelete'
-//import { AccountSet, validateAccountSet } from './accountSet'
-//import { CheckCancel, validateCheckCancel } from './checkCancel'
-//import { CheckCash, validateCheckCash } from './checkCash'
-//import { CheckCreate, validateCheckCreate } from './checkCreate'
-//import { DepositPreauth, validateDepositPreauth } from './depositPreauth'
-//import { EscrowCancel, validateEscrowCancel } from './escrowCancel'
-//import { EscrowCreate, validateEscrowCreate } from './escrowCreate'
-//import { EscrowFinish, validateEscrowFinish } from './escrowFinish'
-//import { TransactionMetadata } from './metadata'
-//import {
-//  NFTokenAcceptOffer,
-//  validateNFTokenAcceptOffer,
-//} from './NFTokenAcceptOffer'
-//import { NFTokenBurn, validateNFTokenBurn } from './NFTokenBurn'
-//import {
-//  NFTokenCancelOffer,
-//  validateNFTokenCancelOffer,
-//} from './NFTokenCancelOffer'
-//import {
-//  NFTokenCreateOffer,
-//  validateNFTokenCreateOffer,
-//} from './NFTokenCreateOffer'
-//import { NFTokenMint, validateNFTokenMint } from './NFTokenMint'
-//import { OfferCancel, validateOfferCancel } from './offerCancel'
-//import { OfferCreate, validateOfferCreate } from './offerCreate'
-//import { Payment, validatePayment } from './payment'
-//import {
-//  PaymentChannelClaim,
-//  validatePaymentChannelClaim,
-//} from './paymentChannelClaim'
-//import {
-//  PaymentChannelCreate,
-//  validatePaymentChannelCreate,
-//} from './paymentChannelCreate'
-//import {
-//  PaymentChannelFund,
-//  validatePaymentChannelFund,
-//} from './paymentChannelFund'
-//import { SetRegularKey, validateSetRegularKey } from './setRegularKey'
-//import { SignerListSet, validateSignerListSet } from './signerListSet'
-//import { TicketCreate, validateTicketCreate } from './ticketCreate'
-//import { TrustSet, validateTrustSet } from './trustSet'
-
 /**
- * @category Transaction Models
+ 
  */
-enum BaseTransaction: Codable {
-  case AccountDelete
-  case AccountSet
-  case CheckCancel
-  case CheckCash
-  case CheckCreate
-  case DepositPreauth
-  case EscrowCancel
-  case EscrowCreate
-  case EscrowFinish
-  case NFTokenAcceptOffer
-  case NFTokenBurn
-  case NFTokenCancelOffer
-  case NFTokenCreateOffer
-  case NFTokenMint
-  case OfferCancel
-  case OfferCreate
-  case Payment
-  case PaymentChannelClaim
-  case PaymentChannelCreate
-  case PaymentChannelFund
-  case SetRegularKey
-  case SignerListSet
-  case TicketCreate
-  case TrustSet
+public enum rTransaction {
+    case accountDelete(AccountDelete)
+    case accountSet(AccountSet)
+    case checkCancel(CheckCancel)
+    case checkCash(CheckCash)
+    case checkCreate(CheckCreate)
+    case depositPreauth(DepositPreauth)
+    case escrowCancel(EscrowCancel)
+    case escrowCreate(EscrowCreate)
+    case escrowFinish(EscrowFinish)
+    case nfTokenAcceptOffer(NFTokenAcceptOffer)
+    case nfTokenBurn(NFTokenBurn)
+    case nfTokenCancelOffer(NFTokenCancelOffer)
+    case nfTokenCreateOffer(NFTokenCreateOffer)
+    case nfTokenMint(NFTokenMint)
+    case offerCancel(OfferCancel)
+    case offerCreate(OfferCreate)
+    case payment(Payment)
+    case paymentChannelClaim(PaymentChannelClaim)
+    case paymentChannelCreate(PaymentChannelCreate)
+    case paymentChannelFund(PaymentChannelFund)
+    case setRegularKey(SetRegularKey)
+    case signerListSet(SignerListSet)
+    //  case ticketCreate(TicketCreate)
+    case trustSet(TrustSet)
 }
+
+extension rTransaction {
+    
+    enum TransactionCodingError: Error {
+        case decoding(String)
+    }
+    
+    public init(from decoder: Decoder) throws {
+        if let value = try? AccountDelete.init(from: decoder) {
+            self = .accountDelete(value)
+            return
+        }
+        if let value = try? AccountSet.init(from: decoder) {
+            self = .accountSet(value)
+            return
+        }
+        if let value = try? CheckCancel.init(from: decoder) {
+            self = .checkCancel(value)
+            return
+        }
+        if let value = try? CheckCreate.init(from: decoder) {
+            self = .checkCreate(value)
+            return
+        }
+        if let value = try? EscrowFinish.init(from: decoder) {
+            self = .escrowFinish(value)
+            return
+        }
+        if let value = try? NFTokenAcceptOffer.init(from: decoder) {
+            self = .nfTokenAcceptOffer(value)
+            return
+        }
+        if let value = try? NFTokenBurn.init(from: decoder) {
+            self = .nfTokenBurn(value)
+            return
+        }
+        if let value = try? NFTokenCancelOffer.init(from: decoder) {
+            self = .nfTokenCancelOffer(value)
+            return
+        }
+        if let value = try? NFTokenCreateOffer.init(from: decoder) {
+            self = .nfTokenCreateOffer(value)
+            return
+        }
+        
+        if let value = try? NFTokenMint.init(from: decoder) {
+            self = .nfTokenMint(value)
+            return
+        }
+        if let value = try? OfferCancel.init(from: decoder) {
+            self = .offerCancel(value)
+            return
+        }
+        if let value = try? OfferCreate.init(from: decoder) {
+            self = .offerCreate(value)
+            return
+        }
+        if let value = try? Payment.init(from: decoder) {
+            self = .payment(value)
+            return
+        }
+        if let value = try? PaymentChannelClaim.init(from: decoder) {
+            self = .paymentChannelClaim(value)
+            return
+        }
+        if let value = try? PaymentChannelCreate.init(from: decoder) {
+            self = .paymentChannelCreate(value)
+            return
+        }
+        if let value = try? PaymentChannelFund.init(from: decoder) {
+            self = .paymentChannelFund(value)
+            return
+        }
+        if let value = try? SetRegularKey.init(from: decoder) {
+            self = .setRegularKey(value)
+            return
+        }
+        if let value = try? SignerListSet.init(from: decoder) {
+            self = .signerListSet(value)
+            return
+        }
+        //        if let value = try? TicketCreate.init(from: decoder) {
+        //            self = .TicketCreate(value)
+        //            return
+        //        }
+        if let value = try? TrustSet.init(from: decoder) {
+            self = .trustSet(value)
+            return
+        }
+        throw TransactionCodingError.decoding("DENIS!!!")
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        switch self {
+        case .accountDelete(let value):
+            try value.encode(to: encoder)
+        case .accountSet(let value):
+            try value.encode(to: encoder)
+        case .checkCancel(let value):
+            try value.encode(to: encoder)
+        case .checkCreate(let value):
+            try value.encode(to: encoder)
+        case .checkCash(let value):
+            try value.encode(to: encoder)
+        case .depositPreauth(let value):
+            try value.encode(to: encoder)
+        case .escrowFinish(let value):
+            try value.encode(to: encoder)
+        case .escrowCancel(let value):
+            try value.encode(to: encoder)
+        case .escrowCreate(let value):
+            try value.encode(to: encoder)
+        case .nfTokenAcceptOffer(let value):
+            try value.encode(to: encoder)
+        case .nfTokenBurn(let value):
+            try value.encode(to: encoder)
+        case .nfTokenCancelOffer(let value):
+            try value.encode(to: encoder)
+        case .nfTokenCreateOffer(let value):
+            try value.encode(to: encoder)
+            
+        case .nfTokenMint(let value):
+            try value.encode(to: encoder)
+        case .offerCancel(let value):
+            try value.encode(to: encoder)
+        case .offerCreate(let value):
+            try value.encode(to: encoder)
+        case .payment(let value):
+            try value.encode(to: encoder)
+        case .paymentChannelClaim(let value):
+            try value.encode(to: encoder)
+        case .paymentChannelCreate(let value):
+            try value.encode(to: encoder)
+        case .paymentChannelFund(let value):
+            try value.encode(to: encoder)
+        case .setRegularKey(let value):
+            try value.encode(to: encoder)
+        case .signerListSet(let value):
+            try value.encode(to: encoder)
+            //        case .ticketCreate(let TicketCreate):
+            //            try TicketCreate.encode(to: encoder)
+        case .trustSet(let value):
+            try value.encode(to: encoder)
+        }
+    }
+}
+
+
 
 /**
  * @category Transaction Models
  */
 public struct rTransactionAndMetadata: Codable {
-  var transaction: BaseTransaction
-  var metadata: rTransactionMetadata
+    public let transaction: rTransaction
+    public let metadata: rTransactionMetadata
 }
 
 /**
@@ -106,124 +203,122 @@ public struct rTransactionAndMetadata: Codable {
  * @throws ValidationError When the Transaction is malformed.
  * @category Utilities
  */
-//validate(transaction: [String: Any]) {
-//    guard let tx as Transaction else {
-//
+func validate(transaction: [String: Any]) throws {
+    guard let tx = transaction as? BaseTransaction else {
+        throw XrplError.validation("Object does not have a `TransactionType`")
+    }
+//    if tx. == nil {
+//        throw XrplError.validation("Object does not have a `TransactionType`")
 //    }
-//  if tx.TransactionType == null {
-//    throw new ValidationError('Object does not have a `TransactionType`')
-//  }
-//  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- okay here
-//  setTransactionFlagsToNumber(tx)
-//  switch (tx.TransactionType) {
-//    case 'AccountDelete':
-//      validateAccountDelete(tx)
-//      break
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- okay here
+//    setTransactionFlagsToNumber(tx)
+//    switch (tx.TransactionType) {
+//    case "AccountDelete":
+//        validateAccountDelete(tx)
+//        break
 //
-//    case 'AccountSet':
-//      validateAccountSet(tx)
-//      break
+//    case "AccountSet":
+//        validateAccountSet(tx)
+//        break
 //
-//    case 'CheckCancel':
-//      validateCheckCancel(tx)
-//      break
+//    case "CheckCancel":
+//        validateCheckCancel(tx)
+//        break
 //
-//    case 'CheckCash':
-//      validateCheckCash(tx)
-//      break
+//    case "CheckCash":
+//        validateCheckCash(tx)
+//        break
 //
-//    case 'CheckCreate':
-//      validateCheckCreate(tx)
-//      break
+//    case "CheckCreate":
+//        validateCheckCreate(tx)
+//        break
 //
-//    case 'DepositPreauth':
-//      validateDepositPreauth(tx)
-//      break
+//    case "DepositPreauth":
+//        validateDepositPreauth(tx)
+//        break
 //
-//    case 'EscrowCancel':
-//      validateEscrowCancel(tx)
-//      break
+//    case "EscrowCancel":
+//        validateEscrowCancel(tx)
+//        break
 //
-//    case 'EscrowCreate':
-//      validateEscrowCreate(tx)
-//      break
+//    case "EscrowCreate":
+//        validateEscrowCreate(tx)
+//        break
 //
-//    case 'EscrowFinish':
-//      validateEscrowFinish(tx)
-//      break
+//    case "EscrowFinish":
+//        validateEscrowFinish(tx)
+//        break
 //
-//    case 'NFTokenAcceptOffer':
-//      validateNFTokenAcceptOffer(tx)
-//      break
+//    case "NFTokenAcceptOffer":
+//        validateNFTokenAcceptOffer(tx)
+//        break
 //
-//    case 'NFTokenBurn':
-//      validateNFTokenBurn(tx)
-//      break
+//    case "NFTokenBurn":
+//        validateNFTokenBurn(tx)
+//        break
 //
-//    case 'NFTokenCancelOffer':
-//      validateNFTokenCancelOffer(tx)
-//      break
+//    case "NFTokenCancelOffer":
+//        validateNFTokenCancelOffer(tx)
+//        break
 //
-//    case 'NFTokenCreateOffer':
-//      validateNFTokenCreateOffer(tx)
-//      break
+//    case "NFTokenCreateOffer":
+//        validateNFTokenCreateOffer(tx)
+//        break
 //
-//    case 'NFTokenMint':
-//      validateNFTokenMint(tx)
-//      break
+//    case "NFTokenMint":
+//        validateNFTokenMint(tx)
+//        break
 //
-//    case 'OfferCancel':
-//      validateOfferCancel(tx)
-//      break
+//    case "OfferCancel":
+//        validateOfferCancel(tx)
+//        break
 //
-//    case 'OfferCreate':
-//      validateOfferCreate(tx)
-//      break
+//    case "OfferCreate":
+//        validateOfferCreate(tx)
+//        break
 //
-//    case 'Payment':
-//      validatePayment(tx)
-//      break
+//    case "Payment":
+//        validatePayment(tx)
+//        break
 //
-//    case 'PaymentChannelClaim':
-//      validatePaymentChannelClaim(tx)
-//      break
+//    case "PaymentChannelClaim":
+//        validatePaymentChannelClaim(tx)
+//        break
 //
-//    case 'PaymentChannelCreate':
-//      validatePaymentChannelCreate(tx)
-//      break
+//    case "PaymentChannelCreate":
+//        validatePaymentChannelCreate(tx)
+//        break
 //
-//    case 'PaymentChannelFund':
-//      validatePaymentChannelFund(tx)
-//      break
+//    case "PaymentChannelFund":
+//        validatePaymentChannelFund(tx)
+//        break
 //
-//    case 'SetRegularKey':
-//      validateSetRegularKey(tx)
-//      break
+//    case "SetRegularKey":
+//        validateSetRegularKey(tx)
+//        break
 //
-//    case 'SignerListSet':
-//      validateSignerListSet(tx)
-//      break
+//    case "SignerListSet":
+//        validateSignerListSet(tx)
+//        break
 //
-//    case 'TicketCreate':
-//      validateTicketCreate(tx)
-//      break
+//    case "TicketCreate":
+//        validateTicketCreate(tx)
+//        break
 //
-//    case 'TrustSet':
-//      validateTrustSet(tx)
-//      break
-//
+//    case "TrustSet":
+//        validateTrustSet(tx)
+//        break
+        
 //    default:
-//      throw new ValidationError(
-//        `Invalid field TransactionType: ${tx.TransactionType}`,
-//      )
-//  }
-//
-//  if (
-//    !_.isEqual(
-//      decode(encode(tx)),
-//      _.omitBy(tx, (value) => value == null),
-//    )
-//  ) {
-//    throw new ValidationError(`Invalid Transaction: ${tx.TransactionType}`)
-//  }
-//}
+//        throw XrplError.validation("Invalid field TransactionType: ${tx.TransactionType}")
+//    }
+//    throw XrplError.validation("Invalid Transaction: \(tx.TransactionType)")
+//    if (
+//        !_.isEqual(
+//            decode(encode(tx)),
+//            _.omitBy(tx, (value) => value == null),
+//        )
+//    ) {
+//        throw new ValidationError(`Invalid Transaction: ${tx.TransactionType}`)
+//    }
+}

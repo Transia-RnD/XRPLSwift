@@ -7,24 +7,23 @@
 
 import Foundation
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/models/transactions/offer_create.py
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/offerCreate.ts
 
+
+/**
+Transactions of the OfferCreate type support additional values in the Flags field.
+This enum represents those options.
+`See OfferCreate Flags <https://xrpl.org/offercreate.html#offercreate-flags>`_
+ */
 public enum OfferCreateFlag: UInt32 {
-    
-    /*
-    Transactions of the OfferCreate type support additional values in the Flags field.
-    This enum represents those options.
-    `See OfferCreate Flags <https://xrpl.org/offercreate.html#offercreate-flags>`_
-     */
-
     case tfPassive = 0x00010000
-    /*
+    /**
     If enabled, the offer does not consume offers that exactly match it, and instead
     becomes an Offer object in the ledger. It still consumes offers that cross it.
      */
 
     case tfImmediateOrCancel = 0x00020000
-    /*
+    /**
     Treat the offer as an `Immediate or Cancel order
     <https://en.wikipedia.org/wiki/Immediate_or_cancel>`_. If enabled, the offer
     never becomes a ledger object: it only tries to match existing offers in the
@@ -34,7 +33,7 @@ public enum OfferCreateFlag: UInt32 {
      */
 
     case tfFillOrKill = 0x00040000
-    /*
+    /**
     Treat the offer as a `Fill or Kill order
     <https://en.wikipedia.org/wiki/Fill_or_kill>`_. Only try to match existing
     offers in the ledger, and only do so if the entire `TakerPays` quantity can be
@@ -46,51 +45,50 @@ public enum OfferCreateFlag: UInt32 {
      */
 
     case tfSell = 0x00080000
-    /*
+    /**
     Exchange the entire `TakerGets` amount, even if it means obtaining more than the
     `TakerPays amount` in exchange.
     */
 }
 
-public class OfferCreate: Transaction {
-    /*
-    Represents an `OfferCreate <https://xrpl.org/offercreate.html>`_ transaction,
-    which executes a limit order in the `decentralized exchange
-    <https://xrpl.org/decentralized-exchange.html>`_. If the specified exchange
-    cannot be completely fulfilled, it creates an Offer object for the remainder.
-    Offers can be partially fulfilled.
-     */
+/**
+Represents an `OfferCreate <https://xrpl.org/offercreate.html>`_ transaction,
+which executes a limit order in the `decentralized exchange
+<https://xrpl.org/decentralized-exchange.html>`_. If the specified exchange
+cannot be completely fulfilled, it creates an Offer object for the remainder.
+Offers can be partially fulfilled.
+ */
+public class OfferCreate: BaseTransaction {
 
-    public var takerGets: aAmount
+    public let takerGets: rAmount
      /*
     The amount and type of currency being provided by the sender of this
     transaction. This field is required.
     :meta hide-value:
       */
 
-    public var takerPays: aAmount
+    public let takerPays: rAmount
       /*
     The amount and type of currency the sender of this transaction wants in
     exchange for the full ``taker_gets`` amount. This field is required.
     :meta hide-value:
        */
 
-    public var expiration: Int?
+    public let expiration: Int?
        /*
     Time after which the offer is no longer active, in seconds since the
     Ripple Epoch.
         */
 
-    public var offerSequence: Int?
+    public let offerSequence: Int?
         /*
     The Sequence number (or Ticket number) of a previous OfferCreate to cancel
     when placing this Offer.
     */
     
     public init(
-        wallet: Wallet,
-        takerGets: aAmount,
-        takerPays: aAmount,
+        takerGets: rAmount,
+        takerPays: rAmount,
         expiration: Int? = nil,
         offerSequence: Int? = nil
     ) {
@@ -99,23 +97,31 @@ public class OfferCreate: Transaction {
         self.takerPays = takerPays
         self.expiration = expiration
         self.offerSequence = offerSequence
-        
-        // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
-        // Sets the fields for the tx
-        var _fields: [String:Any] = [
-            "TransactionType" : TransactionType.OfferCreate.rawValue,
-            "TakerGets": takerGets,
-            "TakerPays": takerPays,
-        ]
-        
-        if let expiration = expiration {
-            _fields["Expiration"] = expiration
-        }
-        
-        if let offerSequence = offerSequence {
-            _fields["OfferSequence"] = offerSequence
-        }
-        
-        super.init(wallet: wallet, fields: _fields)
+        super.init(account: "", transactionType: "OfferCreate")
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case takerGets = "TakerGets"
+        case takerPays = "TakerPays"
+        case expiration = "Expiration"
+        case offerSequence = "OfferSequence"
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        takerGets = try values.decode(rAmount.self, forKey: .takerGets)
+        takerPays = try values.decode(rAmount.self, forKey: .takerPays)
+        expiration = try? values.decode(Int.self, forKey: .expiration)
+        offerSequence = try? values.decode(Int.self, forKey: .offerSequence)
+        try super.init(from: decoder)
+    }
+    
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        try values.encode(takerGets, forKey: .takerGets)
+        try values.encode(takerPays, forKey: .takerPays)
+        if let expiration = expiration { try values.encode(expiration, forKey: .expiration) }
+        if let offerSequence = offerSequence { try values.encode(offerSequence, forKey: .offerSequence) }
     }
 }
