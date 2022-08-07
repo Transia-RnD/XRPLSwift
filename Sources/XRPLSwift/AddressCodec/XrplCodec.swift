@@ -142,8 +142,8 @@ public class XrplCodec {
      - returns:
      The classic address encoding of these bytes as a base58 string.
      */
-    public static func encodeClassicAddress(bytes: [UInt8]) -> String  {
-        return try! _encode(bytes: bytes, prefix: _CLASSIC_ADDRESS_PREFIX, expectedLength: _CLASSIC_ADDRESS_LENGTH)
+    public static func encodeClassicAddress(bytes: [UInt8]) throws -> String  {
+        return try _encode(bytes: bytes, prefix: _CLASSIC_ADDRESS_PREFIX, expectedLength: _CLASSIC_ADDRESS_LENGTH)
     }
     
     /**

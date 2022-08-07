@@ -14,10 +14,9 @@ func numToBytes(num: Int) -> Data {
     return Data(bytes: Int(num).asBigByteArray.reversed(), count: 4)
 }
 
-
-let TRANSACTION_SIGNATURE_PREFIX: Data = numToBytes(num: 0x53545800)
-let PAYMENT_CHANNEL_CLAIM_PREFIX: Data = numToBytes(num: 0x434C4D00)
-let TRANSACTION_MULTISIG_PREFIX: Data = numToBytes(num: 0x534D5400)
+let TRANSACTION_SIGNATURE_PREFIX: Data = Data(numToBytes(num: 0x53545800).bytes.reversed())
+let PAYMENT_CHANNEL_CLAIM_PREFIX: Data = Data(numToBytes(num: 0x434C4D00).bytes.reversed())
+let TRANSACTION_MULTISIG_PREFIX: Data = Data(numToBytes(num: 0x534D5400).bytes.reversed())
 
 class BinaryCodec {
     /*
@@ -29,6 +28,11 @@ class BinaryCodec {
      */
     class func encode(json: [String: Any]) throws -> String {
         return try serializeJson(json: json)
+    }
+    
+    class func encode(data: Data) throws -> String {
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return try serializeJson(json: jsonResult as! [String : Any])
     }
     
     /*
@@ -57,11 +61,10 @@ class BinaryCodec {
      */
     class func encodeForSigningClaim(json: [String: Any]) throws -> String {
         let prefix: Data = PAYMENT_CHANNEL_CLAIM_PREFIX
-        let channel: Hash256 = try Hash256.from(value: json["channel"] as! String) as! Hash256
+        let channel: Hash = try Hash256.from(value: json["channel"] as! String)
         let amount: xUInt64 = try xUInt64.from(value: Int(json["amount"] as! String)!)
-        
         let buffer: Data = prefix + channel.bytes + amount.bytes
-        return buffer.toHexString().uppercased()
+        return buffer.toHex
     }
     
     
@@ -77,7 +80,6 @@ class BinaryCodec {
      */
     class func encodeForMultisigning(json: [String: Any], signingAccount: String) throws -> String {
         let signingAccountID = try AccountID.from(value: signingAccount).bytes
-        
         return try serializeJson(
             json: json,
             prefix: TRANSACTION_MULTISIG_PREFIX,
@@ -100,7 +102,6 @@ class BinaryCodec {
 //        return parsedType.toJson()
         return [:]
     }
-    
     
     class func serializeJson(
         json: [String: Any],
