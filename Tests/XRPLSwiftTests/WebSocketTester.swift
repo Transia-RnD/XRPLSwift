@@ -8,6 +8,11 @@ import Foundation
 import XRPLSwift
 
 class WebSocketTester: XRPLWebSocketDelegate {
+    func onResponse(connection: XRPLWebSocket, response: BaseResponse<Any>) {
+        print("HERE")
+//        self.completion(response)
+    }
+    
 
     var completion: (XRPLWebSocketResponse)->()
     
