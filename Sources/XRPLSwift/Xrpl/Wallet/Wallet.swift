@@ -13,10 +13,6 @@ public enum SeedError: Error {
     case invalidSeed
 }
 
-public enum KeyPairError: Error {
-    case invalidPrivateKey
-}
-
 public enum SeedType {
     case ed25519
     case secp256k1
@@ -323,7 +319,7 @@ public class SeedWallet: Wallet {
             fatalError()
         }
         
-        guard let amount = dict["amount"] as? rAmount else {
+        guard let amount = dict["amount"] as? String else {
             fatalError()
         }
         // add the prefix to the channel and amount
@@ -354,29 +350,5 @@ public class SeedWallet: Wallet {
             message: channelSig.dataBytes,
             publicKey: channelSig.pubKey
         )
-    }
-}
-
-enum HexConvertError: Error {
-    case wrongInputStringLength
-    case wrongInputStringCharacters
-}
-
-public extension StringProtocol {
-    func asHexArrayFromNonValidatedSource() -> [UInt8] {
-        var startIndex = self.startIndex
-        return stride(from: 0, to: count, by: 2).compactMap { _ in
-            let endIndex = index(startIndex, offsetBy: 2, limitedBy: self.endIndex) ?? self.endIndex
-            defer { startIndex = endIndex }
-            return UInt8(self[startIndex..<endIndex], radix: 16)
-        }
-    }
-
-    func asHexArray() throws -> [UInt8] {
-//        if count % 2 != 0 { throw HexConvertError.wrongInputStringLength }
-        let characterSet = "0123456789ABCDEFabcdef"
-        let wrongCharacter = first { return !characterSet.contains($0) }
-        if wrongCharacter != nil { throw HexConvertError.wrongInputStringCharacters }
-        return asHexArrayFromNonValidatedSource()
     }
 }
