@@ -12,7 +12,7 @@ import Foundation
 /**
  
  */
-public enum rTransaction {
+public enum rTransaction: Codable {
     case accountDelete(AccountDelete)
     case accountSet(AccountSet)
     case checkCancel(CheckCancel)
@@ -43,6 +43,63 @@ extension rTransaction {
     
     enum TransactionCodingError: Error {
         case decoding(String)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+//        self.encode(to: <#T##Encoder#>)
+//        return String(data: try self.jsonData(), encoding: encoding)
+        return [:]
+    }
+    
+    public func toAny() throws -> Any {
+        switch self {
+        case .accountDelete(let value):
+            return value
+        case .accountSet(let value):
+            return value
+        case .checkCancel(let value):
+            return value
+        case .checkCreate(let value):
+            return value
+        case .checkCash(let value):
+            return value
+        case .depositPreauth(let value):
+            return value
+        case .escrowFinish(let value):
+            return value
+        case .escrowCancel(let value):
+            return value
+        case .escrowCreate(let value):
+            return value
+        case .nfTokenAcceptOffer(let value):
+            return value
+        case .nfTokenBurn(let value):
+            return value
+        case .nfTokenCancelOffer(let value):
+            return value
+        case .nfTokenCreateOffer(let value):
+            return value
+        case .nfTokenMint(let value):
+            return value
+        case .offerCancel(let value):
+            return value
+        case .offerCreate(let value):
+            return value
+        case .payment(let value):
+            return value
+        case .paymentChannelClaim(let value):
+            return value
+        case .paymentChannelCreate(let value):
+            return value
+        case .paymentChannelFund(let value):
+            return value
+        case .setRegularKey(let value):
+            return value
+        case .signerListSet(let value):
+            return value
+        case .trustSet(let value):
+            return value
+        }
     }
     
     public init(from decoder: Decoder) throws {
@@ -190,9 +247,20 @@ extension rTransaction {
 /**
  * @category Transaction Models
  */
-public struct rTransactionAndMetadata: Codable {
+public class rTransactionAndMetadata: Codable {
     public let transaction: rTransaction
     public let metadata: rTransactionMetadata
+    
+//    enum CodingKeys: String, CodingKey {
+//        case transaction = "transaction"
+//        case metadata = "metadata"
+//    }
+//    
+//    required public init(from decoder: Decoder) throws {
+//        let values = try decoder.container(keyedBy: CodingKeys.self)
+//        transaction = try values.decode(rTransaction.self, forKey: .transaction)
+//        metadata = try values.decode(rTransactionMetadata.self, forKey: .metadata)
+//    }
 }
 
 /**

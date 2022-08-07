@@ -1,58 +1,109 @@
-////
-////  File.swift
-////  
-////
-////  Created by Denis Angell on 7/30/22.
-////
 //
-//// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/transactionEntry.ts
-//
-//import Foundation
+//  TransactionEntry.swift
 //
 //
-///**
-// * The `transaction_entry` method retrieves information on a single transaction
-// * from a specific ledger version. Expects a response in the form of a
-// * {@link TransactionEntryResponse}.
-// *
-// * @category Requests
-// */
-//open class TransactionEntryRequest: BaseRequest {
-//    let command: String = "transaction_entry"
-//  /** A 20-byte hex string for the ledger version to use. */
-//    let ledger_hash?: String
-//  /**
-//   * The ledger index of the ledger to use, or a shortcut string to choose a
-//   * ledger automatically.
-//   */
-//    let ledger_index?: LedgerIndex
-//  /** Unique hash of the transaction you are looking up. */
-//    let tx_hash: String
-//}
+//  Created by Denis Angell on 7/30/22.
 //
-///**
-// * Response expected from a {@link TransactionEntryRequest}.
-// *
-// * @category Responses
-// */
-//open class TransactionEntryResponse: BaseResponse {
-//  result: {
-//    /**
-//     * The identifying hash of the ledger version the transaction was found in;
-//     * this is the same as the one from the request.
-//     */
-//      let ledger_hash: String
-//    /**
-//     * The ledger index of the ledger version the transaction was found in;
-//     * this is the same as the one from the request.
-//     */
-//      let ledger_index: Int
-//    /**
-//     * The transaction metadata, which shows the exact results of the
-//     * transaction in detail.
-//     */
-//      let metadata: TransactionMetadata
-//    /** JSON representation of the Transaction object. */
-//      let tx_json: Transaction & ResponseOnlyTxInfo
-//  }
-//}
+
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/transactionEntry.ts
+
+import Foundation
+
+
+/**
+ * The `transaction_entry` method retrieves information on a single transaction
+ * from a specific ledger version. Expects a response in the form of a
+ * {@link TransactionEntryResponse}.
+ *
+ * @category Requests
+ */
+public class TransactionEntryRequest: BaseRequest {
+    //    let command: String = "transaction_entry"
+    /** A 20-byte hex string for the ledger version to use. */
+    public let ledgerHash: String?
+    /**
+     * The ledger index of the ledger to use, or a shortcut string to choose a
+     * ledger automatically.
+     */
+    public let ledgerIndex: rLedgerIndex?
+    /** Unique hash of the transaction you are looking up. */
+    public let txHash: String
+    
+    enum CodingKeys: String, CodingKey {
+        case ledgerHash = "ledger_hash"
+        case ledgerIndex = "ledger_index"
+        case txHash = "tx_hash"
+    }
+    
+    public init(
+        // Required
+        txHash: String,
+        // Base
+        id: Int? = nil,
+        apiVersion: Int? = nil,
+        // Optional
+        ledgerHash: String? = nil,
+        ledgerIndex: rLedgerIndex? = nil
+    ) {
+        // Required
+        self.txHash = txHash
+        // Optional
+        self.ledgerHash = ledgerHash
+        self.ledgerIndex = ledgerIndex
+        super.init(id: id, command: "transaction_entry", apiVersion: apiVersion)
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        fatalError("init(from:) has not been implemented")
+    }
+    
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        try values.encode(txHash, forKey: .txHash)
+        if let ledgerHash = ledgerHash { try values.encode(ledgerHash, forKey: .ledgerHash) }
+        if let ledgerIndex = ledgerIndex { try values.encode(ledgerIndex, forKey: .ledgerIndex) }
+    }
+}
+
+/**
+ * Response expected from a {@link TransactionEntryRequest}.
+ *
+ * @category Responses
+ */
+public class TransactionEntryResponse: Codable {
+    /**
+     * The ledger index of the ledger version the transaction was found in;
+     * this is the same as the one from the request.
+     */
+    public let ledgerIndex: Int
+    /**
+     * The identifying hash of the ledger version the transaction was found in;
+     * this is the same as the one from the request.
+     */
+    public let ledgerHash: String
+    /**
+     * The transaction metadata, which shows the exact results of the
+     * transaction in detail.
+     */
+    public let metadata: rTransactionMetadata
+    /** JSON representation of the Transaction object. */
+//    public let txJson: Transaction + ResponseOnlyTxInfo
+    public let txJson: rTransaction
+    
+    enum CodingKeys: String, CodingKey {
+        case ledgerHash = "ledger_hash"
+        case ledgerIndex = "ledger_index"
+        case metadata = "metadata"
+        case txJson = "tx_json"
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
+        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
+        metadata = try values.decode(rTransactionMetadata.self, forKey: .metadata)
+        txJson = try values.decode(rTransaction.self, forKey: .txJson)
+//        try super.init(from: decoder)
+    }
+}

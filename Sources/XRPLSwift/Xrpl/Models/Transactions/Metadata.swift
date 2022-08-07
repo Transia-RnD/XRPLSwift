@@ -71,25 +71,38 @@ public enum rNode: Codable {
     case modified(rModifiedNode)
     case created(rCreatedNode)
     case deleted(rDeletedNode)
-    func get() -> Any? {
-        switch self {
-        case .modified(let modified):
-            return modified
-        case .created(let created):
-            return created
-        case .deleted(let deleted):
-            return deleted
-        }
+}
+
+extension rNode {
+    
+    enum NodeCodingError: Error {
+        case decoding(String)
     }
     
-    func value() -> String? {
+    public init(from decoder: Decoder) throws {
+        if let value = try? rModifiedNode.init(from: decoder) {
+            self = .modified(value)
+            return
+        }
+        if let value = try? rCreatedNode.init(from: decoder) {
+            self = .created(value)
+            return
+        }
+        if let value = try? rDeletedNode.init(from: decoder) {
+            self = .deleted(value)
+            return
+        }
+        throw NodeCodingError.decoding("DENIS!!!")
+    }
+    
+    public func encode(to encoder: Encoder) throws {
         switch self {
-        case .modified:
-            return "modified"
-        case .created:
-            return "created"
-        case .deleted:
-            return "deleted"
+        case .modified(let value):
+            try value.encode(to: encoder)
+        case .created(let value):
+            try value.encode(to: encoder)
+        case .deleted(let value):
+            try value.encode(to: encoder)
         }
     }
 }

@@ -29,8 +29,16 @@ public class EscrowFinish: BaseTransaction {
    */
     public let fulfillment: String?
     
-    public init(owner: String, offerSequence: UInt32) {
-        
+    public init(
+        owner: String,
+        offerSequence: Int,
+        condition: String? = nil,
+        fulfillment: String? = nil
+    ) {
+        self.owner = owner
+        self.offerSequence = offerSequence
+        self.condition = condition
+        self.fulfillment = fulfillment
         super.init(account: "", transactionType: "EscrowFinish")
     }
     
