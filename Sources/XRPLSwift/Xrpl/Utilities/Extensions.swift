@@ -13,6 +13,15 @@ func sha512HalfHash(data: [UInt8]) -> [UInt8] {
     return [UInt8](Data(data).sha512().prefix(through: 31))
 }
 
+//extension String {
+//    func sha256() -> String {
+//        if let stringData = self.data(using: String.Encoding.utf8) {
+//            return stringData.sha256()
+//        }
+//        return ""
+//    }
+//}
+
 extension Data {
 //    mutating func getPointer() -> UnsafeMutablePointer<UInt8> {
 //        return self.withUnsafeMutableBytes { (bytePtr) in
