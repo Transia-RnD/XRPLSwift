@@ -66,12 +66,12 @@ extension SubmitTransaction {
 public class SubmitOptions {
     public var autofill: Bool?
     public var failHard: Bool?
-    public var wallet: Wallet
+    public var wallet: rWallet
     
     public init(
         autofill: Bool?,
         failHard: Bool?,
-        wallet: Wallet
+        wallet: rWallet
     ) {
         self.autofill = autofill
         self.failHard = failHard
@@ -83,9 +83,10 @@ func submit(
     this: XrplClient,
     transaction: rTransaction,
     opts: SubmitOptions?
-) async -> EventLoopFuture<TxResponse> {
-    let signedTx = await getSignedTx(this, transaction, opts)
-    return submitRequest(this, signedTx, opts?.failHard)
+//) async throws -> EventLoopFuture<TxResponse> {
+) async throws -> EventLoopFuture<Any> {
+    let signedTx = try await getSignedTx(client: this, transaction: transaction, opts: opts!)
+    return try await submitRequest(client: this, signedTransaction: signedTx, failHard: opts?.failHard)
 }
 
 /**
@@ -101,61 +102,55 @@ func submit(
  * @param opts.wallet - A wallet to sign a transaction. It must be provided when submitting an unsigned transaction.
  * @returns A promise that contains TxResponse, that will return when the transaction has been validated.
  */
-//func submitAndWait(
-//  this: Client,
-//  transaction: Transaction | string,
-//  opts?: {
-//    // If true, autofill a transaction.
-//    autofill?: boolean
-//    // If true, and the transaction fails locally, do not retry or relay the transaction to other servers.
-//    failHard?: boolean
-//    // A wallet to sign a transaction. It must be provided when submitting an unsigned transaction.
-//    wallet?: Wallet
-//  },
-//) -> async EventLoopFuture<TxResponse> {
-//  const signedTx = await getSignedTx(this, transaction, opts)
-//
-//  const lastLedger = getLastLedgerSequence(signedTx)
-//  if (lastLedger == null) {
-//    throw new ValidationError(
-//      "Transaction must contain a LastLedgerSequence value for reliable submission.",
-//    )
-//  }
-//
-//  const response = await submitRequest(this, signedTx, opts?.failHard)
-//
-//  const txHash = hashes.hashSignedTx(signedTx)
-//  return waitForFinalTransactionOutcome(
-//    this,
-//    txHash,
-//    lastLedger,
-//    response.result.engine_result,
-//  )
-//}
+func submitAndWait(
+    this: XrplClient,
+    //  transaction: Transaction | string,
+    transaction: rTransaction,
+    opts: SubmitOptions? = nil
+//) async throws -> EventLoopFuture<TxResponse> {
+) async throws -> String {
+    let signedTx = try await getSignedTx(client: this, transaction: transaction, opts: opts!)
+    
+    let lastLedger: Int? = getLastLedgerSequence(transaction: signedTx)
+    if lastLedger == nil {
+        throw XrplError.validation("Transaction must contain a LastLedgerSequence value for reliable submission.")
+    }
+    
+    let response = try await submitRequest(client: this, signedTransaction: signedTx, failHard: opts?.failHard)
+    print(response)
+//    let txHash = opts?.hashes.hashSignedTx(signedTx)
+    //    return waitForFinalTransactionOutcome(
+    //        this,Int
+    //        txHash,
+    //        lastLedger,
+    //        response.result.engine_result,
+    //    )
+    return ""
+}
 
 // Helper functions
 
 // Encodes and submits a signed transaction.
 func submitRequest(
-client: XrplClient,
-//  signedTransaction: Transaction | string,
-signedTransaction: rTransaction,
-failHard = false,
-) async -> EventLoopFuture<SubmitResponse> {
-    if (!isSigned(signedTransaction)) {
-        throw new ValidationError("Transaction must be signed")
-    }
+    client: XrplClient,
+    //  signedTransaction: Transaction | string,
+    signedTransaction: String,
+    failHard: Bool? = false
+//) async throws -> EventLoopFuture<SubmitResponse> {
+) async throws -> EventLoopFuture<Any> {
+//    if (!isSigned(transaction: signedTransaction)) {
+//        throw XrplError.validation("Transaction must be signed")
+//    }
     
-    const signedTxEncoded =
-    typeof signedTransaction === "string"
-    ? signedTransaction
-    : encode(signedTransaction)
-    const request: SubmitRequest = {
-    command: "submit",
-    tx_blob: signedTxEncoded,
-    fail_hard: isAccountDelete(signedTransaction) || failHard,
-    }
-    return client.request(request)
+//    let signedTxEncoded = signedTransaction is String ? signedTransaction : encode(signedTransaction)
+    let encoder = JSONEncoder()
+    let signedTxEncoded: String = try BinaryCodec.encode(data: try encoder.encode(signedTransaction))
+    let request: SubmitRequest = SubmitRequest(
+        txBlob: signedTxEncoded,
+//        failHard: isAccountDelete(transaction: signedTransaction) || failHard!
+        failHard: failHard!
+    )
+    return await client.request(req: request)!
 }
 
 ///*
@@ -235,7 +230,8 @@ func getSignedTx(
     //  transaction: Transaction | string,
     transaction: rTransaction,
     opts: SubmitOptions
-) async throws -> EventLoopFuture<rTransaction> {
+//) async throws -> EventLoopFuture<String> {
+) async throws -> String {
     //    if isSigned(transaction: transaction) {
     //        return transaction
     //    }
@@ -245,25 +241,33 @@ func getSignedTx(
     }
     
     //    let tx = transaction is String ? (decode(transaction) as? rTransaction) : transaction
-    var tx = transaction
+    let encoder = JSONEncoder()
+    print(transaction)
+    let txs = try encoder.encode(transaction)
+    var tx = try transaction.toAny() as! BaseTransaction
     if opts.autofill! {
-        tx = AutoFillSugar().autofill(client: client, transaction: tx, signersCount: 0).wait()
+        tx = try await AutoFillSugar().autofill(client: client, transaction: tx, signersCount: 0).wait()
     }
-    
-//    return opts.wallet.sign(tx).txBlob
+    return try opts.wallet.sign(transaction: transaction, multisign: false).txBlob
 }
 
-//// checks if there is a LastLedgerSequence as a part of the transaction
-//func getLastLedgerSequence(
-//  transaction: Transaction | string,
-//) -> Int? {
-//  const tx = typeof transaction === "string" ? decode(transaction) : transaction
-//  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- converts LastLedgSeq to number if present.
-//  return tx.LastLedgerSequence as? Int
-//}
-//
-//// checks if the transaction is an AccountDelete transaction
-//func isAccountDelete(transaction: SubmitTransaction) -> Bool {
-//  const tx = typeof transaction === "string" ? decode(transaction) : transaction
-//  return tx.TransactionType === "AccountDelete"
-//}
+// checks if there is a LastLedgerSequence as a part of the transaction
+func getLastLedgerSequence(
+    //  transaction: Transaction | string,
+    transaction: String
+) -> Int? {
+//    let tx = typeof transaction === "string" ? decode(transaction) : transaction
+    let tx = transaction
+    //   eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- converts LastLedgSeq to number if present.
+    
+//    return tx.LastLedgerSequence as? Int
+    return 0
+}
+
+// checks if the transaction is an AccountDelete transaction
+func isAccountDelete(transaction: SubmitTransaction) -> Bool {
+//    let tx = transaction is String ? BinaryCodec.decode(transaction) : transaction
+    let tx = transaction
+//    return tx.TransactionType == "AccountDelete"
+    return false
+}
