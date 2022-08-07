@@ -7,14 +7,19 @@
 import Foundation
 
 class ED25519: SigningAlgorithm {
+    static var rawValue: String = "ed25519"
     
-    static func deriveKeyPair(seed: [UInt8]) throws -> KeyPair {
+    static func deriveKeyPair(seed: [UInt8], isValidator: Bool = false) throws -> KeyPair {
+        if isValidator {
+            throw KeypairsErrors.validation("Validator key pairs cannot use Ed25519")
+        }
         let privateKey = [UInt8](Data(seed).sha512().prefix(32))
         let publicKey = Ed25519.calcPublicKey(secretKey: privateKey)
-        return KeyPair(privateKey: privateKey.toHexString(), publicKey: publicKey.toHexString())
+        return KeyPair(privateKey: privateKey.toHexString().uppercased(), publicKey: publicKey.toHexString().uppercased())
     }
     
     static func sign(message: [UInt8], privateKey: [UInt8]) throws -> [UInt8] {
+        let privateKey = [UInt8](privateKey.suffix(from: 1))
         return Ed25519.sign(message: message, secretKey: privateKey)
     }
     

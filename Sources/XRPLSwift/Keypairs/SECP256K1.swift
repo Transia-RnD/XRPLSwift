@@ -26,8 +26,9 @@ public enum SECP256K1Error: Error {
 }
 
 internal class SECP256K1: SigningAlgorithm {
+    static var rawValue: String = "secp256k1"
     
-    static func deriveKeyPair(seed: [UInt8]) throws -> KeyPair {
+    static func deriveKeyPair(seed: [UInt8], isValidator: Bool = false) throws -> KeyPair {
         
         // FIXME: NOT THE FULL DERIVATION PATH, SEE https://xrpl.org/cryptographic-keys.html#key-derivation
         
@@ -54,6 +55,14 @@ internal class SECP256K1: SigningAlgorithm {
         var finalMasterPrivateKey = Data(repeating: 0x00, count: 33)
         finalMasterPrivateKey.replaceSubrange(1...masterPrivateKey.count, with: masterPrivateKey)
         
+        // TODO: This should be handled with padding..
+        if isValidator {
+            return KeyPair(
+                privateKey: "00\(rootSecretKey.toHexString().uppercased())",
+                publicKey: rootPublicKey.compressed.toHexString().uppercased()
+            )
+        }
+        
         // derive master public key
         var masterPrivateKeyForDerivation = Data(repeating: 0x00, count: 32)
         masterPrivateKeyForDerivation.replaceSubrange(32-masterPrivateKey.count...31, with: masterPrivateKey)
@@ -64,7 +73,7 @@ internal class SECP256K1: SigningAlgorithm {
         let masterPublicKeyHex = masterPublicKey.compressed.toHexString()
         secp256k1_context_destroy(ctx)
         
-        return KeyPair(privateKey: finalMasterPrivateKey.toHexString(), publicKey: masterPublicKeyHex)
+        return KeyPair(privateKey: finalMasterPrivateKey.toHexString().uppercased(), publicKey: masterPublicKeyHex.uppercased())
         
     }
     
@@ -120,8 +129,8 @@ internal class SECP256K1: SigningAlgorithm {
         }
         
         // TODO: IDK WHY I HAVE TO DO THIS
-        _ = _data.getPointer()
-        _ = _privateKey.getPointer()
+//        _ = _data.getPointer()
+//        _ = _privateKey.getPointer()
         
         var tmp: [UInt8] = Array(repeating: 0, count: 72)
         var size = tmp.count
@@ -136,7 +145,6 @@ internal class SECP256K1: SigningAlgorithm {
     }
     
     static func verify(signature: [UInt8], message: [UInt8], publicKey: [UInt8]) throws -> Bool {
-        
         let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_VERIFY))
         var sig = secp256k1_ecdsa_signature()
         
