@@ -240,6 +240,35 @@ extension rTransaction {
             try value.encode(to: encoder)
         }
     }
+    
+    static func all() -> [String] {
+        return [
+            "AccountDelete",
+            "AccountSet",
+            "CheckCancel",
+            "CheckCash",
+            "CheckCreate",
+            "DepositPreauth",
+            "EscrowCancel",
+            "EscrowCreate",
+            "EscrowFinish",
+            "NFTokenAcceptOffer",
+            "NFTokenBurn",
+            "NFTokenCancelOffer",
+            "NFTokenCreateOffer",
+            "NFTokenMint",
+            "OfferCancel",
+            "OfferCreate",
+            "Payment",
+            "PaymentChannelClaim",
+            "PaymentChannelCreate",
+            "PaymentChannelFund",
+            "SetRegularKey",
+            "SignerListSet",
+            "TicketCreate",
+            "TrustSet"
+        ]
+    }
 }
 
 

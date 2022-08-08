@@ -57,7 +57,7 @@ public class LedgerCurrentResponse: Codable {
     
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        ledgerCurrentIndex = try values.decode(String.self, forKey: .ledgerCurrentIndex)
+        ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
         //        try super.init(from: decoder)
     }
 }

@@ -20,7 +20,7 @@ let _DISABLE_TICK_SIZE: Int = 0
 
 let _MAX_DOMAIN_LENGTH: Int = 256
 
-public enum AccountSetFlag: Int, Codable {
+public enum AccountSetAsfFlags: Int, Codable {
     /*
     There are several options which can be either enabled or disabled for an account.
     Account options are represented by different types of flags depending on the
@@ -32,13 +32,13 @@ public enum AccountSetFlag: Int, Codable {
     */
     case asfAccountTxId = 5
     /*
-    Track the ID of this account's most recent transaction. Required for
+    Track the ID of this account"s most recent transaction. Required for
     `AccountTxnID <https://xrpl.org/transaction-common-fields.html#accounttxnid>`_
     */
     case asfDefaultRipple = 8
     /*
     Enable `rippling
-    <https://xrpl.org/rippling.html>`_ on this account's trust lines by default.
+    <https://xrpl.org/rippling.html>`_ on this account"s trust lines by default.
     */
     case asfDepositAuth = 9
     /*
@@ -74,6 +74,12 @@ public enum AccountSetFlag: Int, Codable {
     /*Require a destination tag to send transactions to this account.*/
     case asfAuthorizedMinter = 10
     /*Allow another account to mint and burn tokens on behalf of this account.*/
+    
+    static func all() -> [Int] {
+        return [
+            AccountSetAsfFlags.asfAccountTxId.rawValue
+        ]
+    }
 }
 
 public class AccountSet: BaseTransaction {
@@ -82,13 +88,13 @@ public class AccountSet: BaseTransaction {
     which modifies the properties of an account in the XRP Ledger.
     */
 
-    public var clearFlag: AccountSetFlag?
+    public var clearFlag: AccountSetAsfFlags?
     /*
     Disable a specific `AccountSet Flag
     <https://xrpl.org/accountset.html#accountset-flags>`_
     */
 
-    public var setFlag: AccountSetFlag?
+    public var setFlag: AccountSetAsfFlags?
     /*
     Enable a specific `AccountSet Flag
     <https://xrpl.org/accountset.html#accountset-flags>`_
@@ -126,14 +132,24 @@ public class AccountSet: BaseTransaction {
     public var nfTokenMinter: String?
     /*
     Sets an alternate account that is allowed to mint NFTokens on this
-    account's behalf using NFTokenMint's `Issuer` field. If set, you must
+    account"s behalf using NFTokenMint"s `Issuer` field. If set, you must
     also set the AccountSetFlag.ASF_AUTHORIZED_NFTOKEN_MINTER flag.
     */
+    
+    enum CodingKeys: String, CodingKey {
+        case clearFlag = "ClearFlag"
+        case setFlag = "SetFlag"
+        case domain = "Domain"
+        case emailHash = "EmailHash"
+        case transferRate = "TransferRate"
+        case tickSize = "TickSize"
+        case nfTokenMinter = "NFTokenMinter"
+    }
 
     public init(
         wallet: Wallet,
-        clearFlag: AccountSetFlag?,
-        setFlag: AccountSetFlag?,
+        clearFlag: AccountSetAsfFlags?,
+        setFlag: AccountSetAsfFlags?,
         domain: String?,
         emailHash: String?,
         messageKey: Int?,
@@ -151,21 +167,26 @@ public class AccountSet: BaseTransaction {
         self.nfTokenMinter = nfTokenMinter
         super.init(account: "", transactionType: "AccountSet")
     }
-
-    enum CodingKeys: String, CodingKey {
-        case clearFlag = "ClearFlag"
-        case setFlag = "SetFlag"
-        case domain = "Domain"
-        case emailHash = "EmailHash"
-        case transferRate = "TransferRate"
-        case tickSize = "TickSize"
-        case nfTokenMinter = "NFTokenMinter"
+    
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(AccountSet.self, from: data)
+        self.clearFlag = r.clearFlag
+        self.setFlag = r.setFlag
+        self.domain = r.domain
+        self.emailHash = r.emailHash
+        self.messageKey = r.messageKey
+        self.transferRate = r.transferRate
+        self.tickSize = r.tickSize
+        self.nfTokenMinter = r.nfTokenMinter
+        try super.init(json: json)
     }
     
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        clearFlag = try? values.decode(AccountSetFlag.self, forKey: .clearFlag)
-        setFlag = try? values.decode(AccountSetFlag.self, forKey: .setFlag)
+        clearFlag = try? values.decode(AccountSetAsfFlags.self, forKey: .clearFlag)
+        setFlag = try? values.decode(AccountSetAsfFlags.self, forKey: .setFlag)
         domain = try? values.decode(String.self, forKey: .domain)
         emailHash = try? values.decode(String.self, forKey: .emailHash)
         transferRate = try? values.decode(Int.self, forKey: .transferRate)
@@ -185,71 +206,52 @@ public class AccountSet: BaseTransaction {
         if let tickSize = tickSize { try values.encode(tickSize, forKey: .tickSize) }
         if let nfTokenMinter = nfTokenMinter { try values.encode(nfTokenMinter, forKey: .nfTokenMinter) }
     }
+}
 
-    // TODO:
-    func _get_errors() -> [String: String?] {
-        return [
-            "tick_size": self._get_tick_size_error(),
-            "transfer_rate": self._get_transfer_rate_error(),
-            "domain": self._get_domain_error(),
-            "clear_flag": self._get_clear_flag_error(),
-            "nftoken_minter": self._get_nftoken_minter_error(),
-        ]
+/**
+ * Verify the form and type of an AccountDelete at runtime.
+ *
+ * @param tx - An AccountDelete Transaction.
+ * @throws When the AccountDelete is Malformed.
+ */
+public func validateAccountSet(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
+    
+    if tx["ClearFlag"] != nil {
+        print("NOT NIL")
+        guard let _ = tx["ClearFlag"] as? Int else {
+            throw XrplError.validation("AccountSet: invalid ClearFlag")
+        }
+        // TODO:
     }
-
-    func _get_tick_size_error() -> String? {
-        if self.tickSize == nil {
-            return nil
+    
+    if tx["SetFlag"] != nil {
+        guard let _ = tx["SetFlag"] as? Int else {
+            throw XrplError.validation("AccountSet: invalid SetFlag")
         }
-        if self.tickSize! > _MAX_TICK_SIZE {
-            return "`tickSize` is above \(_MAX_TICK_SIZE)."
-        }
-        if self.tickSize! < _MIN_TICK_SIZE && self.tickSize! != _DISABLE_TICK_SIZE {
-            return "`tickSize` is below \(_MIN_TICK_SIZE)."
-        }
-        return nil
+        // TODO:
     }
-
-    func _get_transfer_rate_error() -> String? {
-        if self.transferRate == nil {
-            return nil
-        }
-        if self.transferRate! > _MAX_TRANSFER_RATE {
-                return "`transfer_rate` is above \(_MAX_TRANSFER_RATE)."
-        }
-        if self.transferRate! < _MIN_TRANSFER_RATE && self.transferRate != _SPECIAL_CASE_TRANFER_RATE {
-            return "`transfer_rate` is below \(_MIN_TRANSFER_RATE)."
-        }
-        return nil
+    
+    if tx["Domain"] != nil, !(tx["Domain"] is String) {
+        throw XrplError.validation("AccountSet: invalid Domain")
     }
-
-    func _get_domain_error() -> String? {
-        if self.domain != nil && self.domain?.lowercased() != self.domain {
-            return "Domain \(self.domain ?? "") is not lowercase"
-        }
-        if self.domain != nil && self.domain!.count > _MAX_DOMAIN_LENGTH {
-            return "Must not be longer than \(_MAX_DOMAIN_LENGTH) characters"
-        }
-        return nil
+    
+    if tx["EmailHash"] != nil, !(tx["EmailHash"] is String) {
+        throw XrplError.validation("AccountSet: invalid EmailHash")
     }
-
-    func _get_clear_flag_error() -> String? {
-        if self.clearFlag != nil && self.clearFlag == self.setFlag {
-            return "Must not be equal to the setFlag"
-        }
-        return nil
+    
+    if tx["MessageKey"] != nil, !(tx["MessageKey"] is String) {
+        throw XrplError.validation("AccountSet: invalid MessageKey")
     }
-
-    func _get_nftoken_minter_error() -> String? {
-        if self.setFlag != AccountSetFlag.asfAuthorizedMinter && self.nfTokenMinter != nil {
-            return "Will not set the minter unless AccountSetFlag.ASF_AUTHORIZED_NFTOKEN_MINTER is set"
+    
+    if tx["TransferRate"] != nil, !(tx["TransferRate"] is Int) {
+        throw XrplError.validation("AccountSet: invalid TransferRate")
+    }
+    
+    if tx["TickSize"] != nil {
+        guard let tickSize = tx["TickSize"] as? Int, tickSize != 0, tickSize < _MIN_TICK_SIZE || tickSize > _MAX_TICK_SIZE else {
+            throw XrplError.validation("AccountSet: invalid TickSize")
         }
-        if self.setFlag == AccountSetFlag.asfAuthorizedMinter && self.nfTokenMinter == nil {
-            return "Must be present if AccountSetFlag.ASF_AUTHORIZED_NFTOKEN_MINTER is set"
-        }
-        if self.clearFlag == AccountSetFlag.asfAuthorizedMinter && self.nfTokenMinter != nil {
-            return "Must not be present if AccountSetFlag.ASF_AUTHORIZED_NFTOKEN_MINTER is unset using clearFlag"
-        }
-        return nil
+        throw XrplError.validation("AccountSet: invalid Tick_MAX_TICK_SIZESize")
     }
 }

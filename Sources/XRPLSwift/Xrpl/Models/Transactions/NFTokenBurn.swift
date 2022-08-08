@@ -76,3 +76,4 @@ public class NFTokenBurn: BaseTransaction {
         if let owner = owner { try values.encode(owner, forKey: .owner) }
     }
 }
+

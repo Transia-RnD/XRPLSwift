@@ -34,6 +34,11 @@ public class DepositPreauth: BaseTransaction {
      */
     public let unauthorize: String?
     
+    enum CodingKeys: String, CodingKey {
+        case authorize = "Authorize"
+        case unauthorize = "Unauthorize"
+    }
+    
     public init(
         authorize: String? = nil,
         unauthorize: String? = nil
@@ -44,15 +49,19 @@ public class DepositPreauth: BaseTransaction {
         super.init(account: "", transactionType: "DepositPreauth")
     }
     
-    enum CodingKeys: String, CodingKey {
-        case authorize = "Authorize"
-        case unauthorize = "Unauthorize"
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(DepositPreauth.self, from: data)
+        self.authorize = r.authorize
+        self.unauthorize = r.unauthorize
+        try super.init(json: json)
     }
     
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        authorize = try values.decode(String.self, forKey: .authorize)
-        unauthorize = try values.decode(String.self, forKey: .unauthorize)
+        authorize = try? values.decode(String.self, forKey: .authorize)
+        unauthorize = try? values.decode(String.self, forKey: .unauthorize)
         try super.init(from: decoder)
     }
     
@@ -61,5 +70,42 @@ public class DepositPreauth: BaseTransaction {
         try super.encode(to: encoder)
         if let authorize = authorize { try values.encode(authorize, forKey: .authorize) }
         if let unauthorize = unauthorize { try values.encode(unauthorize, forKey: .unauthorize) }
+    }
+}
+
+
+/**
+ * Verify the form and type of a DepositPreauth at runtime.
+ *
+ * @param tx - A DepositPreauth Transaction.
+ * @throws When the DepositPreauth is malformed.
+ */
+public func validateDepositPreauth(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
+    
+    if tx["Authorize"] != nil && tx["Unauthorize"] != nil {
+        throw ValidationError.decoding("DepositPreauth: can't provide both Authorize and Unauthorize fields")
+    }
+    
+    if tx["Authorize"] == nil && tx["Unauthorize"] == nil {
+        throw ValidationError.decoding("DepositPreauth: must provide either Authorize or Unauthorize field")
+    }
+    
+    if tx["Authorize"] != nil {
+        if !(tx["Authorize"] is String) {
+            throw ValidationError.decoding("DepositPreauth: Authorize must be a string")
+        }
+        if (tx["Account"] as! String) == (tx["Authorize"] as! String) {
+            throw ValidationError.decoding("DepositPreauth: Account can't preauthorize its own address")
+        }
+    }
+    
+    if tx["Unauthorize"] != nil {
+        if !(tx["Unauthorize"] is String) {
+            throw ValidationError.decoding("DepositPreauth: Unauthorize must be a string")
+        }
+        if (tx["Account"] as! String) == (tx["Unauthorize"] as! String) {
+            throw ValidationError.decoding("DepositPreauth: Account can't unauthorize its own address")
+        }
     }
 }

@@ -53,6 +53,14 @@ public class CheckCreate: BaseTransaction {
      */
     public let invoiceId: String?
     
+    enum CodingKeys: String, CodingKey {
+        case destination = "Destination"
+        case sendMax = "SendMax"
+        case destinationTag = "DestinationTag"
+        case expiration = "Expiration"
+        case invoiceId = "InvoiceId"
+    }
+    
     public init(
         destination: String,
         sendMax: rAmount,
@@ -68,12 +76,16 @@ public class CheckCreate: BaseTransaction {
         super.init(account: "", transactionType: "CheckCreate")
     }
     
-    enum CodingKeys: String, CodingKey {
-        case destination = "Destination"
-        case sendMax = "SendMax"
-        case destinationTag = "DestinationTag"
-        case expiration = "Expiration"
-        case invoiceId = "InvoiceId"
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(CheckCreate.self, from: data)
+        self.destination = r.destination
+        self.sendMax = r.sendMax
+        self.destinationTag = r.destinationTag
+        self.expiration = r.expiration
+        self.invoiceId = r.invoiceId
+        try super.init(json: json)
     }
     
     required public init(from decoder: Decoder) throws {
@@ -94,5 +106,43 @@ public class CheckCreate: BaseTransaction {
         if let destinationTag = destinationTag { try values.encode(destinationTag, forKey: .destinationTag) }
         if let expiration = expiration { try values.encode(expiration, forKey: .expiration) }
         if let invoiceId = invoiceId { try values.encode(invoiceId, forKey: .invoiceId) }
+    }
+}
+
+/**
+ * Verify the form and type of an CheckCreate at runtime.
+ *
+ * @param tx - An CheckCreate Transaction.
+ * @throws When the CheckCreate is Malformed.
+ */
+public func validateCheckCreate(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
+    
+    if tx["SendMax"] == nil {
+        throw ValidationError.decoding("CheckCreate: missing field SendMax")
+    }
+    
+    if tx["Destination"] == nil {
+        throw ValidationError.decoding("CheckCreate: missing field Destination")
+    }
+    
+    if !(tx["SendMax"] is String) && !isIssuedCurrency(input: tx["SendMax"] as? [String: AnyObject]) {
+        throw ValidationError.decoding("CheckCreate: invalid SendMax")
+    }
+    
+    if !(tx["Destination"] is String) {
+        throw ValidationError.decoding("CheckCreate: invalid Destination")
+    }
+    
+    if tx["DestinationTag"] != nil && !(tx["DestinationTag"] is Int) {
+        throw ValidationError.decoding("CheckCash: invalid DestinationTag")
+    }
+    
+    if tx["Expiration"] != nil && !(tx["Expiration"] is Int) {
+        throw ValidationError.decoding("CheckCash: invalid Expiration")
+    }
+    
+    if tx["InvoiceID"] != nil && !(tx["InvoiceID"] is Int) {
+        throw ValidationError.decoding("CheckCash: invalid InvoiceID")
     }
 }

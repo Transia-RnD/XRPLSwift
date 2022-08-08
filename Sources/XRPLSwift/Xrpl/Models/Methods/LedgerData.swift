@@ -89,7 +89,6 @@ public class LedgerDataRequest: BaseRequest {
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
-        try values.encode(account, forKey: .account)
         if let ledgerHash = ledgerHash { try values.encode(ledgerHash, forKey: .ledgerHash) }
         if let ledgerIndex = ledgerIndex { try values.encode(ledgerIndex, forKey: .ledgerIndex) }
         if let binary = binary { try values.encode(binary, forKey: .binary) }

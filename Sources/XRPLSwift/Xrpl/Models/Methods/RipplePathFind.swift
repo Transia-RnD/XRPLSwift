@@ -92,16 +92,16 @@ public class RipplePathFindRequest: BaseRequest {
         fatalError("init(from:) has not been implemented")
     }
     
-    required public init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        sourceAccount = try values.decode(String.self, forKey: .sourceAccount)
-        destinationAmount = try values.decode(rAmount.self, forKey: .destinationAmount)
-        sendMax = try values.decode(rAmount.self, forKey: .sendMax)
-        sourceCurrencies = try values.decode(SourceCurrencyAmount.self, forKey: .sourceCurrencies)
-        ledgerIndex = try values.decode(rLedgerIndex.self, forKey: .ledgerIndex)
-        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
-//        try super.init(from: decoder)
-    }
+//    required public init(from decoder: Decoder) throws {
+//        let values = try decoder.container(keyedBy: CodingKeys.self)
+//        sourceAccount = try values.decode(String.self, forKey: .sourceAccount)
+//        destinationAmount = try values.decode(rAmount.self, forKey: .destinationAmount)
+//        sendMax = try values.decode(rAmount.self, forKey: .sendMax)
+//        sourceCurrencies = try values.decode(SourceCurrencyAmount.self, forKey: .sourceCurrencies)
+//        ledgerIndex = try values.decode(rLedgerIndex.self, forKey: .ledgerIndex)
+//        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
+////        try super.init(from: decoder)
+//    }
 }
 
 public struct PathOption: Codable {

@@ -37,11 +37,11 @@ public enum rLedgerIndex: Codable {
 }
 
 extension rLedgerIndex {
-
+    
     enum LedgerIndexCodingError: Error {
         case decoding(String)
     }
-
+    
     public init(from decoder: Decoder) throws {
         if let value = try? String.init(from: decoder) {
             self = .string(value)
@@ -53,7 +53,7 @@ extension rLedgerIndex {
         }
         throw LedgerIndexCodingError.decoding("OOPS")
     }
-
+    
     public func encode(to encoder: Encoder) throws {
         switch self {
         case .string(let string):
@@ -101,11 +101,11 @@ public enum rAmount: Codable {
 }
 
 extension rAmount {
-
+    
     enum rAmountCodingError: Error {
         case decoding(String)
     }
-
+    
     public init(from decoder: Decoder) throws {
         print(decoder.self)
         if let value = try? String.init(from: decoder) {
@@ -118,7 +118,7 @@ extension rAmount {
         }
         throw rAmountCodingError.decoding("OOPS")
     }
-
+    
     public func encode(to encoder: Encoder) throws {
         switch self {
         case .string(let string):
@@ -185,14 +185,14 @@ public class Memo: Codable {
 //  | 'server'
 //  | 'validations'
 //
-//interface PathStep {
-//  account?: string
-//  currency?: string
-//  issuer?: string
-//}
-//
-//export type Path = PathStep[]
-//
+public struct PathStep: Codable {
+    public var account: String?
+    public var currency: String?
+    public var issuer: String
+}
+
+public typealias Path = [PathStep]
+
 //export interface SignerEntry {
 //  SignerEntry: {
 //    Account: string

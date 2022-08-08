@@ -168,9 +168,9 @@ struct LedgerQueueData {
     var maxSpendDrops: String?
 }
 
-class BinaryLedger: Ledger {
-    var accountState: [String]?
-    var transactions: [String]?
+class BinaryLedger: BaseLedger {
+    public var aaccountState: [LedgerEntry]?
+    public var ttransactions: [BaseTransaction]?
 }
 
 enum rQueueData: Codable {

@@ -11,45 +11,48 @@ import Foundation
 
 let MEMO_SIZE: Int = 3
 
-//func isMemo(obj: [ String: AnyObject? ]) -> Bool {
-//    if (obj["Memo"] == nil) {
-//        return false
-//    }
-//    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS
-//    let memo = obj["Memo"] as? [String: AnyObject]
-//    let size = memo.length
-//    let validData = memo.MemoData == nil || memo.MemoData is String
-//    let validFormat = memo.MemoFormat == nil || memo.MemoData is String
-//    let validType = memo.MemoType == nil || memo.MemoData is String
-//
-//    return (
-//        size >= 1 &&
-//        size <= MEMO_SIZE &&
-//        validData &&
-//        validFormat &&
-//        validType &&
-//        onlyHasFields(memo, ["MemoFormat", "MemoData", "MemoType"])
-//    )
-//}
+func isMemo(obj: [ String: AnyObject? ]) -> Bool {
+    if obj["Memo"] == nil {
+        return false
+    }
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS
+    guard let memo = obj["Memo"] as? [String: AnyObject] else {
+        return false
+    }
+    let size = memo.count
+    // MARK: Need review here.
+    let validData = memo["MemoData"] == nil || memo["MemoData"] is String
+    let validFormat = memo["MemoFormat"] == nil || memo["MemoFormat"] is String
+    let validType = memo["MemoType"] == nil || memo["MemoType"] is String
+
+    return (
+        size >= 1 &&
+        size <= MEMO_SIZE &&
+        validData &&
+        validFormat &&
+        validType &&
+        onlyHasFields(obj: memo, fields: ["MemoFormat", "MemoData", "MemoType"])
+    )
+}
 
 let SIGNER_SIZE: Int = 3
 
-//func isSigner(obj: AnyObject) -> Bool {
-//    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS
-//    let signerWrapper = obj as? [String, AnyObject]
-//
-//    if (signerWrapper.Signer == nil) {
-//        return false
-//    }
-//    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS and Signer is previously unknown
-//    let signer = signerWrapper.Signer as Record<string, unknown>
-//    return (
-//        signer.length === SIGNER_SIZE &&
-//        signer.Account is String &&
-//        signer.TxnSignature is String &&
-//        signer.SigningPubKey is String
-//    )
-//}
+func isSigner(obj: [ String: AnyObject? ]) -> Bool {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS
+    if obj["Signer"] == nil {
+        return false
+    }
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS and Signer is previously unknown
+    guard let signer = obj["Signer"] as? [String: AnyObject] else {
+        return false
+    }
+    return (
+        signer.count == SIGNER_SIZE &&
+        signer["Account"] is String &&
+        signer["TxnSignature"] is String &&
+        signer["SigningPubKey"] is String
+    )
+}
 
 let ISSUED_CURRENCY_SIZE: Int = 3
 
@@ -175,6 +178,22 @@ public class BaseTransaction: Codable {
      */
     public var txnSignature: String?
     
+    enum CodingKeys: String, CodingKey {
+        case account = "Account"
+        case transactionType = "TransactionType"
+        case fee = "Fee"
+        case sequence = "Sequence"
+        case accountTxnId = "AccountTxnID"
+        case flags = "Flags"
+        case lastLedgerSequence = "LastLedgerSequence"
+        case memos = "Memos"
+        case signers = "Signers"
+        case sourceTag = "SourceTag"
+        case signingPubKey = "SigningPubKey"
+        case ticketSequence = "TicketSequence"
+        case txnSignature = "TxnSignature"
+    }
+    
     public init(
         // Required
         account: String,
@@ -209,20 +228,25 @@ public class BaseTransaction: Codable {
         self.txnSignature = txnSignature
     }
     
-    enum CodingKeys: String, CodingKey {
-        case account = "Account"
-        case transactionType = "TransactionType"
-        case fee = "Fee"
-        case sequence = "Sequence"
-        case accountTxnId = "AccountTxnID"
-        case flags = "Flags"
-        case lastLedgerSequence = "LastLedgerSequence"
-        case memos = "Memos"
-        case signers = "Signers"
-        case sourceTag = "SourceTag"
-        case signingPubKey = "SigningPubKey"
-        case ticketSequence = "TicketSequence"
-        case txnSignature = "TxnSignature"
+    public init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try! JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(BaseTransaction.self, from: data)
+        // Required
+        self.account = r.account
+        self.transactionType = r.transactionType
+        // Optional
+        self.fee = r.fee
+        self.sequence = r.sequence
+        self.accountTxnId = r.accountTxnId
+        self.flags = r.flags
+        self.lastLedgerSequence = r.lastLedgerSequence
+        self.memos = r.memos
+        self.signers = r.signers
+        self.sourceTag = r.sourceTag
+        self.signingPubKey = r.signingPubKey
+        self.ticketSequence = r.ticketSequence
+        self.txnSignature = r.txnSignature
     }
     
     
@@ -261,6 +285,16 @@ public class BaseTransaction: Codable {
     }
 }
 
+extension BaseTransaction {
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String : AnyObject]
+    }
+}
+
+
 enum ValidationError: Error {
     case decoding(String)
 }
@@ -275,88 +309,74 @@ enum ValidationError: Error {
  */
 public func validateBaseTransaction(common: [String: AnyObject]) throws -> Void {
     print("VALIDATE BASE TX")
-    //  if (common.Account == nil) {
-    //      throw ValidationError.decoding("BaseTransaction: missing field Account")
-    //  }
-    //
-    //  if (typeof common.Account !== "string") {
-    //    throw new ValidationError("BaseTransaction: Account not string")
-    //  }
-    //
-    //  if (common.TransactionType === undefined) {
-    //    throw new ValidationError("BaseTransaction: missing field TransactionType")
-    //  }
-    //
-    //  if (typeof common.TransactionType !== "string") {
-    //    throw new ValidationError("BaseTransaction: TransactionType not string")
-    //  }
-    //
-    //  if (!TRANSACTION_TYPES.includes(common.TransactionType)) {
-    //    throw new ValidationError("BaseTransaction: Unknown TransactionType")
-    //  }
-    //
-    //  if (common.Fee !== undefined && typeof common.Fee !== "string") {
-    //    throw new ValidationError("BaseTransaction: invalid Fee")
-    //  }
-    //
-    //  if (common.Sequence !== undefined && typeof common.Sequence !== "number") {
-    //    throw new ValidationError("BaseTransaction: invalid Sequence")
-    //  }
-    //
-    //  if (
-    //    common.AccountTxnID !== undefined &&
-    //    typeof common.AccountTxnID !== "string"
-    //  ) {
-    //    throw new ValidationError("BaseTransaction: invalid AccountTxnID")
-    //  }
-    //
-    //  if (
-    //    common.LastLedgerSequence !== undefined &&
-    //    typeof common.LastLedgerSequence !== "number"
-    //  ) {
-    //    throw new ValidationError("BaseTransaction: invalid LastLedgerSequence")
-    //  }
-    //
-    //  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS
-    //  const memos = common.Memos as Array<{ Memo?: unknown }> | undefined
-    //  if (memos !== undefined && !memos.every(isMemo)) {
-    //    throw new ValidationError("BaseTransaction: invalid Memos")
-    //  }
-    //
-    //  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS
-    //  const signers = common.Signers as Array<Record<string, unknown>> | undefined
-    //
-    //  if (
-    //    signers !== undefined &&
-    //    (signers.length === 0 || !signers.every(isSigner))
-    //  ) {
-    //    throw new ValidationError("BaseTransaction: invalid Signers")
-    //  }
-    //
-    //  if (common.SourceTag !== undefined && typeof common.SourceTag !== "number") {
-    //    throw new ValidationError("BaseTransaction: invalid SourceTag")
-    //  }
-    //
-    //  if (
-    //    common.SigningPubKey !== undefined &&
-    //    typeof common.SigningPubKey !== "string"
-    //  ) {
-    //    throw new ValidationError("BaseTransaction: invalid SigningPubKey")
-    //  }
-    //
-    //  if (
-    //    common.TicketSequence !== undefined &&
-    //    typeof common.TicketSequence !== "number"
-    //  ) {
-    //    throw new ValidationError("BaseTransaction: invalid TicketSequence")
-    //  }
-    //
-    //  if (
-    //    common.TxnSignature !== undefined &&
-    //    typeof common.TxnSignature !== "string"
-    //  ) {
-    //    throw new ValidationError("BaseTransaction: invalid TxnSignature")
-    //  }
+    if common["Account"] == nil {
+        throw ValidationError.decoding("BaseTransaction: missing field Account")
+    }
+    
+    if !(common["Account"] is String) {
+        throw ValidationError.decoding("BaseTransaction: Account not string")
+    }
+    
+    if common["TransactionType"] == nil {
+        throw ValidationError.decoding("BaseTransaction: missing field TransactionType")
+    }
+    
+    if !(common["TransactionType"] is String) {
+        throw ValidationError.decoding("BaseTransaction: TransactionType not string")
+    }
+    
+    if !rTransaction.all().contains(common["TransactionType"] as! String) {
+        throw ValidationError.decoding("BaseTransaction: Unknown TransactionType")
+    }
+    
+    if common["Fee"] != nil && !(common["Fee"] is String) {
+        throw ValidationError.decoding("BaseTransaction: invalid Fee")
+    }
+    
+    if common["Sequence"] != nil && !(common["Sequence"] is Int) {
+        throw ValidationError.decoding("BaseTransaction: invalid Sequence")
+    }
+    
+    if common["AccountTxnID"] != nil && !(common["AccountTxnID"] is String) {
+        throw ValidationError.decoding("BaseTransaction: invalid AccountTxnID")
+    }
+    
+    if common["LastLedgerSequence"] != nil && !(common["LastLedgerSequence"] is Int) {
+        throw ValidationError.decoding("BaseTransaction: invalid LastLedgerSequence")
+    }
+    
+//    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS
+    let memos = common["Memos"] as? [[String: AnyObject]]
+    if memos != nil && !(memos?.allSatisfy({ result in
+        isMemo(obj: result)
+    }))! {
+        throw ValidationError.decoding("BaseTransaction: invalid Memos")
+    }
+
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS
+    let signers = common["Signers"] as? [[String: AnyObject]]
+    
+    if signers != nil && (signers?.count == 0 || !(signers?.allSatisfy({ result in
+        isSigner(obj: result)
+    }))!) {
+        throw ValidationError.decoding("BaseTransaction: invalid Signers")
+    }
+    
+    if common["SourceTag"] != nil && !(common["SourceTag"] is Int) {
+        throw ValidationError.decoding("BaseTransaction: invalid SourceTag")
+    }
+    
+    if common["SigningPubKey"] != nil && !(common["SigningPubKey"] is String) {
+        throw ValidationError.decoding("BaseTransaction: invalid SigningPubKey")
+    }
+    
+    if common["TicketSequence"] != nil && !(common["TicketSequence"] is Int) {
+        throw ValidationError.decoding("BaseTransaction: invalid TicketSequence")
+    }
+    
+    if common["TxnSignature"] != nil && !(common["TxnSignature"] is String) {
+        throw ValidationError.decoding("BaseTransaction: invalid TxnSignature")
+    }
 }
 
 /**

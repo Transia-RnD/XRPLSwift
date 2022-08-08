@@ -3,6 +3,7 @@
 //  AnyCodable
 //
 //  Created by Mitch Lang on 2/5/20.
+//  Updated by Denis Angell on 8/7/22.
 //
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/escrowFinish.ts
@@ -14,7 +15,7 @@ public class EscrowFinish: BaseTransaction {
   /** Address of the source account that funded the held payment. */
     public let owner: String
   /**
-   * Transaction sequence of EscrowCreate transaction that created the held.
+   * Transaction sequence of EscrowFinish transaction that created the held.
    * payment to finish.
    */
     public let offerSequence: Int
@@ -29,6 +30,13 @@ public class EscrowFinish: BaseTransaction {
    */
     public let fulfillment: String?
     
+    enum CodingKeys: String, CodingKey {
+        case owner = "Owner"
+        case offerSequence = "OfferSequence"
+        case condition = "Condition"
+        case fulfillment = "Fulfillment"
+    }
+    
     public init(
         owner: String,
         offerSequence: Int,
@@ -42,19 +50,23 @@ public class EscrowFinish: BaseTransaction {
         super.init(account: "", transactionType: "EscrowFinish")
     }
     
-    enum CodingKeys: String, CodingKey {
-        case owner = "Owner"
-        case offerSequence = "OfferSequence"
-        case condition = "Condition"
-        case fulfillment = "Fulfillment"
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(EscrowFinish.self, from: data)
+        self.owner = r.owner
+        self.offerSequence = r.offerSequence
+        self.condition = r.condition
+        self.fulfillment = r.fulfillment
+        try super.init(json: json)
     }
     
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         owner = try values.decode(String.self, forKey: .owner)
         offerSequence = try values.decode(Int.self, forKey: .offerSequence)
-        condition = try? values.decode(String.self, forKey: .condition)
-        fulfillment = try? values.decode(String.self, forKey: .fulfillment)
+        condition = try values.decodeIfPresent(String.self, forKey: .condition)
+        fulfillment = try values.decodeIfPresent(String.self, forKey: .fulfillment)
         try super.init(from: decoder)
     }
     
@@ -65,5 +77,39 @@ public class EscrowFinish: BaseTransaction {
         try values.encode(offerSequence, forKey: .offerSequence)
         if let condition = condition { try values.encode(condition, forKey: .condition) }
         if let fulfillment = fulfillment { try values.encode(fulfillment, forKey: .fulfillment) }
+    }
+}
+
+/**
+ * Verify the form and type of an EscrowFinish at runtime.
+ *
+ * @param tx - An EscrowFinish Transaction.
+ * @throws When the EscrowFinish is Malformed.
+ */
+public func validateEscrowFinish(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
+    
+    if tx["Owner"] == nil {
+        throw ValidationError.decoding("EscrowFinish: missing field Owner")
+    }
+    
+    if !(tx["Owner"] is String) {
+        throw ValidationError.decoding("EscrowFinish: Owner must be a String")
+    }
+    
+    if tx["OfferSequence"] == nil {
+        throw ValidationError.decoding("EscrowFinish: missing Destination")
+    }
+    
+    if !(tx["OfferSequence"] is Int) {
+        throw ValidationError.decoding("EscrowFinish: OfferSequence must be a Int")
+    }
+    
+    if tx["Condition"] != nil && !(tx["Condition"] is String) {
+        throw ValidationError.decoding("EscrowFinish: Condition must be a String")
+    }
+    
+    if tx["Fulfillment"] != nil && !(tx["Fulfillment"] is String) {
+        throw ValidationError.decoding("EscrowFinish: Fulfillment must be a String")
     }
 }

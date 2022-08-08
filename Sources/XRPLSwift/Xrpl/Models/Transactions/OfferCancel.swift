@@ -25,15 +25,21 @@ public class OfferCancel: BaseTransaction {
     specified does not exist.
     */
     
+    enum CodingKeys: String, CodingKey {
+        case offerSequence = "OfferSequence"
+    }
+    
     public init(offerSequence: Int) {
-        
         self.offerSequence = offerSequence
-        
         super.init(account: "", transactionType: "CancelOffer")
     }
     
-    enum CodingKeys: String, CodingKey {
-        case offerSequence = "OfferSequence"
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(OfferCancel.self, from: data)
+        self.offerSequence = r.offerSequence
+        try super.init(json: json)
     }
     
     required public init(from decoder: Decoder) throws {
@@ -46,5 +52,23 @@ public class OfferCancel: BaseTransaction {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
         try values.encode(offerSequence, forKey: .offerSequence)
+    }
+}
+
+/**
+ * Verify the form and type of an OfferCancel at runtime.
+ *
+ * @param tx - An OfferCancel Transaction.
+ * @throws When the OfferCancel is Malformed.
+ */
+public func validateOfferCancel(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
+    
+    if tx["OfferSequence"] == nil {
+        throw ValidationError.decoding("OfferCancel: missing field OfferSequence")
+    }
+    
+    if !(tx["OfferSequence"] is Int) {
+        throw ValidationError.decoding("OfferCancel: OfferSequence must be a Int")
     }
 }

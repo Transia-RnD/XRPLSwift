@@ -27,13 +27,21 @@ public class CheckCancel: BaseTransaction {
      */
     public let checkId: String
     
+    enum CodingKeys: String, CodingKey {
+        case checkId = "CheckID"
+    }
+    
     public init(checkId: String) {
         self.checkId = checkId
         super.init(account: "", transactionType: "AccountSet")
     }
     
-    enum CodingKeys: String, CodingKey {
-        case checkId = "check_id"
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(CheckCancel.self, from: data)
+        self.checkId = r.checkId
+        try super.init(json: json)
     }
     
     required public init(from decoder: Decoder) throws {
@@ -46,5 +54,19 @@ public class CheckCancel: BaseTransaction {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
         try values.encode(checkId, forKey: .checkId)
+    }
+}
+
+/**
+ * Verify the form and type of an CheckCancel at runtime.
+ *
+ * @param tx - An CheckCancel Transaction.
+ * @throws When the CheckCancel is Malformed.
+ */
+public func validateCheckCancel(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
+    
+    guard let checkId = tx["CheckID"] as? String, !checkId.isEmpty else {
+        throw XrplError.validation("CheckCancel: invalid CheckID")
     }
 }

@@ -3,6 +3,7 @@
 //  AnyCodable
 //
 //  Created by Mitch Lang on 2/5/20.
+//  Updated by Denis Angell on 7/31/22.
 //
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/escrowCancel.ts
@@ -25,6 +26,10 @@ public class EscrowCancel: BaseTransaction {
      */
     public var offerSequence: Int
     
+    enum CodingKeys: String, CodingKey {
+        case owner = "Owner"
+        case offerSequence = "OfferSequence"
+    }
     
     public init(owner: String, offerSequence: Int) {
         self.owner = owner
@@ -32,9 +37,13 @@ public class EscrowCancel: BaseTransaction {
         super.init(account: "", transactionType: "EscrowCancel")
     }
     
-    enum CodingKeys: String, CodingKey {
-        case owner = "owner"
-        case offerSequence = "offerSequence"
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(EscrowCancel.self, from: data)
+        self.owner = r.owner
+        self.offerSequence = r.offerSequence
+        try super.init(json: json)
     }
     
     required public init(from decoder: Decoder) throws {
@@ -49,5 +58,32 @@ public class EscrowCancel: BaseTransaction {
         try super.encode(to: encoder)
         try values.encode(owner, forKey: .owner)
         try values.encode(offerSequence, forKey: .offerSequence)
+    }
+}
+
+
+/**
+ * Verify the form and type of an EscrowCancel at runtime.
+ *
+ * @param tx - An EscrowCancel Transaction.
+ * @throws When the EscrowCancel is Malformed.
+ */
+public func validateEscrowCancel(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
+    
+    if tx["Owner"] == nil {
+        throw ValidationError.decoding("EscrowCancel: missing Owner")
+    }
+    
+    if !(tx["Owner"] is String) {
+        throw ValidationError.decoding("EscrowCancel: Owner must be a string")
+    }
+    
+    if tx["OfferSequence"] == nil {
+        throw ValidationError.decoding("EscrowCancel: missing OfferSequence")
+    }
+    
+    if !(tx["OfferSequence"] is Int) {
+        throw ValidationError.decoding("EscrowCancel: OfferSequence must be a string")
     }
 }

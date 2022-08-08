@@ -86,6 +86,13 @@ public class OfferCreate: BaseTransaction {
     when placing this Offer.
     */
     
+    enum CodingKeys: String, CodingKey {
+        case takerGets = "TakerGets"
+        case takerPays = "TakerPays"
+        case expiration = "Expiration"
+        case offerSequence = "OfferSequence"
+    }
+    
     public init(
         takerGets: rAmount,
         takerPays: rAmount,
@@ -100,19 +107,23 @@ public class OfferCreate: BaseTransaction {
         super.init(account: "", transactionType: "OfferCreate")
     }
     
-    enum CodingKeys: String, CodingKey {
-        case takerGets = "TakerGets"
-        case takerPays = "TakerPays"
-        case expiration = "Expiration"
-        case offerSequence = "OfferSequence"
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(OfferCreate.self, from: data)
+        self.takerGets = r.takerGets
+        self.takerPays = r.takerPays
+        self.expiration = r.expiration
+        self.offerSequence = r.offerSequence
+        try super.init(json: json)
     }
     
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         takerGets = try values.decode(rAmount.self, forKey: .takerGets)
         takerPays = try values.decode(rAmount.self, forKey: .takerPays)
-        expiration = try? values.decode(Int.self, forKey: .expiration)
-        offerSequence = try? values.decode(Int.self, forKey: .offerSequence)
+        expiration = try values.decodeIfPresent(Int.self, forKey: .expiration)
+        offerSequence = try values.decodeIfPresent(Int.self, forKey: .offerSequence)
         try super.init(from: decoder)
     }
     
@@ -123,5 +134,39 @@ public class OfferCreate: BaseTransaction {
         try values.encode(takerPays, forKey: .takerPays)
         if let expiration = expiration { try values.encode(expiration, forKey: .expiration) }
         if let offerSequence = offerSequence { try values.encode(offerSequence, forKey: .offerSequence) }
+    }
+}
+
+/**
+ * Verify the form and type of an OfferCreate at runtime.
+ *
+ * @param tx - An OfferCreate Transaction.
+ * @throws When the OfferCreate is Malformed.
+ */
+public func validateOfferCreate(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
+    
+    if tx["TakerGets"] == nil {
+        throw ValidationError.decoding("OfferCreate: missing field TakerGets")
+    }
+    
+    if tx["TakerPays"] == nil {
+        throw ValidationError.decoding("OfferCreate: missing field TakerPays")
+    }
+    
+    if !(tx["TakerGets"] is String) && !isAmount(amount: tx["TakerGets"]) {
+        throw ValidationError.decoding("OfferCreate: invalid TakerGets")
+    }
+    
+    if !(tx["TakerPays"] is String) && !isAmount(amount: tx["TakerPays"]) {
+        throw ValidationError.decoding("OfferCreate: invalid TakerPays")
+    }
+    
+    if tx["Expiration"] != nil && !(tx["Expiration"] is Int) {
+        throw ValidationError.decoding("OfferCreate: Expiration must be a Int")
+    }
+    
+    if tx["OfferSequence"] != nil && !(tx["OfferSequence"] is Int) {
+        throw ValidationError.decoding("OfferCreate: OfferSequence must be a Int")
     }
 }

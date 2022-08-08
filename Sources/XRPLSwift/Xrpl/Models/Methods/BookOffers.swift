@@ -129,7 +129,21 @@ public class BookOffer: Offer {
      */
     public let quality: String?
     
+    enum CodingKeys: String, CodingKey {
+        case ownerFunds = "owner_funds"
+        case takerGetsFunded = "taker_gets_funded"
+        case takerPaysFunded = "taker_pays_funded"
+        case quality = "quality"
+    }
     
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        ownerFunds = try values.decode(String.self, forKey: .ownerFunds)
+        takerGetsFunded = try values.decode(rAmount.self, forKey: .takerGetsFunded)
+        takerPaysFunded = try values.decode(rAmount.self, forKey: .takerPaysFunded)
+        quality = try values.decode(String.self, forKey: .quality)
+        try super.init(from: decoder)
+    }
 }
 
 /**

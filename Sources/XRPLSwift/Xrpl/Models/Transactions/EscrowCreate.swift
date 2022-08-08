@@ -3,7 +3,7 @@
 //  AnyCodable
 //
 //  Created by Mitch Lang on 2/4/20.
-//  Created by Denis Angell on 8/1/22.
+//  Updated by Denis Angell on 8/1/22.
 //
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/escrowCreate.ts
@@ -61,6 +61,14 @@ public class EscrowCreate: BaseTransaction {
      */
     public let condition: String?
     
+    enum CodingKeys: String, CodingKey {
+        case amount = "Amount"
+        case destination = "Destination"
+        case destinationTag = "DestinationTag"
+        case cancelAfter = "CancelAfter"
+        case finishAfter = "FinishAfter"
+        case condition = "Condition"
+    }
     
     public init(
         amount: rAmount,
@@ -79,23 +87,27 @@ public class EscrowCreate: BaseTransaction {
         super.init(account: "", transactionType: "EscrowCreate")
     }
     
-    enum CodingKeys: String, CodingKey {
-        case amount = "amount"
-        case destination = "Destination"
-        case destinationTag = "DestinationTag"
-        case cancelAfter = "CancelAfter"
-        case finishAfter = "FinishAfter"
-        case condition = "condition"
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(EscrowCreate.self, from: data)
+        self.amount = r.amount
+        self.destination = r.destination
+        self.destinationTag = r.destinationTag
+        self.cancelAfter = r.cancelAfter
+        self.finishAfter = r.finishAfter
+        self.condition = r.condition
+        try super.init(json: json)
     }
     
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         amount = try values.decode(rAmount.self, forKey: .amount)
         destination = try values.decode(String.self, forKey: .destination)
-        destinationTag = try? values.decode(Int.self, forKey: .destinationTag)
-        cancelAfter = try? values.decode(Int.self, forKey: .cancelAfter)
-        finishAfter = try? values.decode(Int.self, forKey: .finishAfter)
-        condition = try? values.decode(String.self, forKey: .condition)
+        destinationTag = try values.decodeIfPresent(Int.self, forKey: .destinationTag)
+        cancelAfter = try values.decodeIfPresent(Int.self, forKey: .cancelAfter)
+        finishAfter = try values.decodeIfPresent(Int.self, forKey: .finishAfter)
+        condition = try values.decodeIfPresent(String.self, forKey: .condition)
         try super.init(from: decoder)
     }
     
@@ -108,5 +120,55 @@ public class EscrowCreate: BaseTransaction {
         if let cancelAfter = cancelAfter { try values.encode(cancelAfter, forKey: .cancelAfter) }
         if let finishAfter = finishAfter { try values.encode(finishAfter, forKey: .finishAfter) }
         if let condition = condition { try values.encode(condition, forKey: .condition) }
+    }
+}
+
+/**
+ * Verify the form and type of an EscrowCreate at runtime.
+ *
+ * @param tx - An EscrowCreate Transaction.
+ * @throws When the EscrowCreate is Malformed.
+ */
+public func validateEscrowCreate(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
+    
+    if tx["Amount"] == nil {
+        throw ValidationError.decoding("EscrowCreate: missing Amount")
+    }
+    
+    if !(tx["Amount"] is String) {
+        throw ValidationError.decoding("EscrowCreate: Amount must be a String")
+    }
+    
+    if tx["Destination"] == nil {
+        throw ValidationError.decoding("EscrowCreate: missing Destination")
+    }
+    
+    if !(tx["Destination"] is String) {
+        throw ValidationError.decoding("EscrowCreate: Destination must be a String")
+    }
+    
+    if tx["CancelAfter"] == nil && tx["FinishAfter"] == nil {
+        throw ValidationError.decoding("EscrowCreate: Either CancelAfter or FinishAfter must be specified")
+    }
+    
+    if tx["FinishAfter"] == nil && tx["Condition"] == nil {
+        throw ValidationError.decoding("EscrowCreate: Either Condition or FinishAfter must be specified")
+    }
+    
+    if tx["CancelAfter"] != nil && !(tx["CancelAfter"] is Int) {
+        throw ValidationError.decoding("EscrowCreate: CancelAfter must be a Int")
+    }
+    
+    if tx["FinishAfter"] != nil && !(tx["FinishAfter"] is Int) {
+        throw ValidationError.decoding("EscrowCreate: FinishAfter must be a Int")
+    }
+    
+    if tx["Condition"] != nil && !(tx["Condition"] is String) {
+        throw ValidationError.decoding("EscrowCreate: Condition must be a String")
+    }
+    
+    if tx["DestinationTag"] != nil && !(tx["DestinationTag"] is Int) {
+        throw ValidationError.decoding("EscrowCreate: DestinationTag must be a Int")
     }
 }
