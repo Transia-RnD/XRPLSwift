@@ -1,5 +1,5 @@
 //
-//  TestUnitAccountDelete.swift
+//  TestAccountDelete.swift
 //
 //
 //  Created by Denis Angell on 6/4/22.
@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUnitAccountDelete: XCTestCase {
+final class TestAccountDelete: XCTestCase {
     
     func testValidAccount() {
         let txJson: [String: AnyObject] = [

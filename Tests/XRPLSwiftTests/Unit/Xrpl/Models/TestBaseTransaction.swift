@@ -1,5 +1,5 @@
 //
-//  TestUnitBaseTransaction.swift
+//  TestBaseTransaction.swift
 //  
 //
 //  Created by Denis Angell on 8/7/22.
@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUnitBaseTransaction: XCTestCase {
+final class TestBaseTransaction: XCTestCase {
     
     func testValidBaseTx() {
         do {

@@ -13,7 +13,7 @@ final class TestAddressCodec: XCTestCase {
     public static let testCases = [
         [
             "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",
-            nil,
+            false,
             "X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqZ",
             "T719a5UwUCnEs54UsxG9CJYYDhwmFCqkr7wxCcNcfZ6p5GZ",
         ],
@@ -37,13 +37,13 @@ final class TestAddressCodec: XCTestCase {
         ],
         [
             "rLczgQHxPhWtjkaQqn3Q6UM8AbRbbRvs5K",
-            nil,
+            false,
             "XVZVpQj8YSVpNyiwXYSqvQoQqgBttTxAZwMcuJd4xteQHyt",
             "TVVrSWtmQQssgVcmoMBcFQZKKf56QscyWLKnUyiuZW8ALU4",
         ],
         [
             "rpZc4mVfWUif9CRoHRKKcmhu1nx2xktxBo",
-            nil,
+            false,
             "X7YenJqxv3L66CwhBSfd3N8RzGXxYqPopMGMsCcpho79rex",
             "T77wVQzA8ntj9wvCTNiQpNYLT5hmhRsFyXDoMLqYC4BzQtV",
         ],
@@ -67,7 +67,7 @@ final class TestAddressCodec: XCTestCase {
         ],
         [
             "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf",
-            nil,
+            false,
             "XVLhHMPHU98es4dbozjVtdWzVrDjtV5fdx1mHp98tDMoQXb",
             "TVE26TYGhfLC7tQDno7G8dGtxSkYQn49b3qD26PK7FcGSKE",
         ],
@@ -127,7 +127,7 @@ final class TestAddressCodec: XCTestCase {
         ],
         [
             "rPEPPER7kfTD9w2To4CQk6UCfuHM9c6GDY",
-            nil,
+            false,
             "XV5sbjUmgPpvXv4ixFWZ5ptAYZ6PD2gYsjNFQLKYW33DzBm",
             "TVd2rqMkYL2AyS97NdELcpeiprNBjwLZzuUG5rZnaewsahi",
         ],
@@ -159,8 +159,6 @@ final class TestAddressCodec: XCTestCase {
                     tag: (tag != nil) ? UInt32(tag!) : nil,
                     isTest: true
                 )
-                print("TEST EXPECTED: \(expectedTestXaddress)")
-                print("TEST ADDRESS: \(xAddressTest)")
                 XCTAssert(xAddressTest == expectedTestXaddress)
 
                 // main
@@ -169,8 +167,6 @@ final class TestAddressCodec: XCTestCase {
                     tag: (tag != nil) ? UInt32(tag!) : nil,
                     isTest: false
                 )
-                print("MAIN EXPECTED: \(expectedMainXaddress)")
-                print("MAIN ADDRESS: \(xAddressMain)")
                 XCTAssert(xAddressMain == expectedMainXaddress)
             } catch {
                 print(error.localizedDescription)
@@ -252,6 +248,14 @@ final class TestAddressCodec: XCTestCase {
 //            XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
 //        }
 //    }
+    
+    func testConvertIsTest() {
+        let classicAddress = "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59"
+        let tag = 0
+        let xaddress = "X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqZ"
+        let result = try! AddressCodec.classicAddressToXAddress(classicAddress: classicAddress, tag: UInt32(tag), isTest: false)
+        XCTAssertEqual(result, xaddress)
+    }
     
     func testIsValidClassicAddressSecp256k1() {
         let classicAddress = "rU6K7V3Po4snVhBBaU29sesqs2qTQJWDw1"
