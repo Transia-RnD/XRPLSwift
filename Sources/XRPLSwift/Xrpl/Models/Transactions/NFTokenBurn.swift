@@ -43,28 +43,37 @@ public class NFTokenBurn: BaseTransaction {
     and are not owned by the signing account.
     */
     
+    enum CodingKeys: String, CodingKey {
+        case account = "Account"
+        case nftokenId = "NFTokenID"
+        case owner = "Owner"
+    }
+    
     public init(
         account: String,
         nftokenId: String,
         owner: String? = nil
     ) {
-//        self.account = account
+//        self.account = account // SUPER INIT
         self.nftokenId = nftokenId
         self.owner = owner
         super.init(account: account, transactionType: "NFTokenBurn")
     }
     
-    enum CodingKeys: String, CodingKey {
-        case account = "Account"
-        case nftokenId = "NFTokenId"
-        case owner = "Owner"
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(NFTokenBurn.self, from: data)
+        self.nftokenId = r.nftokenId
+        self.owner = r.owner
+        try super.init(json: json)
     }
     
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 //        account = try values.decode(String.self, forKey: .account)
         nftokenId = try values.decode(String.self, forKey: .nftokenId)
-        owner = try? values.decode(String.self, forKey: .owner)
+        owner = try values.decodeIfPresent(String.self, forKey: .owner)
         try super.init(from: decoder)
     }
     
@@ -77,3 +86,16 @@ public class NFTokenBurn: BaseTransaction {
     }
 }
 
+/**
+ * Verify the form and type of an NFTokenBurn at runtime.
+ *
+ * @param tx - An NFTokenBurn Transaction.
+ * @throws When the NFTokenBurn is Malformed.
+ */
+public func validateNFTokenBurn(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
+
+  if (tx["NFTokenID"] == nil) {
+      throw ValidationError.decoding("NFTokenBurn: missing field NFTokenID")
+  }
+}

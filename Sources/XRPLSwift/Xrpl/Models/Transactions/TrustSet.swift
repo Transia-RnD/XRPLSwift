@@ -77,25 +77,41 @@ public class TrustSet: BaseTransaction {
     
     public var qualityOut: Int?
     
-    public init(
-        limitAmount: rIssuedCurrencyAmount,
-        flags: TrustSetFlagsInterface
-    ) {
-        self.limitAmount = limitAmount
-        super.init(account: "", transactionType: "TrustSet")
-    }
-    
     enum CodingKeys: String, CodingKey {
         case limitAmount = "LimitAmount"
         case qualityIn = "QualityIn"
         case qualityOut = "QualityOut"
     }
     
+    public init(
+        limitAmount: rIssuedCurrencyAmount,
+        qualityIn: Int? = nil,
+        qualityOut: Int? = nil,
+        flags: TrustSetFlagsInterface
+    ) {
+        self.limitAmount = limitAmount
+        self.qualityIn = qualityIn
+        self.qualityOut = qualityOut
+        super.init(account: "", transactionType: "TrustSet")
+    }
+    
+    
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(TrustSet.self, from: data)
+        self.limitAmount = r.limitAmount
+        self.qualityIn = r.qualityIn
+        self.qualityOut = r.qualityOut
+        try super.init(json: json)
+    }
+    
+    
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         limitAmount = try values.decode(rIssuedCurrencyAmount.self, forKey: .limitAmount)
-        qualityIn = try? values.decode(Int.self, forKey: .qualityIn)
-        qualityOut = try? values.decode(Int.self, forKey: .qualityOut)
+        qualityIn = try values.decodeIfPresent(Int.self, forKey: .qualityIn)
+        qualityOut = try values.decodeIfPresent(Int.self, forKey: .qualityOut)
         try super.init(from: decoder)
     }
     
@@ -106,5 +122,30 @@ public class TrustSet: BaseTransaction {
         if let qualityIn = qualityIn { try values.encode(qualityIn, forKey: .qualityIn) }
         if let qualityOut = qualityOut { try values.encode(qualityOut, forKey: .qualityOut) }
     }
+}
+
+/**
+ * Verify the form and type of a TrustSet at runtime.
+ *
+ * @param tx - A TrustSet Transaction.
+ * @throws When the TrustSet is malformed.
+ */
+public func validateTrustSet(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
     
+    if tx["LimitAmount"] == nil {
+        throw ValidationError.decoding("TrustSet: missing field LimitAmount")
+    }
+    
+    if !isAmount(amount: tx["LimitAmount"] as Any) {
+        throw ValidationError.decoding("TrustSet: invalid LimitAmount")
+    }
+    
+    if tx["QualityIn"] != nil && !(tx["QualityIn"] is Int) {
+        throw ValidationError.decoding("TrustSet: QualityIn must be a number")
+    }
+    
+    if tx["QualityOut"] != nil && !(tx["QualityOut"] is Int) {
+        throw ValidationError.decoding("TrustSet: QualityOut must be a number")
+    }
 }

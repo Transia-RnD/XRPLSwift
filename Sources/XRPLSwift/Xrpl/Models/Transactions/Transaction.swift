@@ -300,7 +300,7 @@ public class rTransactionAndMetadata: Codable {
  * @throws ValidationError When the Transaction is malformed.
  * @category Utilities
  */
-func validate(transaction: [String: Any]) throws {
+public func validate(transaction: [String: Any]) throws {
     guard let tx = transaction as? BaseTransaction else {
         throw XrplError.validation("Object does not have a `TransactionType`")
     }

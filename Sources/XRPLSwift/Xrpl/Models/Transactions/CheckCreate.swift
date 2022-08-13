@@ -92,9 +92,9 @@ public class CheckCreate: BaseTransaction {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         destination = try values.decode(String.self, forKey: .destination)
         sendMax = try values.decode(rAmount.self, forKey: .sendMax)
-        destinationTag = try? values.decode(Int.self, forKey: .destinationTag)
-        expiration = try? values.decode(Int.self, forKey: .expiration)
-        invoiceId = try? values.decode(String.self, forKey: .invoiceId)
+        destinationTag = try values.decodeIfPresent(Int.self, forKey: .destinationTag)
+        expiration = try values.decodeIfPresent(Int.self, forKey: .expiration)
+        invoiceId = try values.decodeIfPresent(String.self, forKey: .invoiceId)
         try super.init(from: decoder)
     }
     

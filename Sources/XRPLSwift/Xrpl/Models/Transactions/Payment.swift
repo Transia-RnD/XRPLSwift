@@ -9,7 +9,7 @@
 
 import Foundation
 
-public enum PaymentFlag: UInt32 {
+public enum PaymentFlags: Int {
     /*
      Transactions of the Payment type support additional values in the Flags field.
      This enum represents those options.
@@ -70,13 +70,13 @@ public class Payment: BaseTransaction {
      identifies the reason for the Payment, or a hosted recipient to pay.
      */
     
-    public let invoiceId: Int?
+    public let invoiceId: String?
     /*
      Arbitrary 256-bit hash representing a specific reason or identifier for
      this Check.
      */
     
-    public let paths: Int?
+    public let paths: [Path]?
     /*
      Array of payment paths to be used (for a cross-currency payment). Must be
      omitted for XRP-to-XRP transactions.
@@ -98,12 +98,22 @@ public class Payment: BaseTransaction {
      is considered a success.
      */
     
+    enum CodingKeys: String, CodingKey {
+        case amount = "Amount"
+        case destination = "Destination"
+        case destinationTag = "DestinationTag"
+        case invoiceId = "InvoiceID"
+        case paths = "Paths"
+        case sendMax = "SendMax"
+        case deliverMin = "DeliverMin"
+    }
+    
     public init(
         amount: rAmount,
         destination: String,
         destinationTag: Int? = nil,
-        invoiceId: Int? = nil,
-        paths: Int? = nil,
+        invoiceId: String? = nil,
+        paths: [Path]? = nil,
         sendMax : rAmount? = nil,
         deliverMin : rAmount? = nil
     ) {
@@ -118,25 +128,29 @@ public class Payment: BaseTransaction {
         super.init(account: "", transactionType: "Payment")
     }
     
-    enum CodingKeys: String, CodingKey {
-        case amount = "Amount"
-        case destination = "Destination"
-        case destinationTag = "DestinationTag"
-        case invoiceId = "InvoiceID"
-        case paths = "Paths"
-        case sendMax = "SendMax"
-        case deliverMin = "DeliverMin"
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(Payment.self, from: data)
+        self.amount = r.amount
+        self.destination = r.destination
+        self.destinationTag = r.destinationTag
+        self.invoiceId = r.invoiceId
+        self.paths = r.paths
+        self.sendMax = r.sendMax
+        self.deliverMin = r.deliverMin
+        try super.init(json: json)
     }
     
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         amount = try values.decode(rAmount.self, forKey: .amount)
         destination = try values.decode(String.self, forKey: .destination)
-        destinationTag = try? values.decode(Int.self, forKey: .destinationTag)
-        invoiceId = try? values.decode(Int.self, forKey: .invoiceId)
-        paths = try? values.decode(Int.self, forKey: .paths)
-        sendMax = try? values.decode(rAmount.self, forKey: .sendMax)
-        deliverMin = try? values.decode(rAmount.self, forKey: .deliverMin)
+        destinationTag = try values.decodeIfPresent(Int.self, forKey: .destinationTag)
+        invoiceId = try values.decodeIfPresent(String.self, forKey: .invoiceId)
+        paths = try values.decodeIfPresent([Path].self, forKey: .paths)
+        sendMax = try values.decodeIfPresent(rAmount.self, forKey: .sendMax)
+        deliverMin = try values.decodeIfPresent(rAmount.self, forKey: .deliverMin)
         try super.init(from: decoder)
     }
     
@@ -151,4 +165,114 @@ public class Payment: BaseTransaction {
         if let sendMax = sendMax { try values.encode(sendMax, forKey: .sendMax) }
         if let deliverMin = deliverMin { try values.encode(deliverMin, forKey: .deliverMin) }
     }
+}
+
+/**
+ * Verify the form and type of a Payment at runtime.
+ *
+ * @param tx - A Payment Transaction.
+ * @throws When the Payment is malformed.
+ */
+public func validatePayment(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
+    
+    if tx["Amount"] == nil {
+        throw ValidationError.decoding("Payment: missing field Amount")
+    }
+    
+    if !isAmount(amount: tx["Amount"] as Any) {
+        throw ValidationError.decoding("Payment: invalid Amount")
+    }
+    
+    if tx["Destination"] == nil {
+        throw ValidationError.decoding("Payment: missing field Destination")
+    }
+    
+    if !isAmount(amount: tx["Destination"] as Any) {
+        throw ValidationError.decoding("Payment: invalid Destination")
+    }
+    
+    if tx["DestinationTag"] != nil && !(tx["DestinationTag"] is Int) {
+        throw ValidationError.decoding("Payment: DestinationTag must be a number")
+    }
+    
+    if tx["InvoiceID"] != nil && !(tx["InvoiceID"] is String) {
+        throw ValidationError.decoding("Payment: InvoiceID must be a string")
+    }
+    
+    if tx["Paths"] != nil && !isPaths(paths: tx["Paths"] as! [[[String: AnyObject]]]) {
+        throw ValidationError.decoding("Payment: invalid Paths")
+    }
+    
+    if tx["SendMax"] != nil && !isAmount(amount: tx["SendMax"] as Any) {
+        throw ValidationError.decoding("Payment: invalid SendMax")
+    }
+    try checkPartialPayment(tx: tx)
+}
+
+func checkPartialPayment(tx: [String: AnyObject]) throws -> Void {
+    if tx["DeliverMin"] != nil {
+        if tx["Flags"] == nil {
+            throw ValidationError.decoding("Payment: tfPartialPayment flag required with DeliverMin")
+        }
+        
+        let flags = tx["Flags"] as! PaymentFlags
+        let isTfPartialPayment = flags is Int ? isFlagEnabled(flags: flags.rawValue, checkFlag: PaymentFlags.tfPartialPayment.rawValue) : (flags.rawValue == PaymentFlags.tfPartialPayment.rawValue)
+        
+        if !isTfPartialPayment {
+            throw ValidationError.decoding("Payment: tfPartialPayment flag required with DeliverMin")
+        }
+        
+        if (!isAmount(amount: tx["DeliverMin"] as Any)) {
+            throw ValidationError.decoding("Payment: invalid DeliverMin")
+        }
+    }
+}
+
+func isPathStep(pathStep: [String: AnyObject]) -> Bool {
+    if pathStep["account"] != nil && !(pathStep["account"] is String) {
+        return false
+    }
+    if pathStep["currency"] != nil && !(pathStep["currency"] is String) {
+        return false
+    }
+    if pathStep["issuer"] != nil && !(pathStep["issuer"] is String) {
+        return false
+    }
+    if pathStep["account"] != nil && pathStep["currency"] == nil && pathStep["issuer"] == nil {
+        return true
+    }
+    if pathStep["currency"] != nil || pathStep["issuer"] != nil {
+        return true
+    }
+    return false
+}
+
+func isPath(path: [[String: AnyObject]]) -> Bool {
+    for pathStep in path {
+        if (!isPathStep(pathStep: pathStep)) {
+            return false
+        }
+    }
+    return true
+}
+
+func isPaths(paths: [[[String: AnyObject]]]) -> Bool {
+//    if !(paths is Array) || paths.count == 0 {
+    if paths.count == 0 {
+        return false
+    }
+    
+    for path in paths {
+//        if !(path is Array || path.count == 0 {
+        if path.count == 0 {
+            return false
+        }
+        
+        if (!isPath(path: path)) {
+            return false
+        }
+    }
+    
+    return true
 }

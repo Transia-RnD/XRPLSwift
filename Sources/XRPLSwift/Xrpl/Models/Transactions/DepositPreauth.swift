@@ -60,8 +60,8 @@ public class DepositPreauth: BaseTransaction {
     
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        authorize = try? values.decode(String.self, forKey: .authorize)
-        unauthorize = try? values.decode(String.self, forKey: .unauthorize)
+        authorize = try values.decodeIfPresent(String.self, forKey: .authorize)
+        unauthorize = try values.decodeIfPresent(String.self, forKey: .unauthorize)
         try super.init(from: decoder)
     }
     

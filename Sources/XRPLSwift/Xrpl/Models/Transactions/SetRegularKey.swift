@@ -16,43 +16,53 @@ public class SetRegularKey: BaseTransaction {
      associated with an account.
      */
     
-    public var regularKey: String
+    public var regularKey: String?
     /*
      The classic address derived from the key pair to authorize for this
      account. If omitted, removes any existing regular key pair from the
      account. Must not match the account's master key pair.
      */
     
-    public init(
-        regularKey: String
-    ) {
-        
-        self.regularKey = regularKey
-        
-        // TODO: Write into using variables on model not fields. (Serialize Later in Tx)
-        // Sets the fields for the tx
-        let _fields: [String:Any] = [
-            "TransactionType": "TransactionType.SetRegularKey.rawValue",
-            "RegularKey": regularKey,
-        ]
-        
-        super.init(account: "", transactionType: "SetRegularKey")
-    }
-    
     enum CodingKeys: String, CodingKey {
         case regularKey = "RegularKey"
     }
     
+    public init(regularKey: String? = nil) {
+        self.regularKey = regularKey
+        super.init(account: "", transactionType: "SetRegularKey")
+    }
+    
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(SetRegularKey.self, from: data)
+        self.regularKey = r.regularKey
+        try super.init(json: json)
+    }
+    
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        regularKey = try values.decode(String.self, forKey: .regularKey)
+        regularKey = try values.decodeIfPresent(String.self, forKey: .regularKey)
         try super.init(from: decoder)
     }
     
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
-        try values.encode(regularKey, forKey: .regularKey)
+        if let regularKey = regularKey { try values.encode(regularKey, forKey: .regularKey) }
     }
+}
+
+/**
+ * Verify the form and type of a SetRegularKey at runtime.
+ *
+ * @param tx - A SetRegularKey Transaction.
+ * @throws When the SetRegularKey is malformed.
+ */
+public func validateSetRegularKey(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
     
+    if tx["RegularKey"] != nil && !(tx["RegularKey"] is String) {
+        throw ValidationError.decoding("SetRegularKey: RegularKey must be a string")
+    }
 }

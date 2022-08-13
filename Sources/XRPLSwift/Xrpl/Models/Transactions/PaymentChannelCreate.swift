@@ -11,57 +11,66 @@ import Foundation
 public class PaymentChannelCreate: BaseTransaction {
     
     /*
-    Represents a `PaymentChannelCreate
-    <https://xrpl.org/paymentchannelcreate.html>`_ transaction, which creates a
-    `payment channel <https://xrpl.org/payment-channels.html>`_ and funds it with
-    XRP. The sender of this transaction is the "source address" of the payment
-    channel.
-    */
-
+     Represents a `PaymentChannelCreate
+     <https://xrpl.org/paymentchannelcreate.html>`_ transaction, which creates a
+     `payment channel <https://xrpl.org/payment-channels.html>`_ and funds it with
+     XRP. The sender of this transaction is the "source address" of the payment
+     channel.
+     */
+    
     public var amount: rAmount
     /*
-    The amount of XRP, in drops, to set aside in this channel. This field is
-    required.
-    :meta hide-value:
-    */
-
+     The amount of XRP, in drops, to set aside in this channel. This field is
+     required.
+     :meta hide-value:
+     */
+    
     public var destination: String
     /*
-    The account that can receive XRP from this channel, also known as the
-    "destination address" of the channel. Cannot be the same as the sender.
-    This field is required.
-    :meta hide-value:
-    */
-
+     The account that can receive XRP from this channel, also known as the
+     "destination address" of the channel. Cannot be the same as the sender.
+     This field is required.
+     :meta hide-value:
+     */
+    
     public var settleDelay: Int
     /*
-    The amount of time, in seconds, the source address must wait between
-    requesting to close the channel and fully closing it. This field is
-    required.
-    :meta hide-value:
-    */
-
+     The amount of time, in seconds, the source address must wait between
+     requesting to close the channel and fully closing it. This field is
+     required.
+     :meta hide-value:
+     */
+    
     public var publicKey: String
     /*
-    The public key of the key pair that the source will use to authorize
-    claims against this  channel, as hexadecimal. This can be any valid
-    secp256k1 or Ed25519 public key. This field is required.
-    :meta hide-value:
-    */
-
+     The public key of the key pair that the source will use to authorize
+     claims against this  channel, as hexadecimal. This can be any valid
+     secp256k1 or Ed25519 public key. This field is required.
+     :meta hide-value:
+     */
+    
     public var cancelAfter: Int?
     /*
-    An immutable expiration time for the channel, in seconds since the Ripple
-    Epoch. The channel can be closed sooner than this but cannot remain open
-    later than this time.
-    */
-
+     An immutable expiration time for the channel, in seconds since the Ripple
+     Epoch. The channel can be closed sooner than this but cannot remain open
+     later than this time.
+     */
+    
     public var destinationTag: Int?
     /*
-    An arbitrary `destination tag
-    <https://xrpl.org/source-and-destination-tags.html>`_ that
-    identifies the reason for the Payment Channel, or a hosted recipient to pay.
-    */
+     An arbitrary `destination tag
+     <https://xrpl.org/source-and-destination-tags.html>`_ that
+     identifies the reason for the Payment Channel, or a hosted recipient to pay.
+     */
+    
+    enum CodingKeys: String, CodingKey {
+        case amount = "Amount"
+        case destination = "Destination"
+        case settleDelay = "SettleDelay"
+        case publicKey = "PublicKey"
+        case cancelAfter = "CancelAfter"
+        case destinationTag = "DestinationTag"
+    }
     
     public init(
         amount: rAmount,
@@ -80,13 +89,17 @@ public class PaymentChannelCreate: BaseTransaction {
         super.init(account: "", transactionType: "PaymentChannelCreate")
     }
     
-    enum CodingKeys: String, CodingKey {
-        case amount = "Amount"
-        case destination = "Destination"
-        case settleDelay = "SettleDelay"
-        case publicKey = "PublicKey"
-        case cancelAfter = "CancelAfter"
-        case destinationTag = "DestinationTag"
+    public override init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(PaymentChannelCreate.self, from: data)
+        self.amount = r.amount
+        self.destination = r.destination
+        self.settleDelay = r.settleDelay
+        self.publicKey = r.publicKey
+        self.cancelAfter = r.cancelAfter
+        self.destinationTag = r.destinationTag
+        try super.init(json: json)
     }
     
     required public init(from decoder: Decoder) throws {
@@ -95,8 +108,8 @@ public class PaymentChannelCreate: BaseTransaction {
         destination = try values.decode(String.self, forKey: .destination)
         settleDelay = try values.decode(Int.self, forKey: .settleDelay)
         publicKey = try values.decode(String.self, forKey: .publicKey)
-        cancelAfter = try? values.decode(Int.self, forKey: .cancelAfter)
-        destinationTag = try? values.decode(Int.self, forKey: .destinationTag)
+        cancelAfter = try values.decodeIfPresent(Int.self, forKey: .cancelAfter)
+        destinationTag = try values.decodeIfPresent(Int.self, forKey: .destinationTag)
         try super.init(from: decoder)
     }
     
@@ -109,5 +122,57 @@ public class PaymentChannelCreate: BaseTransaction {
         try values.encode(publicKey, forKey: .publicKey)
         if let cancelAfter = cancelAfter { try values.encode(cancelAfter, forKey: .cancelAfter) }
         if let destinationTag = destinationTag { try values.encode(destinationTag, forKey: .destinationTag) }
+    }
+}
+
+
+/**
+ * Verify the form and type of an PaymentChannelCreate at runtime.
+ *
+ * @param tx - An PaymentChannelCreate Transaction.
+ * @throws When the PaymentChannelCreate is Malformed.
+ */
+// eslint-disable-next-line max-lines-per-function -- okay for this function, there's a lot of things to check
+public func validatePaymentChannelCreate(tx: [String: AnyObject]) throws -> Void {
+    try validateBaseTransaction(common: tx)
+    
+    if tx["Amount"] == nil {
+        throw ValidationError.decoding("PaymentChannelCreate: missing Amount")
+    }
+    
+    if !(tx["Amount"] is String) {
+        throw ValidationError.decoding("PaymentChannelCreate: Amount must be a string")
+    }
+    
+    if tx["Destination"] == nil {
+        throw ValidationError.decoding("PaymentChannelCreate: missing Destination")
+    }
+    
+    if !(tx["Destination"] is String) {
+        throw ValidationError.decoding("PaymentChannelCreate: Destination must be a string")
+    }
+    
+    if tx["SettleDelay"] == nil {
+        throw ValidationError.decoding("PaymentChannelCreate: missing SettleDelay")
+    }
+    
+    if !(tx["SettleDelay"] is Int) {
+        throw ValidationError.decoding("PaymentChannelCreate: SettleDelay must be a number")
+    }
+    
+    if tx["PublicKey"] == nil {
+        throw ValidationError.decoding("PaymentChannelCreate: missing PublicKey")
+    }
+    
+    if !(tx["PublicKey"] is String) {
+        throw ValidationError.decoding("PaymentChannelCreate: PublicKey must be a string")
+    }
+    
+    if tx["CancelAfter"] !== nil && !(tx["CancelAfter"] is Int) {
+        throw ValidationError.decoding("PaymentChannelCreate: CancelAfter must be a number")
+    }
+    
+    if tx["DestinationTag"] !== nil && !(tx["DestinationTag"] is Int) {
+        throw ValidationError.decoding("PaymentChannelCreate: DestinationTag must be a number")
     }
 }

@@ -67,8 +67,8 @@ public class CheckCash: BaseTransaction {
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         checkId = try values.decode(String.self, forKey: .checkId)
-        amount = try? values.decode(rAmount.self, forKey: .amount)
-        deliverMin = try? values.decode(rAmount.self, forKey: .deliverMin)
+        amount = try values.decodeIfPresent(rAmount.self, forKey: .amount)
+        deliverMin = try values.decodeIfPresent(rAmount.self, forKey: .deliverMin)
         try super.init(from: decoder)
     }
     

@@ -185,13 +185,13 @@ public class AccountSet: BaseTransaction {
     
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        clearFlag = try? values.decode(AccountSetAsfFlags.self, forKey: .clearFlag)
-        setFlag = try? values.decode(AccountSetAsfFlags.self, forKey: .setFlag)
-        domain = try? values.decode(String.self, forKey: .domain)
-        emailHash = try? values.decode(String.self, forKey: .emailHash)
-        transferRate = try? values.decode(Int.self, forKey: .transferRate)
-        tickSize = try? values.decode(Int.self, forKey: .tickSize)
-        nfTokenMinter = try? values.decode(String.self, forKey: .nfTokenMinter)
+        clearFlag = try values.decodeIfPresent(AccountSetAsfFlags.self, forKey: .clearFlag)
+        setFlag = try values.decodeIfPresent(AccountSetAsfFlags.self, forKey: .setFlag)
+        domain = try values.decodeIfPresent(String.self, forKey: .domain)
+        emailHash = try values.decodeIfPresent(String.self, forKey: .emailHash)
+        transferRate = try values.decodeIfPresent(Int.self, forKey: .transferRate)
+        tickSize = try values.decodeIfPresent(Int.self, forKey: .tickSize)
+        nfTokenMinter = try values.decodeIfPresent(String.self, forKey: .nfTokenMinter)
         try super.init(from: decoder)
     }
     

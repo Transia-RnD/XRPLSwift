@@ -64,7 +64,7 @@ public class AccountDelete: BaseTransaction {
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         destination = try values.decode(String.self, forKey: .destination)
-        destinationTag = try? values.decode(Int.self, forKey: .destinationTag)
+        destinationTag = try values.decodeIfPresent(Int.self, forKey: .destinationTag)
         try super.init(from: decoder)
     }
     

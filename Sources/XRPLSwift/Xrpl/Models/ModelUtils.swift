@@ -33,9 +33,9 @@ public func onlyHasFields(
  * @param checkFlag - A specific flag to check if it's enabled within Flags.
  * @returns True if checkFlag is enabled within Flags.
  */
-public func isFlagEnabled(Flags: Int, checkFlag: Int) -> Bool {
+public func isFlagEnabled(flags: Int, checkFlag: Int) -> Bool {
     // eslint-disable-next-line no-bitwise -- flags needs bitwise
-    return (checkFlag & Flags) == checkFlag
+    return (checkFlag & flags) == checkFlag
 }
 
 /**
@@ -44,7 +44,9 @@ public func isFlagEnabled(Flags: Int, checkFlag: Int) -> Bool {
  * @param str - The string to check if it's in hex format.
  * @returns True if string is in hex format
  */
-public func isHex(str: String) -> Bool {
-    //  return HEX_REGEX.test(str)
-    return false
+func isHex(str: String) -> Bool {
+    // Tests if value is a valid 40-char hex string.
+    let regex = try! NSRegularExpression(pattern: "^[A-F0-9]+$")
+    let nsrange = NSRange(str.startIndex..<str.endIndex, in: str)
+    return regex.matches(in: str, range: nsrange).isEmpty ? false : true
 }
