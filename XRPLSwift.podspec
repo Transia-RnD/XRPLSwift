@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'XRPLSwift'
   s.version          = '0.9.9-beta.1'
-  s.summary          = 'A Swift library to interact with the XRP Ledger (L) blockchain'
+  s.summary          = 'A Swift API for interacting with the XRP Ledger.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -17,11 +17,11 @@ Pod::Spec.new do |s|
 #   * Write the description between the DESC delimiters below.
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
-  s.description      = 'XRPLSwift is a Swift SDK built for interacting with the XRP Ledger.  XRPLSwift supports offline wallet creation, offline transaction creation/signing, and submitting transactions to the XRP ledger.  XRPLSwift supports both the secp256k1 and ed25519 algorithms.  XRPLSwift is available on iOS, macOS and Linux (SPM)'
+  s.description      = 'XRPLSwift is a Swift SDK built for interacting with the XRP Ledger.  XRPLSwift supports offline wallet creation, offline transaction creation/signing, and submitting transactions to the XRP ledger.  XRPLSwift supports both the secp256k1 and ed25519 algorithms. XRPLSwift is available on iOS, macOS and Linux (SPM)'
 
   s.homepage         = 'https://github.com/Transia-RnD/XRPLSwift'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
+  s.license          = { :type => 'ISC', :file => 'LICENSE' }
   s.author           = { 'Transia-RnD' => 'dangell@transia.co' }
   s.source           = { :git => 'https://github.com/Transia-RnD/XRPLSwift.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
