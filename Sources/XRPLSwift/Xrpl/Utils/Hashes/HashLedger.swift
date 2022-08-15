@@ -1,20 +1,20 @@
-////
-////  HashLedger.swift
-////  
-////
-////  Created by Denis Angell on 8/6/22.
-////
 //
-//// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/utils/hashes/hashLedger.ts
+//  HashLedger.swift
 //
-//import Foundation
 //
+//  Created by Denis Angell on 8/6/22.
+//
+
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/utils/hashes/hashLedger.ts
+
+import Foundation
+
 //let HEX: Int = 16
-//
-////interface HashLedgerHeaderOptions {
-////  computeTreeHashes?: boolean
-////}
-//
+
+//interface HashLedgerHeaderOptions {
+//  computeTreeHashes?: boolean
+//}
+
 //func intToHex(integer: Int, byteLength: Int) -> String {
 //  let foo = Number(integer)
 //    .toString(HEX)
@@ -26,7 +26,7 @@
 //func bytesToHex(bytes: [UInt8]) -> string {
 //  return Buffer.from(bytes).toString("hex")
 //}
-//
+
 //func bigintToHex(
 ////  integerString: string | number | BigNumber,
 //  integerString: String,
@@ -57,43 +57,47 @@
 //  }
 //    throw new XrplError.unknown("Variable integer overflow.")
 //}
-//
-///**
-// * Hashes the Transaction object as the ledger does. Throws if the transaction is unsigned.
-// *
-// * @param tx - A transaction to hash. Tx may be in binary blob form. Tx must be signed.
-// * @returns A hash of tx.
-// * @throws ValidationError if the Transaction is unsigned.\
-// * @category Utilities
-// */
-////public func hashSignedTx(tx: Transaction | string): string {
-//public func hashSignedTx(tx: rTransaction) -> String {
-//  let txBlob: string
-//  let txObject: Transaction
-//  if (tx is String) {
-//    txBlob = tx
-//    /* eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Required until updated in binary codec. */
-//    txObject = decode(tx) as unknown as Transaction
-//  } else {
-//    txBlob = encode(tx)
-//    txObject = tx
-//  }
-//
-//  if (txObject.TxnSignature === undefined && txObject.Signers === undefined) {
-//    throw new ValidationError('The transaction must be signed to hash it.')
-//  }
-//
-//  const prefix = HashPrefix.TRANSACTION_ID.toString(16).toUpperCase()
-//  return sha512Half(prefix.concat(txBlob))
-//}
-//
-///**
-// * Compute the hash of a ledger.
-// *
-// * @param ledgerHeader - Ledger to compute the hash of.
-// * @returns The hash of the ledger.
-// * @category Utilities
-// */
+
+/**
+ * Hashes the Transaction object as the ledger does. Throws if the transaction is unsigned.
+ *
+ * @param tx - A transaction to hash. Tx may be in binary blob form. Tx must be signed.
+ * @returns A hash of tx.
+ * @throws ValidationError if the Transaction is unsigned.\
+ * @category Utilities
+ */
+//public func hashSignedTx(tx: Transaction | string): string {
+public func hashSignedTx(tx: String) throws -> String {
+    let txBlob: String = tx
+    let txObject: [String: AnyObject] = BinaryCodec.decode(buffer: tx)
+    
+    if (txObject["TxnSignature"] == nil && txObject["Signers"] == nil) {
+        throw XrplError.validation("The transaction must be signed to hash it.")
+    }
+    
+    let prefix: String = String(HashPrefix.TRANSACTION_ID.rawValue, radix: 16).uppercased()
+    return sha512Half(hex: prefix + txBlob)
+}
+
+public func hashSignedTx(tx: rTransaction) throws -> String {
+    let txBlob: String = try BinaryCodec.encode(json: tx.toJson())
+    let txObject: [String: AnyObject] = try tx.toJson()
+    
+    if (txObject["TxnSignature"] == nil && txObject["Signers"] == nil) {
+        throw XrplError.validation("The transaction must be signed to hash it.")
+    }
+    
+    let prefix = HashPrefix.TRANSACTION_ID.rawValue
+    return sha512Half(hex: String(prefix) + txBlob)
+}
+
+/**
+ * Compute the hash of a ledger.
+ *
+ * @param ledgerHeader - Ledger to compute the hash of.
+ * @returns The hash of the ledger.
+ * @category Utilities
+ */
 //public func hashLedgerHeader(ledgerHeader: rLedger) -> String {
 //  let prefix = HashPrefix.LEDGER.toString(HEX).toUpperCase()
 //
@@ -111,14 +115,14 @@
 //
 //  return sha512Half(ledger)
 //}
-//
-///**
-// * Compute the root hash of the SHAMap containing all transactions.
-// *
-// * @param transactions - List of Transactions.
-// * @returns The root hash of the SHAMap.
-// * @category Utilities
-// */
+
+/**
+ * Compute the root hash of the SHAMap containing all transactions.
+ *
+ * @param transactions - List of Transactions.
+ * @returns The root hash of the SHAMap.
+ * @category Utilities
+ */
 //public func hashTxTree(
 //  transactions: Array<Transaction & { metaData?: TransactionMetadata }>,
 //) -> String {
@@ -133,14 +137,14 @@
 //
 //  return shamap.hash
 //}
-//
-///**
-// * Compute the state hash of a list of LedgerEntries.
-// *
-// * @param entries - List of LedgerEntries.
-// * @returns Hash of SHAMap that consists of all entries.
-// * @category Utilities
-// */
+
+/**
+ * Compute the state hash of a list of LedgerEntries.
+ *
+ * @param entries - List of LedgerEntries.
+ * @returns Hash of SHAMap that consists of all entries.
+ * @category Utilities
+ */
 //public func hashStateTree(entries: [LedgerEntry]) -> String {
 //  let shamap = SHAMap()
 //
@@ -151,7 +155,7 @@
 //
 //  return shamap.hash
 //}
-//
+
 //func computeTransactionHash(
 //  ledger: Ledger,
 //  options: HashLedgerHeaderOptions,
@@ -181,7 +185,7 @@
 //
 //  return transactionHash
 //}
-//
+
 //func computeStateHash(
 //  ledger: Ledger,
 //  options: HashLedgerHeaderOptions
@@ -206,16 +210,16 @@
 //
 //  return stateHash
 //}
-//
-///**
-// * Compute the hash of a ledger.
-// *
-// * @param ledger - Ledger to compute the hash for.
-// * @param options - Allow client to recompute Transaction and State Hashes.
-// * @param options.computeTreeHashes - Whether to recompute the Transaction and State Hashes.
-// * @returns The has of ledger.
-// * @category Utilities
-// */
+
+/**
+ * Compute the hash of a ledger.
+ *
+ * @param ledger - Ledger to compute the hash for.
+ * @param options - Allow client to recompute Transaction and State Hashes.
+ * @param options.computeTreeHashes - Whether to recompute the Transaction and State Hashes.
+ * @returns The has of ledger.
+ * @category Utilities
+ */
 //public func hashLedger(
 //  ledger: Ledger,
 //  options: {

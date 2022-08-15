@@ -66,12 +66,12 @@ extension SubmitTransaction {
 public class SubmitOptions {
     public var autofill: Bool?
     public var failHard: Bool?
-    public var wallet: rWallet
+    public var wallet: Wallet
     
     public init(
         autofill: Bool?,
         failHard: Bool?,
-        wallet: rWallet
+        wallet: Wallet
     ) {
         self.autofill = autofill
         self.failHard = failHard

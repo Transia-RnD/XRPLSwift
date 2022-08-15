@@ -44,6 +44,6 @@ class Blob: SerializedType {
      XRPLBinaryCodecException: If a Blob cannot be constructed.
      */
     static func from(value: String) throws -> Blob {
-        return Blob(try! value.asHexArray())
+        return Blob(try value.asHexArray())
     }
 }

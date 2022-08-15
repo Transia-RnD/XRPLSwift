@@ -75,7 +75,7 @@ internal struct PrivateKey {
         }
     }
     
-    internal func derived(at node:DerivationNode) -> PrivateKey {
+    internal func derived(at node: DerivationNode) -> PrivateKey {
         guard keyType == .hd else { fatalError() }
         let edge: UInt32 = 0x80000000
         guard (edge & node.index) == 0 else { fatalError("Invalid child index") }

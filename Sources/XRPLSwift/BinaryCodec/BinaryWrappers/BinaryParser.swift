@@ -142,7 +142,6 @@ public class BinaryParser {
         var nth = type & 15
         type >>= 4
 
-        print("TYPE CODE: \(type)")
         if type == 0 {
             type = readUInt8()
             if type == 0 || type < 16 {
@@ -176,8 +175,20 @@ public class BinaryParser {
      * @param type The type that you want to read from the BinaryParser
      * @return The instance of that type read from the BinaryParser
      */
-    func readType(type: SerializedType) -> SerializedType {
-        return try! type.fromParser(parser: self, hint: nil)
+    func readType(type: Any) throws -> SerializedType {
+        if type is AccountID {
+            return AccountID().fromParser(parser: self, hint: nil)
+        }
+        if type is Amount {
+            return try! Amount().fromParser(parser: self, hint: nil)
+        }
+        if type is Blob {
+            return Blob().fromParser(parser: self, hint: nil)
+        }
+        if type is STObject.Type {
+            return STObject().fromParser(parser: self, hint: nil)
+        }
+        fatalError("Invalid Serialized Type")
     }
     
     /**
@@ -200,6 +211,7 @@ public class BinaryParser {
         print("----------------------")
         print("----------------------")
         let av: AssociatedValue = AssociatedValue(field: field, parser: self)
+        print("NAME: \(field.name)")
         print("NTH: \(field.nth)")
         print("TYPE: \(field.type)")
         print("ENCODED: \(field.isVLEncoded)")
@@ -211,7 +223,7 @@ public class BinaryParser {
         if value.bytes.isEmpty {
             throw BinaryError.unknownError(error: "fromParser for (\(field.name), \(field.type) -> nil ")
         }
-        print("VALUE: \(value.toHex())")
+        print("VALUE: \(value.toJson())")
         return value
     }
     

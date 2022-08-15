@@ -46,7 +46,7 @@ public func isFlagEnabled(flags: Int, checkFlag: Int) -> Bool {
  */
 func isHex(str: String) -> Bool {
     // Tests if value is a valid 40-char hex string.
-    let regex = try! NSRegularExpression(pattern: "^[A-F0-9]+$")
+    let regex = try! NSRegularExpression(pattern: "^[0-9A-Fa-f]+$")
     let nsrange = NSRange(str.startIndex..<str.endIndex, in: str)
     return regex.matches(in: str, range: nsrange).isEmpty ? false : true
 }

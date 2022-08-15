@@ -54,7 +54,8 @@ extension Array where Element == UInt8 {
 
 public extension Data {
     var toHex: String {
-        self.toHexString().uppercased()
+        self.hexadecimal.uppercased()
+//        self.toHexString().uppercased()
     }
     func computePKHash() -> Data {
         let hash256: Data = self.sha256()

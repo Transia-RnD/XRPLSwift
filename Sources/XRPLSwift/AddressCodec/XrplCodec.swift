@@ -87,14 +87,14 @@ public class XrplCodec {
      AddressCodecError: If entropy is not of length SEED_LENGTH
      or the encoding type is not one of CryptoAlgorithm.
      */
-    public static func encodeSeed(entropy: [UInt8], type: SeedType) throws -> String {
+    public static func encodeSeed(entropy: [UInt8], type: AlgorithmType) throws -> String {
         if entropy.count != SEED_LENGTH {
             print("Entropy must have length \(SEED_LENGTH)")
             throw AddressCodecError.invalidLength(error: "Entropy must have length \(SEED_LENGTH)")
         }
-        if !SeedType.types.contains(type) {
-            print("Encoding type must be one of \(SeedType.types)")
-            throw AddressCodecError.invalidType(error: "Encoding type must be one of \(SeedType.types)")
+        if !AlgorithmType.types.contains(type) {
+            print("Encoding type must be one of \(AlgorithmType.types)")
+            throw AddressCodecError.invalidType(error: "Encoding type must be one of \(AlgorithmType.types)")
         }
         let prefix: [UInt8] = type == .ed25519 ? _ED25519_SEED_PREFIX : _FAMILY_SEED_PREFIX
         return try _encode(bytes: entropy, prefix: prefix, expectedLength: SEED_LENGTH)
@@ -109,14 +109,14 @@ public class XrplCodec {
      - throws:
      SeedError: If the seed is invalid.
      */
-    public static func decodeSeed(seed: String) throws -> ([UInt8], SeedType)  {
-        for seedType in SeedType.types {
+    public static func decodeSeed(seed: String) throws -> ([UInt8], AlgorithmType)  {
+        for seedType in AlgorithmType.types {
             if seedType == .ed25519 {
                 print("ed25519")
                 do {
                     let prefix: [UInt8] = _ED25519_SEED_PREFIX
                     let decodedResult: [UInt8] = try self._decode(b58String: seed, prefix: prefix)
-                    return (decodedResult, SeedType.ed25519)
+                    return (decodedResult, AlgorithmType.ed25519)
                 } catch {
                     continue
                 }
@@ -126,7 +126,7 @@ public class XrplCodec {
                 do {
                     let prefix: [UInt8] = _FAMILY_SEED_PREFIX
                     let decodedResult: [UInt8] = try self._decode(b58String: seed, prefix: prefix)
-                    return (decodedResult, SeedType.secp256k1)
+                    return (decodedResult, AlgorithmType.secp256k1)
                 } catch {
                     continue
                 }

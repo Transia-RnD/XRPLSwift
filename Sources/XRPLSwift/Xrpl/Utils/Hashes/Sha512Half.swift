@@ -19,7 +19,6 @@ let HASH_SIZE: Int = 32
  * @returns Hash of hex.
  */
 public func sha512Half(hex: String) -> String {
-    let hash: Data = Data(hex: hex).sha256()
-    return [UInt8](hash.prefix(through: HASH_SIZE - 1)).toHexString()
+    let hash: Data = Data(hex: hex).sha512()
+    return [UInt8](hash.prefix(through: HASH_SIZE - 1)).toHex
 }
-

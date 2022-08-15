@@ -67,7 +67,7 @@ class SerializedType {
         return bytes
     }
     
-    func toJson() -> [String: Any] {
+    func toJson() -> [String: AnyObject] {
         /*
          Returns the JSON representation of a SerializedType.
          If not overridden, returns hex string representation of bytes.

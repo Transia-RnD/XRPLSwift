@@ -1,6 +1,6 @@
 ////
 ////  TestAutoFill.swift
-////  
+////
 ////
 ////  Created by Denis Angell on 7/31/22.
 ////
@@ -44,7 +44,32 @@
 //        tx.fee = TestAutoFill.fee
 ////        tx.sequence = TestAutoFill.sequence
 //        tx.lastLedgerSequence = TestAutoFill.lastLedgerSequence
-//        let baseTx: rTransaction = rTransaction.DepositPreauth(tx)
+//        let baseTx: rTransaction = rTransaction.depositPreauth(tx)
+//        let txResult = await AutoFill().autofill(client: self.client, transaction: tx, signersCount: 0)
+//        print(baseTx)
+//        let newTx = try! txResult.wait()
+//        print(newTx)
+//        print("FINISHED")
+////        assert.strictEqual(txResult.Fee, Fee)
+////        assert.strictEqual(txResult.Sequence, Sequence)
+////        assert.strictEqual(txResult.LastLedgerSequence, LastLedgerSequence)
+//    }
+//    
+//    func testAutoFillConstructor() async {
+////        let tx: Transaction = {
+////          TransactionType: 'DepositPreauth',
+////          Account: 'rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf',
+////          Authorize: 'rpZc4mVfWUif9CRoHRKKcmhu1nx2xktxBo',
+////          Fee,
+////          Sequence,
+////          LastLedgerSequence,
+////        }
+//        let tx: DepositPreauth = DepositPreauth(authorize: "rpZc4mVfWUif9CRoHRKKcmhu1nx2xktxBo")
+//        tx.account = "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf"
+//        tx.fee = TestAutoFill.fee
+////        tx.sequence = TestAutoFill.sequence
+//        tx.lastLedgerSequence = TestAutoFill.lastLedgerSequence
+//        let baseTx: rTransaction = rTransaction.depositPreauth(tx)
 //        let txResult = await AutoFill().autofill(client: self.client, transaction: tx, signersCount: 0)
 //        print(baseTx)
 //        let newTx = try! txResult.wait()

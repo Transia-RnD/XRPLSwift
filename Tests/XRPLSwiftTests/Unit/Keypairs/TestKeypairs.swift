@@ -25,7 +25,7 @@ final class TestApi: XCTestCase {
         let options: KeypairsOptions = KeypairsOptions(algorithm: .secp256k1)
         let seed: String = try! Keypairs.generateSeed(options: options)
         XCTAssertEqual(seed[0], "s")
-        let (decodedSeed, decodedAlgorithm): ([UInt8], SeedType) = try! XrplCodec.decodeSeed(seed: seed)
+        let (decodedSeed, decodedAlgorithm): ([UInt8], AlgorithmType) = try! XrplCodec.decodeSeed(seed: seed)
         XCTAssertEqual(decodedAlgorithm, .secp256k1)
         XCTAssertEqual(decodedSeed.count, 16)
     }
@@ -39,7 +39,7 @@ final class TestApi: XCTestCase {
         let options: KeypairsOptions = KeypairsOptions(algorithm: .ed25519)
         let seed: String = try! Keypairs.generateSeed(options: options)
         XCTAssertEqual(seed[0..<3], "sEd")
-        let (decodedSeed, decodedAlgorithm): ([UInt8], SeedType) = try! XrplCodec.decodeSeed(seed: seed)
+        let (decodedSeed, decodedAlgorithm): ([UInt8], AlgorithmType) = try! XrplCodec.decodeSeed(seed: seed)
         XCTAssertEqual(decodedAlgorithm, .ed25519)
         XCTAssertEqual(decodedSeed.count, 16)
     }

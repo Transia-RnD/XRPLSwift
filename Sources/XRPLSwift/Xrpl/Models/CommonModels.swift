@@ -88,6 +88,15 @@ public struct rIssuedCurrencyAmount: IssuedCurrency, Codable {
         case issuer = "issuer"
         case value = "value"
     }
+    
+    public init(_ json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(rIssuedCurrencyAmount.self, from: data)
+        self.currency = r.currency
+        self.issuer = r.issuer
+        self.value = r.value
+    }
 }
 
 enum AmountType {
@@ -104,6 +113,15 @@ extension rAmount {
     
     enum rAmountCodingError: Error {
         case decoding(String)
+    }
+    
+    public var value: Any {
+        switch self {
+        case .string(let string):
+            return string
+        case .ic(let ic):
+            return ic
+        }
     }
     
     public init(from decoder: Decoder) throws {
@@ -149,7 +167,18 @@ public class BaseSigner: Codable {
 }
 
 public class Signer: Codable {
-    public let Signer: BaseSigner
+    enum CodingKeys: String, CodingKey {
+        case signer = "Signer"
+    }
+    
+    public let signer: BaseSigner
+    
+    public init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(Signer.self, from: data)
+        self.signer = r.signer
+    }
 }
 
 public class BaseMemo: Codable {

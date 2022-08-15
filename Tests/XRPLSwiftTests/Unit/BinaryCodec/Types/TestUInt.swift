@@ -11,6 +11,7 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestUInt: XCTestCase {
+    
     func test_from_value() {
         let value1 = xUInt8.from(value: 124)
         let value2 = xUInt8.from(value: 123)

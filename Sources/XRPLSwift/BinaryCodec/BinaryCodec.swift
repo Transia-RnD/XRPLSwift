@@ -96,11 +96,10 @@ class BinaryCodec {
      Returns:
      A JSON-like dictionary representation of the transaction.
      */
-    class func decode(buffer: String) -> [String: Any] {
+    class func decode(buffer: String) -> [String: AnyObject] {
         let parser: BinaryParser = BinaryParser(hex: buffer)
-//        let parsedType: SerializedType = parser.readType(type: STObject)
-//        return parsedType.toJson()
-        return [:]
+        let parsedType: SerializedType = try! parser.readType(type: STObject.self)
+        return parsedType.toJson()
     }
     
     class func serializeJson(

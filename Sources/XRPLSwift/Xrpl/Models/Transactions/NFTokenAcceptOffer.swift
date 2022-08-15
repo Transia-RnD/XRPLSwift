@@ -68,7 +68,6 @@ public class NFTokenAcceptOffer: BaseTransaction {
     }
     
     public init(
-        from wallet: Wallet,
         nftokenSellOffer: String? = nil,
         nftokenBuyOffer: String? = nil,
         nftokenBrokerFee: rAmount? = nil

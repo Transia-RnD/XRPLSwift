@@ -147,7 +147,6 @@ public class AccountSet: BaseTransaction {
     }
 
     public init(
-        wallet: Wallet,
         clearFlag: AccountSetAsfFlags?,
         setFlag: AccountSetAsfFlags?,
         domain: String?,

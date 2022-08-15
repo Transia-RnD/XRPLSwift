@@ -16,7 +16,7 @@ protocol SigningAlgorithm {
     static func verify(signature: [UInt8], message: [UInt8], publicKey: [UInt8]) throws -> Bool
 }
 
-public enum AlgorithType {
+public enum AlgorithmType {
     case ed25519
     case secp256k1
     
@@ -29,7 +29,7 @@ public enum AlgorithType {
         }
     }
     
-    static var types: [SeedType] { return [.ed25519, .secp256k1] }
+    static var types: [AlgorithmType] { return [.ed25519, .secp256k1] }
     
     var rawValue: String {
         switch self {
@@ -44,10 +44,10 @@ public enum AlgorithType {
 
 public struct KeypairsOptions {
     public let entropy: Entropy?
-    public let algorithm: AlgorithType?
+    public let algorithm: AlgorithmType?
     public let isValidator: Bool?
     
-    init(entropy: Entropy? = nil, algorithm: AlgorithType?, isValidator: Bool? = nil) {
+    init(entropy: Entropy? = nil, algorithm: AlgorithmType?, isValidator: Bool? = nil) {
         self.entropy = entropy != nil ? entropy! : Entropy()
         self.algorithm = algorithm ?? .ed25519
         self.isValidator = isValidator ?? false
@@ -128,7 +128,7 @@ public class Keypairs {
         }
     }
     
-    public static func getAlgorithmFromKey(key: String) -> SeedType {
+    public static func getAlgorithmFromKey(key: String) -> AlgorithmType {
         let data = [UInt8](key.hexadecimal!)
         return data.count == 33 && data[0] == 0xED ? .ed25519 : .secp256k1
     }

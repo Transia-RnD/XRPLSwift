@@ -35,7 +35,7 @@ public enum rTransaction: Codable {
     case paymentChannelFund(PaymentChannelFund)
     case setRegularKey(SetRegularKey)
     case signerListSet(SignerListSet)
-    //  case ticketCreate(TicketCreate)
+    case ticketCreate(TicketCreate)
     case trustSet(TrustSet)
 }
 
@@ -45,10 +45,97 @@ extension rTransaction {
         case decoding(String)
     }
     
+    public init?(_ json: [String: AnyObject]) throws {
+        guard let transactionType: String = json["TransactionType"] as? String else {
+            throw TransactionCodingError.decoding("Invalid Transaction Type")
+        }
+        if transactionType == "AccountDelete", let value = try? AccountDelete.init(json: json) {
+            self = .accountDelete(value)
+            return
+        }
+        if transactionType == "AccountSet", let value = try? AccountSet.init(json: json) {
+            self = .accountSet(value)
+            return
+        }
+        if transactionType == "CheckCancel", let value = try? CheckCancel.init(json: json) {
+            self = .checkCancel(value)
+            return
+        }
+        if transactionType == "CheckCreate", let value = try? CheckCreate.init(json: json) {
+            self = .checkCreate(value)
+            return
+        }
+        if transactionType == "EscrowFinish", let value = try? EscrowFinish.init(json: json) {
+            self = .escrowFinish(value)
+            return
+        }
+        if transactionType == "NFTokenAcceptOffer", let value = try? NFTokenAcceptOffer.init(json: json) {
+            self = .nfTokenAcceptOffer(value)
+            return
+        }
+        if transactionType == "NFTokenBurn", let value = try? NFTokenBurn.init(json: json) {
+            self = .nfTokenBurn(value)
+            return
+        }
+        if transactionType == "NFTokenCancelOffer", let value = try? NFTokenCancelOffer.init(json: json) {
+            self = .nfTokenCancelOffer(value)
+            return
+        }
+        if transactionType == "NFTokenCreateOffer", let value = try? NFTokenCreateOffer.init(json: json) {
+            self = .nfTokenCreateOffer(value)
+            return
+        }
+        if transactionType == "NFTokenMint", let value = try? NFTokenMint.init(json: json) {
+            self = .nfTokenMint(value)
+            return
+        }
+        if transactionType == "OfferCancel", let value = try? OfferCancel.init(json: json) {
+            self = .offerCancel(value)
+            return
+        }
+        if transactionType == "OfferCreate", let value = try? OfferCreate.init(json: json) {
+            self = .offerCreate(value)
+            return
+        }
+        if transactionType == "Payment", let value = try? Payment.init(json: json) {
+            self = .payment(value)
+            return
+        }
+        if transactionType == "PaymentChannelClaim", let value = try? PaymentChannelClaim.init(json: json) {
+            self = .paymentChannelClaim(value)
+            return
+        }
+        if transactionType == "PaymentChannelCreate", let value = try? PaymentChannelCreate.init(json: json) {
+            self = .paymentChannelCreate(value)
+            return
+        }
+        if transactionType == "PaymentChannelFund", let value = try? PaymentChannelFund.init(json: json) {
+            self = .paymentChannelFund(value)
+            return
+        }
+        if transactionType == "SetRegularKey", let value = try? SetRegularKey.init(json: json) {
+            self = .setRegularKey(value)
+            return
+        }
+        if transactionType == "SignerListSet", let value = try? SignerListSet.init(json: json) {
+            self = .signerListSet(value)
+            return
+        }
+        if transactionType == "TicketCreate", let value = try? TicketCreate.init(json: json) {
+            self = .ticketCreate(value)
+            return
+        }
+        if transactionType == "TrustSet", let value = try? TrustSet.init(json: json) {
+            self = .trustSet(value)
+            return
+        }
+        throw TransactionCodingError.decoding("Invalid Transaction Type")
+    }
+    
     func toJson() throws -> [String: AnyObject] {
-//        self.encode(to: <#T##Encoder#>)
-//        return String(data: try self.jsonData(), encoding: encoding)
-        return [:]
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String : AnyObject]
     }
     
     public func toAny() throws -> Any {
@@ -96,6 +183,8 @@ extension rTransaction {
         case .setRegularKey(let value):
             return value
         case .signerListSet(let value):
+            return value
+        case .ticketCreate(let value):
             return value
         case .trustSet(let value):
             return value
@@ -176,10 +265,10 @@ extension rTransaction {
             self = .signerListSet(value)
             return
         }
-        //        if let value = try? TicketCreate.init(from: decoder) {
-        //            self = .TicketCreate(value)
-        //            return
-        //        }
+        if let value = try? TicketCreate.init(from: decoder) {
+            self = .ticketCreate(value)
+            return
+        }
         if let value = try? TrustSet.init(from: decoder) {
             self = .trustSet(value)
             return
@@ -215,7 +304,6 @@ extension rTransaction {
             try value.encode(to: encoder)
         case .nfTokenCreateOffer(let value):
             try value.encode(to: encoder)
-            
         case .nfTokenMint(let value):
             try value.encode(to: encoder)
         case .offerCancel(let value):
@@ -234,8 +322,8 @@ extension rTransaction {
             try value.encode(to: encoder)
         case .signerListSet(let value):
             try value.encode(to: encoder)
-            //        case .ticketCreate(let TicketCreate):
-            //            try TicketCreate.encode(to: encoder)
+        case .ticketCreate(let value):
+            try value.encode(to: encoder)
         case .trustSet(let value):
             try value.encode(to: encoder)
         }
