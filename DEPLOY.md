@@ -17,7 +17,7 @@ set the new tag to 0.0.1
 
 ## Trunk
 
-`pod trunk push XRPLSwift.podspec`
+`pod trunk push XRPLSwift.podspec --verbose`
 
 ### Trunk PreReq
 

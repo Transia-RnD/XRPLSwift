@@ -30,8 +30,8 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = "10.10"
   s.tvos.deployment_target = '10.0'
   s.watchos.deployment_target = '3.0'
-  s.swift_version = '5.0'
-  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '5.0' }
+  s.swift_version = '5.1.1'
+  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '5.1.1' }
 
   s.source_files = 'Sources/XRPLSwift/**/*'
 #  s.resources = 'XRPLSwift/Assets/*.xcassets'
@@ -40,7 +40,7 @@ Pod::Spec.new do |s|
   # }
 
   s.dependency 'secp256k1.swift'
-  s.dependency 'CryptoSwift', '~> 1.4.0'
+  s.dependency 'CryptoSwift', '~> 1.5.1'
   s.dependency 'BigInt', '~> 5.0'
   s.dependency 'AnyCodable-FlightSchool'
   s.dependency 'SwiftNIO'
