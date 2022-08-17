@@ -1,21 +1,3 @@
-<p align="center">
-  <a href="https://readthedocs.org/projects/XRPLSwift/badge">
-    <img src="https://img.shields.io/cocoapods/v/XRPLSwift.svg?style=flat&label=docs" alt="Version">
-  </a>
-    <a href="https://cocoapods.org/pods/XRPLSwift">
-    <img src="https://img.shields.io/cocoapods/v/XRPLSwift.svg?style=flat&label=version" alt="Version">
-  </a>
-  <a href="https://github.com/Transia-RnD/XRPLSwift">
-    <img src="https://img.shields.io/cocoapods/l/XRPLSwift.svg?style=flat" alt="License">
-  </a>
-  <a href="https://github.com/Transia-RnD/XRPLSwift">
-    <img src="https://img.shields.io/badge/platforms-macOS%20%7C%20iOS%20%7C%20watchOS%20%7C%20tvOS%20%7C%20Linux-lightgrey.svg" alt="Platform">
-  </a>
-  <a href="https://cocoapods.org/pods/XRPLSwift">
-    <img src="https://img.shields.io/badge/supports-CocoaPods%20%7C%20SwiftPM-green.svg" alt="CocoaPods and SPM compatible">
-  </a>
-</p>
-
 # XRPLSwift
 
 A pure Swift implementation for interacting with the XRP Ledger, the `XRPLSwift` library simplifies the hardest parts of XRP Ledger interaction, like serialization and transaction signing, by providing native Swift methods and models for [XRP Ledger transactions](https://xrpl.org/transaction-formats.html) and core server [API](https://xrpl.org/api-conventions.html) ([`rippled`](https://github.com/ripple/rippled)) objects.
@@ -23,58 +5,81 @@ A pure Swift implementation for interacting with the XRP Ledger, the `XRPLSwift`
 
 
 ```swift
-// swift-tools-version:5.1
-# create a network client
+// create a network client
 let client = try XrplClient(server: "https://s.altnet.rippletest.net:51234/")
 
-# create a wallet on the testnet
-test_wallet = generateFaucetWallet(client)
-print(test_wallet)
-public_key: ED3CC1BBD0952A60088E89FA502921895FC81FBD79CAE9109A8FE2D23659AD5D56
-private_key: -HIDDEN-
-classic_address: rBtXmAdEYcno9LWRnAGfT9qBxCeDvuVRZo
+// create a wallet on the testnet
+let testWallet: Wallet = generateFaucetWallet(client)
+print(testWallet)
+// publicKey: ED3CC1BBD0952A60088E89FA502921895FC81FBD79CAE9109A8FE2D23659AD5D56
+// privateKey: -HIDDEN-
+// classicAddress: rBtXmAdEYcno9LWRnAGfT9qBxCeDvuVRZo
 
-# look up account info
-from xrpl.models.requests.account_info import AccountInfo
-acct_info = AccountInfo(
-    account="rBtXmAdEYcno9LWRnAGfT9qBxCeDvuVRZo",
-    ledger_index="current",
-    queue=True,
-    strict=True,
+// look up account info
+let acctInfo: AccountInfo = AccountInfo(
+    account: "rBtXmAdEYcno9LWRnAGfT9qBxCeDvuVRZo",
+    ledgerIndex: "current",
+    queue: true,
+    strict: true,
 )
-response = client.request(acct_info)
-result = response.result
-import json
-print(json.dumps(result["account_data"], indent=4, sort_keys=True))
-# {
-#     "Account": "rBtXmAdEYcno9LWRnAGfT9qBxCeDvuVRZo",
-#     "Balance": "1000000000",
-#     "Flags": 0,
-#     "LedgerEntryType": "AccountRoot",
-#     "OwnerCount": 0,
-#     "PreviousTxnID": "73CD4A37537A992270AAC8472F6681F44E400CBDE04EC8983C34B519F56AB107",
-#     "PreviousTxnLgrSeq": 16233962,
-#     "Sequence": 16233962,
-#     "index": "FD66EC588B52712DCE74831DCB08B24157DC3198C29A0116AA64D310A58512D7"
-# }
+let response: BaseResponse<AccountInfoResponse> = client.request(req: acctInfo)
+let result = response.result
+print(result)
+// {
+//     "Account": "rBtXmAdEYcno9LWRnAGfT9qBxCeDvuVRZo",
+//     "Balance": "1000000000",
+//     "Flags": 0,
+//     "LedgerEntryType": "AccountRoot",
+//     "OwnerCount": 0,
+//     "PreviousTxnID": "73CD4A37537A992270AAC8472F6681F44E400CBDE04EC8983C34B519F56AB107",
+//     "PreviousTxnLgrSeq": 16233962,
+//     "Sequence": 16233962,
+//     "index": "FD66EC588B52712DCE74831DCB08B24157DC3198C29A0116AA64D310A58512D7"
+// }
 ```
 
-[![Downloads](https://pepy.tech/badge/XRPLSwift/month)](https://pepy.tech/project/XRPLSwift/month)
-[![Contributors](https://img.shields.io/github/contributors/xpring-eng/XRPLSwift.svg)](https://github.com/xpring-eng/XRPLSwift/graphs/contributors)
+[![Contributors](https://img.shields.io/github/contributors/Transia-RnD/XRPLSwift.svg)](https://github.com/Transia-RnD/XRPLSwift/graphs/contributors)
 
 ## Installation and supported versions
 
-The `XRPLSwift` library is available on [PyPI](https://pypi.org/). Install with `pip`:
+### Cocoapods
+
+The `XRPLSwift` library is available on [CocoaPods](https://cocoapods.org/). Install by adding a line to your `Podfile`:
 
 
 ```
-pip3 install XRPLSwift
+pod 'XRPLSwift'
 ```
 
-The library supports [Swift 3.7](https://www.swift.org/downloads/) and later.
+### Swift Package Manager
 
-[![Supported Versions](https://img.shields.io/pypi/pyversions/XRPLSwift.svg)](https://pypi.org/project/XRPLSwift)
+You can use [The Swift Package Manager](https://swift.org/package-manager) to
+install `XRPLSwift` by adding it to your `Package.swift` file:
 
+```swift
+// swift-tools-version:5.1
+import PackageDescription
+
+let package = Package(
+    name: "YOUR_PROJECT_NAME",
+    dependencies: [
+    .package(url: "https://github.com/Transia-RnD/XRPLSwift.git", from: "0.3.0"),
+    ]
+)
+```
+
+### Linux Compatibility
+
+One of the goals of this library is to provide cross-platform support for Linux and support server-side
+Swift, however some features may only be available in iOS/macOS due to a lack of Linux supported
+libraries (ex. WebSockets).  A test_linux.sh file is included that will run tests in a docker container. All
+contributions must compile on Linux.
+
+The library supports [Swift 5.0](https://www.swift.org/download/) and later.
+
+[![Supported Versions](https://img.shields.io/cocoapods/v/XRPLSwift.svg)](https://cocoapods.org/pods/XRPLSwift)
+[![Platforms](https://img.shields.io/badge/platforms-macOS%20%7C%20iOS%20%7C%20watchOS%20%7C%20tvOS%20%7C%20Linux-lightgrey.svg)](https://cocoapods.org/pods/XRPLSwift)
+[![Compatible](https://img.shields.io/badge/supports-CocoaPods%20%7C%20SwiftPM-green.svg)](https://cocoapods.org/pods/XRPLSwift)
 
 ## Features
 
@@ -86,7 +91,7 @@ Use `XRPLSwift` to build Swift applications that leverage the [XRP Ledger](https
 
 `XRPLSwift` also provides:
 
-* A network client — See [`xrpl.clients`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.clients.html) for more information.
+* A network client — See [`XrplClient`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.clients.html) for more information.
 * Methods for inspecting accounts — See [XRPL Account Methods](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.account.html) for more information.
 * Codecs for encoding and decoding addresses and other objects — See [Core Codecs](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.core.html) for more information.
 
@@ -101,64 +106,58 @@ The following sections describe some of the most commonly used modules in the `X
 
 ### Network client
 
-Use the `xrpl.clients` library to create a network client for connecting to the XRP Ledger.
+Use the `XrplClient` library to create a network client for connecting to the XRP Ledger.
 
-```py
-from xrpl.clients import JsonRpcClient
-JSON_RPC_URL = "https://s.altnet.rippletest.net:51234/"
-client = JsonRpcClient(JSON_RPC_URL)
+```swift
+let WSS_URL: String = "wss://s1.ripple.com"
+let client: XrplClient = try XrplClient(server: WSS_URL)
 ```
 
 ### Manage keys and wallets
 
-#### `xrpl.wallet`
+#### `Wallet`
 
-Use the [`xrpl.wallet`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.wallet.html) module to create a wallet from a given seed or or via a [Testnet faucet](https://xrpl.org/xrp-testnet-faucet.html).
+Use the [`Wallet`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.wallet.html) module to create a wallet from a given seed or or via a [Testnet faucet](https://xrpl.org/xrp-testnet-faucet.html).
 
-To create a wallet from a seed (in this case, the value generated using [`xrpl.keypairs`](#xrpl-keypairs)):
+To create a wallet from a seed (in this case, the value generated using [`Keypairs`](#xrpl-keypairs)):
 
-```py
-wallet_from_seed = xrpl.wallet.Wallet(seed, 0)
-print(wallet_from_seed)
-# pub_key: ED46949E414A3D6D758D347BAEC9340DC78F7397FEE893132AAF5D56E4D7DE77B0
-# priv_key: -HIDDEN-
-# classic_address: rG5ZvYsK5BPi9f1Nb8mhFGDTNMJhEhufn6
+```swift
+let walletFromSeed: Wallet = Wallet.Wallet(seed: seed)
+print(walletFromSeed)
+// publicKey: ED46949E414A3D6D758D347BAEC9340DC78F7397FEE893132AAF5D56E4D7DE77B0
+// privateKey: -HIDDEN-
+// classicAddress: rG5ZvYsK5BPi9f1Nb8mhFGDTNMJhEhufn6
 ```
 
 To create a wallet from a Testnet faucet:
 
-```py
-test_wallet = generate_faucet_wallet(client)
-test_account = test_wallet.classic_address
-print("Classic address:", test_account)
-# Classic address: rEQB2hhp3rg7sHj6L8YyR4GG47Cb7pfcuw
+```swift
+let testWallet: Wallet = generateFaucetWallet(client: client)
+let testAccount: String = testWallet.classicAddress
+print("Classic address: \(testAccount)")
+// Classic address: rEQB2hhp3rg7sHj6L8YyR4GG47Cb7pfcuw
 ```
 
-#### `xrpl.core.keypairs`
+#### `Keypairs`
 
-Use the [`xrpl.core.keypairs`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.core.keypairs.html#module-xrpl.core.keypairs) module to generate seeds and derive keypairs and addresses from those seed values.
+Use the [`Keypairs`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.core.keypairs.html#module-xrpl.core.keypairs) module to generate seeds and derive keypairs and addresses from those seed values.
 
 Here's an example of how to generate a `seed` value and derive an [XRP Ledger "classic" address](https://xrpl.org/cryptographic-keys.html#account-id-and-address) from that seed.
 
 
-```py
-from xrpl.core import keypairs
-seed = keypairs.generate_seed()
-public, private = keypairs.derive_keypair(seed)
-test_account = keypairs.derive_classic_address(public)
-print("Here's the public key:")
-print(public)
-print("Here's the private key:")
-print(private)
+```swift
+let seed: String = keypairs.generateSeed()
+let (public, private) = Keypairs.deriveKeypair(seed: seed)
+let testAccount: String = Keypairs.deriveClassicAddress(publicKey: public)
+print("Here's the public key: \(public)")
+print("Here's the private key: \(private)")
 print("Store this in a secure place!")
-# Here's the public key:
-# ED3CC1BBD0952A60088E89FA502921895FC81FBD79CAE9109A8FE2D23659AD5D56
-# Here's the private key:
-# EDE65EE7882847EF5345A43BFB8E6F5EEC60F45461696C384639B99B26AAA7A5CD
-# Store this in a secure place!
+// Here's the public key: ED3CC1BBD0952A60088E89FA502921895FC81FBD79CAE9109A8FE2D23659AD5D56
+// Here's the private key: EDE65EE7882847EF5345A43BFB8E6F5EEC60F45461696C384639B99B26AAA7A5CD
+// Store this in a secure place!
 ```
 
-**Note:** You can use `xrpl.core.keypairs.sign` to sign transactions but `XRPLSwift` also provides explicit methods for safely signing and submitting transactions. See [Transaction Signing](#transaction-signing) and [XRPL Transaction Methods](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.transaction.html#module-xrpl.transaction) for more information.
+**Note:** You can use `Keypairs.sign` to sign transactions but `XRPLSwift` also provides explicit methods for safely signing and submitting transactions. See [Transaction Signing](#transaction-signing) and [XRPL Transaction Methods](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.transaction.html#module-xrpl.transaction) for more information.
 
 
 ### Serialize and sign transactions
@@ -166,40 +165,36 @@ print("Store this in a secure place!")
 To securely submit transactions to the XRP Ledger, you need to first serialize data from JSON and other formats into the [XRP Ledger's canonical format](https://xrpl.org/serialization.html), then to [authorize the transaction](https://xrpl.org/transaction-basics.html#authorizing-transactions) by digitally [signing it](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.core.keypairs.html?highlight=sign#xrpl.core.keypairs.sign) with the account's private key. The `XRPLSwift` library provides several methods to simplify this process.
 
 
-Use the [`xrpl.transaction`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.transaction.html) module to sign and submit transactions. The module offers three ways to do this:
+Use the [`Transaction`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.transaction.html) module to sign and submit transactions. The module offers three ways to do this:
 
-* [`safe_sign_and_submit_transaction`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.transaction.html#xrpl.transaction.safe_sign_and_submit_transaction) — Signs a transaction locally, then submits it to the XRP Ledger. This method does not implement [reliable transaction submission](https://xrpl.org/reliable-transaction-submission.html#reliable-transaction-submission) best practices, so only use it for development or testing purposes.
+* [`safeSignAndSubmitTransaction`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.transaction.html#xrpl.transaction.safe_sign_and_submit_transaction) — Signs a transaction locally, then submits it to the XRP Ledger. This method does not implement [reliable transaction submission](https://xrpl.org/reliable-transaction-submission.html#reliable-transaction-submission) best practices, so only use it for development or testing purposes.
 
-* [`safe_sign_transaction`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.transaction.html#xrpl.transaction.safe_sign_transaction) — Signs a transaction locally. This method **does  not** submit the transaction to the XRP Ledger.
+* [`safeSignTransaction`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.transaction.html#xrpl.transaction.safe_sign_transaction) — Signs a transaction locally. This method **does  not** submit the transaction to the XRP Ledger.
 
-* [`send_reliable_submission`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.transaction.html#xrpl.transaction.send_reliable_submission) — An implementation of the [reliable transaction submission guidelines](https://xrpl.org/reliable-transaction-submission.html#reliable-transaction-submission), this method submits a signed transaction to the XRP Ledger and then verifies that it has been included in a validated ledger (or has failed to do so). Use this method to submit transactions for production purposes.
+* [`sendReliableSubmission`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.transaction.html#xrpl.transaction.send_reliable_submission) — An implementation of the [reliable transaction submission guidelines](https://xrpl.org/reliable-transaction-submission.html#reliable-transaction-submission), this method submits a signed transaction to the XRP Ledger and then verifies that it has been included in a validated ledger (or has failed to do so). Use this method to submit transactions for production purposes.
 
 
-```py
-from xrpl.models.transactions import Payment
-from xrpl.transaction import safe_sign_transaction, send_reliable_submission
-from xrpl.ledger import get_latest_validated_ledger_sequence
-from xrpl.account import get_next_valid_seq_number
+```swift
 
-current_validated_ledger = get_latest_validated_ledger_sequence(client)
-test_wallet.sequence = get_next_valid_seq_number(test_wallet.classic_address, client)
+let currentValidatedLedger: Int = getLatestValidatedLedgerSequence(client: client)
+let testWallet.sequence: Int = getNextValidSeqNumber(classicAddress: testWallet.classicAddress, client: client)
 
-# prepare the transaction
-# the amount is expressed in drops, not XRP
-# see https://xrpl.org/basic-data-types.html#specifying-currency-amounts
-my_tx_payment = Payment(
-    account=test_wallet.classic_address,
+// prepare the transaction
+// the amount is expressed in drops, not XRP
+// see https://xrpl.org/basic-data-types.html#specifying-currency-amounts
+let myTxPayment = Payment(
+    account=testWallet.classicAddress,
     amount="2200000",
     destination="rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
-    last_ledger_sequence=current_validated_ledger + 20,
-    sequence=test_wallet.sequence,
+    lastLedgerSequence=currentValidatedLedger + 20,
+    sequence=testWallet.sequence,
     fee="10",
 )
-# sign the transaction
-my_tx_payment_signed = safe_sign_transaction(my_tx_payment,test_wallet)
+// sign the transaction
+let myTxPaymentSigned: rTransaction = safeSignTransaction(tx: myTxPayment, wallet: testWallet)
 
-# submit the transaction
-tx_response = send_reliable_submission(my_tx_payment_signed, client)
+// submit the transaction
+let txResponse = sendReliableSubmission(tx: myTxPaymentSigned, client: client)
 ```
 
 #### Get fee from the XRP Ledger
@@ -207,57 +202,54 @@ tx_response = send_reliable_submission(my_tx_payment_signed, client)
 
 In most cases, you can specify the minimum [transaction cost](https://xrpl.org/transaction-cost.html#current-transaction-cost) of `"10"` for the `fee` field unless you have a strong reason not to. But if you want to get the [current load-balanced transaction cost](https://xrpl.org/transaction-cost.html#current-transaction-cost) from the network, you can use the `get_fee` function:
 
-```py
-from xrpl.ledger import get_fee
-fee = get_fee(client)
+```swift
+fee = getFee(client: client)
 print(fee)
-# 10
+// 10
 ```
 
 #### Auto-filled fields
 
-The `XRPLSwift` library automatically populates the `fee`, `sequence` and `last_ledger_sequence` fields when you create transactions. In the example above, you could omit those fields and let the library fill them in for you.
+The `XRPLSwift` library automatically populates the `fee`, `sequence` and `lastLedgerSequence` fields when you create transactions. In the example above, you could omit those fields and let the library fill them in for you.
 
-```py
-from xrpl.models.transactions import Payment
-from xrpl.transaction import send_reliable_submission, safe_sign_and_autofill_transaction
-# prepare the transaction
-# the amount is expressed in drops, not XRP
-# see https://xrpl.org/basic-data-types.html#specifying-currency-amounts
-my_tx_payment = Payment(
-    account=test_wallet.classic_address,
+```swift
+// prepare the transaction
+// the amount is expressed in drops, not XRP
+// see https://xrpl.org/basic-data-types.html#specifying-currency-amounts
+let myTxPayment: Payment = Payment(
+    account=testWallet.classicAddress,
     amount="2200000",
     destination="rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe"
 )
 
-# sign the transaction with the autofill method
-# (this will auto-populate the fee, sequence, and last_ledger_sequence)
-my_tx_payment_signed = safe_sign_and_autofill_transaction(my_tx_payment, test_wallet, client)
-print(my_tx_payment_signed)
-# Payment(
-#     account='rMPUKmzmDWEX1tQhzQ8oGFNfAEhnWNFwz',
-#     transaction_type=<TransactionType.PAYMENT: 'Payment'>,
-#     fee='10',
-#     sequence=16034065,
-#     account_txn_id=None,
-#     flags=0,
-#     last_ledger_sequence=10268600,
-#     memos=None,
-#     signers=None,
-#     source_tag=None,
-#     signing_pub_key='EDD9540FA398915F0BCBD6E65579C03BE5424836CB68B7EB1D6573F2382156B444',
-#     txn_signature='938FB22AE7FE76CF26FD11F8F97668E175DFAABD2977BCA397233117E7E1C4A1E39681091CC4D6DF21403682803AB54CC21DC4FA2F6848811DEE10FFEF74D809',
-#     amount='2200000',
-#     destination='rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',
-#     destination_tag=None,
-#     invoice_id=None,
-#     paths=None,
-#     send_max=None,
-#     deliver_min=None
-# )
+// sign the transaction with the autofill method
+// (this will auto-populate the fee, sequence, and last_ledger_sequence)
+let myTxPaymentSigned: rTransaction = safeSignAndAutofillTransaction(tx: myTxPayment, wallet: testWallet, client: client)
+print(myTxPaymentSigned)
+// Payment(
+//     account='rMPUKmzmDWEX1tQhzQ8oGFNfAEhnWNFwz',
+//     transaction_type=<TransactionType.PAYMENT: 'Payment'>,
+//     fee='10',
+//     sequence=16034065,
+//     account_txn_id=None,
+//     flags=0,
+//     last_ledger_sequence=10268600,
+//     memos=None,
+//     signers=None,
+//     source_tag=None,
+//     signing_pub_key='EDD9540FA398915F0BCBD6E65579C03BE5424836CB68B7EB1D6573F2382156B444',
+//     txn_signature='938FB22AE7FE76CF26FD11F8F97668E175DFAABD2977BCA397233117E7E1C4A1E39681091CC4D6DF21403682803AB54CC21DC4FA2F6848811DEE10FFEF74D809',
+//     amount='2200000',
+//     destination='rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe',
+//     destination_tag=None,
+//     invoice_id=None,
+//     paths=None,
+//     send_max=None,
+//     deliver_min=None
+// )
 
-# submit the transaction
-tx_response = send_reliable_submission(my_tx_payment_signed, client)
+// submit the transaction
+let txResponse: BaseResponse<Payment> = sendReliableSubmission(tx: myTxPaymentSigned, client: client)
 ```
 
 
@@ -265,79 +257,66 @@ tx_response = send_reliable_submission(my_tx_payment_signed, client)
 
 You can send `subscribe` and `unsubscribe` requests only using the WebSocket network client. These request methods allow you to be alerted of certain situations as they occur, such as when a new ledger is declared.
 
-```py
-from xrpl.clients import WebsocketClient
+```swift
 url = "wss://s.altnet.rippletest.net/"
-from xrpl.models.requests import Subscribe, StreamParameter
 req = Subscribe(streams=[StreamParameter.LEDGER])
-# NOTE: this code will run forever without a timeout, until the process is killed
+// NOTE: this code will run forever without a timeout, until the process is killed
 with WebsocketClient(url) as client:
     client.send(req)
     for message in client:
         print(message)
-# {'result': {'fee_base': 10, 'fee_ref': 10, 'ledger_hash': '7CD50477F23FF158B430772D8E82A961376A7B40E13C695AA849811EDF66C5C0', 'ledger_index': 18183504, 'ledger_time': 676412962, 'reserve_base': 20000000, 'reserve_inc': 5000000, 'validated_ledgers': '17469391-18183504'}, 'status': 'success', 'type': 'response'}
-# {'fee_base': 10, 'fee_ref': 10, 'ledger_hash': 'BAA743DABD168BD434804416C8087B7BDEF7E6D7EAD412B9102281DD83B10D00', 'ledger_index': 18183505, 'ledger_time': 676412970, 'reserve_base': 20000000, 'reserve_inc': 5000000, 'txn_count': 0, 'type': 'ledgerClosed', 'validated_ledgers': '17469391-18183505'}
-# {'fee_base': 10, 'fee_ref': 10, 'ledger_hash': 'D8227DAF8F745AE3F907B251D40B4081E019D013ABC23B68C0B1431DBADA1A46', 'ledger_index': 18183506, 'ledger_time': 676412971, 'reserve_base': 20000000, 'reserve_inc': 5000000, 'txn_count': 0, 'type': 'ledgerClosed', 'validated_ledgers': '17469391-18183506'}
-# {'fee_base': 10, 'fee_ref': 10, 'ledger_hash': 'CFC412B6DDB9A402662832A781C23F0F2E842EAE6CFC539FEEB287318092C0DE', 'ledger_index': 18183507, 'ledger_time': 676412972, 'reserve_base': 20000000, 'reserve_inc': 5000000, 'txn_count': 0, 'type': 'ledgerClosed', 'validated_ledgers': '17469391-18183507'}
+// {'result': {'fee_base': 10, 'fee_ref': 10, 'ledger_hash': '7CD50477F23FF158B430772D8E82A961376A7B40E13C695AA849811EDF66C5C0', 'ledger_index': 18183504, 'ledger_time': 676412962, 'reserve_base': 20000000, 'reserve_inc': 5000000, 'validated_ledgers': '17469391-18183504'}, 'status': 'success', 'type': 'response'}
+// {'fee_base': 10, 'fee_ref': 10, 'ledger_hash': 'BAA743DABD168BD434804416C8087B7BDEF7E6D7EAD412B9102281DD83B10D00', 'ledger_index': 18183505, 'ledger_time': 676412970, 'reserve_base': 20000000, 'reserve_inc': 5000000, 'txn_count': 0, 'type': 'ledgerClosed', 'validated_ledgers': '17469391-18183505'}
+// {'fee_base': 10, 'fee_ref': 10, 'ledger_hash': 'D8227DAF8F745AE3F907B251D40B4081E019D013ABC23B68C0B1431DBADA1A46', 'ledger_index': 18183506, 'ledger_time': 676412971, 'reserve_base': 20000000, 'reserve_inc': 5000000, 'txn_count': 0, 'type': 'ledgerClosed', 'validated_ledgers': '17469391-18183506'}
+// {'fee_base': 10, 'fee_ref': 10, 'ledger_hash': 'CFC412B6DDB9A402662832A781C23F0F2E842EAE6CFC539FEEB287318092C0DE', 'ledger_index': 18183507, 'ledger_time': 676412972, 'reserve_base': 20000000, 'reserve_inc': 5000000, 'txn_count': 0, 'type': 'ledgerClosed', 'validated_ledgers': '17469391-18183507'}
 ```
 
 
 ### Asynchronous Code
 
-This library supports Swift's [`asyncio`](https://docs.swift.org/3/library/asyncio.html) package, which is used to run asynchronous code. All the async code is in [`xrpl.asyncio`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.asyncio.html) If you are writing asynchronous code, please note that you will not be able to use any synchronous sugar functions, due to how event loops are handled. However, every synchronous method has a corresponding asynchronous method that you can use.
+This library supports Swift's [`Async`](https://docs.swift.org/3/library/asyncio.html) package, which is used to run asynchronous code. All the async code is in [`Async`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.asyncio.html) If you are writing asynchronous code, please note that you will not be able to use any synchronous sugar functions, due to how event loops are handled. However, every synchronous method has a corresponding asynchronous method that you can use.
 
 This sample code is the asynchronous equivalent of the above section on submitting a transaction.
 
-```py
-import asyncio
-from xrpl.models.transactions import Payment
-from xrpl.asyncio.transaction import safe_sign_transaction, send_reliable_submission
-from xrpl.asyncio.ledger import get_latest_validated_ledger_sequence
-from xrpl.asyncio.account import get_next_valid_seq_number
-from xrpl.asyncio.clients import AsyncJsonRpcClient
+```swift
+asyncClient: AsyncClient = AsyncWssClient(WSS_URL)
 
-async_client = AsyncJsonRpcClient(JSON_RPC_URL)
+func submitSampleTransaction() async {
+    let currentValidatedLedger: Int = await getLatestValidatedLedgerSequence(client: asyncClient)
+    testWallet.sequence = await getNextValidSeqNumber(testWallet.classicAddress, asyncClient)
 
-async def submit_sample_transaction():
-    current_validated_ledger = await get_latest_validated_ledger_sequence(async_client)
-    test_wallet.sequence = await get_next_valid_seq_number(test_wallet.classic_address, async_client)
-
-    # prepare the transaction
-    # the amount is expressed in drops, not XRP
-    # see https://xrpl.org/basic-data-types.html#specifying-currency-amounts
-    my_tx_payment = Payment(
-        account=test_wallet.classic_address,
+    // prepare the transaction
+    // the amount is expressed in drops, not XRP
+    // see https://xrpl.org/basic-data-types.html#specifying-currency-amounts
+    let myTxPayment: Payment = Payment(
+        account=testWallet.classicAddress,
         amount="2200000",
         destination="rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
-        last_ledger_sequence=current_validated_ledger + 20,
-        sequence=test_wallet.sequence,
+        last_ledger_sequence=currentValidatedLedger + 20,
+        sequence=testWallet.sequence,
         fee="10",
     )
-    # sign the transaction
-    my_tx_payment_signed = await safe_sign_transaction(my_tx_payment,test_wallet)
+    // sign the transaction
+    let myTxPaymentSigned: rTransaction = await safeSignTransaction(tx: myTxPayment, wallet: testWallet)
 
-    # submit the transaction
-    tx_response = await send_reliable_submission(my_tx_payment_signed, async_client)
-
-asyncio.run(submit_sample_transaction())
+    // submit the transaction
+    let txResponse: BaseResponse<Payment> = await sendReliableSubmission(tx: myTxPaymentSigned, client: asyncClient)
+}
 ```
 
 ### Encode addresses
 
-Use [`xrpl.core.addresscodec`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.core.addresscodec.html) to encode and decode addresses into and from the ["classic" and X-address formats](https://xrpl.org/accounts.html#addresses).
+Use [`AddressCodec`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.core.addresscodec.html) to encode and decode addresses into and from the ["classic" and X-address formats](https://xrpl.org/accounts.html#addresses).
 
-```py
-# convert classic address to x-address
-from xrpl.core import addresscodec
-testnet_xaddress = (
-    addresscodec.classic_address_to_xaddress(
-        "rMPUKmzmDWEX1tQhzQ8oGFNfAEhnWNFwz",
-        tag=0,
-        is_test_network=True,
-    )
+```swift
+// convert classic address to x-address
+testnetXAddress = try AddressCodec.classicAddressToXaddress(
+    classicAddress: "rMPUKmzmDWEX1tQhzQ8oGFNfAEhnWNFwz",
+    tag: 0,
+    isTest: true
 )
-print(testnet_xaddress)
-# T7QDemmxnuN7a52A62nx2fxGPWcRahLCf3qaswfrsNW9Lps
+print(testnetXAddress)
+// T7QDemmxnuN7a52A62nx2fxGPWcRahLCf3qaswfrsNW9Lps
 ```
 
 

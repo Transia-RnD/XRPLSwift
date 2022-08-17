@@ -7,8 +7,6 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/wallet/index.ts
 
-import Foundation
-
 import XCTest
 @testable import XRPLSwift
 

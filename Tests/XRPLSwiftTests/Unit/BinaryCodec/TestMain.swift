@@ -295,7 +295,7 @@ final class TestMainSigning: XCTestCase {
     func testClaim() {
         let channel: String = "43904CBFCDCEC530B4037871F86EE90BF799DF8D2E0EA564BC8A3F332E4F5FB1"
         let amount: String = "1000"
-        let json: [String: String] = ["amount": amount, "channel": channel]
+        let json: [String: AnyObject] = ["amount": amount, "channel": channel] as! [String: AnyObject]
         let expected: String = "434C4D0043904CBFCDCEC530B4037871F86EE90BF799DF8D2E0EA564BC8A3F332E4F5FB100000000000003E8"
         XCTAssertEqual(try BinaryCodec.encodeForSigningClaim(json: json), expected)
     }

@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 8/6/22.
 //
 
-//
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/Wallet/signer.ts
 
 import Foundation
 import BigInt
@@ -25,7 +25,7 @@ public class rSigner: Wallet {
      * @category Signing
      */
     //    public func multisign(transactions: [rTransaction] | [String]) -> String {
-    public func multisign(transactions: [rTransaction]) throws -> String {
+    public static func multisign(transactions: [rTransaction]) throws -> String {
         if transactions.count == 0 {
             throw XrplError.validation("There were 0 transactions to multisign")
         }
@@ -65,18 +65,18 @@ public class rSigner: Wallet {
      * @returns A signature that can be used to redeem a specific amount of XRP from a payment channel.
      * @category Utilities
      */
-    //    public func authorizeChannel(
-    //      wallet: Wallet,
-    //      channelId: String,
-    //      amount: String,
-    //    ) -> String {
-    //      let signingData = encodeForSigningClaim({
-    //        channel: channelId,
-    //        amount,
-    //      })
-    //
-    //      return signWithKeypair(signingData, wallet.privateKey)
-    //    }
+    public static func authorizeChannel(
+        wallet: Wallet,
+        channelId: String,
+        amount: String
+    ) -> String {
+        let json: [String: AnyObject] = [
+            "channel": channelId,
+            "amount": amount
+        ] as! [String: AnyObject]
+        let signingData = try! BinaryCodec.encodeForSigningClaim(json: json)
+        return Keypairs.sign(message: Data(hex: signingData).bytes, privateKey: wallet.privateKey).toHex
+    }
     
     /**
      * Verifies that the given transaction has a valid signature based on public-key encryption.
@@ -85,15 +85,24 @@ public class rSigner: Wallet {
      * @returns Returns true if tx has a valid signature, and returns false otherwise.
      * @category Utilities
      */
-    //    public func verifySignature(tx: rTransaction | String) -> Bool {
-    //    public func verifySignature(tx: rTransaction) -> Bool {
-    //      let decodedTx: rTransaction = getDecodedTransaction(tx)
-    //      return verify(
-    //        encodeForSigning(decodedTx),
-    //        decodedTx.TxnSignature,
-    //        decodedTx.SigningPubKey,
-    //      )
-    //    }
+    public static func verifySignature(tx: String) -> Bool {
+        let decodedTx: rTransaction = rSigner.getDecodedTransaction(tx: tx)
+        let json: [String: AnyObject] = try! decodedTx.toJson()
+        return Keypairs.verify(
+            signature: try! BinaryCodec.encodeForSigning(json: json).bytes,
+            message: (json["TxnSignature"] as! String).bytes,
+            publicKey: json["SigningPubKey"] as! String
+        )
+    }
+    public static func verifySignature(tx: rTransaction) -> Bool {
+        let decodedTx: rTransaction = rSigner.getDecodedTransaction(tx: tx)
+        let json: [String: AnyObject] = try! decodedTx.toJson()
+        return Keypairs.verify(
+            signature: try! BinaryCodec.encodeForSigning(json: json).bytes,
+            message: (json["TxnSignature"] as! String).bytes,
+            publicKey: json["SigningPubKey"] as! String
+        )
+    }
     
     /**
      * The transactions should all be equal except for the 'Signers' field.
@@ -101,7 +110,7 @@ public class rSigner: Wallet {
      * @param transactions - An array of Transactions which are expected to be equal other than 'Signers'.
      * @throws ValidationError if the transactions are not equal in any field other than 'Signers'.
      */
-    func validateTransactionEquivalence(transactions: [rTransaction]) throws -> Void {
+    static func validateTransactionEquivalence(transactions: [rTransaction]) throws -> Void {
         //        let exampleTransaction = JSON.stringify({
         //            ...transactions[0],
         //        Signers: null,
@@ -118,14 +127,14 @@ public class rSigner: Wallet {
         }
     }
     
-    func getTransactionWithAllSigners(transactions: [rTransaction]) -> rTransaction {
+    static func getTransactionWithAllSigners(transactions: [rTransaction]) -> rTransaction {
         // Signers must be sorted in the combined transaction - See compareSigners' documentation for more details
         let sortedSigners: [Signer] = transactions.compactMap { tx in
             let cloneTx = try! tx.toJson()
             return cloneTx["Signers"] as? Signer
-//        }.sorted(by: compareSigners)
+            //        }.sorted(by: compareSigners)
         }
-//        return { ...transactions[0], Signers: sortedSigners }
+        //        return { ...transactions[0], Signers: sortedSigners }
         return transactions[0]
     }
     
@@ -140,7 +149,7 @@ public class rSigner: Wallet {
      * @returns 1 if left \> right, 0 if left = right, -1 if left \< right, and null if left or right are NaN.
      */
     // TODO: Refactor this
-    func compareSigners(left: Signer, right: Signer) -> Int {
+    static func compareSigners(left: Signer, right: Signer) -> Int {
         if addressToBigNumber(address: left.signer.account) > addressToBigNumber(address: right.signer.account) {
             return 1
         }
@@ -153,18 +162,18 @@ public class rSigner: Wallet {
         return 0
     }
     
-    func addressToBigNumber(address: String) -> BigUInt {
+    static func addressToBigNumber(address: String) -> BigUInt {
         let hex: String = try! XrplCodec.decodeClassicAddress(classicAddress: address).toHex
         let numberOfBitsInHex: Int = 16
         return BigUInt(hex, radix: numberOfBitsInHex)!
     }
     
-    func getDecodedTransaction(blob: String) -> rTransaction {
-        let decoded: [String: AnyObject] = BinaryCodec.decode(buffer: blob)
+    static func getDecodedTransaction(tx: String) -> rTransaction {
+        let decoded: [String: AnyObject] = BinaryCodec.decode(buffer: tx)
         return try! rTransaction(decoded)!
     }
     
-    func getDecodedTransaction(tx: rTransaction) -> rTransaction {
+    static func getDecodedTransaction(tx: rTransaction) -> rTransaction {
         let encoded = try! BinaryCodec.encode(json: tx.toJson())
         let decoded: [String: AnyObject] = BinaryCodec.decode(buffer: encoded)
         return try! rTransaction(decoded)!

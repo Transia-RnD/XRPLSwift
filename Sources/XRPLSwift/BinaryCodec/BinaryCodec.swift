@@ -59,7 +59,7 @@ class BinaryCodec {
      Returns:
      The binary-encoded claim, ready to be signed.
      */
-    class func encodeForSigningClaim(json: [String: Any]) throws -> String {
+    class func encodeForSigningClaim(json: [String: AnyObject]) throws -> String {
         let prefix: Data = PAYMENT_CHANNEL_CLAIM_PREFIX
         let channel: Hash = try Hash256.from(value: json["channel"] as! String)
         let amount: xUInt64 = try xUInt64.from(value: Int(json["amount"] as! String)!)
