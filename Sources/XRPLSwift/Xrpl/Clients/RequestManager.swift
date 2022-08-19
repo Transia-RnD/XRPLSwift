@@ -148,11 +148,12 @@ public class RequestManager {
      * @throws ResponseFormatError if the response format is invalid, RippledError if rippled returns an error.
      */
     public func handleResponse(_response: [String: AnyObject]?) throws -> Void {
+        print(_response)
         let decoder = JSONDecoder()
         let baseData = try JSONSerialization.data(withJSONObject: _response!, options: .prettyPrinted)
         let response = try RippleBaseResponse(data: baseData)
         if (response.id == nil || !(response.id is String || response.id is Int)) {
-            throw XrplError.invalidFormat("valid id not found in response")
+            throw ValidationError.invalidFormat("valid id not found in response")
             return
         }
         guard let index = self.promisesAwaitingResponse.firstIndex(where: { $0.key == response.id }) else {
@@ -160,7 +161,7 @@ public class RequestManager {
             //            throw XrplError.noPromise("No existing promise with id \(response.id)")
         }
         if response.status == nil {
-            let error: XrplError = XrplError.invalidFormat("valid id not found in response")
+            let error: XrplError = ValidationError.invalidFormat("valid id not found in response")
             try self.reject(id: response.id, error: error)
             return
         }
@@ -171,7 +172,7 @@ public class RequestManager {
             return
         }
         if response.status != "success" {
-            let error = XrplError.responseError("unrecognized response.status: \(response.status ?? "")")
+            let error = ResponseFormatError.responseError("unrecognized response.status: \(response.status ?? "")")
             try self.reject(id: response.id, error: error)
             return
         }

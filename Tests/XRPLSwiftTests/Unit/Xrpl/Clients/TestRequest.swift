@@ -28,8 +28,8 @@ final class TestRequest: XCTestCase {
     
     func testClientConstructor() async {
         let exp = expectation(description: "WSS CALL")
-        let builtRequest = AccountObjectsRequest(account: MockRippled.account_objects.normal)
-        let request = await self.client.request(req: builtRequest)
+        let builtRequest = AccountObjectsRequest(account: MockRippled1.account_objects.normal)
+        let request = try! await self.client.request(req: builtRequest)
         request?.whenFailure({ error in
             print(error)
             XCTFail()

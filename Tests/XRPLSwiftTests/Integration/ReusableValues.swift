@@ -37,7 +37,7 @@ struct MockAO {
 }
 
 
-final class MockRippled: XCTestCase {
+final class MockRippled1: XCTestCase {
     public static let account_objects: MockAO = MockAO()
     
 }

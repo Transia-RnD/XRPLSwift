@@ -326,7 +326,7 @@ If you want to contribute to this project, see [CONTRIBUTING.md].
 
 ### Mailing Lists
 
-We have a low-traffic mailing list for announcements of new `xrpl.js` releases. (About 1 email per week)
+We have a low-traffic mailing list for announcements of new `XRPLSwift` releases. (About 1 email per week)
 
 + [Subscribe to xrpl-announce](https://groups.google.com/g/xrpl-announce)
 

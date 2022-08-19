@@ -21,10 +21,10 @@ final class TestConstructor: XCTestCase {
     // TODO: SHOULD PASS
     func _testClientInvalidOptions() {
         let options: ClientOptions = ClientOptions(
-            feeCushion: nil,
-            maxFeeXRP: nil,
+            timeout: Timer(),
             proxy: nil,
-            timeout: nil
+            feeCushion: nil,
+            maxFeeXRP: nil
         )
         XCTAssertThrowsError(try XrplClient(server: "wss://s1.ripple.com", options: options))
     }

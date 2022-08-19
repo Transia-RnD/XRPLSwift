@@ -150,7 +150,7 @@ func submitRequest(
 //        failHard: isAccountDelete(transaction: signedTransaction) || failHard!
         failHard: failHard!
     )
-    return await client.request(req: request)!
+    return try await client.request(req: request)!
 }
 
 ///*

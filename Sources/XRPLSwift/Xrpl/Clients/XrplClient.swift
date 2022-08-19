@@ -14,20 +14,20 @@ import AnyCodable
 public class ClientOptions: ConnectionUserOptions {
     public var feeCushion: Int?
     public var maxFeeXRP: String?
-    //    public var proxy: String?
-    //    public var timeout: Timer?
     
     init(
-        feeCushion: Int? = nil,
-        maxFeeXRP: String? = nil,
+        timeout: Timer,
         proxy: String? = nil,
-        timeout: Timer? = nil
+        feeCushion: Int? = nil,
+        maxFeeXRP: String? = nil
     ) {
         super.init()
+        // SUPER
+        self.timeout = timeout
+        self.proxy = proxy
+        
         self.feeCushion = feeCushion
         self.maxFeeXRP = maxFeeXRP
-        self.proxy = proxy
-        self.timeout = timeout!
     }
 }
 
@@ -265,11 +265,11 @@ class XrplClient: EventEmitter {
 //      ): Promise<TransactionEntryResponse>
 //      public async request(r: TxRequest): Promise<TxResponse>
     
-    public func request<R: BaseRequest>(_ rdict: R) async -> EventLoopFuture<Any> {
-        let data = try! JSONSerialization.data(withJSONObject: rdict, options: .prettyPrinted)
+    public func request<R: BaseRequest>(_ rdict: R) async throws -> EventLoopFuture<Any> {
+        let data = try JSONSerialization.data(withJSONObject: rdict, options: .prettyPrinted)
         let decoder = JSONDecoder()
-        let base = try! decoder.decode(R.self, from: data)
-        return await request(req: base)!
+        let base = try decoder.decode(R.self, from: data)
+        return try await request(req: base)!
     }
     
     public func request<R: BaseRequest, T: BaseResponse<Any>>(r: R) async -> EventLoopFuture<T> {
@@ -288,7 +288,7 @@ class XrplClient: EventEmitter {
         return account
     }
     
-    public func request<R: BaseRequest>(req: R) async -> EventLoopFuture<Any>? {
+    public func request<R: BaseRequest>(req: R) async throws -> EventLoopFuture<Any>? {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Necessary for overloading
         //        print(req)
         //        guard var requestDict = req as? [String: AnyObject] else {
@@ -301,7 +301,7 @@ class XrplClient: EventEmitter {
         //        } else {
         //            requestDict["account"] = nil
         //        }
-        let response = await self.connection.request(request: req)
+        let response = try await self.connection.request(request: req)
         
         //        // mutates `response` to add warnings
         //        handlePartialPayment(req.command, response)
@@ -518,13 +518,13 @@ class XrplClient: EventEmitter {
      * @returns A promise that resolves with a void value when a connection is destroyed.
      * @category Network
      */
-    //    public func disconnect() async -> EventLoopFuture<Void> {
-    //        /*
-    //         * backwards compatibility: connection.disconnect() can return a number, but
-    //         * this method returns nothing. SO we await but don"t return any result.
-    //         */
-    //        await self.connection.disconnect()
-    //    }
+    public func disconnect() async -> EventLoopFuture<Any?> {
+        /*
+         * backwards compatibility: connection.disconnect() can return a number, but
+         * this method returns nothing. SO we await but don"t return any result.
+         */
+        await self.connection.disconnect()
+    }
     
     /**
      * Checks if the Client instance is connected to its rippled server.

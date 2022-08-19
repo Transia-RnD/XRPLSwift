@@ -10,6 +10,12 @@
 import Foundation
 import AnyCodable
 
+public class TestData: Codable {
+    var closeServer: Bool?
+    var unrecognizedResponse: Bool?
+    var disconnectIn: Int?
+}
+
 public class BaseRequest: Codable, Equatable {
     public static func == (lhs: BaseRequest, rhs: BaseRequest) -> Bool {
         return lhs.id == rhs.id
@@ -17,20 +23,41 @@ public class BaseRequest: Codable, Equatable {
         && lhs.apiVersion == rhs.apiVersion
     }
     
-    var id: Int?
-    var command: String?
-    var apiVersion: Int?
+    public var id: Int?
+    public var command: String?
+    public var apiVersion: Int?
+    
+    // TESTING
+    public var data: TestData?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case command = "command"
         case apiVersion = "api_version"
+        
+        // TESTING
+        case data = "data"
     }
     
-    public init(id: Int? = nil, command: String? = nil, apiVersion: Int? = nil) {
+    public init(id: Int? = nil, command: String? = nil, apiVersion: Int? = nil, data: TestData? = nil) {
         self.id = id
         self.command = command
         self.apiVersion = apiVersion
+        
+        // TESTING
+        self.data = data
+    }
+    
+    public init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let r = try decoder.decode(BaseRequest.self, from: data)
+        self.id = r.id
+        self.command = r.command
+        self.apiVersion = r.apiVersion
+        
+        // TESTING
+        self.data = r.data
     }
     
     func jsonData() throws -> Data {

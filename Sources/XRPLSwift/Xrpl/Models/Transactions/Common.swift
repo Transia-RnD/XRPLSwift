@@ -294,11 +294,6 @@ extension BaseTransaction {
     }
 }
 
-
-enum ValidationError: Error {
-    case decoding(String)
-}
-
 /**
  * Verify the common fields of a transaction. The validate functionality will be
  * optional, and will check transaction form at runtime. This should be called

@@ -134,8 +134,6 @@ class AppleWebSocket: _WebSocket, XRPLWebSocket, URLSessionWebSocketDelegate {
     let delegateQueue = OperationQueue()
     var connected: Bool = false
     
-    var openRequests: [String: EventLoopFuture] = [:]
-    
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
         self.connected = true
         self.delegate?.onConnected(connection: self)
