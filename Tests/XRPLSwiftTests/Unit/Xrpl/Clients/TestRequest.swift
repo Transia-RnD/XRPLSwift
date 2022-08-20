@@ -17,13 +17,7 @@ final class TestRequest: XCTestCase {
     private var client: XrplClient!
 
     override func setUp() async throws {
-        do {
-            client = try XrplClient(server: ReusableValues.server)
-            _ = try! await client.connect()
-            print(client.url())
-        } catch {
-            print(error.localizedDescription)
-        }
+        try await super.setUp()
     }
 
     func testClientConstructor() async {
