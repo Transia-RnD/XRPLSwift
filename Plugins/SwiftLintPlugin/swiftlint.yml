@@ -1,0 +1,60 @@
+# Excluded sources
+excluded:
+    - ./*/Generated
+
+# Opt-in rules
+opt_in_rules:
+    - closure_end_indentation
+    - empty_count
+    - empty_string
+    - force_unwrapping
+    - multiline_arguments
+    - multiline_function_chains
+    - multiline_literal_brackets
+    - multiline_parameters_brackets
+    - object_literal
+    - operator_usage_whitespace
+    - overridden_super_call
+    - private_action
+    - private_outlet
+    - prohibited_super_call
+    - redundant_type_annotation
+    - strict_fileprivate
+    - switch_case_on_newline
+    - toggle_bool
+    - trailing_closure
+    - unused_import
+    - vertical_parameter_alignment_on_call
+    - xct_specific_matcher
+    - yoda_condition
+
+# Metrics rules
+cyclomatic_complexity:
+    ignores_case_statements: true
+    warning: 5
+file_length:
+    warning: 600
+function_body_length:
+    warning: 70
+line_length:
+    ignores_comments: true
+    warning: 160
+nesting:
+    type_level:
+        warning: 5
+    statement_level:
+        warning: 5
+type_body_length:
+    warning: 400
+
+# Idiomatic rules
+force_cast: warning
+force_try: warning
+type_name:
+    max_length:
+        warning: 50
+
+# Style rules
+identifier_name:
+    excluded:
+        - id

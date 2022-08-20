@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.6
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -29,12 +29,32 @@ let package = Package(
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
+        .binaryTarget(
+            name: "SwiftLintBinary",
+            url: "https://github.com/realm/SwiftLint/releases/download/0.48.0/SwiftLintBinary-macos.artifactbundle.zip",
+            checksum: "9c255e797260054296f9e4e4cd7e1339a15093d75f7c4227b9568d63edddba50"
+        ),
+        .plugin(
+            name: "SwiftLintPlugin",
+            capability: .buildTool(),
+            dependencies: ["SwiftLintBinary"]
+        ),
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "XRPLSwift",
-            dependencies: ["WebSocketKit", "NIO", "AnyCodable", "secp256k1", "CryptoSwift", "BigInt"]),
+            dependencies: [
+                .product(name: "WebSocketKit", package: "websocket-kit"),
+                .product(name: "NIO", package: "swift-nio"),
+                .product(name: "secp256k1", package: "secp256k1.swift"),
+                "AnyCodable",
+                "CryptoSwift",
+                "BigInt"
+            ],
+            plugins: ["SwiftLintPlugin"]
+        ),
         .testTarget(
             name: "XRPLSwiftTests",
-            dependencies: ["XRPLSwift"]),
+            dependencies: ["XRPLSwift"]
+        ),
     ]
 )
