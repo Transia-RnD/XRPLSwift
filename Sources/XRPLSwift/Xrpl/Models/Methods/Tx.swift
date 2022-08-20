@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The tx method retrieves information on a single transaction, by its
  * identifying hash. Expects a response in the form of a {@link TxResponse}.
@@ -39,14 +38,14 @@ public class TxRequest: BaseRequest {
      * the requested range.
      */
     public var maxLedger: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case transaction = "transaction"
         case binary = "binary"
         case minLedger = "min_ledger"
         case maxLedger = "max_ledger"
     }
-    
+
     public init(
         // Required
         transaction: String,
@@ -66,11 +65,11 @@ public class TxRequest: BaseRequest {
         self.maxLedger = maxLedger
         super.init(id: id, command: "tx", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -93,7 +92,7 @@ open class TxResponse: Codable {
     public let ledgerIndex: Int?
     /** Transaction metadata, which describes the results of the transaction. */
     //    public let meta?: TransactionMetadata | String
-    public let meta: rTransactionMetadata?
+    public let meta: TransactionMetadata?
     /**
      * If true, this data comes from a validated ledger version; if omitted or.
      * Set to false, this data is not final.
@@ -110,7 +109,7 @@ open class TxResponse: Codable {
      * If one of them might contain the transaction.
      */
     public let searchedAll: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case hash = "hash"
         case ledgerIndex = "ledger_index"
@@ -119,12 +118,12 @@ open class TxResponse: Codable {
         case date = "date"
         case searchedAll = "searchedAll"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         hash = try values.decode(String.self, forKey: .hash)
         ledgerIndex = try? values.decode(Int.self, forKey: .ledgerIndex)
-        meta = try? values.decode(rTransactionMetadata.self, forKey: .meta)
+        meta = try? values.decode(TransactionMetadata.self, forKey: .meta)
         validated = try? values.decode(Bool.self, forKey: .validated)
         date = try? values.decode(Int.self, forKey: .date)
         searchedAll = try? values.decode(Bool.self, forKey: .searchedAll)

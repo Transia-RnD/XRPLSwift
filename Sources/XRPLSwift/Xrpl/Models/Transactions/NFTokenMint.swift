@@ -9,28 +9,27 @@ import Foundation
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/NFTokenMint.ts
 
-
 // Transaction Flags for an NFTokenMint Transaction.
 public enum NFTokenMintFlags: Int {
-    
+
     case tfBurnable = 0x00000001
     /**
      If set, indicates that the minted token may be burned by the issuer even
      if the issuer does not currently hold the token. The current holder of
      the token may always burn it.
      */
-    
+
     case tfOnlyXrp = 0x00000002
     /**
      If set, indicates that the token may only be offered or sold for XRP.
      */
-    
+
     case tfTrustline = 0x00000004
     /**
      If set, indicates that the issuer wants a trustline to be automatically
      created.
      */
-    
+
     case tfTransferable = 0x00000008
     /**
      If set, indicates that this NFT can be transferred. This flag has no
@@ -39,7 +38,6 @@ public enum NFTokenMintFlags: Int {
      */
 }
 
-
 /**
  The NFTokenMint transaction creates an NFToken object and adds it to the
  relevant NFTokenPage object of the minter. If the transaction is
@@ -47,7 +45,7 @@ public enum NFTokenMintFlags: Int {
  specified by the transaction.
  */
 public class NFTokenMint: BaseTransaction {
-    
+
     public let nftokenTaxon: Int
     /**
      Indicates the taxon associated with this token. The taxon is generally a
@@ -57,7 +55,7 @@ public class NFTokenMint: BaseTransaction {
      field, set it to 0.
      :meta hide-value:
      */
-    
+
     public let issuer: String?
     /**
      Indicates the account that should be the issuer of this token. This value
@@ -66,7 +64,7 @@ public class NFTokenMint: BaseTransaction {
      present, the `MintAccount` field in the `AccountRoot` of the `Issuer`
      field must match the `Account`, otherwise the transaction will fail.
      */
-    
+
     public let transferFee: Int?
     /**
      Specifies the fee charged by the issuer for secondary sales of the Token,
@@ -75,7 +73,7 @@ public class NFTokenMint: BaseTransaction {
      increments of 0.001%. This field must NOT be present if the
      `tfTransferable` flag is not set.
      */
-    
+
     public let uri: String?
     /**
      URI that points to the data and/or metadata associated with the NFT.
@@ -85,39 +83,39 @@ public class NFTokenMint: BaseTransaction {
      This field must be hex-encoded. You can use `xrpl.utils.str_to_hex` to
      convert a UTF-8 string to hex.
      */
-    
+
     enum CodingKeys: String, CodingKey {
         case nftokenTaxon = "NFTokenTaxon"
         case issuer = "Issuer"
         case transferFee = "TransferFee"
         case uri = "URI"
     }
-    
+
     public init(
         nftokenTaxon: Int,
         issuer: String? = nil,
         transferFee: Int? = nil,
         uri: String? = nil
     ) {
-        
+
         self.nftokenTaxon = nftokenTaxon
         self.issuer = issuer
         self.transferFee = transferFee
         self.uri = uri
         super.init(account: "", transactionType: "NFTokenMint")
     }
-    
+
     public override init(json: [String: AnyObject]) throws {
         let decoder: JSONDecoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-        let r = try decoder.decode(NFTokenMint.self, from: data)
-        self.nftokenTaxon = r.nftokenTaxon
-        self.issuer = r.issuer
-        self.transferFee = r.transferFee
-        self.uri = r.uri
+        let decoded = try decoder.decode(NFTokenMint.self, from: data)
+        self.nftokenTaxon = decoded.nftokenTaxon
+        self.issuer = decoded.issuer
+        self.transferFee = decoded.transferFee
+        self.uri = decoded.uri
         try super.init(json: json)
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         nftokenTaxon = try values.decode(Int.self, forKey: .nftokenTaxon)
@@ -126,7 +124,7 @@ public class NFTokenMint: BaseTransaction {
         uri = try values.decodeIfPresent(String.self, forKey: .uri)
         try super.init(from: decoder)
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -143,17 +141,17 @@ public class NFTokenMint: BaseTransaction {
  * @param tx - An NFTokenMint Transaction.
  * @throws When the NFTokenMint is Malformed.
  */
-public func validateNFTokenMint(tx: [String: AnyObject]) throws -> Void {
+public func validateNFTokenMint(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
-    
+
     if tx["Account"] as? String == tx["Issuer"] as? String {
         throw ValidationError.decoding("NFTokenMint: Issuer must not be equal to Account")
     }
-    
+
     if tx["URI"] is String && !isHex(str: tx["URI"] as! String) {
         throw ValidationError.decoding("NFTokenMint: URI must be in hex format")
     }
-    
+
     if tx["NFTokenTaxon"] == nil {
         throw ValidationError.decoding("NFTokenMint: missing field NFTokenTaxon")
     }

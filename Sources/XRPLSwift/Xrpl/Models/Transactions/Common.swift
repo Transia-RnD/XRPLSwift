@@ -9,6 +9,7 @@
 
 import Foundation
 
+// swiftlint:disable:next identifier_name
 let MEMO_SIZE: Int = 3
 
 func isMemo(obj: [ String: AnyObject? ]) -> Bool {
@@ -35,6 +36,7 @@ func isMemo(obj: [ String: AnyObject? ]) -> Bool {
     )
 }
 
+// swiftlint:disable:next identifier_name
 let SIGNER_SIZE: Int = 3
 
 func isSigner(obj: [ String: AnyObject? ]) -> Bool {
@@ -54,6 +56,7 @@ func isSigner(obj: [ String: AnyObject? ]) -> Bool {
     )
 }
 
+// swiftlint:disable:next identifier_name
 let ISSUED_CURRENCY_SIZE: Int = 3
 
 func isRecord(value: Any) -> Bool {
@@ -102,7 +105,7 @@ public func isAmount(amount: Any) -> Bool {
 }
 
 //// eslint-disable-next-line @typescript-eslint/no-empty-interface -- no global flags right now, so this is fine
-//export interface GlobalFlags {}
+// export interface GlobalFlags {}
 
 /**
  * Every transaction has the same set of common fields.
@@ -177,7 +180,7 @@ public class BaseTransaction: Codable {
      * account it says it is from.
      */
     public var txnSignature: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "Account"
         case transactionType = "TransactionType"
@@ -193,7 +196,7 @@ public class BaseTransaction: Codable {
         case ticketSequence = "TicketSequence"
         case txnSignature = "TxnSignature"
     }
-    
+
     public init(
         // Required
         account: String,
@@ -227,29 +230,28 @@ public class BaseTransaction: Codable {
         self.ticketSequence = ticketSequence
         self.txnSignature = txnSignature
     }
-    
+
     public init(json: [String: AnyObject]) throws {
         let decoder: JSONDecoder = JSONDecoder()
         let data: Data = try! JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-        let r = try decoder.decode(BaseTransaction.self, from: data)
+        let decoded = try decoder.decode(BaseTransaction.self, from: data)
         // Required
-        self.account = r.account
-        self.transactionType = r.transactionType
+        self.account = decoded.account
+        self.transactionType = decoded.transactionType
         // Optional
-        self.fee = r.fee
-        self.sequence = r.sequence
-        self.accountTxnId = r.accountTxnId
-        self.flags = r.flags
-        self.lastLedgerSequence = r.lastLedgerSequence
-        self.memos = r.memos
-        self.signers = r.signers
-        self.sourceTag = r.sourceTag
-        self.signingPubKey = r.signingPubKey
-        self.ticketSequence = r.ticketSequence
-        self.txnSignature = r.txnSignature
+        self.fee = decoded.fee
+        self.sequence = decoded.sequence
+        self.accountTxnId = decoded.accountTxnId
+        self.flags = decoded.flags
+        self.lastLedgerSequence = decoded.lastLedgerSequence
+        self.memos = decoded.memos
+        self.signers = decoded.signers
+        self.sourceTag = decoded.sourceTag
+        self.signingPubKey = decoded.signingPubKey
+        self.ticketSequence = decoded.ticketSequence
+        self.txnSignature = decoded.txnSignature
     }
-    
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
@@ -266,7 +268,7 @@ public class BaseTransaction: Codable {
         ticketSequence = try? values.decode(Int.self, forKey: .ticketSequence)
         txnSignature = try? values.decode(String.self, forKey: .txnSignature)
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try values.encode(account, forKey: .account)
@@ -286,11 +288,11 @@ public class BaseTransaction: Codable {
 }
 
 extension BaseTransaction {
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
-        return jsonResult as! [String : AnyObject]
+        return jsonResult as! [String: AnyObject]
     }
 }
 
@@ -302,44 +304,44 @@ extension BaseTransaction {
  * @param common - An interface w/ common transaction fields.
  * @throws When the common param is malformed.
  */
-public func validateBaseTransaction(common: [String: AnyObject]) throws -> Void {
+public func validateBaseTransaction(common: [String: AnyObject]) throws {
     print("VALIDATE BASE TX")
     if common["Account"] == nil {
         throw ValidationError.decoding("BaseTransaction: missing field Account")
     }
-    
+
     if !(common["Account"] is String) {
         throw ValidationError.decoding("BaseTransaction: Account not string")
     }
-    
+
     if common["TransactionType"] == nil {
         throw ValidationError.decoding("BaseTransaction: missing field TransactionType")
     }
-    
+
     if !(common["TransactionType"] is String) {
         throw ValidationError.decoding("BaseTransaction: TransactionType not string")
     }
-    
-    if !rTransaction.all().contains(common["TransactionType"] as! String) {
+
+    if !Transaction.all().contains(common["TransactionType"] as! String) {
         throw ValidationError.decoding("BaseTransaction: Unknown TransactionType")
     }
-    
+
     if common["Fee"] != nil && !(common["Fee"] is String) {
         throw ValidationError.decoding("BaseTransaction: invalid Fee")
     }
-    
+
     if common["Sequence"] != nil && !(common["Sequence"] is Int) {
         throw ValidationError.decoding("BaseTransaction: invalid Sequence")
     }
-    
+
     if common["AccountTxnID"] != nil && !(common["AccountTxnID"] is String) {
         throw ValidationError.decoding("BaseTransaction: invalid AccountTxnID")
     }
-    
+
     if common["LastLedgerSequence"] != nil && !(common["LastLedgerSequence"] is Int) {
         throw ValidationError.decoding("BaseTransaction: invalid LastLedgerSequence")
     }
-    
+
 //    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS
     let memos = common["Memos"] as? [[String: AnyObject]]
     if memos != nil && !(memos?.allSatisfy({ result in
@@ -350,25 +352,25 @@ public func validateBaseTransaction(common: [String: AnyObject]) throws -> Void 
 
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS
     let signers = common["Signers"] as? [[String: AnyObject]]
-    
-    if signers != nil && (signers?.count == 0 || !(signers?.allSatisfy({ result in
+
+    if signers != nil && (signers!.isEmpty || !(signers?.allSatisfy({ result in
         isSigner(obj: result)
     }))!) {
         throw ValidationError.decoding("BaseTransaction: invalid Signers")
     }
-    
+
     if common["SourceTag"] != nil && !(common["SourceTag"] is Int) {
         throw ValidationError.decoding("BaseTransaction: invalid SourceTag")
     }
-    
+
     if common["SigningPubKey"] != nil && !(common["SigningPubKey"] is String) {
         throw ValidationError.decoding("BaseTransaction: invalid SigningPubKey")
     }
-    
+
     if common["TicketSequence"] != nil && !(common["TicketSequence"] is Int) {
         throw ValidationError.decoding("BaseTransaction: invalid TicketSequence")
     }
-    
+
     if common["TxnSignature"] != nil && !(common["TxnSignature"] is String) {
         throw ValidationError.decoding("BaseTransaction: invalid TxnSignature")
     }
@@ -381,7 +383,7 @@ public func validateBaseTransaction(common: [String: AnyObject]) throws -> Void 
  * @returns The parsed amount value, or NaN if the amount count not be parsed.
  */
 public func parseAmountValue(amount: Any) -> Double? {
-    if (!isAmount(amount: amount)) {
+    if !isAmount(amount: amount) {
         return nil
     }
     if let amount = amount as? String {

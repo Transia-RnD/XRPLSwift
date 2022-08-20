@@ -9,34 +9,34 @@
 
 import Foundation
 
-//let HEX: Int = 16
+// let HEX: Int = 16
 
-//interface HashLedgerHeaderOptions {
+// interface HashLedgerHeaderOptions {
 //  computeTreeHashes?: boolean
-//}
+// }
 
-//func intToHex(integer: Int, byteLength: Int) -> String {
+// func intToHex(integer: Int, byteLength: Int) -> String {
 //  let foo = Number(integer)
 //    .toString(HEX)
 //    .padStart(byteLength * 2, "0")
 //
 //  return foo
-//}
+// }
 //
-//func bytesToHex(bytes: [UInt8]) -> string {
+// func bytesToHex(bytes: [UInt8]) -> string {
 //  return Buffer.from(bytes).toString("hex")
-//}
+// }
 
-//func bigintToHex(
+// func bigintToHex(
 ////  integerString: string | number | BigNumber,
 //  integerString: String,
 //  byteLength: Int
-//) -> String {
+// ) -> String {
 //  let hex = BigNumber(integerString).toString(HEX)
 //  return hex.padStart(byteLength * 2, "0")
-//}
+// }
 //
-//func addLengthPrefix(hex: String) -> string {
+// func addLengthPrefix(hex: String) -> string {
 //  let length = hex.length / 2
 //  if length <= 192 {
 //    return bytesToHex([length]) + hex
@@ -56,7 +56,7 @@ import Foundation
 //    )
 //  }
 //    throw new XrplError.unknown("Variable integer overflow.")
-//}
+// }
 
 /**
  * Hashes the Transaction object as the ledger does. Throws if the transaction is unsigned.
@@ -66,27 +66,27 @@ import Foundation
  * @throws ValidationError if the Transaction is unsigned.\
  * @category Utilities
  */
-//public func hashSignedTx(tx: Transaction | string): string {
+// public func hashSignedTx(tx: Transaction | string): string {
 public func hashSignedTx(tx: String) throws -> String {
     let txBlob: String = tx
     let txObject: [String: AnyObject] = BinaryCodec.decode(buffer: tx)
-    
-    if (txObject["TxnSignature"] == nil && txObject["Signers"] == nil) {
+
+    if txObject["TxnSignature"] == nil && txObject["Signers"] == nil {
         throw XrplError.validation("The transaction must be signed to hash it.")
     }
-    
+
     let prefix: String = String(HashPrefix.TRANSACTION_ID.rawValue, radix: 16).uppercased()
     return sha512Half(hex: prefix + txBlob)
 }
 
-public func hashSignedTx(tx: rTransaction) throws -> String {
+public func hashSignedTx(tx: Transaction) throws -> String {
     let txBlob: String = try BinaryCodec.encode(json: tx.toJson())
     let txObject: [String: AnyObject] = try tx.toJson()
-    
-    if (txObject["TxnSignature"] == nil && txObject["Signers"] == nil) {
+
+    if txObject["TxnSignature"] == nil && txObject["Signers"] == nil {
         throw XrplError.validation("The transaction must be signed to hash it.")
     }
-    
+
     let prefix = HashPrefix.TRANSACTION_ID.rawValue
     return sha512Half(hex: String(prefix) + txBlob)
 }
@@ -98,7 +98,7 @@ public func hashSignedTx(tx: rTransaction) throws -> String {
  * @returns The hash of the ledger.
  * @category Utilities
  */
-//public func hashLedgerHeader(ledgerHeader: rLedger) -> String {
+// public func hashLedgerHeader(ledgerHeader: rLedger) -> String {
 //  let prefix = HashPrefix.LEDGER.toString(HEX).toUpperCase()
 //
 //  let ledger =
@@ -114,7 +114,7 @@ public func hashSignedTx(tx: rTransaction) throws -> String {
 //    intToHex(ledgerHeader.close_flags, 1)
 //
 //  return sha512Half(ledger)
-//}
+// }
 
 /**
  * Compute the root hash of the SHAMap containing all transactions.
@@ -123,9 +123,9 @@ public func hashSignedTx(tx: rTransaction) throws -> String {
  * @returns The root hash of the SHAMap.
  * @category Utilities
  */
-//public func hashTxTree(
+// public func hashTxTree(
 //  transactions: Array<Transaction & { metaData?: TransactionMetadata }>,
-//) -> String {
+// ) -> String {
 //  let shamap = SHAMap()
 //  for (const txJSON of transactions) {
 //    const txBlobHex = encode(txJSON)
@@ -136,7 +136,7 @@ public func hashSignedTx(tx: rTransaction) throws -> String {
 //  }
 //
 //  return shamap.hash
-//}
+// }
 
 /**
  * Compute the state hash of a list of LedgerEntries.
@@ -145,7 +145,7 @@ public func hashSignedTx(tx: rTransaction) throws -> String {
  * @returns Hash of SHAMap that consists of all entries.
  * @category Utilities
  */
-//public func hashStateTree(entries: [LedgerEntry]) -> String {
+// public func hashStateTree(entries: [LedgerEntry]) -> String {
 //  let shamap = SHAMap()
 //
 //  entries.forEach((ledgerEntry) => {
@@ -154,12 +154,12 @@ public func hashSignedTx(tx: rTransaction) throws -> String {
 //  })
 //
 //  return shamap.hash
-//}
+// }
 
-//func computeTransactionHash(
+// func computeTransactionHash(
 //  ledger: Ledger,
 //  options: HashLedgerHeaderOptions,
-//) throws -> String {
+// ) throws -> String {
 //  let { transaction_hash } = ledger
 //
 //  if (!options.computeTreeHashes) {
@@ -184,12 +184,12 @@ public func hashSignedTx(tx: rTransaction) throws -> String {
 //  }
 //
 //  return transactionHash
-//}
+// }
 
-//func computeStateHash(
+// func computeStateHash(
 //  ledger: Ledger,
 //  options: HashLedgerHeaderOptions
-//) -> String {
+// ) -> String {
 //  let { account_hash } = ledger
 //
 //  if !options.computeTreeHashes {
@@ -209,7 +209,7 @@ public func hashSignedTx(tx: rTransaction) throws -> String {
 //  }
 //
 //  return stateHash
-//}
+// }
 
 /**
  * Compute the hash of a ledger.
@@ -220,15 +220,15 @@ public func hashSignedTx(tx: rTransaction) throws -> String {
  * @returns The has of ledger.
  * @category Utilities
  */
-//public func hashLedger(
+// public func hashLedger(
 //  ledger: Ledger,
 //  options: {
 //    computeTreeHashes: Bool?
 //  } = {},
-//) -> String {
+// ) -> String {
 //  let subhashes = {
 //    transaction_hash: computeTransactionHash(ledger, options),
 //    account_hash: computeStateHash(ledger, options),
 //  }
 //  return hashLedgerHeader({ ...ledger, ...subhashes })
-//}
+// }

@@ -10,14 +10,19 @@ import Foundation
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/accountSet.ts
 
+// swiftlint:disable:next identifier_name
 let _MAX_TRANSFER_RATE: Int = 2000000000
+// swiftlint:disable:next identifier_name
 let _MIN_TRANSFER_RATE: Int = 1000000000
+// swiftlint:disable:next identifier_name
 let _SPECIAL_CASE_TRANFER_RATE: Int = 0
-
+// swiftlint:disable:next identifier_name
 let _MIN_TICK_SIZE: Int = 3
+// swiftlint:disable:next identifier_name
 let _MAX_TICK_SIZE: Int = 15
+// swiftlint:disable:next identifier_name
 let _DISABLE_TICK_SIZE: Int = 0
-
+// swiftlint:disable:next identifier_name
 let _MAX_DOMAIN_LENGTH: Int = 256
 
 public enum AccountSetAsfFlags: Int, Codable {
@@ -74,7 +79,7 @@ public enum AccountSetAsfFlags: Int, Codable {
     /*Require a destination tag to send transactions to this account.*/
     case asfAuthorizedMinter = 10
     /*Allow another account to mint and burn tokens on behalf of this account.*/
-    
+
     static func all() -> [Int] {
         return [
             AccountSetAsfFlags.asfAccountTxId.rawValue
@@ -135,7 +140,7 @@ public class AccountSet: BaseTransaction {
     account"s behalf using NFTokenMint"s `Issuer` field. If set, you must
     also set the AccountSetFlag.ASF_AUTHORIZED_NFTOKEN_MINTER flag.
     */
-    
+
     enum CodingKeys: String, CodingKey {
         case clearFlag = "ClearFlag"
         case setFlag = "SetFlag"
@@ -166,22 +171,22 @@ public class AccountSet: BaseTransaction {
         self.nfTokenMinter = nfTokenMinter
         super.init(account: "", transactionType: "AccountSet")
     }
-    
+
     public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-        let r = try decoder.decode(AccountSet.self, from: data)
-        self.clearFlag = r.clearFlag
-        self.setFlag = r.setFlag
-        self.domain = r.domain
-        self.emailHash = r.emailHash
-        self.messageKey = r.messageKey
-        self.transferRate = r.transferRate
-        self.tickSize = r.tickSize
-        self.nfTokenMinter = r.nfTokenMinter
+        let decoded = try decoder.decode(AccountSet.self, from: data)
+        self.clearFlag = decoded.clearFlag
+        self.setFlag = decoded.setFlag
+        self.domain = decoded.domain
+        self.emailHash = decoded.emailHash
+        self.messageKey = decoded.messageKey
+        self.transferRate = decoded.transferRate
+        self.tickSize = decoded.tickSize
+        self.nfTokenMinter = decoded.nfTokenMinter
         try super.init(json: json)
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         clearFlag = try values.decodeIfPresent(AccountSetAsfFlags.self, forKey: .clearFlag)
@@ -193,7 +198,7 @@ public class AccountSet: BaseTransaction {
         nfTokenMinter = try values.decodeIfPresent(String.self, forKey: .nfTokenMinter)
         try super.init(from: decoder)
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -213,40 +218,40 @@ public class AccountSet: BaseTransaction {
  * @param tx - An AccountDelete Transaction.
  * @throws When the AccountDelete is Malformed.
  */
-public func validateAccountSet(tx: [String: AnyObject]) throws -> Void {
+public func validateAccountSet(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
-    
+
     if tx["ClearFlag"] != nil {
         print("NOT NIL")
         guard let _ = tx["ClearFlag"] as? Int else {
             throw XrplError.validation("AccountSet: invalid ClearFlag")
         }
-        // TODO:
+        // TODO: review this
     }
-    
+
     if tx["SetFlag"] != nil {
         guard let _ = tx["SetFlag"] as? Int else {
             throw XrplError.validation("AccountSet: invalid SetFlag")
         }
-        // TODO:
+        // TODO: review this
     }
-    
+
     if tx["Domain"] != nil, !(tx["Domain"] is String) {
         throw XrplError.validation("AccountSet: invalid Domain")
     }
-    
+
     if tx["EmailHash"] != nil, !(tx["EmailHash"] is String) {
         throw XrplError.validation("AccountSet: invalid EmailHash")
     }
-    
+
     if tx["MessageKey"] != nil, !(tx["MessageKey"] is String) {
         throw XrplError.validation("AccountSet: invalid MessageKey")
     }
-    
+
     if tx["TransferRate"] != nil, !(tx["TransferRate"] is Int) {
         throw XrplError.validation("AccountSet: invalid TransferRate")
     }
-    
+
     if tx["TickSize"] != nil {
         guard let tickSize = tx["TickSize"] as? Int, tickSize != 0, tickSize < _MIN_TICK_SIZE || tickSize > _MAX_TICK_SIZE else {
             throw XrplError.validation("AccountSet: invalid TickSize")

@@ -191,7 +191,7 @@ let myTxPayment = Payment(
     fee="10",
 )
 // sign the transaction
-let myTxPaymentSigned: rTransaction = safeSignTransaction(tx: myTxPayment, wallet: testWallet)
+let myTxPaymentSigned: Transaction = safeSignTransaction(tx: myTxPayment, wallet: testWallet)
 
 // submit the transaction
 let txResponse = sendReliableSubmission(tx: myTxPaymentSigned, client: client)
@@ -224,7 +224,7 @@ let myTxPayment: Payment = Payment(
 
 // sign the transaction with the autofill method
 // (this will auto-populate the fee, sequence, and last_ledger_sequence)
-let myTxPaymentSigned: rTransaction = safeSignAndAutofillTransaction(tx: myTxPayment, wallet: testWallet, client: client)
+let myTxPaymentSigned: Transaction = safeSignAndAutofillTransaction(tx: myTxPayment, wallet: testWallet, client: client)
 print(myTxPaymentSigned)
 // Payment(
 //     account='rMPUKmzmDWEX1tQhzQ8oGFNfAEhnWNFwz',
@@ -297,7 +297,7 @@ func submitSampleTransaction() async {
         fee="10",
     )
     // sign the transaction
-    let myTxPaymentSigned: rTransaction = await safeSignTransaction(tx: myTxPayment, wallet: testWallet)
+    let myTxPaymentSigned: Transaction = await safeSignTransaction(tx: myTxPayment, wallet: testWallet)
 
     // submit the transaction
     let txResponse: BaseResponse<Payment> = await sendReliableSubmission(tx: myTxPaymentSigned, client: asyncClient)

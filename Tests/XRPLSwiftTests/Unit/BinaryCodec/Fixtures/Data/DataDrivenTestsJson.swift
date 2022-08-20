@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 let dataDrivenTestsJson = """
 {
   "types": [

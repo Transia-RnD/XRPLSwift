@@ -7,10 +7,10 @@
 //
 //// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/manifest.ts
 //
-//import Foundation
+// import Foundation
 //
 //
-///**
+/// **
 // * The `manifest` method reports the current "manifest" information for a given
 // * validator public key. The "manifest" is the public portion of that
 // * validator's configured token. Expects a response in the form of a {@link
@@ -26,21 +26,21 @@
 // *
 // * @category Requests
 // */
-//open class ManifestRequest: BaseRequest {
+// open class ManifestRequest: BaseRequest {
 //    let command: String = "manifest"
 //  /**
 //   * The base58-encoded public key of the validator to look up. This can be the
 //   * master public key or ephemeral public key.
 //   */
 //    let public_key: String
-//}
+// }
 //
-///**
+/// **
 // * Response expected from a {@link ManifestRequest}.
 // *
 // * @category Responses
 // */
-//open class ManifestResponse: BaseResponse {
+// open class ManifestResponse: BaseResponse {
 //  result: {
 //    /**
 //     * The data contained in this manifest. Omitted if the server does not have
@@ -61,4 +61,4 @@
 //    /** The public_key from the request. */
 //      let requested: String
 //  }
-//}
+// }

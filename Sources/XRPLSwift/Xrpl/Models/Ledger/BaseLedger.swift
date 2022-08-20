@@ -70,7 +70,7 @@ public class BaseLedger: Codable {
     public var transactions: [BaseTransaction]?
     /** All the state information in this ledger. */
     public var accountState: [LedgerEntry]?
-    
+
     enum CodingKeys: String, CodingKey {
         case accountHash = "account_hash"
         case accountState = "account_state"
@@ -87,7 +87,7 @@ public class BaseLedger: Codable {
         case transactionHash = "transaction_hash"
         case transactions = "transactions"
     }
-    
+
 //    required public init(from decoder: Decoder) throws {
 //        let values = try decoder.container(keyedBy: CodingKeys.self)
 //        accountHash = try values.decode(String.self, forKey: .accountHash)

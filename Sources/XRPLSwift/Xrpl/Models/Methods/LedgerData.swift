@@ -10,7 +10,6 @@
 import Foundation
 import AnyCodable
 
-
 /**
  * The `ledger_data` method retrieves contents of the specified ledger. You can
  * iterate through several calls to retrieve the entire contents of a single
@@ -37,7 +36,7 @@ public class LedgerDataRequest: BaseRequest {
      * The ledger index of the ledger to use, or a shortcut string to choose a
      * ledger automatically.
      */
-    let ledgerIndex: rLedgerIndex?
+    let ledgerIndex: LedgerIndex?
     /**
      * If set to true, return ledger objects as hashed hex strings instead of
      * JSON.
@@ -53,7 +52,7 @@ public class LedgerDataRequest: BaseRequest {
      * that response left off.
      */
     let marker: AnyCodable?
-    
+
     enum CodingKeys: String, CodingKey {
         case ledgerHash = "ledger_hash"
         case ledgerIndex = "ledger_index"
@@ -61,14 +60,14 @@ public class LedgerDataRequest: BaseRequest {
         case limit = "limit"
         case marker = "marker"
     }
-    
+
     public init(
         // Base
         id: Int? = nil,
         apiVersion: Int? = nil,
         // Optional
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil,
+        ledgerIndex: LedgerIndex? = nil,
         binary: Bool? = nil,
         limit: Int? = nil,
         marker: AnyCodable? = nil
@@ -81,11 +80,11 @@ public class LedgerDataRequest: BaseRequest {
         self.marker = marker
         super.init(id: id, command: "ledger_data", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -97,7 +96,7 @@ public class LedgerDataRequest: BaseRequest {
     }
 }
 
-//type LabeledLedgerEntry = { ledgerEntryType: String } & LedgerEntry
+// type LabeledLedgerEntry = { ledgerEntryType: String } & LedgerEntry
 
 public struct BinaryLedgerEntry {
     let data: String
@@ -107,7 +106,7 @@ public struct State: Codable {
     public let index: String
 }
 
-//type State = { index: String } & (BinaryLedgerEntry | LabeledLedgerEntry)
+// type State = { index: String } & (BinaryLedgerEntry | LabeledLedgerEntry)
 
 /**
  * The response expected from a {@link LedgerDataRequest}.
@@ -130,7 +129,7 @@ public class LedgerDataResponse: Codable {
      */
     public let marker: AnyCodable?
     public let validated: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case state = "state"
         case ledgerHash = "ledger_hash"
@@ -138,7 +137,7 @@ public class LedgerDataResponse: Codable {
         case marker = "marker"
         case validated = "validated"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         state = try values.decode([State].self, forKey: .state)

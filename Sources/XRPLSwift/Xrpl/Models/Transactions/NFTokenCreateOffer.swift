@@ -11,7 +11,7 @@ import Foundation
 
 // Transaction Flags for an NFTokenCreateOffer Transaction.
 public enum NFTokenCreateOfferFlags: Int {
-    
+
     /**
      If set, indicates that the offer is a sell offer.
      Otherwise, it is a buy offer.
@@ -19,22 +19,21 @@ public enum NFTokenCreateOfferFlags: Int {
     case tfSellNFToken = 1
 }
 
-
 /**
  The NFTokenCreateOffer transaction creates either an offer to buy an
  NFT the submitting account does not own, or an offer to sell an NFT
  the submitting account does own.
  */
 public class NFTokenCreateOffer: BaseTransaction {
-    
+
     public var nftokenId: String
     /*
      Identifies the TokenID of the NFToken object that the
      offer references. This field is required.
      :meta hide-value:
      */
-    
-    public var amount: rAmount
+
+    public var amount: Amount
     /*
      Indicates the amount expected or offered for the Token.
      The amount must be non-zero, except when this is a sell
@@ -44,7 +43,7 @@ public class NFTokenCreateOffer: BaseTransaction {
      is required.
      :meta hide-value:
      */
-    
+
     public var owner: String?
     /*
      Indicates the AccountID of the account that owns the
@@ -57,21 +56,21 @@ public class NFTokenCreateOffer: BaseTransaction {
      (since an offer to sell a token one doesn't already hold
      is meaningless).
      */
-    
+
     public var expiration: Int?
     /*
      Indicates the time after which the offer will no longer
      be valid. The value is the number of seconds since the
      Ripple Epoch.
      */
-    
+
     public var destination: String?
     /*
      If present, indicates that this offer may only be
      accepted by the specified account. Attempts by other
      accounts to accept this offer MUST fail.
      */
-    
+
     enum CodingKeys: String, CodingKey {
         case nftokenId = "NFTokenID"
         //        case flags = "Flags"
@@ -80,11 +79,11 @@ public class NFTokenCreateOffer: BaseTransaction {
         case expiration = "Expiration"
         case destination = "Destination"
     }
-    
+
     public init(
         // Required
         nftokenId: String,
-        amount: rAmount,
+        amount: Amount,
         // Optional
         //        flags: NFTokenCreateOfferFlag? = nil,
         owner: String? = nil,
@@ -99,29 +98,29 @@ public class NFTokenCreateOffer: BaseTransaction {
         self.destination = destination
         super.init(account: "", transactionType: "NFTokenCreateOffer")
     }
-    
+
     public override init(json: [String: AnyObject]) throws {
         let decoder: JSONDecoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-        let r = try decoder.decode(NFTokenCreateOffer.self, from: data)
-        self.nftokenId = r.nftokenId
-        self.amount = r.amount
-        self.owner = r.owner
-        self.expiration = r.expiration
-        self.destination = r.destination
+        let decoded = try decoder.decode(NFTokenCreateOffer.self, from: data)
+        self.nftokenId = decoded.nftokenId
+        self.amount = decoded.amount
+        self.owner = decoded.owner
+        self.expiration = decoded.expiration
+        self.destination = decoded.destination
         try super.init(json: json)
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         nftokenId = try values.decode(String.self, forKey: .nftokenId)
-        amount = try values.decode(rAmount.self, forKey: .amount)
+        amount = try values.decode(Amount.self, forKey: .amount)
         owner = try values.decodeIfPresent(String.self, forKey: .owner)
         expiration = try values.decodeIfPresent(Int.self, forKey: .expiration)
         destination = try values.decodeIfPresent(String.self, forKey: .destination)
         try super.init(from: decoder)
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -133,18 +132,18 @@ public class NFTokenCreateOffer: BaseTransaction {
     }
 }
 
-func validateNFTokenSellOfferCases(tx: [String: AnyObject]) throws -> Void {
+func validateNFTokenSellOfferCases(tx: [String: AnyObject]) throws {
     if tx["Owner"] != nil {
         throw ValidationError.decoding("NFTokenCreateOffer: Owner must not be present for sell offers")
     }
 }
 
-func validateNFTokenBuyOfferCases(tx: [String: AnyObject]) throws -> Void {
-    if (tx["Owner"] == nil) {
+func validateNFTokenBuyOfferCases(tx: [String: AnyObject]) throws {
+    if tx["Owner"] == nil {
         throw ValidationError.decoding("NFTokenCreateOffer: Owner must be present for buy offers")
     }
-    
-    if (parseAmountValue(amount: tx["Amount"] as Any)! <= 0) {
+
+    if parseAmountValue(amount: tx["Amount"] as Any)! <= 0 {
         throw ValidationError.decoding("NFTokenCreateOffer: Amount must be greater than 0 for buy offers")
     }
 }
@@ -155,25 +154,25 @@ func validateNFTokenBuyOfferCases(tx: [String: AnyObject]) throws -> Void {
  * @param tx - An NFTokenCreateOffer Transaction.
  * @throws When the NFTokenCreateOffer is Malformed.
  */
-public func validateNFTokenCreateOffer(tx: [String: AnyObject]) throws -> Void {
+public func validateNFTokenCreateOffer(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
-    
+
     if tx["Account"] as? String == tx["Owner"] as? String {
         throw ValidationError.decoding("NFTokenCreateOffer: Owner and Account must not be equal")
     }
-    
+
     if tx["Account"] === tx["Destination"] {
         throw ValidationError.decoding("NFTokenCreateOffer: Destination and Account must not be equal")
     }
-    
+
     if tx["NFTokenID"] == nil {
         throw ValidationError.decoding("NFTokenCreateOffer: missing field NFTokenID")
     }
-    
+
     if !isAmount(amount: tx["Amount"] as Any) {
         throw ValidationError.decoding("NFTokenCreateOffer: invalid Amount")
     }
-    
+
     if tx["Flags"] is Int && isFlagEnabled(
         flags: tx["Flags"] as! Int,
         checkFlag: NFTokenCreateOfferFlags.tfSellNFToken.rawValue

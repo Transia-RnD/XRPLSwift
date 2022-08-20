@@ -7,10 +7,10 @@
 //
 //// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/serverState.ts
 //
-//import Foundation
+// import Foundation
 //
 //
-///**
+/// **
 // * The `server_state` command asks the server for various machine-readable
 // * information about the rippled server's current state. The response is almost
 // * the same as the server_info method, but uses units that are easier to process
@@ -18,16 +18,16 @@
 // *
 // * @category Requests
 // */
-//open class ServerStateRequest: BaseRequest {
+// open class ServerStateRequest: BaseRequest {
 //    let command: String = "server_state"
-//}
+// }
 //
-///**
+/// **
 // * Response expected from a {@link ServerStateRequest}.
 // *
 // * @category Responses
 // */
-//open class ServerStateResponse: BaseResponse {
+// open class ServerStateResponse: BaseResponse {
 //  result: {
 //    state: {
 //      amendment_blocked?: Bool
@@ -77,4 +77,4 @@
 //      validator_list_expires?: String
 //    }
 //  }
-//}
+// }

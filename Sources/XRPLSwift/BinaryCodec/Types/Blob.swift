@@ -14,12 +14,12 @@ class Blob: SerializedType {
      Codec for serializing and deserializing blob fields.
      See `Blob Fields <https://xrpl.org/serialization.html#blob-fields>`_
      */
-    
+
     init(_ bytes: [UInt8]? = nil) {
         // Construct a new Blob type from a ``bytes`` value.
         super.init(bytes: bytes ?? [])
     }
-    
+
     /*
      Construct a new Blob type from a BinaryParser.
      Args:
@@ -33,7 +33,7 @@ class Blob: SerializedType {
     ) -> Blob {
         return Blob(try! parser.read(n: hint!))
     }
-    
+
     /*
      Construct a new Blob type from a number.
      Args:

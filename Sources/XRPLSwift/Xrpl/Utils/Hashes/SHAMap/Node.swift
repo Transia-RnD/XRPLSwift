@@ -9,18 +9,20 @@
 
 import Foundation
 
-
 public enum NodeType: Int {
     case INNER = 1
+    // swiftlint:disable:next identifier_name
     case TRANSACTION_NO_METADATA = 2
+    // swiftlint:disable:next identifier_name
     case TRANSACTION_METADATA = 3
+    // swiftlint:disable:next identifier_name
     case ACCOUNT_STATE = 4
 }
 
 /**
  * Abstract base class for SHAMapNode.
  */
-public protocol Node {
-    func addItem(_tag: String, _node: Node) throws -> Void
+public protocol HashesNode {
+    func addItem(tag: String, node: HashesNode) throws
     func hash() throws -> String
 }

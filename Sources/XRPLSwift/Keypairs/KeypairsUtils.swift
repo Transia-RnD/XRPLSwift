@@ -28,7 +28,7 @@ public extension StringProtocol {
             return UInt8(self[startIndex..<endIndex], radix: 16)
         }
     }
-    
+
     func toBytes() -> [UInt8] {
         //        if count % 2 != 0 { throw HexConvertError.wrongInputStringLength }
         let characterSet = "0123456789ABCDEFabcdef"
@@ -36,7 +36,7 @@ public extension StringProtocol {
         if wrongCharacter != nil { return [] }
         return asHexArrayFromNonValidatedSource()
     }
-    
+
     func asHexArray() throws -> [UInt8] {
         //        if count % 2 != 0 { throw HexConvertError.wrongInputStringLength }
         let characterSet = "0123456789ABCDEFabcdef"

@@ -7,17 +7,18 @@
 //
 
 import Foundation
+// swiftlint:disable all
 
 internal struct VarInt: ExpressibleByIntegerLiteral {
     internal typealias IntegerLiteralType = UInt64
     internal let underlyingValue: UInt64
     let length: UInt8
     let data: Data
-    
+
     internal init(integerLiteral value: UInt64) {
         self.init(value)
     }
-    
+
     /*
      0xfc : 252
      0xfd : 253
@@ -31,7 +32,7 @@ internal struct VarInt: ExpressibleByIntegerLiteral {
      */
     internal init(_ value: UInt64) {
         underlyingValue = value
-        
+
         switch value {
         case 0...252:
             length = 1
@@ -49,15 +50,15 @@ internal struct VarInt: ExpressibleByIntegerLiteral {
             data = Data() + UInt8(0xff).littleEndian.data + UInt64(value).littleEndian.data
         }
     }
-    
+
     internal init(_ value: Int) {
         self.init(UInt64(value))
     }
-    
+
     internal func serialized() -> Data {
         return data
     }
-    
+
     internal static func deserialize(_ data: Data) -> VarInt {
         return data.to(type: self)
     }

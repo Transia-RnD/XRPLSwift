@@ -30,12 +30,13 @@ public protocol XRPLWebSocket {
         get
         set
     }
-    
+
     // convenience methods
     func subscribe(account: String)
 }
 
-class _WebSocket: NSObject  {
+// swiftlint:disable:next type_name
+class _WebSocket: NSObject {
     var delegate: XRPLWebSocketDelegate?
     internal override init() {}
     fileprivate func handleResponse(connection: XRPLWebSocket, data: Data) {
@@ -55,95 +56,91 @@ class LinuxWebSocket: _WebSocket, XRPLWebSocket {
     func subscribe(account: String) {
         print()
     }
-    
-    
+
     var ws: WebSocket!
-    
+
     func send(text: String) {
         if ws != nil && !ws.isClosed {
             ws.send(text)
         }
     }
-    
+
     func send(data: Data) {
         if ws != nil && !ws.isClosed {
             ws.send([UInt8](data))
         }
     }
-    
+
     func connect(host: String) {
         let client = WebSocketClient(eventLoopGroupProvider: .shared(socketGroup))
-        try! client.connect(scheme: "wss", host: host, port: 443, onUpgrade: { (_ws) -> () in
-            self.ws = _ws
+        try! client.connect(scheme: "wss", host: host, port: 443, onUpgrade: { (ws) -> Void in
+            self.ws = ws
         }).wait()
         self.delegate?.onConnected(connection: self)
-        self.ws.onText { (ws, text) in
+        self.ws.onText { (_, text) in
             let data = text.data(using: .utf8)!
             self.handleResponse(connection: self, data: data)
         }
-        self.ws.onBinary { (ws, byteBuffer) in
+        self.ws.onBinary { (_, _) in
             fatalError()
         }
         _ = self.ws.onClose.map {
             self.delegate?.onDisconnected(connection: self, error: nil)
         }
-        
+
     }
-    
+
     func connect(host: String, path: String) {
         let client = WebSocketClient(eventLoopGroupProvider: .shared(socketGroup))
-        try! client.connect(scheme: "wss", host: host, port: 443, path: path, onUpgrade: { (_ws) -> () in
-            self.ws = _ws
-            self.ws.onText { ws, text in
+        try! client.connect(scheme: "wss", host: host, port: 443, path: path, onUpgrade: { (ws) -> Void in
+            self.ws = ws
+            self.ws.onText { _, text in
                 let data = text.data(using: .utf8)!
                 self.handleResponse(connection: self, data: data)
             }
         }).wait()
         self.delegate?.onConnected(connection: self)
-        self.ws.onText { (ws, text) in
+        self.ws.onText { (_, text) in
             let data = text.data(using: .utf8)!
             self.handleResponse(connection: self, data: data)
         }
-        self.ws.onBinary { (ws, byteBuffer) in
+        self.ws.onBinary { (_, _) in
             fatalError()
         }
         _ = self.ws.onClose.map {
             self.delegate?.onDisconnected(connection: self, error: nil)
         }
-        
+
     }
-    
+
     func disconnect() {
         _ = ws.close()
     }
-    
-    
-    
+
 }
 
 #elseif !os(Linux)
-
 
 import Foundation
 
 @available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
 class AppleWebSocket: _WebSocket, XRPLWebSocket, URLSessionWebSocketDelegate {
-    
+
     var webSocketTask: URLSessionWebSocketTask!
     var urlSession: URLSession!
     let delegateQueue = OperationQueue()
     var connected: Bool = false
-    
+
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
         self.connected = true
         self.delegate?.onConnected(connection: self)
     }
-    
+
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
         self.delegate?.onDisconnected(connection: self, error: nil)
         self.connected = false
     }
-    
+
     func connect(host: String, path: String) {
         let url = URL(string: "wss://" + host + "/" + path)!
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: delegateQueue)
@@ -152,12 +149,12 @@ class AppleWebSocket: _WebSocket, XRPLWebSocket, URLSessionWebSocketDelegate {
         self.connected = true
         listen()
     }
-    
+
     func disconnect() {
         webSocketTask.cancel(with: .goingAway, reason: nil)
     }
-    
-    func listen()  {
+
+    func listen() {
         webSocketTask.receive { result in
             switch result {
             case .failure(let error):
@@ -172,12 +169,12 @@ class AppleWebSocket: _WebSocket, XRPLWebSocket, URLSessionWebSocketDelegate {
                 @unknown default:
                     fatalError()
                 }
-                
+
                 self.listen()
             }
         }
     }
-    
+
     func send(request: String) {
         if self.connected {
             webSocketTask.send(URLSessionWebSocketTask.Message.string(text)) { error in
@@ -187,7 +184,7 @@ class AppleWebSocket: _WebSocket, XRPLWebSocket, URLSessionWebSocketDelegate {
             }
         }
     }
-    
+
     func send(text: String) {
         if self.connected {
             webSocketTask.send(URLSessionWebSocketTask.Message.string(text)) { error in
@@ -197,7 +194,7 @@ class AppleWebSocket: _WebSocket, XRPLWebSocket, URLSessionWebSocketDelegate {
             }
         }
     }
-    
+
     func send(data: Data) {
         if self.connected {
             webSocketTask.send(URLSessionWebSocketTask.Message.data(data)) { error in

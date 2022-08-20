@@ -6,11 +6,12 @@
 //
 
 import Foundation
+// swiftlint:disable all
 
 internal enum DerivationNode {
     case hardened(UInt32)
     case notHardened(UInt32)
-    
+
     internal var index: UInt32 {
         switch self {
         case .hardened(let index):
@@ -19,7 +20,7 @@ internal enum DerivationNode {
             return index
         }
     }
-    
+
     internal var hardens: Bool {
         switch self {
         case .hardened:

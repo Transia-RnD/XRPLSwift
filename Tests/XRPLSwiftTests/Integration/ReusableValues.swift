@@ -6,13 +6,13 @@ final class ReusableValues: XCTestCase {
     public static var wallet: SeedWallet = try! SeedWallet(seed: "sEdVLSxBzx6Xi9XTqYj6a88epDSETKR")
     public static var destWallet: SeedWallet = try! SeedWallet(seed: "sEdVWZmeUDgQdMEFKTK9kYVX71FKB7o")
     public static var destination: String = destWallet.address
-    
+
     // NFToken
     public static var nftokenURI: String = "ipfs://"
     public static var nftokenId: String = "0"
     public static var nftokenBuyOfferIndex: String = "0"
     public static var nftokenSellOfferIndex: String = "0"
-    
+
     // Channel
     public static var channelHex: String = "931E6B6C278DB7AC0A61CD92AEA5373E8DF59E5836E6D0D1ECAA53D38C3C4E1E"
     public static var channelPkey: String = "00b6bff339e05562b0ee3b59d57a9259ed4ab8dbec112668758ebc5c5362d424ec"
@@ -23,21 +23,19 @@ final class ReusableValues: XCTestCase {
     public static var channelSigBytes: [UInt8] = [190, 50, 164, 198, 141, 107, 164, 120, 114, 100, 238, 231, 96, 222, 255, 180, 240, 90, 218, 201, 153, 186, 243, 172, 99, 244, 233, 245, 66, 223, 7, 250, 231, 131, 253, 112, 112, 113, 135, 151, 116, 160, 34, 232, 122, 106, 136, 73, 182, 102, 182, 221, 170, 34, 54, 23, 133, 34, 77, 54, 183, 203, 196, 6]
     public static var drops: UInt64 = 1000000
     public static var amount = "1.0"
-    
+
     // NEW
     public static let testServer: String = "s.altnet.rippletest.net"
     public static let server: String = "s1.ripple.com"
     public static let address: String = "radtouEofR55c92fy8xszfQPccjoGi68C3"
-    
-}
 
+}
 
 struct MockAO {
     public var normal: String = "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn"
 }
 
-
 final class MockRippled1: XCTestCase {
     public static let account_objects: MockAO = MockAO()
-    
+
 }

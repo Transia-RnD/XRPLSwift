@@ -32,13 +32,13 @@ public class AccountNFTsRequest: BaseRequest {
      * that response left off.
      */
     public let marker: AnyCodable?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case limit = "limit"
         case marker = "marker"
     }
-    
+
     public init(
         // Required
         account: String,
@@ -56,11 +56,11 @@ public class AccountNFTsRequest: BaseRequest {
         self.marker = marker
         super.init(id: id, command: "account_nfts", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -82,7 +82,7 @@ public struct AccountNFToken: Codable {
     public let nfTokenTaxon: Int
     public let uri: String?
     public let nftSerial: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case flags = "flags"
         case issuer = "issuer"
@@ -122,7 +122,7 @@ public class AccountNFTsResponse: Codable {
      * No additional pages after this one.
      */
     public let marker: AnyCodable?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case accountNfts = "account_nfts"
@@ -131,7 +131,7 @@ public class AccountNFTsResponse: Codable {
         case limit = "limit"
         case marker = "marker"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)

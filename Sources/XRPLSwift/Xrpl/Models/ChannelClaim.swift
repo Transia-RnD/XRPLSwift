@@ -10,7 +10,7 @@ import Foundation
 public struct ChannelClaim: Codable {
     public var amount: Int64
     public var channel: String
-    
+
     public init(amount: Int64, channel: String) {
         self.amount = amount
         self.channel = channel
@@ -23,7 +23,7 @@ public struct ChannelSignature: Codable {
     public var sigHex: String
     public var sigBytes: [UInt8] = []
     public var pubKey: String
-    
+
     public init(
         pubKey: String,
         sigHex: String,

@@ -5,6 +5,8 @@
 //  Created by Mitch Lang on 5/11/19.
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 
 let serializerDefinitions = """

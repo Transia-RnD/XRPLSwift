@@ -9,7 +9,7 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestBinaryParser: XCTestCase {
-    
+
     func testPeekSkipReadMethods() {
         let testHex: String = "00112233445566"
         let testBytes: [UInt8] = try! testHex.asHexArray()
@@ -28,7 +28,7 @@ final class TestBinaryParser: XCTestCase {
             XCTFail("Could not peek/skip/read BinaryParser")
         }
     }
-    
+
     func testIntReadMethods() {
         let testHex: String = "01000200000003"
         let binaryParser = BinaryParser(hex: testHex)
@@ -39,7 +39,7 @@ final class TestBinaryParser: XCTestCase {
         XCTAssertEqual(int16, 2)
         XCTAssertEqual(int32, 3)
     }
-    
+
     func testReadVariableLengthLength() {
 //        [100, 1000, 10000].forEach { _case in
         [100].forEach { _case in

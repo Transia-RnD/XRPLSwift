@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The ledger_closed method returns the unique identifiers of the most recently
  * closed ledger. Expects a response in the form of a {@link
@@ -34,11 +33,11 @@ public class LedgerClosedRequest: BaseRequest {
     ) {
         super.init(id: id, command: "ledger_closed", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
     }
@@ -52,12 +51,12 @@ public class LedgerClosedRequest: BaseRequest {
 public class LedgerClosedResponse: Codable {
     public let ledgerHash: String
     public let ledgerIndex: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case ledgerHash = "ledger_hash"
         case ledgerIndex = "ledger_index"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ledgerHash = try values.decode(String.self, forKey: .ledgerHash)

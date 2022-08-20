@@ -10,7 +10,7 @@
 import Foundation
 
 public class FieldIdCodec {
-    
+
     /*
      Returns the unique field ID for a given field name.
      This field ID consists of the type code and field code, in 1 to 3 bytes
@@ -24,8 +24,7 @@ public class FieldIdCodec {
         let fieldHeader: FieldHeader = Definitions().getFieldHeaderFromName(fieldName: fieldName)
         return try self.encodeFieldId(fieldHeader: fieldHeader)
     }
-    
-    
+
     /*
      Returns the field name represented by the given field ID.
      Args:
@@ -37,7 +36,7 @@ public class FieldIdCodec {
         let fieldHeader: FieldHeader = try self.decodeFieldId(fieldId: fieldId)
         return Definitions().getFieldNameFromHeader(fieldHeader: fieldHeader)
     }
-    
+
     /*
      Returns the unique field ID for a given field header.
      This field ID consists of the type code and field code, in 1 to 3 bytes
@@ -46,11 +45,11 @@ public class FieldIdCodec {
     class func encodeFieldId(fieldHeader: FieldHeader) throws -> Data {
         let typeCode = fieldHeader.typeCode
         let fieldCode = fieldHeader.fieldCode
-        
+
         if !(0 < fieldCode || fieldCode <= 255) || !(0 < typeCode || typeCode <= 255) {
             throw BinaryError.unknownError(error: "Codes must be nonzero and fit in 1 byte.")
         }
-        
+
         if typeCode < 16 && fieldCode < 16 {
             // high 4 bits is the type_code
             // low 4 bits is the field code
@@ -81,7 +80,7 @@ public class FieldIdCodec {
             return [0x0] + byte2 + byte3
         }
     }
-    
+
     /*
      Returns a FieldHeader object representing the type code and field code of
      a decoded field ID.
@@ -107,11 +106,11 @@ public class FieldIdCodec {
         if byteArray.count == 3 {
             return FieldHeader(typeCode: Int(byteArray[1]), fieldCode: Int(byteArray[2]))
         }
-        
+
         throw BinaryError.unknownError(error: "Field ID must be between 1 and 3 bytes. This field ID contained \(byteArray.count) bytes.")
     }
-    
-    
+
+    // swiftlint:disable:next identifier_name
     class func uint8ToBytes(i: Int) -> Data {
         return Data(bytes: i.data.bytes, count: 1)
     }

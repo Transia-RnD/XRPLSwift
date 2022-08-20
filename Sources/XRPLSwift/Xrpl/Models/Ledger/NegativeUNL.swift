@@ -9,11 +9,10 @@
 
 import Foundation
 
-
 class DisabledValidator: Codable {
     let firstLedgerSequence: Int
     let publicKey: String
-    
+
     enum CodingKeys: String, CodingKey {
         case firstLedgerSequence = "FirstLedgerSequence"
         case publicKey = "PublicKey"
@@ -42,7 +41,7 @@ open class NegativeUNL: BaseLedgerEntry {
      * scheduled to be re-enabled in the next flag ledger.
      */
     let validatorToReEnable: String?
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         disabledValidators = try values.decode([DisabledValidator].self, forKey: .disabledValidators)
@@ -50,7 +49,7 @@ open class NegativeUNL: BaseLedgerEntry {
         validatorToReEnable = try values.decode(String.self, forKey: .validatorToReEnable)
         try super.init(from: decoder)
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case disabledValidators = "DisabledValidators"
         case validatorToDisable = "ValidatorToDisable"

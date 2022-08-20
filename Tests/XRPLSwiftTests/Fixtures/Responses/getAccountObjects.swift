@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 let accountObjectFixture = """
 {
   "account": "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",

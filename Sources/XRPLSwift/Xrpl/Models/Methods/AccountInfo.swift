@@ -26,7 +26,7 @@ public class AccountInfoRequest: BaseRequest {
      * The ledger index of the ledger to use, or a shortcut string to choose a
      * ledger automatically.
      */
-    public let ledgerIndex: rLedgerIndex?
+    public let ledgerIndex: LedgerIndex?
     /**
      * Whether to get info about this account's queued transactions. Can only be
      * used when querying for the data from the current open ledger. Not available
@@ -43,7 +43,7 @@ public class AccountInfoRequest: BaseRequest {
      * recommended). The default is false.
      */
     public let strict: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case ledgerHash = "ledger_hash"
@@ -52,7 +52,7 @@ public class AccountInfoRequest: BaseRequest {
         case signerLists = "signer_lists"
         case strict = "strict"
     }
-    
+
     public init(
         // Required
         account: String,
@@ -61,7 +61,7 @@ public class AccountInfoRequest: BaseRequest {
         apiVersion: Int? = nil,
         // Optional
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil,
+        ledgerIndex: LedgerIndex? = nil,
         queue: Bool? = nil,
         signerLists: Bool? = nil,
         strict: Bool? = nil
@@ -76,11 +76,11 @@ public class AccountInfoRequest: BaseRequest {
         self.strict = strict
         super.init(id: id, command: "account_info", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -98,39 +98,39 @@ public struct QueueTransaction: Codable {
      * Whether this transaction changes this address's ways of authorizing
      * transactions.
      */
-    public let auth_change: Bool
+    public let authChange: Bool
     /** The Transaction Cost of this transaction, in drops of XRP. */
     public let fee: String
     /**
      * The transaction cost of this transaction, relative to the minimum cost for
      * this type of transaction, in fee levels.
      */
-    public let fee_level: String
+    public let feeLevel: String
     /** The maximum amount of XRP, in drops, this transaction could send or destroy. */
-    public let max_spend_drops: String
+    public let maxSpendDrops: String
     /** The Sequence Number of this transaction. */
     public let seq: Int
 }
 
 public struct QueueData: Codable {
     /** Number of queued transactions from this address. */
-    public let txn_count: Int
+    public let txnCount: Int
     /**
      * Whether a transaction in the queue changes this address's ways of
      * authorizing transactions. If true, this address can queue no further
      * transactions until that transaction has been executed or dropped from the
      * queue.
      */
-    public let auth_change_queued: Bool?
+    public let authChangeQueued: Bool?
     /** The lowest Sequence Number among transactions queued by this address. */
-    public let lowest_sequence: Int?
+    public let lowestSequence: Int?
     /** The highest Sequence Number among transactions queued by this address. */
-    public let highest_sequence: Int?
+    public let highestSequence: Int?
     /**
      * Integer amount of drops of XRP that could be debited from this address if
      * every transaction in the queue consumes the maximum amount of XRP possible.
      */
-    public let max_spend_drops_total: String?
+    public let maxSpendDropsTotal: String?
     /** Information about each queued transaction from this address. */
     public let transactions: [QueueTransaction]?
 }
@@ -176,7 +176,7 @@ public class AccountInfoResponse: Codable {
      * to false, this data is not final.
      */
     public let validated: Bool?
-    
+
     private enum CodingKeys: String, CodingKey {
         case accountData = "account_data"
         case signerLists = "signer_lists"
@@ -185,7 +185,7 @@ public class AccountInfoResponse: Codable {
         case queueData = "queue_data"
         case validated = "validated"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         accountData = try values.decode(AccountRoot.self, forKey: .accountData)

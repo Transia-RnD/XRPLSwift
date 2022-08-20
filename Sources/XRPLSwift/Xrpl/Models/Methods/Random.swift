@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The random command provides a random number to be used as a source of
  * entropy for random number generation by clients. Expects a response in the
@@ -26,11 +25,11 @@ public class RandomRequest: BaseRequest {
     ) {
         super.init(id: id, command: "random", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
     }
@@ -43,15 +42,15 @@ public class RandomRequest: BaseRequest {
  */
 public class RandomResponse: Codable {
     public let random: String
-    
+
     enum CodingKeys: String, CodingKey {
         case random = "random"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         random = try values.decode(String.self, forKey: .random)
 //        try super.init(from: decoder)
     }
-    
+
 }

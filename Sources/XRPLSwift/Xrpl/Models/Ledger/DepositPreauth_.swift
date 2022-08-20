@@ -9,14 +9,13 @@
 
 import Foundation
 
-
 /**
  * A DepositPreauth object tracks a preauthorization from one account to
  * another. DepositPreauth transactions create these objects.
  *
  * @category Ledger Entries
  */
-open class DepositPreauth_: BaseLedgerEntry {
+open class LODepositPreauth: BaseLedgerEntry {
     public var ledgerEntryType: String = "DepositPreauth"
     /** The account that granted the preauthorization. */
     public let account: String
@@ -42,7 +41,7 @@ open class DepositPreauth_: BaseLedgerEntry {
      * modified this object.
      */
     public let previousTxnLgrSeq: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "Account"
         case authorize = "Authorize"
@@ -51,7 +50,7 @@ open class DepositPreauth_: BaseLedgerEntry {
         case previousTxnId = "PreviousTxnID"
         case previousTxnLgrSeq = "PreviousTxnLgrSeq"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)

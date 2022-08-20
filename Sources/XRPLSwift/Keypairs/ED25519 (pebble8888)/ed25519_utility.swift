@@ -29,6 +29,8 @@ import CommonCrypto
 import CryptoSwift
 #endif
 
+// swiftlint:disable all
+
 extension String {
     func unhexlify() -> [UInt8] {
         var pos = startIndex

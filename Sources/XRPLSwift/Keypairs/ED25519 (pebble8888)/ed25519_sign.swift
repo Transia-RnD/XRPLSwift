@@ -23,6 +23,7 @@
 //
 
 import Foundation
+// swiftlint:disable all
 
 /**
  * ed25519 fast calculation implementation

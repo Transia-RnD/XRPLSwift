@@ -6,6 +6,7 @@
 //
 
 import Foundation
+// swiftlint:disable all
 
 let HASH_CHANNEL_SIGN: [UInt8] = [0x43, 0x4C, 0x4D, 0x00]
 
@@ -29,7 +30,7 @@ public enum SeedType {
             return SECP256K1.self
         }
     }
-    
+
     static var types: [SeedType] { return [.ed25519, .secp256k1] }
 
 }
@@ -41,7 +42,7 @@ public protocol tmpWallet {
     var accountID: [UInt8] {get}
     init()
     static func deriveAddress(publicKey: String) -> String
-    static func accountID(for address: String) ->  [UInt8]
+    static func accountID(for address: String) -> [UInt8]
     static func validate(address: String) -> Bool
 }
 
@@ -63,14 +64,14 @@ extension tmpWallet {
         let address = String(base58Encoding: addrrssData)
         return address
     }
-    
-    public static func accountID(for address: String) ->  [UInt8] {
+
+    public static func accountID(for address: String) -> [UInt8] {
         let data = Data(base58Decoding: address)!
         let withoutCheck = data.prefix(data.count-4)
         let withoutPrefix = withoutCheck.suffix(from: 1)
         return withoutPrefix.bytes
     }
-    
+
     /// Validates a String is a valid XRP address.
     ///
     /// - Parameter address: address encoded using XRP alphabet
@@ -99,17 +100,17 @@ extension tmpWallet {
 }
 
 public class MnemonicWallet: tmpWallet {
-    
+
     public var privateKey: String
     public var publicKey: String
     public var address: String
     public var mnemonic: String
-    
+
     required public convenience init() {
         let mnemonic = try! Bip39Mnemonic.create()
         try! self.init(mnemonic: mnemonic)
     }
-    
+
     /// Generates an Wallet from an mnemonic string.
     ///
     /// - Parameter mnemonic: mnemonic phrase .
@@ -128,7 +129,7 @@ public class MnemonicWallet: tmpWallet {
         let change = account.derived(at: .notHardened(change))
         // m/44'/144'/0'/0/0
         let firstPrivateKey = change.derived(at: .notHardened(addressIndex))
-        
+
         var finalMasterPrivateKey = Data(repeating: 0x00, count: 33)
         finalMasterPrivateKey.replaceSubrange(1...firstPrivateKey.raw.count, with: firstPrivateKey.raw)
         let address = SeedWallet.deriveAddress(publicKey: firstPrivateKey.publicKey.hexadecimal)
@@ -139,14 +140,14 @@ public class MnemonicWallet: tmpWallet {
             address: address
         )
     }
-    
+
     private init(privateKey: String, publicKey: String, mnemonic: String, address: String) {
         self.privateKey = privateKey.uppercased()
         self.publicKey = publicKey.uppercased()
         self.mnemonic = mnemonic
         self.address = address
     }
-    
+
     public static func generateRandomMnemonicWallet() throws -> tmpWallet {
         let mnemonic = try Bip39Mnemonic.create()
         return try MnemonicWallet(mnemonic: mnemonic)
@@ -159,7 +160,7 @@ public class SeedWallet: tmpWallet {
     public var publicKey: String
     public var seed: String
     public var address: String
-    
+
     public required convenience init() {
         let entropy = Entropy()
         self.init(entropy: entropy, type: .secp256k1)
@@ -169,7 +170,7 @@ public class SeedWallet: tmpWallet {
         let entropy = Entropy()
         self.init(entropy: entropy, type: type)
     }
-    
+
     private init(privateKey: String, publicKey: String, seed: String, address: String) {
         self.privateKey = privateKey
         self.publicKey = publicKey
@@ -239,13 +240,12 @@ public class SeedWallet: tmpWallet {
         throw SeedError.invalidSeed
     }
 
-
     public static func getSeedTypeFrom(publicKey: String) -> SeedType {
         let data = [UInt8](publicKey.hexadecimal!)
         // FIXME: Is this correct?
         return data.count == 33 && data[0] == 0xED ? .ed25519 : .secp256k1
     }
-    
+
     /// Validates a String is a valid XRP family seed.
     ///
     /// - Parameter seed: seed encoded using XRP alphabet
@@ -271,7 +271,7 @@ public class SeedWallet: tmpWallet {
             return nil
         }
     }
-    
+
     public static func encode(bytes: [UInt8]) throws -> String? {
         do {
             let entropy = Entropy(bytes: bytes)
@@ -280,12 +280,12 @@ public class SeedWallet: tmpWallet {
             return nil
         }
     }
-    
+
     public func sign(message: [UInt8]) -> [UInt8] {
         do {
             let algorithm = SeedWallet.getSeedTypeFrom(publicKey: self.publicKey).algorithm
             let signature = try algorithm.sign(message: message, privateKey: [UInt8](Data(hex: self.privateKey)))
-    
+
             // verify signature
             let verified = try algorithm.verify(
                 signature: signature,
@@ -295,14 +295,14 @@ public class SeedWallet: tmpWallet {
             if !verified {
                 fatalError()
             }
-    
+
             return signature
         } catch {
             print(error.localizedDescription)
             return []
         }
     }
-    
+
     public static func verify(signature: [UInt8], message: [UInt8], publicKey: String) -> Bool {
         do {
             let algorithm = SeedWallet.getSeedTypeFrom(publicKey: publicKey).algorithm
@@ -316,23 +316,22 @@ public class SeedWallet: tmpWallet {
             return false
         }
     }
-    
+
     public func encodeClaim(dict: [String: Any]) throws -> [UInt8] {
-        
+
         guard let channel = dict["channel"] as? String else {
             fatalError()
         }
-        
+
         guard let amount = dict["amount"] as? Amount else {
             fatalError()
         }
-        
+
         // add the prefix to the channel and amount
 //        let data: [UInt8] = HASH_CHANNEL_SIGN + [UInt8](channel.hexadecimal!) + [UInt8](UInt64(amount.drops).bigEndian.data)
         return []
     }
-    
-    
+
     public static func getBytes(
         bytes: [UInt8],
         start: Int,
@@ -340,7 +339,7 @@ public class SeedWallet: tmpWallet {
     ) -> [UInt8] {
         return [UInt8](bytes[start...end])
     }
-    
+
     public func decodeClaim(data: [UInt8]) throws -> ChannelClaim {
         let channelHexBytes = SeedWallet.getBytes(bytes: data, start: 4, end: 35)
         let amountBytes = SeedWallet.getBytes(bytes: data, start: 36, end: data.count - 1)
@@ -348,7 +347,7 @@ public class SeedWallet: tmpWallet {
         let channelString = channelHexBytes.toHexString().uppercased()
         return ChannelClaim(amount: amountInt, channel: channelString)
     }
-    
+
     public static func verifyClaim(channelSig: ChannelSignature) -> Bool {
         return SeedWallet.verify(
             signature: channelSig.sigBytes,

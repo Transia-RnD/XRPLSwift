@@ -23,6 +23,7 @@
 //
 
 import Foundation
+// swiftlint:disable all
 
 struct shortsc {
     var v: [UInt32] // 16

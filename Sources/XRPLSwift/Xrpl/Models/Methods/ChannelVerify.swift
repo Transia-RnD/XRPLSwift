@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /**
  * The `channel_verify` method checks the validity of a signature that can be
  * used to redeem a specific amount of XRP from a payment channel. Expects a
@@ -31,14 +30,14 @@ public class ChannelVerifyRequest: BaseRequest {
     public let publicKey: String
     /** The signature to verify, in hexadecimal. */
     public let signature: String
-    
+
     enum CodingKeys: String, CodingKey {
         case amount = "amount"
         case channelId = "channel_id"
         case publicKey = "public_key"
         case signature = "signature"
     }
-    
+
     public init(
         // Required
         amount: String,
@@ -56,11 +55,11 @@ public class ChannelVerifyRequest: BaseRequest {
         self.signature = signature
         super.init(id: id, command: "channel_verify", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -82,11 +81,11 @@ public class ChannelVerifyResponse: Codable {
      * public key.
      */
     public let signatureVerified: Bool
-    
+
     enum CodingKeys: String, CodingKey {
         case signatureVerified = "signature_verified"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         signatureVerified = try values.decode(Bool.self, forKey: .signatureVerified)

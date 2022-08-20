@@ -10,20 +10,20 @@
 import Foundation
 
 internal let WIDTH64: Int = 8  // 64 / 8
-internal let HEX_REGEX64: String = "^[a-fA-F0-9]{1,16}$"
+internal let HEXREGEX64: String = "^[a-fA-F0-9]{1,16}$"
 
-
+// swiftlint:disable:next type_name
 class xUInt64: xUInt {
     /*
     Class for serializing and deserializing an 8-bit UInt.
     See `UInt Fields <https://xrpl.org/serialization.html#uint-fields>`_
      */
-    
-    static public var ZERO_64: xUInt64 = xUInt64([UInt8].init(repeating: 0x0, count: WIDTH64))
+
+    static public var ZERO64: xUInt64 = xUInt64([UInt8].init(repeating: 0x0, count: WIDTH64))
 
     override init(_ bytes: [UInt8]? = nil) {
         // Construct a new xUInt64 type from a ``bytes`` value.
-        super.init(bytes ?? xUInt64.ZERO_64.bytes)
+        super.init(bytes ?? xUInt64.ZERO64.bytes)
     }
 
     /*
@@ -56,9 +56,9 @@ class xUInt64: xUInt {
         let valueBytes = Data(bytes: value.data.bytes, count: WIDTH64)
         return xUInt64(valueBytes.bytes.reversed())
     }
-    
+
     class func from(value: String) throws -> xUInt64 {
-        let regex = try! NSRegularExpression(pattern: HEX_REGEX64)
+        let regex = try! NSRegularExpression(pattern: HEXREGEX64)
         let nsrange = NSRange(value.startIndex..<value.endIndex, in: value)
         if regex.matches(in: value, range: nsrange).isEmpty {
             throw BinaryError.unknownError(error: "\(value) is not a valid hex string")
@@ -66,5 +66,3 @@ class xUInt64: xUInt {
         return xUInt64(try value.padding(toLength: 16, withPad: "0", startingAt: 0).asHexArray())
     }
 }
-
-

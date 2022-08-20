@@ -23,7 +23,9 @@ struct ExponentialBackoffOptions {
     var max: Int?
 }
 
+// swiftlint:disable:next identifier_name
 let DEFAULT_MIN = 100
+// swiftlint:disable:next identifier_name
 let DEFAULT_MAX = 1000
 
 /**
@@ -35,7 +37,7 @@ class ExponentialBackoff {
     private var max: Int
     private var factor: Int = 2
     private var numAttempts: Int = 0
-    
+
     /**
      Constructs an ExponentialBackoff object.
      - parameters:
@@ -45,7 +47,7 @@ class ExponentialBackoff {
         self.ms = opts?.min ?? DEFAULT_MIN
         self.max = opts?.max ?? DEFAULT_MAX
     }
-    
+
     /**
      * Number of attempts for backoff so far.
      *
@@ -54,7 +56,7 @@ class ExponentialBackoff {
     public func attempts() -> Int {
         return self.numAttempts
     }
-    
+
     /**
      * Return the backoff duration.
      *
@@ -65,7 +67,7 @@ class ExponentialBackoff {
         self.numAttempts += 1
         return Int(round(Double(min(Int(ms), self.max))))
     }
-    
+
     /**
      * Reset the number of attempts.
      */

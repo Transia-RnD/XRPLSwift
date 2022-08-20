@@ -9,7 +9,7 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestUtils: XCTestCase {
-    
+
     public static let ADDRESSES: [String: String] = [
         "ACCOUNT": "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",
         "ACCOUNT_X": "X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqZ",
@@ -22,16 +22,16 @@ final class TestUtils: XCTestCase {
         "SECRET": "shsWGZcmZz6YsWWmcnpfr6fLTdtFV",
         "SOURCE_LOW_FUNDS": "rhVgDEfS1r1fLyRUZCpab4TdowZcAJwHy2"
     ]
-    
+
     public static let addressTests: [[String: String]] = [
         [
             "type": "Classic Address",
-            "address": "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",
+            "address": "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59"
         ],
         [
             "type": "X-Address",
-            "address": "X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqZ",
-        ],
+            "address": "X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqZ"
+        ]
     ]
 }
 
@@ -47,13 +47,13 @@ public func assertResultMatch<T: Codable>(
     response: T?,
     expected: [String: AnyObject],
     _schemaName: String? = nil
-) -> Void {
+) {
     print(response)
 //    print(expected)
 //    guard let type = T.Type else {
 //        XCTFail("TESTING: Invalid Type")
 //    }
-    
+
     let jsonData = try! JSONSerialization.data(
         withJSONObject: expected,
         options: .prettyPrinted

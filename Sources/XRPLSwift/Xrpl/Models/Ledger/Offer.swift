@@ -21,12 +21,12 @@ open class Offer: BaseLedgerEntry {
      */
     let sequence: Int
     /** The remaining amount and type of currency requested by the Offer creator. */
-    let takerPays: rAmount
+    let takerPays: Amount
     /**
      * The remaining amount and type of currency being provided by the Offer
      * creator.
      */
-    let takerGets: rAmount
+    let takerGets: Amount
     /** The ID of the Offer Directory that links to this Offer. */
     let bookDirectory: String
     /**
@@ -51,7 +51,7 @@ open class Offer: BaseLedgerEntry {
     let previousTxnLgrSeq: Int
     /** The time this Offer expires, in seconds since the Ripple Epoch. */
     let expiration: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case flags = "Flags"
         case account = "Account"
@@ -65,14 +65,14 @@ open class Offer: BaseLedgerEntry {
         case previousTxnLgrSeq = "PreviousTxnLgrSeq"
         case expiration = "Expiration"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         flags = try values.decode(Int.self, forKey: .flags)
         account = try values.decode(String.self, forKey: .account)
         sequence = try values.decode(Int.self, forKey: .sequence)
-        takerPays = try values.decode(rAmount.self, forKey: .takerPays)
-        takerGets = try values.decode(rAmount.self, forKey: .takerGets)
+        takerPays = try values.decode(Amount.self, forKey: .takerPays)
+        takerGets = try values.decode(Amount.self, forKey: .takerGets)
         bookDirectory = try values.decode(String.self, forKey: .bookDirectory)
         bookNode = try values.decode(String.self, forKey: .bookNode)
         ownerNode = try values.decode(String.self, forKey: .ownerNode)

@@ -5,32 +5,32 @@
 ////  Created by Denis Angell on 8/6/22.
 ////
 //
-//import Foundation
+// import Foundation
 //
-//public struct FaucetAccount {
+// public struct FaucetAccount {
 //    let xAddress: String
 //    let classicAddress: String?
 //    let secret: String
-//}
+// }
 //
-//public struct FaucetWallet {
+// public struct FaucetWallet {
 //  account: FaucetAccount
 //  amount: Int
 //  balance: Int
-//}
+// }
 //
-//enum FaucetNetwork: String {
+// enum FaucetNetwork: String {
 //  case Testnet = "faucet.altnet.rippletest.net",
 //  case Devnet = "faucet.devnet.rippletest.net",
 //  case NFTDevnet = "faucet-nft.ripple.com",
-//}
+// }
 //
 //// Interval to check an account balance
-//let INTERVAL_SECONDS = 1
+// let INTERVAL_SECONDS = 1
 //// Maximum attempts to retrieve a balance
-//let MAX_ATTEMPTS = 20
+// let MAX_ATTEMPTS = 20
 //
-///**
+/// **
 // * Generates a random wallet with some amount of XRP (usually 1000 XRP).
 // *
 // * @example
@@ -52,14 +52,14 @@
 // * and that wallet's balance in XRP.
 // * @throws When either Client isn't connected or unable to fund wallet address.
 // */
-//async func fundWallet(
+// async func fundWallet(
 //  this: Client,
 //  wallet: Wallet? = nil,
 //  faucetHost: String,
-//) -> Promise<{
+// ) -> Promise<{
 //  wallet: Wallet
 //  balance: number
-//}> {
+// }> {
 //  if (!this.isConnected()) {
 //    throw new RippledError('Client not connected, cannot call faucet')
 //  }
@@ -98,19 +98,19 @@
 //    walletToFund,
 //    postBody,
 //  )
-//}
+// }
 //
 //// eslint-disable-next-line max-params -- Helper function created for organizational purposes
-//async function returnPromise(
+// async function returnPromise(
 //  options: RequestOptions,
 //  client: Client,
 //  startingBalance: number,
 //  walletToFund: Wallet,
 //  postBody: Buffer,
-//): Promise<{
+// ): Promise<{
 //  wallet: Wallet
 //  balance: number
-//}> {
+// }> {
 //  return new Promise((resolve, reject) => {
 //    const request = httpsRequest(options, (response) => {
 //      const chunks: Uint8Array[] = []
@@ -137,13 +137,13 @@
 //
 //    request.end()
 //  })
-//}
+// }
 //
-//function getHTTPOptions(
+// function getHTTPOptions(
 //  client: Client,
 //  postBody: Uint8Array,
 //  hostname?: string,
-//): RequestOptions {
+// ): RequestOptions {
 //  return {
 //    hostname: hostname ?? getFaucetHost(client),
 //    port: 443,
@@ -154,10 +154,10 @@
 //      'Content-Length': postBody.length,
 //    },
 //  }
-//}
+// }
 //
 //// eslint-disable-next-line max-params -- Helper function created for organizational purposes
-//async function onEnd(
+// async function onEnd(
 //  response: IncomingMessage,
 //  chunks: Uint8Array[],
 //  client: Client,
@@ -165,7 +165,7 @@
 //  walletToFund: Wallet,
 //  resolve: (response: { wallet: Wallet; balance: number }) => void,
 //  reject: (err: ErrorConstructor | Error | unknown) => void,
-//): Promise<void> {
+// ): Promise<void> {
 //  const body = Buffer.concat(chunks).toString()
 //
 //  // "application/json; charset=utf-8"
@@ -189,17 +189,17 @@
 //      ),
 //    )
 //  }
-//}
+// }
 //
 //// eslint-disable-next-line max-params, max-lines-per-function -- Only used as a helper function, lines inc due to added balance.
-//async function processSuccessfulResponse(
+// async function processSuccessfulResponse(
 //  client: Client,
 //  body: string,
 //  startingBalance: number,
 //  walletToFund: Wallet,
 //  resolve: (response: { wallet: Wallet; balance: number }) => void,
 //  reject: (err: ErrorConstructor | Error | unknown) => void,
-//): Promise<void> {
+// ): Promise<void> {
 //  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- We know this is safe and correct
 //  const faucetWallet: FaucetWallet = JSON.parse(body)
 //  const classicAddress = faucetWallet.account.classicAddress
@@ -240,9 +240,9 @@
 //    }
 //    reject(err)
 //  }
-//}
+// }
 //
-///**
+/// **
 // * Check at regular interval if the address is enabled on the XRPL and funded.
 // *
 // * @param client - Client.
@@ -250,11 +250,11 @@
 // * @param originalBalance - The initial balance before the funding.
 // * @returns A Promise boolean.
 // */
-//async function getUpdatedBalance(
+// async function getUpdatedBalance(
 //  client: Client,
 //  address: string,
 //  originalBalance: number,
-//): Promise<number> {
+// ): Promise<number> {
 //  return new Promise((resolve, reject) => {
 //    let attempts = MAX_ATTEMPTS
 //    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Not actually misused here, different resolve
@@ -291,16 +291,16 @@
 //      }
 //    }, INTERVAL_SECONDS * 1000)
 //  })
-//}
+// }
 //
-///**
+/// **
 // * Get the faucet host based on the Client connection.
 // *
 // * @param client - Client.
 // * @returns A {@link FaucetNetwork}.
 // * @throws When the client url is not on altnet or devnet.
 // */
-//function getFaucetHost(client: Client): FaucetNetwork | undefined {
+// function getFaucetHost(client: Client): FaucetNetwork | undefined {
 //  const connectionUrl = client.url
 //
 //  // 'altnet' for Ripple Testnet server and 'testnet' for XRPL Labs Testnet server
@@ -317,13 +317,13 @@
 //  }
 //
 //  throw new XRPLFaucetError('Faucet URL is not defined or inferrable.')
-//}
+// }
 //
-//export default fundWallet
+// export default fundWallet
 //
-//const _private = {
+// const _private = {
 //  FaucetNetwork,
 //  getFaucetHost,
-//}
+// }
 //
-//export { _private }
+// export { _private }

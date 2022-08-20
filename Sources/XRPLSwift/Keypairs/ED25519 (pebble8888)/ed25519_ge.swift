@@ -23,6 +23,7 @@
 //
 
 import Foundation
+// swiftlint:disable all
 
 // group element
 //   point

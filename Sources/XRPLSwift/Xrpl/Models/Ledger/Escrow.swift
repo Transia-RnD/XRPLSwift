@@ -78,7 +78,7 @@ open class Escrow: BaseLedgerEntry {
      * this object, in case the directory consists of multiple pages.
      */
     public let destinationNode: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "Account"
         case destination = "Destination"
@@ -94,7 +94,7 @@ open class Escrow: BaseLedgerEntry {
         case destinationTag = "DestinationTag"
         case destinationNode = "DestinationNode"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)

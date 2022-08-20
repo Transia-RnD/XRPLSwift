@@ -23,7 +23,7 @@ public struct Channel: Codable {
     let cancelAfter: Int?
     let sourceTag: Int?
     let destinationTag: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case amount = "amount"
@@ -68,7 +68,7 @@ public class AccountChannelsRequest: BaseRequest {
      * The ledger index of the ledger to use, or a shortcut string to choose a
      * ledger automatically.
      */
-    public var ledgerIndex: rLedgerIndex?
+    public var ledgerIndex: LedgerIndex?
     /**
      * Limit the number of transactions to retrieve. Cannot be less than 10 or
      * more than 400. The default is 200.
@@ -79,7 +79,7 @@ public class AccountChannelsRequest: BaseRequest {
      * that response left off.
      */
     public var marker: AnyCodable?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case destinationAccount = "destination_account"
@@ -88,7 +88,7 @@ public class AccountChannelsRequest: BaseRequest {
         case limit = "limit"
         case marker = "marker"
     }
-    
+
     public init(
         // Required
         account: String,
@@ -98,7 +98,7 @@ public class AccountChannelsRequest: BaseRequest {
         // Result Response
         destinationAccount: String? = nil,
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil,
+        ledgerIndex: LedgerIndex? = nil,
         limit: Int? = nil,
         marker: AnyCodable? = nil
     ) {
@@ -110,11 +110,11 @@ public class AccountChannelsRequest: BaseRequest {
         self.marker = marker
         super.init(id: id, command: "account_channels", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -125,7 +125,7 @@ public class AccountChannelsRequest: BaseRequest {
         if let limit = limit { try values.encode(limit, forKey: .limit) }
         if let marker = marker { try values.encode(marker, forKey: .marker) }
     }
-    
+
 //    override func jsonData() throws -> Data {
 //        return try JSONEncoder().encode(self)
 //    }
@@ -133,13 +133,13 @@ public class AccountChannelsRequest: BaseRequest {
 //    override func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
 //        return String(data: try self.jsonData(), encoding: encoding)
 //    }
-    
+
 //    required public init(from decoder: Decoder) throws {
 //        let values = try decoder.container(keyedBy: CodingKeys.self)
 //        account = try values.decode(String.self, forKey: .account)
 //        destinationAccount = try values.decode(String.self, forKey: .destinationAccount)
 //        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
-//        ledgerIndex = try values.decode(rLedgerIndex.self, forKey: .ledgerIndex)
+//        ledgerIndex = try values.decode(LedgerIndex.self, forKey: .ledgerIndex)
 //        limit = try values.decode(Int.self, forKey: .limit)
 //        marker = try values.decode(AnyCodable.self, forKey: .marker)
 //        try super.init(from: decoder)
@@ -181,7 +181,7 @@ open class AccountChannelsResponse: Codable {
      * no additional pages after this one.
      */
     public var marker: AnyCodable?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case channels = "channels"
@@ -191,7 +191,7 @@ open class AccountChannelsResponse: Codable {
         case limit = "limit"
         case marker = "marker"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)

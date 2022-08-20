@@ -18,7 +18,7 @@ public enum XrplError: Error {
     case invalidFormat(_ desc: String)
     case responseError(_ desc: String)
     case decoding(_ desc: String)
-    
+
     public var localizedDescription: String {
         switch self {
         case .validation(let desc):
@@ -41,20 +41,19 @@ public enum XrplError: Error {
     }
 }
 
-
-///**
+/// **
 // * Error thrown when rippled responds with an error.
 // *
 // * @category Errors
 // */
-//class RippledError: rXrplError {}
+// class RippledError: rXrplError {}
 //
-///**
+/// **
 // * Error thrown when xrpl.js cannot specify error type.
 // *
 // * @category Errors
 // */
-//class UnexpectedError: rXrplError {}
+// class UnexpectedError: rXrplError {}
 
 /**
  * Error thrown when xrpl.js has an error with connection to rippled.
@@ -120,7 +119,7 @@ typealias XRPLFaucetError = XrplError
  *
  * @category Errors
  */
-//class NotFoundError: rXrplError {
+// class NotFoundError: rXrplError {
 //    /**
 //     * Construct an XrplError.
 //     *
@@ -129,4 +128,4 @@ typealias XRPLFaucetError = XrplError
 //    public init(message: String = "Not found") {
 //        self.message = message
 //    }
-//}
+// }

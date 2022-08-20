@@ -11,9 +11,9 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestOfferCancel: XCTestCase {
-    
+
     public static var baseTx: [String: AnyObject] = [:]
-    
+
     override func setUp() async throws {
         TestOfferCancel.baseTx = [
             "Account": "rnKiczmiQkZFiDES8THYyLA2pQohC5C6EF",
@@ -26,10 +26,10 @@ final class TestOfferCancel: XCTestCase {
                 "0369C9BC4D18FAE741898828A1F48E53E53F6F3DB3191441CC85A14D4FC140E031",
             "TransactionType": "OfferCancel",
             "TxnSignature":
-                "304402203EC848BD6AB42DC8509285245804B15E1652092CC0B189D369E12E563771D049022046DF40C16EA05DC99D01E553EA2E218FCA1C5B38927889A2BDF064D1F44D60F0",
+                "304402203EC848BD6AB42DC8509285245804B15E1652092CC0B189D369E12E563771D049022046DF40C16EA05DC99D01E553EA2E218FCA1C5B38927889A2BDF064D1F44D60F0"
         ] as! [String: AnyObject]
     }
-    
+
     func testValidOfferCancel() {
         let tx = try! OfferCancel(json: TestOfferCancel.baseTx)
         do {
@@ -38,7 +38,7 @@ final class TestOfferCancel: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testValidOfferCancelFlags() {
         TestOfferCancel.baseTx["Flags"] = 2147483648 as AnyObject
         let tx = try! OfferCancel(json: TestOfferCancel.baseTx)
@@ -48,15 +48,14 @@ final class TestOfferCancel: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidOfferSequenceType() {
         TestOfferCancel.baseTx["OfferSequence"] = "10" as AnyObject
         XCTAssertThrowsError(try OfferCancel(json: TestOfferCancel.baseTx))
     }
-    
+
     func testInvalidOfferSequenceNil() {
         TestOfferCancel.baseTx["OfferSequence"] = nil
         XCTAssertThrowsError(try OfferCancel(json: TestOfferCancel.baseTx))
     }
 }
-

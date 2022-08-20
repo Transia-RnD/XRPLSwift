@@ -11,17 +11,18 @@ import Foundation
 
 let WIDTH8: Int = 1  // 8 / 8
 
+// swiftlint:disable:next type_name
 class xUInt8: xUInt {
     /*
     Class for serializing and deserializing an 8-bit UInt.
     See `UInt Fields <https://xrpl.org/serialization.html#uint-fields>`_
      */
-    
-    static public var ZERO_8: xUInt8 = xUInt8([UInt8].init(repeating: 0x0, count: WIDTH8))
+
+    static public var ZERO8: xUInt8 = xUInt8([UInt8].init(repeating: 0x0, count: WIDTH8))
 
     override init(_ bytes: [UInt8]? = nil) {
         // Construct a new xUInt8 type from a ``bytes`` value.
-        super.init(bytes ?? xUInt8.ZERO_8.bytes)
+        super.init(bytes ?? xUInt8.ZERO8.bytes)
     }
 
     /*
@@ -37,7 +38,7 @@ class xUInt8: xUInt {
     ) -> xUInt8 {
         return try! xUInt8(parser.read(n: WIDTH8))
     }
-    
+
     /*
     Construct a new xUInt8 type from a number.
     Args:
@@ -52,5 +53,3 @@ class xUInt8: xUInt {
         return xUInt8(valueBytes.bytes.reversed())
     }
 }
-
-

@@ -92,7 +92,7 @@ public class AccountLinesRequest: BaseRequest {
      * The ledger index of the ledger to use, or a shortcut string to choose a
      * ledger automatically.
      */
-    public let ledgerIndex: rLedgerIndex?
+    public let ledgerIndex: LedgerIndex?
     /**
      * The Address of a second account. If provided, show only lines of trust
      * connecting the two accounts.
@@ -108,7 +108,7 @@ public class AccountLinesRequest: BaseRequest {
      * that response left off.
      */
     public let marker: AnyCodable?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case ledgerHash = "ledger_hash"
@@ -117,7 +117,7 @@ public class AccountLinesRequest: BaseRequest {
         case limit = "limit"
         case marker = "marker"
     }
-    
+
     public init(
         // Required
         account: String,
@@ -126,7 +126,7 @@ public class AccountLinesRequest: BaseRequest {
         apiVersion: Int? = nil,
         // Optional
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil,
+        ledgerIndex: LedgerIndex? = nil,
         peer: Int? = nil,
         limit: Int? = nil,
         marker: AnyCodable? = nil
@@ -141,11 +141,11 @@ public class AccountLinesRequest: BaseRequest {
         self.marker = marker
         super.init(id: id, command: "account_currencies", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -195,7 +195,7 @@ open class AccountLinesResponse: Codable {
      * No additional pages after this one.
      */
     public let marker: AnyCodable?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case lines = "lines"
@@ -204,7 +204,7 @@ open class AccountLinesResponse: Codable {
         case ledgerHash = "ledger_hash"
         case marker = "marker"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)

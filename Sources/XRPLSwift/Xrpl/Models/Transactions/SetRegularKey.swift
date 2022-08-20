@@ -15,37 +15,37 @@ public class SetRegularKey: BaseTransaction {
      transaction, which assigns, changes, or removes a secondary "regular" key pair
      associated with an account.
      */
-    
+
     public var regularKey: String?
     /*
      The classic address derived from the key pair to authorize for this
      account. If omitted, removes any existing regular key pair from the
      account. Must not match the account's master key pair.
      */
-    
+
     enum CodingKeys: String, CodingKey {
         case regularKey = "RegularKey"
     }
-    
+
     public init(regularKey: String? = nil) {
         self.regularKey = regularKey
         super.init(account: "", transactionType: "SetRegularKey")
     }
-    
+
     public override init(json: [String: AnyObject]) throws {
         let decoder: JSONDecoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-        let r = try decoder.decode(SetRegularKey.self, from: data)
-        self.regularKey = r.regularKey
+        let decoded = try decoder.decode(SetRegularKey.self, from: data)
+        self.regularKey = decoded.regularKey
         try super.init(json: json)
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         regularKey = try values.decodeIfPresent(String.self, forKey: .regularKey)
         try super.init(from: decoder)
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -59,9 +59,9 @@ public class SetRegularKey: BaseTransaction {
  * @param tx - A SetRegularKey Transaction.
  * @throws When the SetRegularKey is malformed.
  */
-public func validateSetRegularKey(tx: [String: AnyObject]) throws -> Void {
+public func validateSetRegularKey(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
-    
+
     if tx["RegularKey"] != nil && !(tx["RegularKey"] is String) {
         throw ValidationError.decoding("SetRegularKey: RegularKey must be a string")
     }

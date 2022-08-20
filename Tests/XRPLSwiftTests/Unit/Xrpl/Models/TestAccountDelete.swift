@@ -11,7 +11,7 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestAccountDelete: XCTestCase {
-    
+
     func testValidAccount() {
         let txJson: [String: AnyObject] = [
             "TransactionType": "AccountDelete",
@@ -20,7 +20,7 @@ final class TestAccountDelete: XCTestCase {
             "DestinationTag": 13,
             "Fee": "5000000",
             "Sequence": 2470665,
-            "Flags": 2147483648,
+            "Flags": 2147483648
         ] as! [String: AnyObject]
         print(txJson)
         let tx = try! AccountDelete(json: txJson)
@@ -31,8 +31,7 @@ final class TestAccountDelete: XCTestCase {
             print(error.localizedDescription)
         }
     }
-    
-    
+
     // TODO: Review By XRPLF
     // If Destination is NOT included, the error is thrown at Transaction () not at validation
     func testInvalidAccount() {
@@ -41,7 +40,7 @@ final class TestAccountDelete: XCTestCase {
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Fee": "5000000",
             "Sequence": 2470665,
-            "Flags": 2147483648,
+            "Flags": 2147483648
         ] as! [String: AnyObject]
         print(txJson)
         do {
@@ -50,7 +49,7 @@ final class TestAccountDelete: XCTestCase {
             XCTAssertEqual(error.localizedDescription, "The data couldn’t be read because it is missing.")
         }
     }
-    
+
     func testInvalidDestination() {
         let txJson: [String: AnyObject] = [
             "TransactionType": "AccountDelete",
@@ -58,13 +57,13 @@ final class TestAccountDelete: XCTestCase {
             "Destination": "65478965",
             "Fee": "5000000",
             "Sequence": 2470665,
-            "Flags": 2147483648,
+            "Flags": 2147483648
         ] as! [String: AnyObject]
         print(txJson)
         let tx = try! AccountDelete(json: txJson)
         XCTAssertThrowsError(try validateAccountDelete(tx: tx.toJson()))
     }
-    
+
     func testInvalidDestinationTag() {
         let txJson: [String: AnyObject] = [
             "TransactionType": "AccountDelete",
@@ -73,7 +72,7 @@ final class TestAccountDelete: XCTestCase {
             "DestinationTag": "gvftyujnbv",
             "Fee": "5000000",
             "Sequence": 2470665,
-            "Flags": 2147483648,
+            "Flags": 2147483648
         ] as! [String: AnyObject]
         print(txJson)
         let tx = try! AccountDelete(json: txJson)

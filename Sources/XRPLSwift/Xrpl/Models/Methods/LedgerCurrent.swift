@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The ledger_current method returns the unique identifiers of the current
  * in-progress ledger. Expects a response in the form of a {@link
@@ -33,11 +32,11 @@ public class LedgerCurrentRequest: BaseRequest {
     ) {
         super.init(id: id, command: "ledger_current", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
     }
@@ -50,11 +49,11 @@ public class LedgerCurrentRequest: BaseRequest {
  */
 public class LedgerCurrentResponse: Codable {
     public let ledgerCurrentIndex: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case ledgerCurrentIndex = "ledger_current_index"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)

@@ -15,7 +15,7 @@ let TX_JSON: [String: Any] = [
     "Destination": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
     "Flags": (1 << 31),  // tfFullyCanonicalSig
     "Sequence": 1,
-    "TransactionType": "Payment",
+    "TransactionType": "Payment"
 ]
 
 let jsonX1: [String: Any] = [
@@ -26,7 +26,7 @@ let jsonX1: [String: Any] = [
     "PreviousTxnID": "DF530FB14C5304852F20080B0A8EEF3A6BDD044F41F4EBBD68B8B321145FE4FF",
     "Flags": 0,
     "Sequence": 1,
-    "Balance": "10000000000",
+    "Balance": "10000000000"
 ]
 
 let jsonR1: [String: Any] = [
@@ -38,7 +38,7 @@ let jsonR1: [String: Any] = [
     "Flags": 0,
     "Sequence": 1,
     "Balance": "10000000000",
-    "SourceTag": 12345,
+    "SourceTag": 12345
 ]
 
 let jsonNullX: [String: Any] = [
@@ -51,7 +51,7 @@ let jsonNullX: [String: Any] = [
     "PreviousTxnID": "DF530FB14C5304852F20080B0A8EEF3A6BDD044F41F4EBBD68B8B321145FE4FF",
     "Flags": 0,
     "Sequence": 1,
-    "Balance": "10000000000",
+    "Balance": "10000000000"
 ]
 
 let jsonInvalidX: [String: Any] = [
@@ -64,7 +64,7 @@ let jsonInvalidX: [String: Any] = [
     "PreviousTxnID": "DF530FB14C5304852F20080B0A8EEF3A6BDD044F41F4EBBD68B8B321145FE4FF",
     "Flags": 0,
     "Sequence": 1,
-    "Balance": "10000000000",
+    "Balance": "10000000000"
 ]
 
 let jsonNullR: [String: Any] = [
@@ -77,7 +77,7 @@ let jsonNullR: [String: Any] = [
     "PreviousTxnID": "DF530FB14C5304852F20080B0A8EEF3A6BDD044F41F4EBBD68B8B321145FE4FF",
     "Flags": 0,
     "Sequence": 1,
-    "Balance": "10000000000",
+    "Balance": "10000000000"
 ]
 
 let invalidJsonIssuerTagged: [String: Any] = [
@@ -90,7 +90,7 @@ let invalidJsonIssuerTagged: [String: Any] = [
     "PreviousTxnID": "DF530FB14C5304852F20080B0A8EEF3A6BDD044F41F4EBBD68B8B321145FE4FF",
     "Flags": 0,
     "Sequence": 1,
-    "Balance": "10000000000",
+    "Balance": "10000000000"
 ]
 
 var validJsonXAndTags: [String: Any] = [
@@ -101,7 +101,7 @@ var validJsonXAndTags: [String: Any] = [
     "DestinationTag": 13,
     "Flags": 0,
     "Sequence": 1,
-    "Amount": "1000000",
+    "Amount": "1000000"
 ]
 
 let signingJson: [String: Any] = [
@@ -120,61 +120,61 @@ let signingJson: [String: Any] = [
     ),
     "SigningPubKey": (
         "ED5F5AC8B98974A3CA843326D9B88CEBD0560177B973EE0B149F782CFAA06DC66A"
-    ),
+    )
 ]
 
 final class TestBinaryCodec: XCTestCase {
-    
+
     func testXaddressEncode() {
         XCTAssertEqual(try BinaryCodec.encode(json: jsonX1), try BinaryCodec.encode(json: jsonR1))
     }
-    
+
     // TODO: Compare Any
     //    func testXaddressDecode() {
     //        XCTAssertEqual(BinaryCodec.decode(buffer: BinaryCodec.encode(json: jsonX1)), jsonR1)
     //    }
-    
+
     func testXaddressNullTag() {
         XCTAssertEqual(try BinaryCodec.encode(json: jsonNullX), try BinaryCodec.encode(json: jsonNullR))
     }
-    
+
     func testXaddressInvalid() {
         XCTAssertThrowsError(try BinaryCodec.encode(json: jsonInvalidX))
     }
-    
+
     func testXaddressInvalidField() {
         XCTAssertThrowsError(try BinaryCodec.encode(json: invalidJsonIssuerTagged))
     }
-    
+
     func testXaddressXaddrAndMismatchedSourceTag() {
         var invalidJsonXAndSourceTag: [String: Any] = validJsonXAndTags
-        invalidJsonXAndSourceTag.merge(["SourceTag": 999])  { (_, new) in new }
+        invalidJsonXAndSourceTag.merge(["SourceTag": 999]) { (_, new) in new }
         print(invalidJsonXAndSourceTag)
         XCTAssertThrowsError(try BinaryCodec.encode(json: invalidJsonXAndSourceTag))
     }
-    
+
     func testXaddressXaddrAndMismatchedDestTag() {
         var invalidJsonXAndDestTag: [String: Any] = validJsonXAndTags
-        invalidJsonXAndDestTag.merge(["DestinationTag": 999])  { (_, new) in new }
+        invalidJsonXAndDestTag.merge(["DestinationTag": 999]) { (_, new) in new }
         XCTAssertThrowsError(try BinaryCodec.encode(json: invalidJsonXAndDestTag))
     }
-    
+
     func testxaddressXaddrAndMatchingSourceTag() {
         var validJsonNoXTags: [String: Any] = validJsonXAndTags
         validJsonNoXTags.merge([
             "Account": "rLs1MzkFWCxTbuAHgjeTZK4fcCDDnf2KRv",
-            "Destination": "rso13LJmsQvPzzV3q1keJjn6dLRFJm95F2",
-        ])  { (_, new) in new }
+            "Destination": "rso13LJmsQvPzzV3q1keJjn6dLRFJm95F2"
+        ]) { (_, new) in new }
         XCTAssertEqual(try BinaryCodec.encode(json: validJsonXAndTags), try BinaryCodec.encode(json: validJsonNoXTags))
     }
 }
 
 final class TestMainFixtures: XCTestCase {
     let maxDiff: Int = 1000
-    
+
     var CODEC_FIXTURES_JSON: [String: AnyObject] = [:]
     var XCODEC_FIXTURES_JSON: [String: AnyObject] = [:]
-    
+
     override func setUp() async throws {
         do {
             let data: Data = codecFixturesJson.data(using: .utf8)!
@@ -194,7 +194,7 @@ final class TestMainFixtures: XCTestCase {
             XCTAssertEqual(error.localizedDescription, nil)
         }
     }
- 
+
     func checkBinaryAndJson(test: [String: AnyObject]) {
         let testBinary: String = test["binary"] as! String
         let testJson: [String: AnyObject] = test["json"] as! [String: AnyObject]
@@ -207,23 +207,23 @@ final class TestMainFixtures: XCTestCase {
         XCTAssertEqual(try BinaryCodec.encode(json: testJson), testBinary)
 //        XCTAssertEqual(try BinaryCodec.decode(buffer: testBinary), testJson)
     }
-    
+
     func checkXaddressJsons(test: [String: AnyObject]) {
         return
         let xJson: [String: AnyObject] = test["xjson"] as! [String: AnyObject]
         let rJson: [String: AnyObject] = test["rjson"] as! [String: AnyObject]
-        
+
         XCTAssertEqual(try BinaryCodec.encode(json: xJson), try BinaryCodec.encode(json: rJson))
 //        XCTAssertEqual(try BinaryCodec.decode(buffer: try BinaryCodec.encode(json: xJson)), rJson)
     }
-    
+
     func runFixturesTest(filename: String, category: String, testMethod: Any) {
         print("runFixturesTest")
         var fixturesJson: [String: AnyObject] = [:]
         switch filename {
         case "codec-fixtures.json":
             fixturesJson = self.CODEC_FIXTURES_JSON
-            let tests = fixturesJson[category] as! [[String : AnyObject]]
+            let tests = fixturesJson[category] as! [[String: AnyObject]]
             for test in tests {
                 switch category {
                 case "accountState":
@@ -236,7 +236,7 @@ final class TestMainFixtures: XCTestCase {
             }
         case "x-codec-fixtures.json":
             fixturesJson = self.XCODEC_FIXTURES_JSON
-            let tests = fixturesJson[category] as! [[String : AnyObject]]
+            let tests = fixturesJson[category] as! [[String: AnyObject]]
             for test in tests {
                 switch category {
                 case "transactions":
@@ -250,7 +250,7 @@ final class TestMainFixtures: XCTestCase {
             return
         }
     }
-    
+
     func testCodecFixturesAccountState() {
         self.runFixturesTest(
             filename: "codec-fixtures.json",
@@ -258,7 +258,7 @@ final class TestMainFixtures: XCTestCase {
             testMethod: self.checkBinaryAndJson
         )
     }
-    
+
     func testCodecFixturesTransaction() {
         self.runFixturesTest(
             filename: "codec-fixtures.json",
@@ -266,7 +266,7 @@ final class TestMainFixtures: XCTestCase {
             testMethod: self.checkBinaryAndJson
         )
     }
-    
+
     func testXCodecFixtures() {
         self.runFixturesTest(
             filename: "x-codec-fixtures.json",
@@ -274,7 +274,7 @@ final class TestMainFixtures: XCTestCase {
             testMethod: self.checkXaddressJsons
         )
     }
-    
+
     func testWholeObjectFixtures() {
         let wholeObjectTests = DataDrivenFixtures().getWholeObjectTests()
         for wholeObject in wholeObjectTests {
@@ -303,7 +303,7 @@ final class TestMainSigning: XCTestCase {
     func testMultisig() {
         let signingAccount: String = "rJZdUusLDtY9NEsGea7ijqhVrXv98rYBYN"
         var multisigJson: [String: Any] = signingJson
-        multisigJson.merge(["SigningPubKey": ""])  { (_, new) in new }
+        multisigJson.merge(["SigningPubKey": ""]) { (_, new) in new }
         let expected: String = "534D5400120000228000000024000000016140000000000003E868400000000000000A730081145B812C9D57731E27A2DA8B1830195F88EF32A3B68314B5F76279853D543A014CAF8B297CFF8F2F937E8C0A5ABEF242802EFED4B041E8F2D4A8CC86AE3D1"
         XCTAssertEqual(
             try BinaryCodec.encodeForMultisigning(json: multisigJson, signingAccount: signingAccount),
@@ -311,4 +311,3 @@ final class TestMainSigning: XCTestCase {
         )
     }
 }
-

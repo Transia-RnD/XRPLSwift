@@ -14,15 +14,15 @@ import AnyCodable
  * Account Objects can be a Check, a DepositPreauth, an Escrow, an Offer, a
  * PayChannel, a SignerList, a Ticket, or a RippleState.
  */
-//type AccountObject =
-//| Check
-//| DepositPreauth
-//| Escrow
-//| Offer
-//| PayChannel
-//| SignerList
-//| Ticket
-//| RippleState
+// type AccountObject =
+// | Check
+// | DepositPreauth
+// | Escrow
+// | Offer
+// | PayChannel
+// | SignerList
+// | Ticket
+// | RippleState
 
 public enum AccountObject: Codable {
     case check(Check)
@@ -99,7 +99,6 @@ extension AccountObject {
     }
 }
 
-
 /**
  * The account_objects command returns the raw ledger format for all objects
  * owned by an account. For a higher-level view of an account's trust lines and
@@ -129,7 +128,7 @@ public class AccountObjectsRequest: BaseRequest {
      * The ledger index of the ledger to use, or a shortcut string to choose a
      * Ledger automatically.
      */
-    public let ledgerIndex: rLedgerIndex?
+    public let ledgerIndex: LedgerIndex?
     /**
      * The maximum number of objects to include in the results. Must be within
      * the inclusive range 10 to 400 on non-admin connections. The default is 200.
@@ -140,7 +139,7 @@ public class AccountObjectsRequest: BaseRequest {
      * that response left off.
      */
     public let marker: AnyCodable?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case type = "type"
@@ -150,7 +149,7 @@ public class AccountObjectsRequest: BaseRequest {
         case limit = "limit"
         case marker = "marker"
     }
-    
+
     public init(
         // Required
         account: String,
@@ -161,7 +160,7 @@ public class AccountObjectsRequest: BaseRequest {
         type: AccountObjectType? = nil,
         deletionBlockersOnly: Bool? = nil,
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil,
+        ledgerIndex: LedgerIndex? = nil,
         limit: Int? = nil,
         marker: AnyCodable? = nil
     ) {
@@ -176,11 +175,11 @@ public class AccountObjectsRequest: BaseRequest {
         self.marker = marker
         super.init(id: id, command: "account_objects", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -236,7 +235,7 @@ public class AccountObjectsResponse: Codable {
      * change.
      */
     public let validated: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case accountObjects = "account_objects"
@@ -247,7 +246,7 @@ public class AccountObjectsResponse: Codable {
         case marker = "marker"
         case validated = "validated"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)

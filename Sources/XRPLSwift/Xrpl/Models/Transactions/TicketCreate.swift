@@ -9,7 +9,6 @@ import Foundation
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/ticketCreate.ts
 
-
 /**
  * A TicketCreate transaction sets aside one or more sequence numbers as
  * Tickets.
@@ -26,30 +25,30 @@ public class TicketCreate: BaseTransaction {
      This field is required.
      :meta hide-value:
      */
-    
+
     enum CodingKeys: String, CodingKey {
         case ticketCount = "TicketCount"
     }
-    
+
     public init(ticketCount: Int) {
         self.ticketCount = ticketCount
         super.init(account: "", transactionType: "TrustSet")
     }
-    
+
     public override init(json: [String: AnyObject]) throws {
         let decoder: JSONDecoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-        let r = try decoder.decode(TicketCreate.self, from: data)
-        self.ticketCount = r.ticketCount
+        let decoded = try decoder.decode(TicketCreate.self, from: data)
+        self.ticketCount = decoded.ticketCount
         try super.init(json: json)
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ticketCount = try values.decode(Int.self, forKey: .ticketCount)
         try super.init(from: decoder)
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -57,7 +56,7 @@ public class TicketCreate: BaseTransaction {
     }
 }
 
-
+// swiftlint:disable:next identifier_name
 let MAX_TICKETS: Int = 250
 
 /**
@@ -66,23 +65,22 @@ let MAX_TICKETS: Int = 250
  * @param tx - A TicketCreate Transaction.
  * @throws When the TicketCreate is malformed.
  */
-public func validateTicketCreate(tx: [String: AnyObject]) throws -> Void {
+public func validateTicketCreate(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
-    
+
     let ticketCount: Int? = tx["TicketCount"] as? Int
     if tx["TicketCount"] == nil {
         throw ValidationError.decoding("TicketCreate: missing field TicketCount")
     }
-    
+
     if !(tx["TicketCount"] is Int) {
         throw ValidationError.decoding("TicketCreate: TicketCount must be a number")
     }
-    
-    if (
+
+    if
         ticketCount == nil ||
         ticketCount! < 1 ||
-        ticketCount! > MAX_TICKETS
-    ) {
+        ticketCount! > MAX_TICKETS {
         throw ValidationError.decoding("TicketCreate: TicketCount must be an integer from 1 to 250")
     }
 }

@@ -28,21 +28,21 @@ public class PortResponse: BaseResponse<Any> {}
 class MockRippledSocket {
     var listener: NWListener
     var connectedClients: [NWConnection] = []
-    
+
     var timer: Timer?
     var responses: [String: AnyObject] = [:]
-    
+
     init(port: Int) {
-        
+
         let parameters = NWParameters(tls: nil)
         parameters.allowLocalEndpointReuse = true
         parameters.includePeerToPeer = true
-        
+
         let wsOptions = NWProtocolWebSocket.Options()
         wsOptions.autoReplyPing = true
-        
+
         parameters.defaultProtocolStack.applicationProtocols.insert(wsOptions, at: 0)
-        
+
         do {
             if let port = NWEndpoint.Port(rawValue: UInt16(port)) {
                 listener = try NWListener(using: parameters, on: port)
@@ -53,26 +53,26 @@ class MockRippledSocket {
             fatalError(error.localizedDescription)
         }
     }
-    
+
     func start() {
         let serverQueue = DispatchQueue(label: "ServerQueue")
         listener.newConnectionHandler = { newConnection in
             print("New connection connecting")
             func receive() {
-                newConnection.receiveMessage { (data, context, isComplete, error) in
-                    var request: [String : AnyObject] = [:]
+                newConnection.receiveMessage { (data, context, _, error) in
+                    var request: [String: AnyObject] = [:]
                     guard let data = data, let context = context else {
                         receive()
                         return
                     }
-                    
+
                     print(self.responses)
                     do {
                         print("Received a new message from client")
-                        request = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as! [String : AnyObject]
+                        request = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as! [String: AnyObject]
                         print(request)
                         print(context)
-                        
+
                         if request["id"] == nil {
                             fatalError("Request has no id: \(jsonToString(request))")
                         }
@@ -110,11 +110,11 @@ class MockRippledSocket {
 //                          )
 //                        }
                     }
-                    
+
                 }
             }
             receive()
-            
+
             newConnection.stateUpdateHandler = { state in
                 switch state {
                 case .ready:
@@ -128,10 +128,10 @@ class MockRippledSocket {
                     break
                 }
             }
-            
+
             newConnection.start(queue: serverQueue)
         }
-        
+
         listener.stateUpdateHandler = { state in
             print(state)
             switch state {
@@ -143,15 +143,15 @@ class MockRippledSocket {
                 break
             }
         }
-        
+
         listener.start(queue: serverQueue)
         startTimer()
     }
-    
+
     func startTimer() {
         self.timer?.fire()
     }
-    
+
     func ping(
         conn: NWConnection,
         request: [String: AnyObject]
@@ -159,7 +159,7 @@ class MockRippledSocket {
         let response: [String: AnyObject] = [
             "result": [:],
             "status": "Success",
-            "type": "response",
+            "type": "response"
         ] as! [String: AnyObject]
         let responseString: String = try createResponse(request: request, response: response)
         let data: Data = responseString.data(using: .utf8)!
@@ -173,7 +173,7 @@ class MockRippledSocket {
             }
         }))
     }
-    
+
     //    func send(data: Data, client: NWConnection) throws {
     //        //        let data = try JSONSerialization.data(withJSONObject: request, options: .prettyPrinted)
     //        let metadata = NWProtocolWebSocket.Metadata(opcode: .binary)
@@ -187,7 +187,7 @@ class MockRippledSocket {
     //            }
     //        }))
     //    }
-    
+
     func send(conn: NWConnection, string: String) throws {
         let data: Data = string.data(using: .utf8)!
         let metadata = NWProtocolWebSocket.Metadata(opcode: .binary)
@@ -200,19 +200,19 @@ class MockRippledSocket {
             }
         }))
     }
-    
+
     /**
      * Adds a mocked response
      * If an object is passed in for `response`, then the response is static for the command
      * If a function is passed in for `response`, then the response can be determined by the exact request shape
      */
-    func addResponses(command: String, response: [String: AnyObject]) throws -> Void {
+    func addResponses(command: String, response: [String: AnyObject]) throws {
         if response["type"] != nil && response["error"] != nil {
             throw XrplError.unknown("Bad response format. Must contain `type` or `error`. \(jsonToString(response))")
         }
         self.responses[command] = response as AnyObject
     }
-    
+
     func getResponse(request: BaseRequest) throws -> [String: AnyObject] {
         if self.responses[request.command!] == nil {
             throw XrplError.unknown("No handler for \(request.command ?? "")")
@@ -223,8 +223,8 @@ class MockRippledSocket {
         //        }
         return functionOrObject as! [String: AnyObject]
     }
-    
-    func testCommand(conn: NWConnection, request: [String: AnyObject]) throws -> Void {
+
+    func testCommand(conn: NWConnection, request: [String: AnyObject]) throws {
         let data: [String: AnyObject] = request["data"] as! [String: AnyObject]
         if let disconnectIn = data["disconnectIn"] as? Int {
             print("disconnectIn")
@@ -233,7 +233,7 @@ class MockRippledSocket {
             let response: [String: AnyObject] = [
                 "result": [:],
                 "status": "Success",
-                "type": "response",
+                "type": "response"
             ] as! [String: AnyObject]
             let responseString: String = try createResponse(request: request, response: response)
             try self.send(
@@ -266,7 +266,7 @@ class MockRippledSocket {
             let response: [String: AnyObject] = [
                 "result": [:],
                 "status": "unrecognized",
-                "type": "response",
+                "type": "response"
             ] as! [String: AnyObject]
             let responseString: String = try createResponse(request: request, response: response)
             try self.send(conn: conn, string: responseString)
@@ -282,12 +282,10 @@ class MockRippledSocket {
             let response: [String: AnyObject] = [
                 "result": [:],
                 "status": "Success",
-                "type": "response",
+                "type": "response"
             ] as! [String: AnyObject]
             let responseString: String = try createResponse(request: request, response: response)
             try self.send(conn: conn, string: responseString)
         }
     }
 }
-
-

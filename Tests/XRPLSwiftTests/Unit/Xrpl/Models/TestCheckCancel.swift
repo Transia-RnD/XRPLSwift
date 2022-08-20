@@ -11,7 +11,7 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestCheckCancel: XCTestCase {
-    
+
     func testValidCheckCancel() {
         let baseTx = [
             "TransactionType": "CheckCancel",
@@ -25,7 +25,7 @@ final class TestCheckCancel: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidCheckCancel() {
         let baseTx = [
             "TransactionType": "CheckCancel",

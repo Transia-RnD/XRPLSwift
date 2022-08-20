@@ -12,15 +12,14 @@ enum EntropyError: Error {
 }
 
 public class Entropy {
-    
     private(set) var bytes: [UInt8]!
-    
+
     init() {
-        var _bytes = [UInt8](repeating: 0, count: 16)
-        _bytes = try! URandom().bytes(count: 16)
-        self.bytes = _bytes
+        var copyBytes = [UInt8](repeating: 0, count: 16)
+        copyBytes = try! URandom().bytes(count: 16)
+        self.bytes = copyBytes
     }
-    
+
     init(bytes: [UInt8]) {
         self.bytes = bytes
     }

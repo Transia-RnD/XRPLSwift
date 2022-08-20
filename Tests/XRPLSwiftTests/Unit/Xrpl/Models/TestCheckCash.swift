@@ -11,7 +11,7 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestCheckCash: XCTestCase {
-    
+
     func testValidCheckCash() {
         let baseTx = [
             "TransactionType": "CheckCash",
@@ -27,7 +27,7 @@ final class TestCheckCash: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidCheckID() {
         let baseTx = [
             "TransactionType": "CheckCash",
@@ -40,7 +40,7 @@ final class TestCheckCash: XCTestCase {
 //        let tx = try! CheckCancel(json: baseTx)
 //        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
-    
+
     func testInvalidAmount() {
         let baseTx = [
             "TransactionType": "CheckCash",
@@ -53,7 +53,7 @@ final class TestCheckCash: XCTestCase {
 //        let tx = try! CheckCancel(json: baseTx)
 //        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
-    
+
     func testInvalidAmountAndDeliverMin() {
         let baseTx = [
             "TransactionType": "CheckCash",
@@ -67,7 +67,7 @@ final class TestCheckCash: XCTestCase {
 //        let tx = try! CheckCancel(json: baseTx)
 //        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
-    
+
     func testInvalidDeliverMin() {
         let baseTx = [
             "TransactionType": "CheckCash",

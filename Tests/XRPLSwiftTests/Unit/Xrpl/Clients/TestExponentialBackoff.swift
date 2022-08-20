@@ -13,7 +13,7 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestExponentialBackoff: XCTestCase {
-    
+
     func testExponentialBackoffDuration() {
         XCTAssert(ExponentialBackoff().duration() == 100)
         var options: ExponentialBackoffOptions = ExponentialBackoffOptions(min: 100)
@@ -21,7 +21,7 @@ final class TestExponentialBackoff: XCTestCase {
         options.min = 123
         XCTAssert(ExponentialBackoff(opts: options).duration() == 123)
     }
-    
+
     func testExponentialBackoffIncreaseReturn() {
         let options: ExponentialBackoffOptions = ExponentialBackoffOptions(min: 100, max: 1000)
         let backoff: ExponentialBackoff = ExponentialBackoff(opts: options)
@@ -30,7 +30,7 @@ final class TestExponentialBackoff: XCTestCase {
         XCTAssert(backoff.duration() == 400)
         XCTAssert(backoff.duration() == 800)
     }
-    
+
     func testExponentialBackoffNeverReturn() {
         let options: ExponentialBackoffOptions = ExponentialBackoffOptions(min: 300, max: 1000)
         let backoff: ExponentialBackoff = ExponentialBackoff(opts: options)
@@ -39,7 +39,7 @@ final class TestExponentialBackoff: XCTestCase {
         XCTAssert(backoff.duration() == 1000)
         XCTAssert(backoff.duration() == 1000)
     }
-    
+
     func testExponentialBackoffReset() {
         let options: ExponentialBackoffOptions = ExponentialBackoffOptions(min: 100, max: 1000)
         let backoff: ExponentialBackoff = ExponentialBackoff(opts: options)

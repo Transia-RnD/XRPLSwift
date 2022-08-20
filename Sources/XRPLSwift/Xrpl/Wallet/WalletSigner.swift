@@ -1,5 +1,5 @@
 //
-//  Signor.swift
+//  WalletSigner.swift
 //
 //
 //  Created by Denis Angell on 8/6/22.
@@ -7,11 +7,11 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/Wallet/signer.ts
 
-import Foundation
 import BigInt
+import Foundation
 
-public class rSigner: Wallet {
-    
+public class WalletSigner: Wallet {
+
     /**
      * Takes several transactions with Signer fields (in object or blob form) and creates a
      * single transaction with all Signers that then gets signed and returned.
@@ -24,38 +24,39 @@ public class rSigner: Wallet {
      * - Any transaction is missing a Signers field.
      * @category Signing
      */
-    //    public func multisign(transactions: [rTransaction] | [String]) -> String {
-    public static func multisign(transactions: [rTransaction]) throws -> String {
-        if transactions.count == 0 {
+    //    public func multisign(transactions: [Transaction] | [String]) -> String {
+    public static func multisign(transactions: [Transaction]) throws -> String {
+        if transactions.isEmpty {
             throw XrplError.validation("There were 0 transactions to multisign")
         }
-        
+
         for txOrBlob in transactions {
-            let tx: rTransaction = getDecodedTransaction(tx: txOrBlob)
+            let tx: Transaction = getDecodedTransaction(tx: txOrBlob)
             let jsonTx: [String: AnyObject] = try tx.toJson()
             /*
              * This will throw a more clear error for JS users if any of the supplied transactions has incorrect formatting
              */
             // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- validate does not accept Transaction type
             try validate(transaction: jsonTx)
-            if jsonTx["Signers"] == nil || (jsonTx["Signers"] as! [String: AnyObject]).count == 0 {
+            if jsonTx["Signers"] == nil || (jsonTx["Signers"] as! [String: AnyObject]).isEmpty {
+                // swiftlint:disable:next line_length
                 throw XrplError.validation("For multisigning all transactions must include a Signers field containing an array of signatures. You may have forgotten to pass the 'forMultisign' parameter when signing.")
             }
-            
+
             if jsonTx["SigningPubKey"] as! String != "" {
                 throw XrplError.validation("SigningPubKey must be an empty string for all transactions when multisigning.")
             }
         }
-        
-        let decodedTransactions: [rTransaction] = transactions.map { tx in
+
+        let decodedTransactions: [Transaction] = transactions.map { tx in
             return getDecodedTransaction(tx: tx)
         }
-        
+
         try validateTransactionEquivalence(transactions: decodedTransactions)
-        
+
         return try BinaryCodec.encode(json: getTransactionWithAllSigners(transactions: decodedTransactions).toJson())
     }
-    
+
     /**
      * Creates a signature that can be used to redeem a specific amount of XRP from a payment channel.
      *
@@ -77,7 +78,7 @@ public class rSigner: Wallet {
         let signingData = try! BinaryCodec.encodeForSigningClaim(json: json)
         return Keypairs.sign(message: Data(hex: signingData).bytes, privateKey: wallet.privateKey).toHex
     }
-    
+
     /**
      * Verifies that the given transaction has a valid signature based on public-key encryption.
      *
@@ -86,7 +87,7 @@ public class rSigner: Wallet {
      * @category Utilities
      */
     public static func verifySignature(tx: String) -> Bool {
-        let decodedTx: rTransaction = rSigner.getDecodedTransaction(tx: tx)
+        let decodedTx: Transaction = WalletSigner.getDecodedTransaction(tx: tx)
         let json: [String: AnyObject] = try! decodedTx.toJson()
         return Keypairs.verify(
             signature: try! BinaryCodec.encodeForSigning(json: json).bytes,
@@ -94,8 +95,8 @@ public class rSigner: Wallet {
             publicKey: json["SigningPubKey"] as! String
         )
     }
-    public static func verifySignature(tx: rTransaction) -> Bool {
-        let decodedTx: rTransaction = rSigner.getDecodedTransaction(tx: tx)
+    public static func verifySignature(tx: Transaction) -> Bool {
+        let decodedTx: Transaction = WalletSigner.getDecodedTransaction(tx: tx)
         let json: [String: AnyObject] = try! decodedTx.toJson()
         return Keypairs.verify(
             signature: try! BinaryCodec.encodeForSigning(json: json).bytes,
@@ -103,14 +104,14 @@ public class rSigner: Wallet {
             publicKey: json["SigningPubKey"] as! String
         )
     }
-    
+
     /**
      * The transactions should all be equal except for the 'Signers' field.
      *
      * @param transactions - An array of Transactions which are expected to be equal other than 'Signers'.
      * @throws ValidationError if the transactions are not equal in any field other than 'Signers'.
      */
-    static func validateTransactionEquivalence(transactions: [rTransaction]) throws -> Void {
+    static func validateTransactionEquivalence(transactions: [Transaction]) throws {
         //        let exampleTransaction = JSON.stringify({
         //            ...transactions[0],
         //        Signers: null,
@@ -126,8 +127,8 @@ public class rSigner: Wallet {
             throw XrplError.validation("txJSON is not the same for all signedTransactions")
         }
     }
-    
-    static func getTransactionWithAllSigners(transactions: [rTransaction]) -> rTransaction {
+
+    static func getTransactionWithAllSigners(transactions: [Transaction]) -> Transaction {
         // Signers must be sorted in the combined transaction - See compareSigners' documentation for more details
         let sortedSigners: [Signer] = transactions.compactMap { tx in
             let cloneTx = try! tx.toJson()
@@ -137,7 +138,7 @@ public class rSigner: Wallet {
         //        return { ...transactions[0], Signers: sortedSigners }
         return transactions[0]
     }
-    
+
     /**
      * If presented in binary form, the Signers array must be sorted based on
      * the numeric value of the signer addresses, with the lowest value first.
@@ -161,21 +162,21 @@ public class rSigner: Wallet {
         }
         return 0
     }
-    
+
     static func addressToBigNumber(address: String) -> BigUInt {
         let hex: String = try! XrplCodec.decodeClassicAddress(classicAddress: address).toHex
         let numberOfBitsInHex: Int = 16
         return BigUInt(hex, radix: numberOfBitsInHex)!
     }
-    
-    static func getDecodedTransaction(tx: String) -> rTransaction {
+
+    static func getDecodedTransaction(tx: String) -> Transaction {
         let decoded: [String: AnyObject] = BinaryCodec.decode(buffer: tx)
-        return try! rTransaction(decoded)!
+        return try! Transaction(decoded)!
     }
-    
-    static func getDecodedTransaction(tx: rTransaction) -> rTransaction {
+
+    static func getDecodedTransaction(tx: Transaction) -> Transaction {
         let encoded = try! BinaryCodec.encode(json: tx.toJson())
         let decoded: [String: AnyObject] = BinaryCodec.decode(buffer: encoded)
-        return try! rTransaction(decoded)!
+        return try! Transaction(decoded)!
     }
 }

@@ -11,33 +11,33 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestConnection: RippledMockTester {
-    
+
     override func setUp() async throws {
         try await super.setUp()
     }
-    
+
     func testValidConnection() {
         let connection: Connection = Connection(url: "url")
         XCTAssertEqual(connection.getUrl(), "url")
         XCTAssert(connection.config.proxy == nil)
         XCTAssert(connection.config.authorization == nil)
     }
-    
+
     func testMultipleDisconnect() async {
         _ = await self.client.disconnect()
         _ = await self.client.disconnect()
     }
-    
+
     func testReconnect() async {
         _ = try! await self.client.connection.reconnect()
     }
-    
+
     func testNotConnected() async {
         let exp = expectation(description: "WSS CALL")
         let connection = Connection(url: "url")
         let request: BaseRequest = try! BaseRequest(json: [
             "command": "ledger",
-            "ledger_index": "validated",
+            "ledger_index": "validated"
         ] as! [String: AnyObject])
         do {
             _ = try await connection.request(request: request)
@@ -48,14 +48,14 @@ final class TestConnection: RippledMockTester {
         }
         await waitForExpectations(timeout: 1)
     }
-    
+
     func testDisconnected() async {
         let exp = expectation(description: "WSS CALL")
         let request: BaseRequest = try! BaseRequest(json: [
             "command": "test_command",
             "data": [
                 "closeServer": true
-            ],
+            ]
         ] as! [String: AnyObject])
         do {
             let response = try await self.client.request(req: request)
@@ -63,7 +63,7 @@ final class TestConnection: RippledMockTester {
                 XCTAssertTrue(error is DisconnectedError)
                 exp.fulfill()
             }
-            response?.whenSuccess { error in
+            response?.whenSuccess { _ in
                 XCTFail()
             }
         } catch {
@@ -71,7 +71,7 @@ final class TestConnection: RippledMockTester {
         }
         await waitForExpectations(timeout: 1)
     }
-    
+
 //    func testDisconnectedOnOpen() async {
 //        let exp = expectation(description: "WSS CALL")
 //        let request: BaseRequest = try! BaseRequest(json: [
@@ -94,14 +94,14 @@ final class TestConnection: RippledMockTester {
 //        }
 //        await waitForExpectations(timeout: 1)
 //    }
-    
+
     func testResponseFormatError() async {
         let exp = expectation(description: "WSS CALL")
         let request: BaseRequest = try! BaseRequest(json: [
             "command": "test_command",
             "data": [
                 "unrecognizedResponse": true
-            ],
+            ]
         ] as! [String: AnyObject])
         do {
             let response = try await self.client.request(req: request)
@@ -109,7 +109,7 @@ final class TestConnection: RippledMockTester {
                 XCTAssertTrue(error is ResponseFormatError)
                 exp.fulfill()
             }
-            response?.whenSuccess { error in
+            response?.whenSuccess { _ in
                 XCTFail()
             }
         } catch {
@@ -117,14 +117,14 @@ final class TestConnection: RippledMockTester {
         }
         await waitForExpectations(timeout: 1)
     }
-    
+
     func testReconnectUnecpectedClose() async {
         let exp = expectation(description: "WSS CALL")
         let request: BaseRequest = try! BaseRequest(json: [
             "command": "test_command",
             "data": [
                 "unrecognizedResponse": true
-            ],
+            ]
         ] as! [String: AnyObject])
         do {
             let response = try await self.client.request(req: request)
@@ -132,7 +132,7 @@ final class TestConnection: RippledMockTester {
                 XCTAssertTrue(error is ResponseFormatError)
                 exp.fulfill()
             }
-            response?.whenSuccess { error in
+            response?.whenSuccess { _ in
                 XCTFail()
             }
         } catch {
@@ -143,35 +143,35 @@ final class TestConnection: RippledMockTester {
 }
 
 final class TestTrace: XCTestCase {
-    
+
     var mockedRequestData: [String: AnyObject] = [:]
     var mockedResponse: String = ""
     var expectedMessages: [[String]] = []
     let originalConsoleLog: String = ""
-    
+
     override func setUp() async throws {
         self.mockedRequestData = ["mocked": "request"] as! [String: AnyObject]
         self.mockedResponse = jsonToString(["mocked": "response", "id": 0] as! [String: AnyObject])
-        
+
         self.mockedRequestData["id"] = 0 as AnyObject
         // We add the ID here, since it's not a part of the user-provided request.
         self.expectedMessages = [
             ["send", jsonToString(mockedRequestData)],
-            ["receive", mockedResponse],
+            ["receive", mockedResponse]
         ]
     }
-    
+
     override func tearDown() {
         //        teardownClient()
     }
-    
+
     func testValidConnection() {
         let connection: Connection = Connection(url: "url")
         XCTAssertEqual(connection.getUrl(), "url")
         XCTAssert(connection.config.proxy == nil)
         XCTAssert(connection.config.authorization == nil)
     }
-    
+
     func testAsFalse() async {
         let messages: [[String: AnyObject]] = []
         //        console.log = function (id: number, message: string): void {
@@ -180,13 +180,13 @@ final class TestTrace: XCTestCase {
         let opts: ConnectionUserOptions = ConnectionUserOptions()
         let connection: Connection = Connection(url: "url", options: opts)
         connection.ws?.send([])
-        
+
         try! await connection.request(request: try! BaseRequest(json: mockedRequestData))
         //        connection.onMessage(mockedResponse)
         // TODO: Deep Equal
         //        XCTAssertEqual(messages, [])
     }
-    
+
     func testAsTrue() {
         let messages: [[String: AnyObject]] = []
         //        console.log = function (id: number, message: string): void {
@@ -195,13 +195,13 @@ final class TestTrace: XCTestCase {
         let opts: ConnectionUserOptions = ConnectionUserOptions()
         let connection: Connection = Connection(url: "url", options: opts)
         connection.ws?.send([])
-        
+
         //        connection.request(request: mockedRequestData)
         //        connection.onMessage(mockedResponse)
         // TODO: Deep Equal
         //        XCTAssertEqual(messages, [])
     }
-    
+
     func testAsFunction() {
         let messages: [[String: AnyObject]] = []
         //        console.log = function (id: number, message: string): void {
@@ -210,7 +210,7 @@ final class TestTrace: XCTestCase {
         let opts: ConnectionUserOptions = ConnectionUserOptions()
         let connection: Connection = Connection(url: "url", options: opts)
         connection.ws?.send([])
-        
+
         //        connection.request(request: mockedRequestData)
         //        connection.onMessage(mockedResponse)
         // TODO: Deep Equal

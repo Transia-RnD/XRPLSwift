@@ -12,7 +12,7 @@ import Foundation
 let MEMO: [String: AnyObject] = [
     "Memo": [
         "MemoType": "687474703A2F2F6578616D706C652E636F6D2F6D656D6F2F67656E65726963",
-        "MemoData": "72656E74",
+        "MemoData": "72656E74"
     ]
 ] as [String: AnyObject]
 let MEMO_HEX: String = "EA7C1F687474703A2F2F6578616D706C652E636F6D2F6D656D6F2F67656E657269637D0472656E74E1"
@@ -26,7 +26,7 @@ import XCTest
 
 final class TestSTArray: XCTestCase {
     public static let maxDiff: Int = 1000
-    
+
     func testFromValue() {
         let serializedList: STArray = try! STArray.from(value: EXPECTED_JSON)
         XCTAssertEqual(BUFFER, serializedList.str())

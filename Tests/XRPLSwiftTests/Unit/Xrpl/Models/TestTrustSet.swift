@@ -13,9 +13,9 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestTrustSet: XCTestCase {
-    
+
     public static var baseTx: [String: AnyObject] = [:]
-    
+
     override class func setUp() {
         baseTx = [
             "TransactionType": "TrustSet",
@@ -23,13 +23,13 @@ final class TestTrustSet: XCTestCase {
             "LimitAmount": [
                 "currency": "XRP",
                 "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
-                "value": "4329.23",
+                "value": "4329.23"
             ],
             "QualityIn": 1234,
-            "QualityOut": 4321,
+            "QualityOut": 4321
         ] as! [String: AnyObject]
     }
-    
+
     func testValid() {
         let tx = try! TrustSet(json: TestTrustSet.baseTx)
         do {
@@ -38,17 +38,17 @@ final class TestTrustSet: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidLimitAmountNil() {
         TestTrustSet.baseTx["LimitAmount"] = nil
         XCTAssertThrowsError(try TrustSet(json: TestTrustSet.baseTx))
     }
-    
+
     func testInvalidLimitAmountType() {
         TestTrustSet.baseTx["LimitAmount"] = 1234 as AnyObject
         XCTAssertThrowsError(try TrustSet(json: TestTrustSet.baseTx))
     }
-    
+
     func testInvalidQualityInType() {
         TestTrustSet.baseTx["QualityIn"] = "1234" as AnyObject
         XCTAssertThrowsError(try TrustSet(json: TestTrustSet.baseTx))
@@ -58,4 +58,3 @@ final class TestTrustSet: XCTestCase {
         XCTAssertThrowsError(try TrustSet(json: TestTrustSet.baseTx))
     }
 }
-

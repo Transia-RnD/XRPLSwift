@@ -7,6 +7,7 @@
 //
 
 import Foundation
+// swiftlint:disable all
 
 internal enum Coin {
     case bitcoin
@@ -14,7 +15,7 @@ internal enum Coin {
     case litecoin
     case bitcoinCash
     case dash
-    
+
     //https://github.com/satoshilabs/slips/blob/master/slip-0132.md
     internal var privateKeyVersion: UInt32 {
         switch self {
@@ -43,7 +44,7 @@ internal enum Coin {
             fatalError("Not implemented")
         }
     }
-    
+
     // P2SH
     internal var scriptHash: UInt8 {
         switch self {
@@ -57,7 +58,7 @@ internal enum Coin {
             fatalError("Not implemented")
         }
     }
-    
+
     //https://www.reddit.com/r/litecoin/comments/6vc8tc/how_do_i_convert_a_raw_private_key_to_wif_for/
     internal var wifAddressPrefix: UInt8 {
         switch self {
@@ -72,8 +73,8 @@ internal enum Coin {
             fatalError("Not implemented")
         }
     }
-    
-    internal var addressPrefix:String {
+
+    internal var addressPrefix: String {
         switch self {
         case .ethereum:
             return "0x"
@@ -81,12 +82,11 @@ internal enum Coin {
             return ""
         }
     }
-    
+
     internal var uncompressedPkSuffix: UInt8 {
         return 0x01
     }
-    
-    
+
     internal var coinType: UInt32 {
         switch self {
         case .bitcoin:
@@ -101,7 +101,7 @@ internal enum Coin {
             return 145
         }
     }
-    
+
     internal var scheme: String {
         switch self {
         case .bitcoin:

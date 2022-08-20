@@ -7,33 +7,33 @@
 //
 //// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/types/path_set.py
 //
-//import Foundation
+// import Foundation
 //
 //
 //// Constant for masking types of a PathStep
-//let TYPE_ACCOUNT: Int  = 0x01
-//let TYPE_CURRENCY: Int = 0x10
-//let TYPE_ISSUER: Int = 0x20
+// let TYPE_ACCOUNT: Int  = 0x01
+// let TYPE_CURRENCY: Int = 0x10
+// let TYPE_ISSUER: Int = 0x20
 //
 //// Constants for separating Paths in a PathSet
-//let PATHSET_END_BYTE: Int = 0x00
-//let PATH_SEPARATOR_BYTE: Int = 0xFF
+// let PATHSET_END_BYTE: Int = 0x00
+// let PATH_SEPARATOR_BYTE: Int = 0xFF
 //
-//internal func isPathStep(value: [String: String]) -> Bool {
+// internal func isPathStep(value: [String: String]) -> Bool {
 //    // Helper function to determine if a dictionary represents a valid path step.
 //    guard value["issuer"] as String || value["currency"] as String else {
 //        return false
 //    }
 //    return true
 //
-//}
+// }
 //
-//internal func isPathSet(value: [[[String: String]]]) -> Bool {
+// internal func isPathSet(value: [[[String: String]]]) -> Bool {
 //    // Helper function to determine if a list represents a valid path set.
 //    return value.count == 0 || value[0].count == 0 || isPathStep(value[0][0])
-//}
+// }
 //
-//class PathStep: SerializedType {
+// class PathStep: SerializedType {
 //    static func from(value: [String: String]) throws -> Amount {
 //        let dataType: Int = 0x00
 //        let buffer = [UInt8] = []
@@ -112,9 +112,9 @@
 //        */
 //        return self.buffer[0]
 //    }
-//}
+// }
 //
-//class Path: SerializedType {
+// class Path: SerializedType {
 //    // Class for serializing/deserializing Paths.
 //
 //    func from(value: [[[String: String]]]) throws -> Amount {
@@ -152,9 +152,9 @@
 //        return json
 //    }
 //
-//}
+// }
 //
-//class PathSet: SerializedType {
+// class PathSet: SerializedType {
 //    func from(value: [[[String: String]]]) throws -> Amount {
 //        if isPathSet(value: value) {
 //            let buffer: [UInt8] = []
@@ -194,4 +194,4 @@
 //            pathsetParser.skip(1)
 //        return json
 //    }
-//}
+// }

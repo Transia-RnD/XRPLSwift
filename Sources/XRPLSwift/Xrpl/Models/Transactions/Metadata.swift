@@ -9,15 +9,14 @@
 
 import Foundation
 
+// import { Amount } from '../common'
 
-//import { Amount } from '../common'
-
-public struct rDirectoryNodeField: Codable {
+public struct DirectoryNodeField: Codable {
     public var owner: String
     public var rootIndex: String
 }
 
-public struct rPayChannelNodeField: Codable {
+public struct PayChannelNodeField: Codable {
     public var account: String
     public var amount: String
     public var destination: String
@@ -25,76 +24,76 @@ public struct rPayChannelNodeField: Codable {
     public var settleDelay: Int
 }
 
-public enum rLedgerEntryType: Codable {
+public enum LedgerEntryType: Codable {
     case directory
     case paychannel
     case unknown
 }
 
 public enum NewField: Codable {
-    case directory(rDirectoryNodeField)
-    case paychannel(rPayChannelNodeField)
+    case directory(DirectoryNodeField)
+    case paychannel(PayChannelNodeField)
     case unknown
 }
 
-public struct rCreatedNode: Codable {
-    
-    public var ledgerEntryType: rLedgerEntryType
+public struct CreatedNode: Codable {
+
+    public var ledgerEntryType: LedgerEntryType
     public var ledgerIndex: String
     public var newFields: [NewField]?
-    
+
 }
 
-public enum rFinalField: Codable {
-    case directory(rDirectoryNodeField)
-    case paychannel(rPayChannelNodeField)
+public enum FinalField: Codable {
+    case directory(DirectoryNodeField)
+    case paychannel(PayChannelNodeField)
     case unknown
 }
 
-public struct rModifiedNode: Codable {
+public struct ModifiedNode: Codable {
     public var ledgerEntryType: String
     public var ledgerIndex: String
-    public var finalFields: [rFinalField]?
-    public var previousFields: [rFinalField]?
+    public var finalFields: [FinalField]?
+    public var previousFields: [FinalField]?
     public var previoudTxnId: String?
     public var previoudTxnLgrSeq: Int?
 }
 
-public struct rDeletedNode: Codable {
-    public var ledgerEntryType: rLedgerEntryType
+public struct DeletedNode: Codable {
+    public var ledgerEntryType: LedgerEntryType
     public var ledgerIndex: String
-    public var finalFields: [rFinalField]?
-    
+    public var finalFields: [FinalField]?
+
 }
 
-public enum rNode: Codable {
-    case modified(rModifiedNode)
-    case created(rCreatedNode)
-    case deleted(rDeletedNode)
+public enum Node: Codable {
+    case modified(ModifiedNode)
+    case created(CreatedNode)
+    case deleted(DeletedNode)
 }
 
-extension rNode {
-    
+extension Node {
+
     enum NodeCodingError: Error {
         case decoding(String)
     }
-    
+
     public init(from decoder: Decoder) throws {
-        if let value = try? rModifiedNode.init(from: decoder) {
+        if let value = try? ModifiedNode.init(from: decoder) {
             self = .modified(value)
             return
         }
-        if let value = try? rCreatedNode.init(from: decoder) {
+        if let value = try? CreatedNode.init(from: decoder) {
             self = .created(value)
             return
         }
-        if let value = try? rDeletedNode.init(from: decoder) {
+        if let value = try? DeletedNode.init(from: decoder) {
             self = .deleted(value)
             return
         }
         throw NodeCodingError.decoding("DENIS!!!")
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         switch self {
         case .modified(let value):
@@ -107,14 +106,14 @@ extension rNode {
     }
 }
 
-public class rTransactionMetadata: Codable {
-    public var affectedNodes: [rNode]?
-    public var deliveredAmount: rAmount?
+public class TransactionMetadata: Codable {
+    public var affectedNodes: [Node]?
+    public var deliveredAmount: Amount?
     public var transactionResult: String
     public var transactionIndex: Int
-    
+
     init(
-        affectedNodes: [rNode]? = nil,
+        affectedNodes: [Node]? = nil,
         transactionResult: String,
         transactionIndex: Int
     ) {

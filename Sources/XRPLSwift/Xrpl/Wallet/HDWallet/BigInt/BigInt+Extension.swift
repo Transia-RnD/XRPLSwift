@@ -6,6 +6,8 @@
 //  Copyright © 2018 yuzushioh. All rights reserved.
 //
 
+// swiftlint:disable all
+
 import Foundation
 
 extension BInt {
@@ -21,21 +23,21 @@ extension BInt {
                 }
             }
         }
-        
+
         return data
     }
-    
+
     init?(hex: String) {
         self.init(number: hex.lowercased(), withBase: 16)
     }
-    
+
     init(data: Data) {
         let n = data.count
         guard n > 0 else {
             self.init(0)
             return
         }
-        
+
         let m = (n + 7) / 8
         var limbs = Limbs(repeating: 0, count: m)
         data.withUnsafeBytes { (ptr) -> Void in
@@ -54,7 +56,7 @@ extension BInt {
                 }
             }
         }
-        
+
         self.init(limbs: limbs)
     }
 }

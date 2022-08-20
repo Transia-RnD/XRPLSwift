@@ -8,56 +8,60 @@
 import Foundation
 
 class IssuedAmount {
-    
-    let MIN_MANTISSA: Int64 = 1000000000000000 //10^15
-    let MAX_MANTISSA: Int64 = 10000000000000000 - 1 //10^16-1
+
+    // swiftlint:disable:next identifier_name
+    let MIN_MANTISSA: Int64 = 1000000000000000 // 10^15
+    // swiftlint:disable:next identifier_name
+    let MAX_MANTISSA: Int64 = 10000000000000000 - 1 // 10^16-1
+    // swiftlint:disable:next identifier_name
     let MIN_EXP = -96
+    // swiftlint:disable:next identifier_name
     let MAX_EXP = 80
-    
+
     var stringVal: String!
     var decimal: Decimal!
-    
+
     init(value: String) {
         self.stringVal = value
-        
+
         if let value = Decimal(string: stringVal) {
             self.decimal = value
         } else {
             fatalError()
         }
     }
-    
+
     func canonicalize() -> Data {
         if self.decimal == 0 {
             return canonicalZeroSerial()
         }
-        
+
         let sign = decimal.sign
-        var exponent:Int = decimal.exponent
+        var exponent: Int = decimal.exponent
         let digits = stringVal.replacingOccurrences(of: ".", with: "")
-        var mantissa:UInt64 = UInt64(digits)!
-        
+        var mantissa: UInt64 = UInt64(digits)!
+
         while mantissa < MIN_MANTISSA && exponent > MIN_EXP {
-            mantissa = mantissa * 10
-            exponent = exponent - 1
+            mantissa *= 10
+            exponent -= 1
         }
-        
+
         while mantissa > MAX_MANTISSA {
             if exponent > MAX_EXP {
                 fatalError()
             }
-            mantissa = mantissa / 10
-            exponent = exponent + 1
+            mantissa /= 10
+            exponent += 1
         }
-        
+
         if exponent < MIN_EXP || mantissa < MIN_MANTISSA {
             return self.canonicalZeroSerial()
         }
-        
+
         if exponent > MAX_EXP || mantissa > MAX_MANTISSA {
             fatalError()
         }
-        
+
         var serial: UInt64 = 0x8000000000000000 // "Not XRP" bit set
         if sign == .plus {
             serial = serial | 0x4000000000000000 // "Is positive" bit set
@@ -66,7 +70,7 @@ class IssuedAmount {
         serial |= mantissa // last 54 bits are mantissa
         return serial.bigEndian.data
     }
-    
+
     func canonicalZeroSerial() -> Data {
         /*
         Returns canonical format for zero (a special case):

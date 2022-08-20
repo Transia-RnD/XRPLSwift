@@ -5,10 +5,10 @@
 ////  Created by Denis Angell on 3/20/22.
 ////
 //
-//import XCTest
-//@testable import XRPLSwift
+// import XCTest
+// @testable import XRPLSwift
 //
-//final class TestUnitWallet: XCTestCase {
+// final class TestUnitWallet: XCTestCase {
 //
 //    func testEncodeChannel() {
 //        let params: [String: Any] = [
@@ -107,4 +107,4 @@
 //        let data1: [UInt8] = try! hex1.asHexArray()
 //        print(data1)
 //    }
-//}
+// }

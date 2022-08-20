@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 let codecFixturesJson = """
 {
   "accountState": [

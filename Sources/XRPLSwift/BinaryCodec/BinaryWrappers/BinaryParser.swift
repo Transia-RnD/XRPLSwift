@@ -15,9 +15,9 @@ public enum BinaryError: Error {
 }
 
 public class BinaryParser {
-    
+
     public var bytes: [UInt8]
-    
+
     /**
      * Initialize bytes to a hex string
      *
@@ -26,37 +26,39 @@ public class BinaryParser {
     public init(hex: String) {
         bytes = try! hex.asHexArray()
     }
-    
+
     /**
      * Peek the first byte of the BinaryParser
      *
      * @returns The first byte of the BinaryParser
      */
     public func peek() throws -> UInt8 {
-        guard bytes.count > 0 else {
+        guard bytes.isEmpty else {
             throw BinaryError.unknownError(error: "Invalid Bytes Length")
         }
         return bytes[0]
     }
-    
+
     /**
      * Consume the first n bytes of the BinaryParser
      *
      * @param n the number of bytes to skip
      */
+    // swiftlint:disable:next identifier_name
     public func skip(n: Int) throws {
         guard n <= bytes.count else {
             throw BinaryError.unknownError(error: "Invalid Bytes Length")
         }
         bytes = [UInt8](bytes[n...])
     }
-    
+
     /**
      * read the first n bytes from the BinaryParser
      *
      * @param n The number of bytes to read
      * @return The bytes
      */
+    // swiftlint:disable:next identifier_name
     public func read(n: Int) throws -> [UInt8] {
         guard n <= bytes.count else {
             throw BinaryError.unknownError(error: "Invalid Bytes Length")
@@ -65,43 +67,45 @@ public class BinaryParser {
         try! skip(n: n)
         return [UInt8](slice)
     }
-    
+
     /**
      * Read an integer of given size
      *
      * @param n The number of bytes to read
      * @return The number represented by those bytes
      */
+    // swiftlint:disable:next identifier_name
     public func readUIntN(n: Int) throws -> Int {
         guard 0 < n && n <= 4 else {
             throw BinaryError.unknownError(error: "Invalid n")
         }
+        // swiftlint:disable:next identifier_name
         return try read(n: n).reduce(0) { v, byte in
             return v << 8 | Int(byte)
         }
     }
-    
+
     public func readUInt8() -> UInt8 {
         return try! UInt8(readUIntN(n: 1))
     }
-    
+
     public func readUInt16() -> UInt16 {
         return try! UInt16(readUIntN(n: 2))
     }
-    
+
     public func readUInt32() -> UInt32 {
         return try! UInt32(readUIntN(n: 4))
     }
-    
+
     public func size() -> Int {
         return bytes.count
     }
-    
+
     // TODO: GUARD
     public func end(customEnd: Int? = nil) -> Bool {
-        return bytes.count == 0 || (customEnd != nil && bytes.count <= customEnd!)
+        return bytes.isEmpty || (customEnd != nil && bytes.count <= customEnd!)
     }
-    
+
     /**
      * Reads variable length encoded bytes
      *
@@ -110,7 +114,7 @@ public class BinaryParser {
     func readVariableLength() -> [UInt8] {
         return try! read(n: readLengthPrefix())
     }
-    
+
     /**
      * Reads the length of the variable length encoded bytes
      *
@@ -119,19 +123,19 @@ public class BinaryParser {
     func readLengthPrefix() throws -> Int {
         let b1: Int = Int(self.readUInt8())
         print(b1)
-        if (b1 <= 192) {
+        if b1 <= 192 {
             return b1
-        } else if (b1 <= 240) {
+        } else if b1 <= 240 {
             let b2: Int = Int(self.readUInt8())
             return 193 + (b1 - 193) * 256 + b2
-        } else if (b1 <= 254) {
+        } else if b1 <= 254 {
             let b2: Int = Int(self.readUInt8())
             let b3: Int = Int(self.readUInt8())
             return 12481 + (b1 - 241) * 65536 + b2 * 256 + b3
         }
         fatalError("Invalid variable length indicator")
     }
-    
+
     /**
      * Reads the field ordinal from the BinaryParser
      *
@@ -157,7 +161,7 @@ public class BinaryParser {
         }
         return FieldHeader(typeCode: Int(type), fieldCode: Int(nth))
     }
-    
+
     /**
      * Read the field from the BinaryParser
      *
@@ -168,7 +172,7 @@ public class BinaryParser {
         let fieldName: String = Definitions().getFieldNameFromHeader(fieldHeader: fieldHeader)
         return Definitions().getFieldInstance(fieldName: fieldName)
     }
-    
+
     /**
      * Read a given type from the BinaryParser
      *
@@ -180,7 +184,7 @@ public class BinaryParser {
             return AccountID().fromParser(parser: self, hint: nil)
         }
         if type is Amount {
-            return try! Amount().fromParser(parser: self, hint: nil)
+            return try! xAmount().fromParser(parser: self, hint: nil)
         }
         if type is Blob {
             return Blob().fromParser(parser: self, hint: nil)
@@ -190,7 +194,7 @@ public class BinaryParser {
         }
         fatalError("Invalid Serialized Type")
     }
-    
+
     /**
      * Get the type associated with a given field
      *
@@ -200,7 +204,7 @@ public class BinaryParser {
     func typeForField(field: FieldInstance) -> SerializedType.Type {
         return field.associatedType.self
     }
-    
+
     /**
      * Read value of the type specified by field from the BinaryParser
      *
@@ -226,7 +230,7 @@ public class BinaryParser {
         print("VALUE: \(value.toJson())")
         return value
     }
-    
+
     /**
      * Get the next field and value from the BinaryParser
      *

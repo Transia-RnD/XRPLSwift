@@ -9,7 +9,6 @@ import Foundation
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/NFTokenBurn.ts
 
-
 /**
 The NFTokenBurn transaction is used to remove an NFToken object from the
 NFTokenPage in which it is being held, effectively removing the token from
@@ -20,7 +19,7 @@ consolidation, thus removing an NFTokenPage, the owner’s reserve requirement
 is reduced by one.
 */
 public class NFTokenBurn: BaseTransaction {
-    
+
 //    public var account: String
     /**
     Identifies the AccountID that submitted this transaction. The account must
@@ -42,13 +41,13 @@ public class NFTokenBurn: BaseTransaction {
     Account. Only used to burn tokens which have the lsfBurnable flag enabled
     and are not owned by the signing account.
     */
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "Account"
         case nftokenId = "NFTokenID"
         case owner = "Owner"
     }
-    
+
     public init(
         account: String,
         nftokenId: String,
@@ -59,16 +58,16 @@ public class NFTokenBurn: BaseTransaction {
         self.owner = owner
         super.init(account: account, transactionType: "NFTokenBurn")
     }
-    
+
     public override init(json: [String: AnyObject]) throws {
         let decoder: JSONDecoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-        let r = try decoder.decode(NFTokenBurn.self, from: data)
-        self.nftokenId = r.nftokenId
-        self.owner = r.owner
+        let decoded = try decoder.decode(NFTokenBurn.self, from: data)
+        self.nftokenId = decoded.nftokenId
+        self.owner = decoded.owner
         try super.init(json: json)
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 //        account = try values.decode(String.self, forKey: .account)
@@ -76,7 +75,7 @@ public class NFTokenBurn: BaseTransaction {
         owner = try values.decodeIfPresent(String.self, forKey: .owner)
         try super.init(from: decoder)
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -92,10 +91,10 @@ public class NFTokenBurn: BaseTransaction {
  * @param tx - An NFTokenBurn Transaction.
  * @throws When the NFTokenBurn is Malformed.
  */
-public func validateNFTokenBurn(tx: [String: AnyObject]) throws -> Void {
+public func validateNFTokenBurn(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
-  if (tx["NFTokenID"] == nil) {
+  if tx["NFTokenID"] == nil {
       throw ValidationError.decoding("NFTokenBurn: missing field NFTokenID")
   }
 }

@@ -9,11 +9,11 @@
 
 import Foundation
 
-let Types: [String: SerializedType.Type] = [
+let binaryTypes: [String: SerializedType.Type] = [
     "AccountID": AccountID.self,
-    "Amount": Amount.self,
+    "Amount": xAmount.self,
     "Blob": Blob.self,
-    "Currency": Currency.self,
+    "Currency": xCurrency.self,
     "Hash": Hash.self,
     "Hash128": Hash128.self,
     "Hash160": Hash160.self,
@@ -27,7 +27,7 @@ let Types: [String: SerializedType.Type] = [
     "UInt16": xUInt16.self,
     "UInt32": xUInt32.self,
     "UInt64": xUInt64.self,
-    "Vector256": Vector256.self,
+    "Vector256": Vector256.self
 ]
 
 func getTypeByName(name: String) -> SerializedType.Type? {
@@ -39,10 +39,9 @@ func getTypeByName(name: String) -> SerializedType.Type? {
         The corresponding class object.
     */
     var typeMap: [String: SerializedType.Type] = [:]
-    for (name, objectType) in Types { typeMap[name] = objectType.self }
+    for (name, objectType) in binaryTypes { typeMap[name] = objectType.self }
     return typeMap[name]
 }
-
 
 class FieldInstance {
     // A collection of serialization information about a specific field type.

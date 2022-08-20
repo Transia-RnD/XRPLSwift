@@ -25,7 +25,7 @@ struct RequestMap<T> {
 public class RequestManager {
     private var nextId = 0
     private var promisesAwaitingResponse: [Int: RequestMap<Any>] = [:]
-    
+
     /**
      * Successfully resolves a request.
      *
@@ -42,7 +42,7 @@ public class RequestManager {
         map.promise.succeed(response!)
         self.deletePromise(id: id)
     }
-    
+
     public func resolve(id: Int, error: Any) throws {
         guard let index = self.promisesAwaitingResponse.firstIndex(where: { $0.key == id }) else {
             throw XrplError.noPromise("No existing promise with id \(id)")
@@ -52,7 +52,7 @@ public class RequestManager {
         map.promise.succeed(error)
         self.deletePromise(id: id)
     }
-    
+
     /**
      * Rejects a request.
      *
@@ -70,19 +70,19 @@ public class RequestManager {
         map.promise.fail(error)
         self.deletePromise(id: id)
     }
-    
+
     /**
      * Reject all pending requests.
      *
      * @param error - Error to throw with the reject.
      */
     public func rejectAll(error: Error) throws {
-        try self.promisesAwaitingResponse.forEach { (key: Int, value: RequestMap) in
+        try self.promisesAwaitingResponse.forEach { (key: Int, _: RequestMap) in
             try self.reject(id: key, error: error)
             self.deletePromise(id: key)
         }
     }
-    
+
     /**
      * Creates a new WebSocket request. This sets up a timeout timer to catch
      * hung responses, and a promise that will resolve with the response once
@@ -93,7 +93,7 @@ public class RequestManager {
      * @returns Request ID, new request form, and the promise for resolving the request.
      * @throws XrplError if request with the same ID is already pending.
      */
-    @objc func _resolve(_ sender: Timer) {
+    @objc func resolveTimer(_ sender: Timer) {
         guard let id = sender.userInfo as? Int else { return }
         try! resolve(id: id, error: XrplError.timeout())
     }
@@ -114,7 +114,7 @@ public class RequestManager {
         let timer = Timer.scheduledTimer(
             timeInterval: Double(timeout),
             target: self,
-            selector: #selector(self._resolve),
+            selector: #selector(self.resolveTimer),
             userInfo: self.nextId,
             repeats: false
         )
@@ -133,13 +133,13 @@ public class RequestManager {
         //    if (self.promisesAwaitingResponse.has(newId)) {
         //      throw new XrplError(`Response with id "${newId}" is already pending`)
         //    }
-        
+
         let newPromise = eventGroup.next().makePromise(of: Any.self)
         let reqMap: RequestMap = RequestMap<Any>(timer: timer, promise: newPromise, requestType: R.self)
         self.promisesAwaitingResponse[newId] = reqMap
         return (newId, newRequest, newPromise.futureResult)
     }
-    
+
     /**
      * Handle a "response". Responses match to the earlier request handlers,
      * and resolve/reject based on the data received.
@@ -147,48 +147,47 @@ public class RequestManager {
      * @param response - The response to handle.
      * @throws ResponseFormatError if the response format is invalid, RippledError if rippled returns an error.
      */
-    public func handleResponse(_response: [String: AnyObject]?) throws -> Void {
-        print(_response)
+    public func handleResponse(response: [String: AnyObject]?) throws {
+        print(response)
         let decoder = JSONDecoder()
-        let baseData = try JSONSerialization.data(withJSONObject: _response!, options: .prettyPrinted)
-        let response = try RippleBaseResponse(data: baseData)
-        if (response.id == nil || !(response.id is String || response.id is Int)) {
+        let baseData = try JSONSerialization.data(withJSONObject: response!, options: .prettyPrinted)
+        let baseResponse = try RippleBaseResponse(data: baseData)
+        if baseResponse.id == nil || !(baseResponse.id is String || baseResponse.id is Int) {
             throw ValidationError.invalidFormat("valid id not found in response")
             return
         }
-        guard let index = self.promisesAwaitingResponse.firstIndex(where: { $0.key == response.id }) else {
+        guard let index = self.promisesAwaitingResponse.firstIndex(where: { $0.key == baseResponse.id }) else {
             return
             //            throw XrplError.noPromise("No existing promise with id \(response.id)")
         }
-        if response.status == nil {
+        if baseResponse.status == nil {
             let error: XrplError = ValidationError.invalidFormat("valid id not found in response")
-            try self.reject(id: response.id, error: error)
+            try self.reject(id: baseResponse.id, error: error)
             return
         }
-        if response.status == "error" {
-            let errorData = try JSONSerialization.data(withJSONObject: _response!, options: .prettyPrinted)
+        if baseResponse.status == "error" {
+            let errorData = try JSONSerialization.data(withJSONObject: response!, options: .prettyPrinted)
             let returnedDecodable = try decoder.decode(ErrorResponse.self, from: errorData)
-            try self.reject(id: response.id, error: XrplError.unknown(returnedDecodable.errorMessage!))
+            try self.reject(id: baseResponse.id, error: XrplError.unknown(returnedDecodable.errorMessage!))
             return
         }
-        if response.status != "success" {
-            let error = ResponseFormatError.responseError("unrecognized response.status: \(response.status ?? "")")
-            try self.reject(id: response.id, error: error)
+        if baseResponse.status != "success" {
+            let error = ResponseFormatError.responseError("unrecognized response.status: \(baseResponse.status ?? "")")
+            try self.reject(id: baseResponse.id, error: error)
             return
         }
-        
+
         let map = self.promisesAwaitingResponse[index].value
         let jsonData = try JSONSerialization.data(
-            withJSONObject: _response!["result"] as! [String: AnyObject],
+            withJSONObject: response!["result"] as! [String: AnyObject],
             options: .prettyPrinted
         )
-        print(_response!["result"])
-        
-        
+        print(response!["result"])
+
 //        var responseObj: BaseResponse<Any>? = nil
         if map.requestType.self is AccountChannelsRequest.Type {
             let responseObj = BaseResponse(
-                response: response,
+                response: baseResponse,
                 result: CodableHelper.decode(AccountChannelsResponse.self, from: jsonData).decodableObj
             )
             try! self.resolve(responseObj.id, responseObj, nil)
@@ -196,13 +195,13 @@ public class RequestManager {
         }
         if map.requestType.self is AccountObjectsRequest.Type {
             let responseObj = BaseResponse(
-                response: response,
+                response: baseResponse,
                 result: CodableHelper.decode(AccountObjectsResponse.self, from: jsonData).decodableObj
             )
             try! self.resolve(responseObj.id, responseObj, nil)
             return
         }
-        
+
 //        guard let responseObj = RippleRequestFactory(
 //            requestType: map.requestType
 //        ).getResponse(
@@ -214,9 +213,9 @@ public class RequestManager {
 //        try! self.resolve(responseObj!.id, responseObj, nil)
 //        return
         let error: XrplError = XrplError.noPromise("The request \(map.requestType) has not been mapped")
-        try self.reject(id: response.id, error: error)
+        try self.reject(id: baseResponse.id, error: error)
     }
-    
+
     /**
      * Delete a promise after it has been returned.
      *

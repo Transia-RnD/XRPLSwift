@@ -29,5 +29,5 @@ public enum AddressCodecError: Error {
     case invalidPrefix(error: String = "Provided prefix is incorrect")
     /// Invalid Seed Encoding Algorithm.
     /// - Parameter error: String error message
-    case SeedError(error: String = "Invalid seed; could not determine encoding algorithm")
+    case seedError(error: String = "Invalid seed; could not determine encoding algorithm")
 }

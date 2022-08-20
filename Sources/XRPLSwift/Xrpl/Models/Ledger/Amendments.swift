@@ -23,13 +23,12 @@ open class Majority: Codable {
      * recently gained a majority.
      */
     let closeTime: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case amendment = "Amendment"
         case closeTime = "CloseTime"
     }
 }
-
 
 /**
  * The Amendments object type contains a list of Amendments that are currently
@@ -55,7 +54,7 @@ open class Amendments: Codable {
      * type, so this value is always 0.
      */
     var flags: Int = 0
-    
+
     enum CodingKeys: String, CodingKey {
         case amendments = "Amendments"
         case majorities = "Majorities"

@@ -12,12 +12,12 @@ import Foundation
 public class BaseSignerEntry: Codable {
     public let account: String
     public let signerWeight: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "Account"
         case signerWeight = "SignerWeight"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
@@ -26,7 +26,10 @@ public class BaseSignerEntry: Codable {
 }
 
 public class SignerEntry: Codable {
-    public let SignerEntry: BaseSignerEntry
+    public let signerEntry: BaseSignerEntry
+    enum CodingKeys: String, CodingKey {
+        case signerEntry = "SignerEntry"
+    }
 }
 
 /**
@@ -75,7 +78,7 @@ open class SignerList: BaseLedgerEntry {
      * weights sum to this value or more.
      */
     let signerQuorum: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case flags = "Flags"
         case previousTxnId = "PreviousTxnID"
@@ -85,7 +88,7 @@ open class SignerList: BaseLedgerEntry {
         case signerListId = "SignerListID"
         case signerQuorum = "SignerQuorum"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         flags = try values.decode(Int.self, forKey: .flags)

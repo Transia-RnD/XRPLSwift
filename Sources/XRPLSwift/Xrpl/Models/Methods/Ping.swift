@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The ping command returns an acknowledgement, so that clients can test the
  * connection status and latency. Expects a response in the form of a {@link
@@ -26,11 +25,11 @@ public class PingRequest: BaseRequest {
     ) {
         super.init(id: id, command: "ping", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
     }
@@ -44,12 +43,12 @@ public class PingRequest: BaseRequest {
 public class PingResponse: Codable {
     public let role: String?
     public let unlimited: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case role = "role"
         case unlimited = "unlimited"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         role = try values.decode(String.self, forKey: .role)

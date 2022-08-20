@@ -13,7 +13,7 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestNFTokenMint: XCTestCase {
-    
+
     func testValid() {
         let baseTx = [
             "TransactionType": "NFTokenMint",
@@ -24,7 +24,7 @@ final class TestNFTokenMint: XCTestCase {
             "NFTokenTaxon": 0,
             "Issuer": "r9LqNeG6qHxjeUocjvVki2XR35weJ9mZgQ",
             "TransferFee": 1,
-            "URI": "http://xrpl.org".bytes.toHex,
+            "URI": "http://xrpl.org".bytes.toHex
         ] as! [String: AnyObject]
         let tx = try! NFTokenMint(json: baseTx)
         do {
@@ -33,7 +33,7 @@ final class TestNFTokenMint: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testValidNoTaxon() {
         let baseTx = [
             "TransactionType": "NFTokenMint",
@@ -44,7 +44,7 @@ final class TestNFTokenMint: XCTestCase {
 //            "NFTokenTaxon": 0,
             "Issuer": "r9LqNeG6qHxjeUocjvVki2XR35weJ9mZgQ",
             "TransferFee": 1,
-            "URI": "http://xrpl.org".bytes.toHex,
+            "URI": "http://xrpl.org".bytes.toHex
         ] as! [String: AnyObject]
         let tx = try! NFTokenMint(json: baseTx)
         do {
@@ -53,7 +53,7 @@ final class TestNFTokenMint: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidNoAccountEqualIssuer() {
         let baseTx = [
             "TransactionType": "NFTokenMint",
@@ -64,11 +64,11 @@ final class TestNFTokenMint: XCTestCase {
             "NFTokenTaxon": 0,
             "Issuer": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "TransferFee": 1,
-            "URI": "http://xrpl.org".bytes.toHex,
+            "URI": "http://xrpl.org".bytes.toHex
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try NFTokenMint(json: baseTx))
     }
-    
+
     func testInvalidURIType() {
         let baseTx = [
             "TransactionType": "NFTokenMint",
@@ -79,9 +79,8 @@ final class TestNFTokenMint: XCTestCase {
             "NFTokenTaxon": 0,
             "Issuer": "r9LqNeG6qHxjeUocjvVki2XR35weJ9mZgQ",
             "TransferFee": 1,
-            "URI": "http://xrpl.org",
+            "URI": "http://xrpl.org"
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try NFTokenMint(json: baseTx))
     }
 }
-

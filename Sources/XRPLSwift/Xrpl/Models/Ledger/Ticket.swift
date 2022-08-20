@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The Ticket object type represents a Ticket, which tracks an account sequence
  * number that has been set aside for future use. You can create new tickets
@@ -43,7 +42,7 @@ open class Ticket: BaseLedgerEntry {
     let previousTxnLgrSeq: Int
     /** The Sequence Number this Ticket sets aside. */
     let ticketSequence: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "Account"
         case flags = "Flags"
@@ -52,7 +51,7 @@ open class Ticket: BaseLedgerEntry {
         case previousTxnLgrSeq = "PreviousTxnLgrSeq"
         case ticketSequence = "TicketSequence"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)

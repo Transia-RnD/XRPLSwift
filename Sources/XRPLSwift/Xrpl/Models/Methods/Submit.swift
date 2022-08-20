@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The submit method applies a transaction and sends it to the network to be
  * confirmed and included in future ledgers. Expects a response in the form of a
@@ -26,7 +25,7 @@ public class SubmitRequest: BaseRequest {
      * transaction to other servers. The default is false.
      */
     public let failHard: Bool?
-    
+
     public init(
         txBlob: String,
         failHard: Bool? = nil
@@ -37,19 +36,19 @@ public class SubmitRequest: BaseRequest {
         self.failHard = failHard
         super.init(command: "submit")
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case txBlob = "tx_blob"
         case failHard = "fail_hard"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         txBlob = try values.decode(String.self, forKey: .txBlob)
         failHard = try values.decode(Bool.self, forKey: .failHard)
         try super.init(from: decoder)
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -127,7 +126,7 @@ open class SubmitResponse: RippleBaseResponse {
      * transaction can appear in as a result of this request.
      */
     public let validatedLedgerIndex: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case engineResult = "engine_result"
         case engineResultCode = "engine_result_code"
@@ -144,7 +143,7 @@ open class SubmitResponse: RippleBaseResponse {
         case openLedgerCost = "open_ledger_cost"
         case validatedLedgerIndex = "validated_ledger_index"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         engineResult = try values.decode(String.self, forKey: .engineResult)

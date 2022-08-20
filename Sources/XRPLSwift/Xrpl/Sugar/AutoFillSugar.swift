@@ -25,31 +25,32 @@ private let autofillEventGroup = MultiThreadedEventLoopGroup(numberOfThreads: 4)
  * @returns The autofilled transaction.
  */
 public class AutoFillSugar {
-    
+
     // Expire unconfirmed transactions after 20 ledger versions, approximately 1 minute, by default
+    // swiftlint:disable:next identifier_name
     let LEDGER_OFFSET = 20
     struct ClassicAccountAndTag {
         private let classicAccount: String
-        private let tag: Int? //JM: Int | Bool only false?
+        private let tag: Int? // JM: Int | Bool only false?
     }
-    
+
     func autofill<T: BaseTransaction>(
         client: XrplClient,
         transaction: T,
         signersCount: Int?
     ) async -> EventLoopFuture<T> {
         let tx = transaction
-        
+
         //      setValidAddresses(tx)
-        
+
         //      setTransactionFlagsToNumber(tx)
-        
+
         var promises: [Void] = []
         if tx.sequence == nil {
             await promises.append(self.setNextValidSequenceNumber(client: client, tx: tx))
         }
 //        if (tx.fee == nil) {
-//            promises.append(calculateFeePerTransactionType(client, tx, signersCount))
+//            promises.append(calculateFeePeTransactionType(client, tx, signersCount))
 //        }
 //        if (tx.lastLedgerSequence == nil) {
 //            promises.append(setLatestValidatedLedgerSequence(client, tx))
@@ -57,7 +58,7 @@ public class AutoFillSugar {
 //        if (tx.transactionType == "AccountDelete") {
 //            promises.append(checkAccountDeleteBlockers(client, tx))
 //        }
-        
+
         let promise = autofillEventGroup.next().makePromise(of: T.self)
         _ = promises.compactMap({ $0 })
         promise.succeed(tx)
@@ -65,7 +66,7 @@ public class AutoFillSugar {
         //        return promise
         //        return Promise.all(promises).then(() => tx)
     }
-    
+
     //    func setValidAddresses(tx: Transaction) -> Void {
     //      validateAccountAddress(tx, "Account", "SourceTag")
     //      // eslint-disable-next-line @typescript-eslint/dot-notation -- Destination can exist on Transaction
@@ -138,12 +139,12 @@ public class AutoFillSugar {
     func setNextValidSequenceNumber(
         client: XrplClient,
         tx: BaseTransaction
-    ) async -> Void {
+    ) async {
         let request: AccountInfoRequest = AccountInfoRequest(account: tx.account, ledgerIndex: .string("current"))
         let response = try! await client.request(req: request)?.wait() as? BaseResponse<AccountInfoResponse>
         tx.sequence = response!.result?.accountData.sequence
     }
-    
+
     //    async func fetchAccountDeleteFee(client: Client): EventLoopFuture<Int> {
     //        let response = await client.request({ command: "server_state" })
     //      let fee = response.result.state.validated_ledger?.reserve_inc
@@ -154,8 +155,8 @@ public class AutoFillSugar {
     //
     //      return new BigNumber(fee)
     //    }
-    
-    //    async func calculateFeePerTransactionType(
+
+    //    async func calculateFeePeTransactionType(
     //      client: XrplClient,
     //      tx: Transaction,
     //      signersCount = 0,
@@ -237,4 +238,3 @@ public class AutoFillSugar {
     //      })
     //    }
 }
-

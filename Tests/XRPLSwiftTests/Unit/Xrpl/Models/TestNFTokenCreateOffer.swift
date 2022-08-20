@@ -13,7 +13,7 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestNFTokenCreateOffer: XCTestCase {
-    
+
     func testValidBuySide() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
@@ -24,7 +24,7 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Destination": "r9LqNeG6qHxjeUocjvVki2XR35weJ9mZgQ",
             "Fee": "5000000",
-            "Sequence": 2470665,
+            "Sequence": 2470665
         ] as! [String: AnyObject]
         let tx = try! NFTokenCreateOffer(json: baseTx)
         do {
@@ -33,7 +33,7 @@ final class TestNFTokenCreateOffer: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testValidSellSide() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
@@ -44,7 +44,7 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Destination": "r9LqNeG6qHxjeUocjvVki2XR35weJ9mZgQ",
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Fee": "5000000",
-            "Sequence": 2470665,
+            "Sequence": 2470665
         ] as! [String: AnyObject]
         let tx = try! NFTokenCreateOffer(json: baseTx)
         do {
@@ -53,7 +53,7 @@ final class TestNFTokenCreateOffer: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testValidSellSideZero() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
@@ -64,7 +64,7 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Destination": "r9LqNeG6qHxjeUocjvVki2XR35weJ9mZgQ",
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Fee": "5000000",
-            "Sequence": 2470665,
+            "Sequence": 2470665
         ] as! [String: AnyObject]
         let tx = try! NFTokenCreateOffer(json: baseTx)
         do {
@@ -73,7 +73,7 @@ final class TestNFTokenCreateOffer: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidAccountEqualOwner() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
@@ -83,11 +83,11 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Expiration": 1000,
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Fee": "5000000",
-            "Sequence": 2470665,
+            "Sequence": 2470665
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
     }
-    
+
     func testInvalidAccountEqualDest() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
@@ -97,11 +97,11 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Expiration": 1000,
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Fee": "5000000",
-            "Sequence": 2470665,
+            "Sequence": 2470665
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
     }
-    
+
     func testInvalidNFTokenIDNil() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
@@ -111,11 +111,11 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Expiration": 1000,
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Fee": "5000000",
-            "Sequence": 2470665,
+            "Sequence": 2470665
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
     }
-    
+
     func testInvalidAmountType() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
@@ -125,11 +125,11 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Expiration": 1000,
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Fee": "5000000",
-            "Sequence": 2470665,
+            "Sequence": 2470665
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
     }
-    
+
     func testInvalidAmountNil() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
@@ -139,11 +139,11 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Expiration": 1000,
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Fee": "5000000",
-            "Sequence": 2470665,
+            "Sequence": 2470665
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
     }
-    
+
     func testInvalidOwnerWithSell() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
@@ -154,11 +154,11 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Expiration": 1000,
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Fee": "5000000",
-            "Sequence": 2470665,
+            "Sequence": 2470665
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
     }
-    
+
     func testInvalidNoOwnerWithBuy() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
@@ -167,11 +167,11 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Expiration": 1000,
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Fee": "5000000",
-            "Sequence": 2470665,
+            "Sequence": 2470665
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
     }
-    
+
     func testInvalidBuyZeroAmount() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
@@ -181,9 +181,8 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Owner": "r9LqNeG6qHxjeUocjvVki2XR35weJ9mZgQ",
             "Fee": "5000000",
-            "Sequence": 2470665,
+            "Sequence": 2470665
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
     }
 }
-

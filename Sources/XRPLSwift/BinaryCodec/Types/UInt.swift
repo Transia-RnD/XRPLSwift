@@ -9,24 +9,24 @@
 
 import Foundation
 
-
+// swiftlint:disable:next type_name
 class xUInt: SerializedType {
-    
+
     init(_ bytes: [UInt8]) {
         super.init(bytes: bytes)
     }
-    
+
     // TODO: REVIEW THIS: See Tests...
     func value() -> Int {
         let data = Data(self.bytes)
         let value = Int(bigEndian: data.withUnsafeBytes { $0.pointee })
         return value
     }
-    
+
 //    class func from(value: Int) throws -> xUInt {
 //        return xUInt(try! value.asHexArray())
 //    }
-    
+
 }
 
 extension xUInt: Comparable {

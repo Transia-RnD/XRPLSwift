@@ -11,9 +11,9 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestEscrowFinish: XCTestCase {
-    
+
     public static var baseTx: [String: AnyObject] = [:]
-    
+
     override func setUp() async throws {
         TestEscrowFinish.baseTx = [
             "Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
@@ -22,10 +22,10 @@ final class TestEscrowFinish: XCTestCase {
             "OfferSequence": 7,
             "Condition":
                 "A0258020E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855810100",
-            "Fulfillment": "A0028000",
+            "Fulfillment": "A0028000"
         ] as! [String: AnyObject]
     }
-    
+
     func testValidEscrowFinish() {
         print(TestEscrowFinish.baseTx)
         let tx = try! EscrowFinish(json: TestEscrowFinish.baseTx)
@@ -35,7 +35,7 @@ final class TestEscrowFinish: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidWOOption() {
         TestEscrowFinish.baseTx["Condition"] = nil
         TestEscrowFinish.baseTx["Fulfillment"] = nil
@@ -46,25 +46,24 @@ final class TestEscrowFinish: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidOwnerNil() {
         TestEscrowFinish.baseTx["Owner"] = 0x15415253 as AnyObject
         XCTAssertThrowsError(try EscrowFinish(json: TestEscrowFinish.baseTx))
     }
-    
+
     func testInvalidOfferSequenceNil() {
         TestEscrowFinish.baseTx["OfferSequence"] = "10" as AnyObject
         XCTAssertThrowsError(try EscrowFinish(json: TestEscrowFinish.baseTx))
     }
-    
+
     func testInvalidConditionNil() {
         TestEscrowFinish.baseTx["Condition"] = 10 as AnyObject
         XCTAssertThrowsError(try EscrowFinish(json: TestEscrowFinish.baseTx))
     }
-    
+
     func testInvalidFulfillmentNil() {
         TestEscrowFinish.baseTx["Fulfillment"] = 0x142341 as AnyObject
         XCTAssertThrowsError(try EscrowFinish(json: TestEscrowFinish.baseTx))
     }
 }
-

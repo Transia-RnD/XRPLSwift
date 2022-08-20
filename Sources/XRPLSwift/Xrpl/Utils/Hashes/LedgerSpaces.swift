@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /**
  * XRP Ledger namespace prefixes.
  *

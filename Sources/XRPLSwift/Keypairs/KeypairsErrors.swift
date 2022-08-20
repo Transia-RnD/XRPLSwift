@@ -13,7 +13,7 @@ public enum KeypairsErrors: Error {
     case validation(_ desc: String)
     case invalidPrivateKey
     case unknown
-    
+
     public var localizedDescription: String {
         switch self {
         case .unknownError(let desc):

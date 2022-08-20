@@ -9,22 +9,21 @@
 
 import Foundation
 
-
 class Hash160: Hash {
-    
+
     /*
     Codec for serializing and deserializing a hash field with a width
     of 160 bits (20 bytes).
     `See Hash Fields <https://xrpl.org/serialization.html#hash-fields>`_
     */
-    
+
     static internal var WIDTH160: Int = 20
-    static public var ZERO_160: Hash160 = Hash160([UInt8].init(repeating: 0x0, count: Hash160.WIDTH160))
-    
+    static public var ZERO160: Hash160 = Hash160([UInt8].init(repeating: 0x0, count: Hash160.WIDTH160))
+
     override init(_ bytes: [UInt8]? = nil) {
-        super.init(bytes ?? Hash160.ZERO_160.bytes)
+        super.init(bytes ?? Hash160.ZERO160.bytes)
     }
-    
+
     override class func getLength() -> Int {
         return Hash160.WIDTH160
     }

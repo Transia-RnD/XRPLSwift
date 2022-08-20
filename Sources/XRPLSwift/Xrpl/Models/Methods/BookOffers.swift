@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 public struct TakerAmount: Codable {
     public let currency: String
     public let issuer: String?
@@ -34,14 +33,14 @@ public class BookOffersRequest: BaseRequest {
      * currency amounts.
      */
     public let takerPays: TakerAmount
-    
+
     /** A 20-byte hex string for the ledger version to use. */
     public let ledgerHash: String?
     /**
      * The ledger index of the ledger to use, or a shortcut string to choose a
      * ledger automatically.
      */
-    public let ledgerIndex: rLedgerIndex?
+    public let ledgerIndex: LedgerIndex?
     /**
      * If provided, the server does not provide more than this many offers in the
      * results. The total number of results returned may be fewer than the limit,
@@ -53,7 +52,7 @@ public class BookOffersRequest: BaseRequest {
      * by this account are always included in the response.
      */
     public let taker: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case takerGets = "taker_gets"
         case takerPays = "taker_pays"
@@ -62,7 +61,7 @@ public class BookOffersRequest: BaseRequest {
         case limit = "limit"
         case taker = "taker"
     }
-    
+
     public init(
         // Required
         takerGets: TakerAmount,
@@ -72,7 +71,7 @@ public class BookOffersRequest: BaseRequest {
         apiVersion: Int? = nil,
         // Optional
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil,
+        ledgerIndex: LedgerIndex? = nil,
         limit: Int? = nil,
         taker: String? = nil
     ) {
@@ -86,11 +85,11 @@ public class BookOffersRequest: BaseRequest {
         self.taker = taker
         super.init(id: id, command: "book_offers", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -101,7 +100,7 @@ public class BookOffersRequest: BaseRequest {
         if let limit = limit { try values.encode(limit, forKey: .limit) }
         if let taker = taker { try values.encode(taker, forKey: .taker) }
     }
-    
+
 }
 
 public class BookOffer: Offer {
@@ -116,31 +115,31 @@ public class BookOffer: Offer {
      * The maximum amount of currency that the taker can get, given the funding
      * status of the offer.
      */
-    public let takerGetsFunded: rAmount?
+    public let takerGetsFunded: Amount?
     /**
      * The maximum amount of currency that the taker would pay, given the funding
      * status of the offer.
      */
-    public let takerPaysFunded: rAmount?
+    public let takerPaysFunded: Amount?
     /**
      * The exchange rate, as the ratio taker_pays divided by taker_gets. For
      * fairness, offers that have the same quality are automatically taken
      * first-in, first-out.
      */
     public let quality: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case ownerFunds = "owner_funds"
         case takerGetsFunded = "taker_gets_funded"
         case takerPaysFunded = "taker_pays_funded"
         case quality = "quality"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ownerFunds = try values.decode(String.self, forKey: .ownerFunds)
-        takerGetsFunded = try values.decode(rAmount.self, forKey: .takerGetsFunded)
-        takerPaysFunded = try values.decode(rAmount.self, forKey: .takerPaysFunded)
+        takerGetsFunded = try values.decode(Amount.self, forKey: .takerGetsFunded)
+        takerPaysFunded = try values.decode(Amount.self, forKey: .takerPaysFunded)
         quality = try values.decode(String.self, forKey: .quality)
         try super.init(from: decoder)
     }
@@ -169,7 +168,7 @@ public class BookOffersResponse: Codable {
      */
     public let ledgerIndex: Int?
     public let validated: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case offers = "offers"
         case ledgerCurrentIndex = "ledger_curren_index"
@@ -177,7 +176,7 @@ public class BookOffersResponse: Codable {
         case ledgerIndex = "ledger_index"
         case validated = "validated"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         offers = try values.decode([BookOffer].self, forKey: .offers)

@@ -19,7 +19,7 @@ protocol SigningAlgorithm {
 public enum AlgorithmType {
     case ed25519
     case secp256k1
-    
+
     var algorithm: SigningAlgorithm.Type {
         switch self {
         case .ed25519:
@@ -28,9 +28,9 @@ public enum AlgorithmType {
             return SECP256K1.self
         }
     }
-    
+
     static var types: [AlgorithmType] { return [.ed25519, .secp256k1] }
-    
+
     var rawValue: String {
         switch self {
         case .ed25519:
@@ -39,21 +39,20 @@ public enum AlgorithmType {
             return "secp256k1"
         }
     }
-    
+
 }
 
 public struct KeypairsOptions {
     public let entropy: Entropy?
     public let algorithm: AlgorithmType?
     public let isValidator: Bool?
-    
+
     init(entropy: Entropy? = nil, algorithm: AlgorithmType?, isValidator: Bool? = nil) {
         self.entropy = entropy != nil ? entropy! : Entropy()
         self.algorithm = algorithm ?? .ed25519
         self.isValidator = isValidator ?? false
     }
 }
-
 
 public protocol rKeypairs {
     var privateKey: String {get}
@@ -71,7 +70,7 @@ public protocol rKeypairs {
 }
 
 public class Keypairs {
-    
+
     public static func generateSeed(options: KeypairsOptions) throws -> String {
         //        assert.ok(
         //          !options.entropy || options.entropy.length >= 16,
@@ -87,14 +86,13 @@ public class Keypairs {
             throw KeypairsErrors.unknown
         }
     }
-    
+
     public static func hash(message: String) -> [UInt8] {
         //      return hashjs.sha512().update(message).digest().slice(0, 32)
-        
+
         return []
     }
-    
-    
+
     public static func deriveKeypair(seed: String, isValidator: Bool = false) throws -> KeyPair {
         let (bytes, seedType) = try XrplCodec.decodeSeed(seed: seed)
         let entropy = Entropy(bytes: bytes)
@@ -127,15 +125,15 @@ public class Keypairs {
             return keyPair
         }
     }
-    
+
     public static func getAlgorithmFromKey(key: String) -> AlgorithmType {
         let data = [UInt8](key.hexadecimal!)
         return data.count == 33 && data[0] == 0xED ? .ed25519 : .secp256k1
     }
-    
+
     public static func sign(message: [UInt8], privateKey: String) -> [UInt8] {
         do {
-            
+
             let algorithm = Keypairs.getAlgorithmFromKey(key: privateKey).algorithm
             return try algorithm.sign(message: message, privateKey: Data(hex: privateKey).bytes)
         } catch {
@@ -143,7 +141,7 @@ public class Keypairs {
             return []
         }
     }
-    
+
     public static func verify(signature: [UInt8], message: [UInt8], publicKey: String) -> Bool {
         do {
             let algorithm = Keypairs.getAlgorithmFromKey(key: publicKey).algorithm
@@ -157,16 +155,15 @@ public class Keypairs {
             return false
         }
     }
-    
-    
+
     public static func deriveAddressFromBytes(publicKeyBytes: Data) throws -> String {
         return try XrplCodec.encodeClassicAddress(bytes: publicKeyBytes.computePKHash().bytes)
     }
-    
+
     public static func deriveAddress(publicKey: String) throws -> String {
         return try deriveAddressFromBytes(publicKeyBytes: Data(hex: publicKey))
     }
-    
+
     public static func deriveNodeAddress(publicKey: String) -> String {
         let _: [UInt8] = try! XrplCodec.decodeNodePublicKey(nodePublicKey: publicKey)
         //        let accountPublicBytes: [UInt8] = accountPublicFromPublicGenerator(generatorBytes)

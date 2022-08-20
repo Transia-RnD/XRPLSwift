@@ -11,14 +11,14 @@ import Foundation
 
 class SerializedType {
     // The base class for all binary codec field types.
-    
+
     public var bytes: [UInt8] = []
-    
+
     init(bytes: [UInt8]) {
         // Construct a new SerializedType.
         self.bytes = bytes
     }
-    
+
     func fromParser(
         parser: BinaryParser,
         // hint is Any so that subclasses can choose whether or not to require it.
@@ -27,18 +27,18 @@ class SerializedType {
         throw BinaryError.notImplemented
         return try! self.fromParser(parser: parser, hint: hint)
     }
-    
+
     func from(value: SerializedType) throws -> SerializedType {
         throw BinaryError.notImplemented
         return try! self.from(value: value)
     }
-    
+
     //    static func from(value: SerializedType | JSON | bigInt.BigInteger) -> SerializedType {
     class func from(value: SerializedType) throws -> SerializedType {
         throw BinaryError.notImplemented
         return try! self.from(value: value)
     }
-    
+
     //    func from(value: Data) -> Data {
     //        return value
     //    }
@@ -47,7 +47,7 @@ class SerializedType {
     //        print("fromValue")
     //        return Data(hex: value)
     //    }
-    
+
     func toBytesSink(list: BytesList) -> BytesList {
         /*
          Write the bytes representation of a SerializedType to a bytearray.
@@ -57,7 +57,7 @@ class SerializedType {
          */
         return list.put(bytesArg: bytes)
     }
-    
+
     func toBytes() -> [UInt8] {
         /*
          Get the bytes representation of a SerializedType.
@@ -66,7 +66,7 @@ class SerializedType {
          */
         return bytes
     }
-    
+
     func toJson() -> [String: AnyObject] {
         /*
          Returns the JSON representation of a SerializedType.
@@ -76,7 +76,7 @@ class SerializedType {
          */
         return [:]
     }
-    
+
     func toJson() -> Any {
         /*
          Returns the JSON representation of a SerializedType.
@@ -86,7 +86,7 @@ class SerializedType {
          */
         return toHex()
     }
-    
+
     func toJson() -> String {
         /*
          Returns the JSON representation of a SerializedType.
@@ -96,8 +96,7 @@ class SerializedType {
          */
         return toHex()
     }
-    
-    
+
     func str() -> String {
         /*
          Returns the hex string representation of self.buffer.
@@ -106,7 +105,7 @@ class SerializedType {
          */
         return toHex()
     }
-    
+
     func toHex() -> String {
         /*
          Get the hex representation of a SerializedType's bytes.
@@ -115,10 +114,10 @@ class SerializedType {
          */
         return bytes.toHexString().uppercased()
     }
-    
+
     func len() -> Int {
         // Get the length of a SerializedType's bytes.
         return bytes.count
     }
-    
+
 }

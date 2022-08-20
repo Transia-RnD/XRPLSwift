@@ -23,6 +23,7 @@
 //
 
 import Foundation
+// swiftlint:disable all
 
 public extension Ed25519 {
     /// verify

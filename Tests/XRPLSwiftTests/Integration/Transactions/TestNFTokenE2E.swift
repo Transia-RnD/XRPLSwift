@@ -5,10 +5,10 @@
 ////  Created by Denis Angell on 6/2/22.
 ////
 //
-//import XCTest
-//@testable import XRPLSwift
+// import XCTest
+// @testable import XRPLSwift
 //
-//final class TestNFTokenE2E: XCTestCase {
+// final class TestNFTokenE2E: XCTestCase {
 //
 //    var xrpLedger: Ledger = Ledger(endpoint: .xrpl_rpc_Testnet)
 //    
@@ -95,4 +95,4 @@
 //        // wait three seconds for all outstanding expectations to be fulfilled
 //        waitForExpectations(timeout: 40)
 //    }
-//}
+// }

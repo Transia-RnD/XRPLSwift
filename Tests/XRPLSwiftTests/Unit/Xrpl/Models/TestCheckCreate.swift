@@ -11,7 +11,7 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestCheckCreate: XCTestCase {
-    
+
     func testValidCheckCreate() {
         let baseTx = [
             "TransactionType": "CheckCreate",
@@ -30,7 +30,7 @@ final class TestCheckCreate: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidDestination() {
         let baseTx = [
             "TransactionType": "CheckCreate",
@@ -44,7 +44,7 @@ final class TestCheckCreate: XCTestCase {
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try CheckCreate(json: baseTx))
     }
-    
+
     func testInvalidSendMax() {
         let baseTx = [
             "TransactionType": "CheckCreate",
@@ -58,7 +58,7 @@ final class TestCheckCreate: XCTestCase {
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try CheckCreate(json: baseTx))
     }
-    
+
     func testInvalidDestinationTag() {
         let baseTx = [
             "TransactionType": "CheckCreate",
@@ -74,7 +74,7 @@ final class TestCheckCreate: XCTestCase {
         let tx = try! CheckCreate(json: baseTx)
         XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
-    
+
     func testInvalidExpiration() {
         let baseTx = [
             "TransactionType": "CheckCreate",
@@ -89,7 +89,7 @@ final class TestCheckCreate: XCTestCase {
         let tx = try! CheckCreate(json: baseTx)
         XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
-    
+
     func testInvalidInvoiceID() {
         let baseTx = [
             "TransactionType": "CheckCreate",

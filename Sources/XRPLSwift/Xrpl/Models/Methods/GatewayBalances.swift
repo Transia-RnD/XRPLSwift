@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The gateway_balances command calculates the total balances issued by a given
  * account, optionally excluding amounts held by operational addresses. Expects
@@ -49,8 +48,8 @@ public class GatewayBalancesRequest: BaseRequest {
    * The ledger index of the ledger version to use, or a shortcut string to
    * choose a ledger automatically.
    */
-    public let ledgerIndex: rLedgerIndex?
-    
+    public let ledgerIndex: LedgerIndex?
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case strict = "strict"
@@ -58,7 +57,7 @@ public class GatewayBalancesRequest: BaseRequest {
         case ledgerHash = "ledgerHash"
         case ledgerIndex = "ledgerIndex"
     }
-    
+
     public init(
         // Required
         account: String,
@@ -69,7 +68,7 @@ public class GatewayBalancesRequest: BaseRequest {
         strict: Bool? = nil,
         hotwallet: String? = nil,
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil
+        ledgerIndex: LedgerIndex? = nil
     ) {
         // Required
         self.account = account
@@ -79,11 +78,11 @@ public class GatewayBalancesRequest: BaseRequest {
         self.ledgerIndex = ledgerIndex
         super.init(id: id, command: "gateway_balances", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -93,7 +92,7 @@ public class GatewayBalancesRequest: BaseRequest {
         if let ledgerHash = ledgerHash { try values.encode(ledgerHash, forKey: .ledgerHash) }
         if let ledgerIndex = ledgerIndex { try values.encode(ledgerIndex, forKey: .ledgerIndex) }
     }
-    
+
 }
 
 public struct Balance: Codable {
@@ -108,7 +107,6 @@ public struct BaseBalance: Codable {
 public struct BaseCurrency: Codable {
     public let currency: [String: String]
 }
-
 
 /**
  * Expected response from a {@link GatewayBalancesRequest}.
@@ -148,7 +146,7 @@ public class GatewayBalancesResponse: Codable {
      * response.
      */
       public let ledgerCurrentIndex: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case obligations = "obligations"
@@ -158,7 +156,7 @@ public class GatewayBalancesResponse: Codable {
         case ledgerCurrentIndex = "ledgerCurrentIndex"
         case ledgerIndex = "ledgerIndex"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)

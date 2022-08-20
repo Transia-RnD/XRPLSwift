@@ -5,10 +5,10 @@
 ////  Created by Denis Angell on 6/2/22.
 ////
 //
-//import XCTest
-//@testable import XRPLSwift
+// import XCTest
+// @testable import XRPLSwift
 //
-//final class TestPaymentChannelE2E: XCTestCase {
+// final class TestPaymentChannelE2E: XCTestCase {
 //
 //    var xrpLedger: Ledger = Ledger(endpoint: .xrpl_rpc_Testnet)
 //    var channelHex: String = ""
@@ -150,4 +150,4 @@
 //        waitForExpectations(timeout: 10)
 //    }
 //
-//}
+// }

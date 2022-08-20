@@ -15,13 +15,13 @@ public class FieldInfo {
     public var isSerialized: Bool
     public var isSigningField: Bool
     public var type: String
-    
+
     init(dict: NSDictionary) {
         self.nth = dict["nth"] as! Int
         self.isVLEncoded = dict["isVLEncoded"] as! Bool
         self.isSerialized = dict["isSerialized"] as! Bool
         self.isSigningField = dict["isSigningField"] as! Bool
         self.type = dict["type"] as! String
-        
+
     }
 }

@@ -26,21 +26,21 @@ public class AccountCurrenciesRequest: BaseRequest {
      * The ledger index of the ledger to use, or a shortcut string to choose a
      * ledger automatically.
      */
-    public let ledgerIndex: rLedgerIndex?
+    public let ledgerIndex: LedgerIndex?
     /**
      * If true, then the account field only accepts a public key or XRP Ledger
      * address. Otherwise, account can be a secret or passphrase (not
      * recommended). The default is false.
      */
     public let strict: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case ledgerHash = "ledger_hash"
         case ledgerIndex = "ledger_index"
         case strict = "strict"
     }
-    
+
     public init(
         // Required
         account: String,
@@ -49,7 +49,7 @@ public class AccountCurrenciesRequest: BaseRequest {
         apiVersion: Int? = nil,
         // Optional
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil,
+        ledgerIndex: LedgerIndex? = nil,
         strict: Bool? = nil
     ) {
         // Required
@@ -64,7 +64,7 @@ public class AccountCurrenciesRequest: BaseRequest {
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -94,7 +94,7 @@ public class AccountCurrenciesResponse: Codable {
     public let sendCurrencies: [String]
     /** If true, this data comes from a validated ledger. */
     public let validated: Bool
-    
+
     enum CodingKeys: String, CodingKey {
         case ledgerHash = "ledger_hash"
         case ledgerIndex = "ledger_index"
@@ -102,7 +102,7 @@ public class AccountCurrenciesResponse: Codable {
         case sendCurrencies = "send_currencies"
         case validated = "validated"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ledgerHash = try values.decode(String.self, forKey: .ledgerHash)

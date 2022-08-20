@@ -9,7 +9,6 @@ import Foundation
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/NFTokenAcceptOffer.ts
 
-
 /**
  The NFTokenOfferAccept transaction is used to accept offers
  to buy or sell an NFToken. It can either:
@@ -32,7 +31,7 @@ public class NFTokenAcceptOffer: BaseTransaction {
      and NFTokenBuyOffer must be specified.
      */
     public var nftokenSellOffer: String?
-    
+
     /**
      Identifies the NFTokenOffer that offers to buy the NFToken.
      In direct mode this field is optional, but either NFTokenSellOffer or
@@ -40,7 +39,7 @@ public class NFTokenAcceptOffer: BaseTransaction {
      and NFTokenBuyOffer must be specified.
      */
     public var nftokenBuyOffer: String?
-    
+
     /**
      This field is only valid in brokered mode. It specifies the
      amount that the broker will keep as part of their fee for
@@ -59,43 +58,43 @@ public class NFTokenAcceptOffer: BaseTransaction {
      and NFTokenSellOffer must both specify the same TokenID; that is,
      both must be for the same NFToken.
      */
-    public var nftokenBrokerFee: rAmount?
-    
+    public var nftokenBrokerFee: Amount?
+
     enum CodingKeys: String, CodingKey {
         case nftokenSellOffer = "NFTokenSellOffer"
         case nftokenBuyOffer = "NFTokenBuyOffer"
         case nftokenBrokerFee = "NFTokenBrokerFee"
     }
-    
+
     public init(
         nftokenSellOffer: String? = nil,
         nftokenBuyOffer: String? = nil,
-        nftokenBrokerFee: rAmount? = nil
+        nftokenBrokerFee: Amount? = nil
     ) {
         self.nftokenSellOffer = nftokenSellOffer
         self.nftokenBuyOffer = nftokenBuyOffer
         self.nftokenBrokerFee = nftokenBrokerFee
         super.init(account: "", transactionType: "NFTokenAcceptOffer")
     }
-    
+
     public override init(json: [String: AnyObject]) throws {
         let decoder: JSONDecoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-        let r = try decoder.decode(NFTokenAcceptOffer.self, from: data)
-        self.nftokenSellOffer = r.nftokenSellOffer
-        self.nftokenBuyOffer = r.nftokenBuyOffer
-        self.nftokenBrokerFee = r.nftokenBrokerFee
+        let decoded = try decoder.decode(NFTokenAcceptOffer.self, from: data)
+        self.nftokenSellOffer = decoded.nftokenSellOffer
+        self.nftokenBuyOffer = decoded.nftokenBuyOffer
+        self.nftokenBrokerFee = decoded.nftokenBrokerFee
         try super.init(json: json)
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         nftokenSellOffer = try values.decodeIfPresent(String.self, forKey: .nftokenSellOffer)
         nftokenBuyOffer = try values.decodeIfPresent(String.self, forKey: .nftokenBuyOffer)
-        nftokenBrokerFee = try values.decodeIfPresent(rAmount.self, forKey: .nftokenBrokerFee)
+        nftokenBrokerFee = try values.decodeIfPresent(Amount.self, forKey: .nftokenBrokerFee)
         try super.init(from: decoder)
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -105,17 +104,16 @@ public class NFTokenAcceptOffer: BaseTransaction {
     }
 }
 
-
-func validateNFTokenBrokerFee(tx: [String: AnyObject]) throws -> Void {
+func validateNFTokenBrokerFee(tx: [String: AnyObject]) throws {
     let value = parseAmountValue(amount: tx["NFTokenBrokerFee"] as Any)
     if value!.isNaN {
         throw ValidationError.decoding("NFTokenAcceptOffer: invalid NFTokenBrokerFee")
     }
-    
+
     if value! <= 0 {
         throw ValidationError.decoding("NFTokenAcceptOffer: NFTokenBrokerFee must be greater than 0; omit if there is no fee")
     }
-    
+
     if tx["NFTokenSellOffer"] == nil || tx["NFTokenBuyOffer"] == nil {
         throw ValidationError.decoding("NFTokenAcceptOffer: both NFTokenSellOffer and NFTokenBuyOffer must be set if using brokered mode")
     }
@@ -127,13 +125,13 @@ func validateNFTokenBrokerFee(tx: [String: AnyObject]) throws -> Void {
  * @param tx - An NFTokenAcceptOffer Transaction.
  * @throws When the NFTokenAcceptOffer is Malformed.
  */
-public func validateNFTokenAcceptOffer(tx: [String: AnyObject]) throws -> Void {
+public func validateNFTokenAcceptOffer(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
-    
+
     if tx["NFTokenBrokerFee"] != nil {
         try validateNFTokenBrokerFee(tx: tx)
     }
-    
+
     if tx["NFTokenSellOffer"] == nil && tx["NFTokenBuyOffer"] == nil {
         throw ValidationError.decoding("NFTokenAcceptOffer: must set either NFTokenSellOffer or NFTokenBuyOffer")
     }

@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 public struct SourceCurrencyAmount: Codable {
     public let currency: String
     public let issuer: String?
@@ -32,12 +31,12 @@ public class RipplePathFindRequest: BaseRequest {
      * Currency Amount that the destination account would receive in a
      * transaction.
      */
-    public let destinationAmount: rAmount
+    public let destinationAmount: Amount
     /**
      * Currency Amount that would be spent in the transaction. Cannot be used
      * with `source_currencies`.
      */
-    public let sendMax: rAmount?
+    public let sendMax: Amount?
     /**
      * Array of currencies that the source account might want to spend. Each
      * entry in the array should be a JSON object with a mandatory currency field
@@ -50,8 +49,8 @@ public class RipplePathFindRequest: BaseRequest {
      * The ledger index of the ledger to use, or a shortcut string to choose a
      * ledger automatically.
      */
-    public let ledgerIndex: rLedgerIndex?
-    
+    public let ledgerIndex: LedgerIndex?
+
     enum CodingKeys: String, CodingKey {
         case sourceAccount = "source_account"
         case destinationAccount = "destination_account"
@@ -61,20 +60,20 @@ public class RipplePathFindRequest: BaseRequest {
         case ledgerIndex = "ledger_index"
         case ledgerHash = "ledger_hash"
     }
-    
+
     public init(
         // Required
         sourceAccount: String,
         destinationAccount: String,
-        destinationAmount: rAmount,
+        destinationAmount: Amount,
         // Base
         id: Int? = nil,
         apiVersion: Int? = nil,
         // Optional
-        sendMax: rAmount? = nil,
+        sendMax: Amount? = nil,
         sourceCurrencies: SourceCurrencyAmount? = nil,
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil
+        ledgerIndex: LedgerIndex? = nil
     ) {
         // Required
         self.sourceAccount = sourceAccount
@@ -87,18 +86,18 @@ public class RipplePathFindRequest: BaseRequest {
         self.ledgerIndex = ledgerIndex
         super.init(id: id, command: "submit_multisigned", apiVersion: apiVersion)
     }
-    
+
     required public init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
 //    required public init(from decoder: Decoder) throws {
 //        let values = try decoder.container(keyedBy: CodingKeys.self)
 //        sourceAccount = try values.decode(String.self, forKey: .sourceAccount)
 //        destinationAmount = try values.decode(rAmount.self, forKey: .destinationAmount)
 //        sendMax = try values.decode(rAmount.self, forKey: .sendMax)
 //        sourceCurrencies = try values.decode(SourceCurrencyAmount.self, forKey: .sourceCurrencies)
-//        ledgerIndex = try values.decode(rLedgerIndex.self, forKey: .ledgerIndex)
+//        ledgerIndex = try values.decode(LedgerIndex.self, forKey: .ledgerIndex)
 //        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
 ////        try super.init(from: decoder)
 //    }
@@ -106,12 +105,12 @@ public class RipplePathFindRequest: BaseRequest {
 
 public struct PathOption: Codable {
     /** Array of arrays of objects defining payment paths. */
-    public let paths_computed: [Path]
+    public let pathsComputed: [Path]
     /**
      * Currency amount that the source would have to send along this path for the
      * destination to receive the desired amount.
      */
-    public let source_amount: rAmount
+    public let sourceAmount: Amount
 }
 
 /**
@@ -134,14 +133,14 @@ public class RipplePathFindResponse: Codable {
      * "015841551A748AD2C1F76FF6ECB0CCCD00000000".
      */
     public let destinationCurrencies: [String]
-    public let destinationAmount: rAmount
+    public let destinationAmount: Amount
     public let fullReply: Bool?
     //    public let id: Int? | String
     public let id: Int?
     public let ledgerCurrentIndex: Int?
     public let sourceAccount: String
     public let validated: Bool
-    
+
     enum CodingKeys: String, CodingKey {
         case alternatives = "alternatives"
         case destinationAccount = "destination_account"
@@ -153,13 +152,13 @@ public class RipplePathFindResponse: Codable {
         case sourceAccount = "source_account"
         case validated = "validated"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         alternatives = try values.decode([PathOption].self, forKey: .alternatives)
         destinationAccount = try values.decode(String.self, forKey: .destinationAccount)
         destinationCurrencies = try values.decode([String].self, forKey: .destinationCurrencies)
-        destinationAmount = try values.decode(rAmount.self, forKey: .destinationAmount)
+        destinationAmount = try values.decode(Amount.self, forKey: .destinationAmount)
         fullReply = try values.decode(Bool.self, forKey: .fullReply)
         id = try values.decode(Int.self, forKey: .id)
         ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)

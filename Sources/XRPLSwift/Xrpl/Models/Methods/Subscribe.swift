@@ -7,10 +7,10 @@
 //
 //// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/subscribe.ts
 //
-//import Foundation
+// import Foundation
 //
 //
-//struct Book {
+// struct Book {
 //  /**
 //   * Specification of which currency the account taking the Offer would
 //   * receive, as a currency object with no amount.
@@ -33,16 +33,16 @@
 //    let snapshot?: boolean
 //  /** If true, return both sides of the order book. The default is false. */
 //    let both?: boolean
-//}
+// }
 //
-///**
+/// **
 // * The subscribe method requests periodic notifications from the server when
 // * certain events happen. Expects a response in the form of a.
 // * {@link SubscribeResponse}.
 // *
 // * @category Requests
 // */
-//open class SubscribeRequest: BaseRequest {
+// open class SubscribeRequest: BaseRequest {
 //    let command: String = "subscribe"
 //  /** Array of string names of generic streams to subscribe to. */
 //    let streams?: StreamType[]
@@ -69,31 +69,31 @@
 //    let url_username?: String
 //  /** Password to provide for basic authentication at the callback URL. */
 //    let url_password?: String
-//}
+// }
 //
-//type BooksSnapshot = Offer[]
+// type BooksSnapshot = Offer[]
 //
-///**
+/// **
 // * Response expected from a {@link SubscribeRequest}.
 // *
 // * @category Responses
 // */
-//open class SubscribeResponse: BaseResponse {
+// open class SubscribeResponse: BaseResponse {
 //  result: Record<String, never> | LedgerStreamResponse | BooksSnapshot
-//}
+// }
 //
-//struct BaseStream {
+// struct BaseStream {
 //  type: String
-//}
+// }
 //
-///**
+/// **
 // * The `ledger` stream only sends `ledgerClosed` messages when the consensus
 // * process declares a new validated ledger. The message identifies the ledger
 // * And provides some information about its contents.
 // *
 // * @category Streams
 // */
-//open class LedgerStream: BaseStream {
+// open class LedgerStream: BaseStream {
 //    let type: 'ledgerClosed'
 //  /**
 //   * The reference transaction cost as of this ledger version, in drops of XRP.
@@ -130,13 +130,13 @@
 //   * connected but has not yet obtained a ledger from the network.
 //   */
 //    let validated_ledgers?: String
-//}
+// }
 //
-///**
+/// **
 // * This response mirrors the LedgerStream, except it does NOT include the 'type' nor 'txn_count' fields.
 // */
 //// eslint-disable-next-line import/no-unused-modules -- Detailed enough to be worth exporting for end users.
-//open class LedgerStreamResponse {
+// open class LedgerStreamResponse {
 //  /**
 //   * The reference transaction cost as of this ledger version, in drops of XRP.
 //   * If this ledger version includes a SetFee pseudo-transaction the new.
@@ -170,16 +170,16 @@
 //   * connected but has not yet obtained a ledger from the network.
 //   */
 //    let validated_ledgers?: String
-//}
+// }
 //
-///**
+/// **
 // * The validations stream sends messages whenever it receives validation
 // * messages, also called validation votes, regardless of whether or not the
 // * validation message is from a trusted validator.
 // *
 // * @category Streams
 // */
-//open class ValidationStream: BaseStream {
+// open class ValidationStream: BaseStream {
 //    let type: 'validationReceived'
 //  /**
 //   * The value validationReceived indicates this is from the validations
@@ -242,14 +242,14 @@
 //   * validator is using a token, this is an ephemeral public key.
 //   */
 //    let validation_public_key: String
-//}
+// }
 //
-///**
+/// **
 // * Many subscriptions result in messages about transactions.
 // *
 // * @category Streams
 // */
-//open class TransactionStream: BaseStream {
+// open class TransactionStream: BaseStream {
 //    let status: String
 //    let type: 'transaction'
 //  /** String Transaction result code. */
@@ -281,16 +281,16 @@
 //   */
 //    let validated?: boolean
 //    let warnings?: Array<{ id: Int; message: String }>
-//}
+// }
 //
-///**
+/// **
 // * The admin-only `peer_status` stream reports a large amount of information on
 // * the activities of other rippled servers to which this server is connected, in
 // * particular their status in the consensus process.
 // *
 // * @category Streams
 // */
-//open class PeerStatusStream: BaseStream {
+// open class PeerStatusStream: BaseStream {
 //    let type: 'peerStatusChange'
 //  /**
 //   * The type of event that prompted this message. See Peer Status Events for
@@ -307,23 +307,23 @@
 //    let ledger_index_max?: Int
 //  /** The smallest Ledger Index the peer has currently available. */
 //    let ledger_index_min?: Int
-//}
+// }
 //
-///**
+/// **
 // * The format of an order book stream message is the same as that of
 // * transaction stream messages, except that OfferCreate transactions also
 // * contain the following field.
 // */
-//struct ModifiedOfferCreateTransaction extends OfferCreate {
+// struct ModifiedOfferCreateTransaction extends OfferCreate {
 //  /**
 //   * Numeric amount of the TakerGets currency that the Account sending this
 //   * OfferCreate transaction has after executing this transaction. This does not
 //   * check whether the currency amount is frozen.
 //   */
 //    let owner_funds: String
-//}
+// }
 //
-///**
+/// **
 // * When you subscribe to one or more order books with the `books` field, you
 // * get back any transactions that affect those order books. Has the same format
 // * as a {@link TransactionStream} but the transaction can have a `owner_funds`
@@ -331,7 +331,7 @@
 // *
 // * @category Streams
 // */
-//open class OrderBookStream: BaseStream {
+// open class OrderBookStream: BaseStream {
 //    let status: String
 //    let type: 'transaction'
 //    let engine_result: String
@@ -353,32 +353,32 @@
 //    hash?: String
 //  }
 //    let validated: Bool
-//}
+// }
 //
-///**
+/// **
 // * The consensus stream sends consensusPhase messages when the consensus
 // * process changes phase. The message contains the new phase of consensus the
 // * server is in.
 // *
 // * @category Streams
 // */
-//open class ConsensusStream: BaseStream {
+// open class ConsensusStream: BaseStream {
 //    let type: consensusPhase'
 //  /**
 //   * The new consensus phase the server is in. Possible values are open,
 //   * establish, and accepted.
 //   */
 //    let consensus: 'open' | 'establish' | 'accepted'
-//}
+// }
 //
-///**
+/// **
 // * The path_find method searches for a path along which a transaction can
 // * possibly be made, and periodically sends updates when the path changes over
 // * time.
 // *
 // * @category Streams
 // */
-//open class PathFindStream: BaseStream {
+// open class PathFindStream: BaseStream {
 //    let type: 'path_find'
 //  /** Unique address that would send a transaction. */
 //    let source_account: String
@@ -408,12 +408,12 @@
 //        paths_computed: Path[]
 //        source_amount: Amount
 //      }
-//}
+// }
 //
-///**
+/// **
 // * @category Streams
 // */
-//export type Stream =
+// export type Stream =
 //  | LedgerStream
 //  | ValidationStream
 //  | TransactionStream

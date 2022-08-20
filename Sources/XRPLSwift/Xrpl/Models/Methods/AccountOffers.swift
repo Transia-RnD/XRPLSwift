@@ -27,7 +27,7 @@ public class AccountOffersRequest: BaseRequest {
      * The ledger index of the ledger to use, or "current", "closed", or
      * "validated" to select a ledger dynamically.
      */
-    public let ledgerIndex: rLedgerIndex?
+    public let ledgerIndex: LedgerIndex?
     /**
      * Limit the number of transactions to retrieve. The server is not required
      * to honor this value. Must be within the inclusive range 10 to 400.
@@ -44,7 +44,7 @@ public class AccountOffersRequest: BaseRequest {
      * recommended). The default is false.
      */
     public let strict: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case ledgerHash = "ledger_hash"
@@ -53,7 +53,7 @@ public class AccountOffersRequest: BaseRequest {
         case marker = "marker"
         case strict = "strict"
     }
-    
+
     public init(
         // Required
         account: String,
@@ -62,7 +62,7 @@ public class AccountOffersRequest: BaseRequest {
         apiVersion: Int? = nil,
         // Optional
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil,
+        ledgerIndex: LedgerIndex? = nil,
         limit: Int? = nil,
         marker: AnyCodable? = nil,
         strict: Bool? = nil
@@ -77,11 +77,11 @@ public class AccountOffersRequest: BaseRequest {
         self.strict = strict
         super.init(id: id, command: "account_objects", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -102,11 +102,11 @@ public class AccountOffer: Codable {
     /**
      * The amount the account placing this Offer receives.
      */
-    public let takerGets: rAmount
+    public let takerGets: Amount
     /**
      * The amount the account placing this Offer pays.
      */
-    public let takerPays: rAmount
+    public let takerPays: Amount
     /**
      * The exchange rate of the Offer, as the ratio of the original taker_pays
      * divided by the original taker_gets. When executing offers, the offer with
@@ -119,7 +119,7 @@ public class AccountOffer: Codable {
      * seconds since the Ripple Epoch. See also: Offer Expiration.
      */
     public let expiration: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case flags = "flags"
         case seq = "seq"
@@ -165,7 +165,7 @@ public class AccountOffersResponse: Codable {
      * no pages of information after this one.
      */
     public let marker: AnyCodable?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case offers = "offers"
@@ -175,7 +175,7 @@ public class AccountOffersResponse: Codable {
 //        case limit = "limit"
         case marker = "marker"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)

@@ -9,16 +9,15 @@
 
 import Foundation
 
-
 public class CheckCash: BaseTransaction {
-    
+
     /**
      Represents a `CheckCash transaction <https://xrpl.org/checkcash.html>`_,
      which redeems a Check object to receive up to the amount authorized by the
      corresponding CheckCreate transaction. Only the Destination address of a
      Check can cash it.
      */
-    
+
     public let checkId: String
     /**
      The ID of the `Check ledger object
@@ -26,52 +25,52 @@ public class CheckCash: BaseTransaction {
      hexadecimal string. This field is required.
      :meta hide-value:
      */
-    
-    public let amount: rAmount?
+
+    public let amount: Amount?
     /**
      Redeem the Check for exactly this amount, if possible. The currency must
      match that of the SendMax of the corresponding CheckCreate transaction.
      You must provide either this field or ``DeliverMin``.
      */
-    
-    public let deliverMin: rAmount?
+
+    public let deliverMin: Amount?
     /**
      Redeem the Check for at least this amount and for as much as possible.
      The currency must match that of the ``SendMax`` of the corresponding
      CheckCreate transaction. You must provide either this field or ``Amount``.
      */
-    
+
     enum CodingKeys: String, CodingKey {
         case checkId = "CheckID"
         case amount = "Amount"
         case deliverMin = "DeliverMin"
     }
-    
-    public init(checkId: String, amount: rAmount, deliverMin: rAmount) {
+
+    public init(checkId: String, amount: Amount, deliverMin: Amount) {
         self.checkId = checkId
         self.amount = amount
         self.deliverMin = deliverMin
         super.init(account: "", transactionType: "CheckCash")
     }
-    
+
     public override init(json: [String: AnyObject]) throws {
         let decoder: JSONDecoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-        let r = try decoder.decode(CheckCash.self, from: data)
-        self.checkId = r.checkId
-        self.amount = r.amount
-        self.deliverMin = r.deliverMin
+        let decoded = try decoder.decode(CheckCash.self, from: data)
+        self.checkId = decoded.checkId
+        self.amount = decoded.amount
+        self.deliverMin = decoded.deliverMin
         try super.init(json: json)
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         checkId = try values.decode(String.self, forKey: .checkId)
-        amount = try values.decodeIfPresent(rAmount.self, forKey: .amount)
-        deliverMin = try values.decodeIfPresent(rAmount.self, forKey: .deliverMin)
+        amount = try values.decodeIfPresent(Amount.self, forKey: .amount)
+        deliverMin = try values.decodeIfPresent(Amount.self, forKey: .deliverMin)
         try super.init(from: decoder)
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -87,27 +86,27 @@ public class CheckCash: BaseTransaction {
  * @param tx - An CheckCash Transaction.
  * @throws When the CheckCash is Malformed.
  */
-public func validateCheckCash(tx: [String: AnyObject]) throws -> Void {
+public func validateCheckCash(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
-    
+
     if tx["Amount"] == nil && tx["DeliverMin"] == nil {
         throw ValidationError.decoding("CheckCash: must have either Amount or DeliverMin")
     }
-    
+
     if tx["Amount"] != nil && tx["DeliverMin"] != nil {
         throw ValidationError.decoding("CheckCash: cannot have both Amount and DeliverMin")
     }
-    
+
 //    if !String(tx["Amount"]).isEmpty && tx["Amount"] != nil && !isAmount(tx["Amount"]) {
     if tx["Amount"] != nil && !(tx["Amount"] as? String)!.isEmpty {
         throw ValidationError.decoding("CheckCash: invalid Amount")
     }
-    
+
 //    if !String(tx["DeliverMin"]).isEmpty && tx["DeliverMin"] != nil && !isAmount(tx["DeliverMin"]) {
     if tx["DeliverMin"] != nil && !(tx["DeliverMin"] as? String)!.isEmpty {
         throw ValidationError.decoding("CheckCash: invalid DeliverMin")
     }
-    
+
     if tx["CheckID"] != nil && !(tx["CheckID"] is Int) {
         throw ValidationError.decoding("CheckCash: invalid CheckID")
     }

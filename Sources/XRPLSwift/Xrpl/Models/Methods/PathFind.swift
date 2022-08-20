@@ -7,16 +7,16 @@
 //
 //// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/pathFind.ts
 //
-//import Foundation
+// import Foundation
 //
 //
-//class BasePathFindRequest: BaseRequest {
+// class BasePathFindRequest: BaseRequest {
 //    let command: String = "path_find"
 //    let subcommand: String
-//}
+// }
 //
-///** Start sending pathfinding information. */
-//open class PathFindCreateRequest: BasePathFindRequest {
+/// ** Start sending pathfinding information. */
+// open class PathFindCreateRequest: BasePathFindRequest {
 //    let subcommand: String = "create"
 //  /**
 //   * Unique address of the account to find a path from. In other words, the.
@@ -38,19 +38,19 @@
 //   * about, or to check the overall cost to make a payment along a certain path.
 //   */
 //    let paths?: Path[]
-//}
+// }
 //
-///** Stop sending pathfinding information. */
-//open classPathFindCloseRequest: BasePathFindRequest {
+/// ** Stop sending pathfinding information. */
+// open classPathFindCloseRequest: BasePathFindRequest {
 //    let subcommand: String = "close"
-//}
+// }
 //
-///** Get the information of the currently-open pathfinding request. */
-//open class PathFindStatusRequest: BasePathFindRequest {
+/// ** Get the information of the currently-open pathfinding request. */
+// open class PathFindStatusRequest: BasePathFindRequest {
 //    let subcommand: String = "status"
-//}
+// }
 //
-///**
+/// **
 // * The `path_find` method searches for a path along which a transaction can
 // * possibly be made, and periodically sends updates when the path changes over
 // * time. For a simpler version that is supported by JSON-RPC, see the
@@ -58,12 +58,12 @@
 // *
 // * @category Requests
 // */
-//export type PathFindRequest =
+// export type PathFindRequest =
 //  | PathFindCreateRequest
 //  | PathFindCloseRequest
 //  | PathFindStatusRequest
 //
-//struct PathOption {
+// struct PathOption {
 //  /** Array of arrays of objects defining payment paths. */
 //    let paths_computed: Path[]
 //  /**
@@ -71,14 +71,14 @@
 //   * Destination to receive the desired amount.
 //   */
 //    let source_amount: Amount
-//}
+// }
 //
-///**
+/// **
 // * Response expected from a {@link PathFindRequest}.
 // *
 // * @category Responses
 // */
-//open class PathFindResponse: BaseResponse {
+// open class PathFindResponse: BaseResponse {
 //  result: {
 //    /**
 //     * Array of objects with suggested paths to take, as described below. If
@@ -116,4 +116,4 @@
 //     */
 //      let status?: true
 //  }
-//}
+// }

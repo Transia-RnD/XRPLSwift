@@ -13,10 +13,10 @@ import NIO
 
 let eventGroup = MultiThreadedEventLoopGroup(numberOfThreads: 4)
 
-//struct PromiseResolveMap {
+// struct PromiseResolveMap {
 //    var resolve: (value?: void | PromiseLike<void>) => void
 //    var reject: (value?: Error) => void
-//}
+// }
 
 /**
  * Manage all the requests made to the websocket, and their async responses
@@ -25,29 +25,29 @@ let eventGroup = MultiThreadedEventLoopGroup(numberOfThreads: 4)
  */
 public class ConnectionManager {
     private var promisesAwaitingConnection: [EventLoopPromise<Any>] = []
-    
+
     /**
      * Resolves all awaiting connections.
      */
-    public func resolveAllAwaiting() -> Void {
+    public func resolveAllAwaiting() {
         _ = self.promisesAwaitingConnection.map { resolve in
             resolve.succeed("")
         }
         self.promisesAwaitingConnection = []
     }
-    
+
     /**
      * Rejects all awaiting connections.
      *
      * @param error - Error to throw in the rejection.
      */
-    public func rejectAllAwaiting(error: Error) -> Void {
+    public func rejectAllAwaiting(error: Error) {
         _ = self.promisesAwaitingConnection.map { resolve in
             resolve.fail(error)
         }
         self.promisesAwaitingConnection = []
     }
-    
+
     /**
      * Await a new connection.
      *

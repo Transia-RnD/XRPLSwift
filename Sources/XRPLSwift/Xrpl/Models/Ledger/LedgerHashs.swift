@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The LedgerHashes objects exist to make it possible to look up a previous
  * ledger's hash with only the current ledger version and at most one lookup of
@@ -34,12 +33,12 @@ open class LedgerHashes: BaseLedgerEntry {
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         flags = try values.decode(Int.self, forKey: .flags)
-        
+
         lastLedgerSequence = try values.decode(Int.self, forKey: .lastLedgerSequence)
         hashes = try values.decode([String].self, forKey: .hashes)
         try super.init(from: decoder)
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case flags = "Flags"
         case lastLedgerSequence = "LastLedgerSequence"

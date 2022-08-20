@@ -18,7 +18,7 @@ import Foundation
 open class FeeSettings: BaseLedgerEntry {
     var ledgerEntryType: String = "FeeSettings"
     var flags: Int
-    
+
     /**
      * The transaction cost of the "reference transaction" in drops of XRP as
      * hexadecimal.
@@ -43,7 +43,7 @@ open class FeeSettings: BaseLedgerEntry {
         reserveIncrement = try values.decode(Int.self, forKey: .reserveIncrement)
         try super.init(from: decoder)
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case flags = "Flags"
         case baseFee = "BaseFee"

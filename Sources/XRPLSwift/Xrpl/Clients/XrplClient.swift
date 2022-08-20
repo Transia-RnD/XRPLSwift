@@ -14,7 +14,7 @@ import AnyCodable
 public class ClientOptions: ConnectionUserOptions {
     public var feeCushion: Int?
     public var maxFeeXRP: String?
-    
+
     init(
         timeout: Timer,
         proxy: String? = nil,
@@ -25,7 +25,7 @@ public class ClientOptions: ConnectionUserOptions {
         // SUPER
         self.timeout = timeout
         self.proxy = proxy
-        
+
         self.feeCushion = feeCushion
         self.maxFeeXRP = maxFeeXRP
     }
@@ -40,7 +40,7 @@ public class ClientOptions: ConnectionUserOptions {
  * @returns The property key corresponding to the command.
  */
 private func getCollectKeyFromCommand(command: String) -> String? {
-    switch (command) {
+    switch command {
     case "account_channels":
         return "channels"
     case "account_lines":
@@ -71,25 +71,28 @@ class MarkerRequest: BaseRequest {
     public var marker: String?
 }
 
-//struct MarkerResult {
+// struct MarkerResult {
 //    private var marker: String?
-//}
+// }
 
 class MarkerResponse: BaseResponse<Any> {}
 
+// swiftlint:disable:next identifier_name
 private let DEFAULT_FEE_CUSHION: Double = 1.2
+// swiftlint:disable:next identifier_name
 private let DEFAULT_MAX_FEE_XRP: String = "2"
-
+// swiftlint:disable:next identifier_name
 private let MIN_LIMIT: Int = 10
+// swiftlint:disable:next identifier_name
 private let MAX_LIMIT: Int = 400
-
+// swiftlint:disable:next identifier_name
 private let NORMAL_DISCONNECT_CODE: Int = 1000
 
-//public typealias T = Any
-//public typealias R = Any
+// public typealias T = Any
+// public typealias R = Any
 
 class EventEmitter {
-    
+
 }
 
 /**
@@ -102,7 +105,7 @@ class XrplClient: EventEmitter {
      * Underlying connection to rippled.
      */
     public var connection: Connection
-    
+
     /**
      * Factor to multiply estimated fee by to provide a cushion in case the
      * required fee rises during submission of a transaction. Defaults to 1.2.
@@ -110,7 +113,7 @@ class XrplClient: EventEmitter {
      * @category Fee
      */
     public let feeCushion: Int
-    
+
     /**
      * Maximum transaction cost to allow, in decimal XRP. Must be a string-encoded
      * number. Defaults to "2".
@@ -118,7 +121,7 @@ class XrplClient: EventEmitter {
      * @category Fee
      */
     public let maxFeeXRP: String
-    
+
     /**
      * Creates a new Client with a websocket connection to a rippled server.
      *
@@ -128,7 +131,7 @@ class XrplClient: EventEmitter {
      */
     // eslint-disable-next-line max-lines-per-function -- okay because we have to set up all the connection handlers
     public init(server: String, options: ClientOptions? = nil) throws {
-        
+
         print(server.isValidWss)
         if server.isValidWss {
             throw XrplError.validation("server URI must start with `wss://`, `ws://`, `wss+unix://`, or `ws+unix://`.")
@@ -138,21 +141,21 @@ class XrplClient: EventEmitter {
         //            "server URI must start with `wss://`, `ws://`, `wss+unix://`, or `ws+unix://`.",
         //          )
         //        }
-        
+
         self.feeCushion = options?.feeCushion ?? Int(DEFAULT_FEE_CUSHION)
         self.maxFeeXRP = options?.maxFeeXRP ?? DEFAULT_MAX_FEE_XRP
-        
+
         self.connection = Connection(url: server, options: options)
         print(connection)
         print("HERE")
         //        self.connection.on("error", (errorCode, errorMessage, data) => {
         //            self.emit("error", errorCode, errorMessage, data)
         //        })
-        
+
         //        self.connection.on("connected", () => {
         //            self.emit("connected")
         //        })
-        
+
         //        self.connection.on("disconnected", (code: Int) => {
         //            let finalCode = code
         //            /*
@@ -195,7 +198,7 @@ class XrplClient: EventEmitter {
         //            self.emit("path_find", path)
         //        })
     }
-    
+
     /**
      * Get the url that the client is connected to.
      *
@@ -205,7 +208,7 @@ class XrplClient: EventEmitter {
     public func url() -> String {
         return self.connection.getUrl()
     }
-    
+
       /**
        * @category Network
        */
@@ -217,6 +220,7 @@ class XrplClient: EventEmitter {
 //      ): Promise<AccountCurrenciesResponse>
 //      public async request(r: AccountInfoRequest) -> EventLoopFuture<AccountInfoResponse>
 //      public async request(r: AccountLinesRequest): EventLoopFuture<AccountLinesResponse>
+        // swiftlint:disable:next identifier_name
         public func request(r: AccountLinesRequest) async -> EventLoopFuture<AccountLinesResponse> {
             return await request(r: r)
         }
@@ -264,18 +268,19 @@ class XrplClient: EventEmitter {
 //        r: TransactionEntryRequest,
 //      ): Promise<TransactionEntryResponse>
 //      public async request(r: TxRequest): Promise<TxResponse>
-    
+
     public func request<R: BaseRequest>(_ rdict: R) async throws -> EventLoopFuture<Any> {
         let data = try JSONSerialization.data(withJSONObject: rdict, options: .prettyPrinted)
         let decoder = JSONDecoder()
         let base = try decoder.decode(R.self, from: data)
         return try await request(req: base)!
     }
-    
+
+    // swiftlint:disable:next identifier_name
     public func request<R: BaseRequest, T: BaseResponse<Any>>(r: R) async -> EventLoopFuture<T> {
         return await request(r: r)
     }
-    
+
     /**
      * Makes a request to the client with the given command and
      * additional request body parameters.
@@ -287,7 +292,7 @@ class XrplClient: EventEmitter {
     func ensureClassicAddress(_ account: String) -> String {
         return account
     }
-    
+
     public func request<R: BaseRequest>(req: R) async throws -> EventLoopFuture<Any>? {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Necessary for overloading
         //        print(req)
@@ -302,13 +307,13 @@ class XrplClient: EventEmitter {
         //            requestDict["account"] = nil
         //        }
         let response = try await self.connection.request(request: req)
-        
+
         //        // mutates `response` to add warnings
         //        handlePartialPayment(req.command, response)
-        
+
         return response
     }
-    
+
     //  /**
     //   * @category Network
     //   */
@@ -501,7 +506,7 @@ class XrplClient: EventEmitter {
     //    } while (Boolean(marker) && count < countTo && lastBatchLength !== 0)
     //    return results
     //  }
-    
+
     /**
      * Tells the Client instance to connect to its rippled server.
      *
@@ -511,7 +516,7 @@ class XrplClient: EventEmitter {
     public func connect() async throws -> EventLoopFuture<Any> {
         return try await self.connection.connect()
     }
-    
+
     /**
      * Tells the Client instance to disconnect from it"s rippled server.
      *
@@ -525,7 +530,7 @@ class XrplClient: EventEmitter {
          */
         await self.connection.disconnect()
     }
-    
+
     /**
      * Checks if the Client instance is connected to its rippled server.
      *
@@ -535,7 +540,7 @@ class XrplClient: EventEmitter {
     public func isConnected() -> Bool {
         return self.connection.isConnected()
     }
-    
+
 //    /**
 //     * @category Core
 //     */

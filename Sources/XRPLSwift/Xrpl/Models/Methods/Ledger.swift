@@ -10,16 +10,15 @@
 import Foundation
 import AnyCodable
 
-
 public class LedgerRequest: BaseRequest {
-    
+
     /** A 20-byte hex string for the ledger version to use. */
     var ledgerHash: String?
     /**
      * The ledger index of the ledger to use, or a shortcut string to choose a
      * ledger automatically.
      */
-    var ledgerIndex: rLedgerIndex?
+    var ledgerIndex: LedgerIndex?
     /**
      * Admin required If true, return full information on the entire ledger.
      * Ignored if you did not specify a ledger version. Defaults to false.
@@ -59,10 +58,10 @@ public class LedgerRequest: BaseRequest {
      * array of queued transactions in the results.
      */
     var queue: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
-        case ledger_hash = "ledger_hash"
-        case ledger_index = "ledger_index"
+        case ledgerHash = "ledger_hash"
+        case ledgerIndex = "ledger_index"
         case full = "full"
         case accounts = "accounts"
         case transactions = "transactions"
@@ -71,14 +70,14 @@ public class LedgerRequest: BaseRequest {
         case binary = "binary"
         case queue = "queue"
     }
-    
+
     init( id: Int? = nil, apiVersion: Int? = nil ) { super.init(id: id, command: "ledger", apiVersion: apiVersion) }
-    
+
     init(
         id: Int? = nil,
         apiVersion: Int? = nil,
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil,
+        ledgerIndex: LedgerIndex? = nil,
         full: Bool? = nil,
         accounts: Bool? = nil,
         transactions: Bool? = nil,
@@ -95,18 +94,18 @@ public class LedgerRequest: BaseRequest {
         self.expand = expand
         self.ownerFunds = ownerFunds
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
 }
 
-class ModifiedMetadata: rTransactionMetadata {
+class ModifiedMetadata: TransactionMetadata {
     var ownerFunds: String
-    
+
     init(
         ownerFunds: String,
-        affectedNodes: [rNode]? = nil,
+        affectedNodes: [Node]? = nil,
         transactionResult: String,
         transactionIndex: Int
     ) {
@@ -117,7 +116,7 @@ class ModifiedMetadata: rTransactionMetadata {
             transactionIndex: transactionIndex
         )
     }
-    
+
     required public init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
@@ -128,9 +127,8 @@ struct ModifiedOfferCreateTransaction {
     var metadata: ModifiedMetadata
 }
 
-
 public enum LedgerQueueTx: Codable {
-    case metadata(rTransactionAndMetadata)
+    case metadata(TransactionAndMetadata)
     //    case modified(ModifiedOfferCreateTransaction)
     case json([String: String])
     func get() -> Any? {
@@ -143,7 +141,7 @@ public enum LedgerQueueTx: Codable {
             return json
         }
     }
-    
+
     func value() -> String? {
         switch self {
         case .metadata:
@@ -161,7 +159,7 @@ struct LedgerQueueData {
     var tx: LedgerQueueTx
     var retriesRemaining: Int
     var preflightResult: String
-    var last_Result: String?
+    var lastResult: String?
     var authChange: Bool?
     var fee: String?
     var feeLevel: String?
@@ -173,7 +171,7 @@ class BinaryLedger: BaseLedger {
     public var ttransactions: [BaseTransaction]?
 }
 
-enum rQueueData: Codable {
+enum LOQueueData: Codable {
     case data
     case string
 }
@@ -187,7 +185,7 @@ public struct Result {
      * this ledger's data is not final.
      */
     //    var queueData: Array<LedgerQueueData | string>?
-    var queueData: [rQueueData]?
+    var queueData: [LedgerQueueData]?
     /**
      * Array of objects describing queued transactions, in the same order as
      * the queue. If the request specified expand as true, members contain full
@@ -204,7 +202,7 @@ public struct Result {
  */
 public class LedgerResponse: Codable {
     var ledger: BaseLedger
-    
+
     var ledgerHash: String
     /** The Ledger Index of this ledger. */
     var ledgerIndex: Int
@@ -221,7 +219,7 @@ public class LedgerResponse: Codable {
      * on whether the request specified binary as true.
      */
     var validated: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case ledger = "ledger"
         case ledgerHash = "ledger_hash"
@@ -229,7 +227,7 @@ public class LedgerResponse: Codable {
         case validated = "validated"
 //        case queueData = "queue_data"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ledger = try values.decode(BaseLedger.self, forKey: .ledger)
@@ -240,4 +238,3 @@ public class LedgerResponse: Codable {
 //        try super.init(from: decoder)
     }
 }
-

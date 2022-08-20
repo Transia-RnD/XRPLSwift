@@ -23,6 +23,8 @@
 //
 
 import Foundation
+// swiftlint:disable all
+
 
 // field element
 struct fe: CustomDebugStringConvertible {

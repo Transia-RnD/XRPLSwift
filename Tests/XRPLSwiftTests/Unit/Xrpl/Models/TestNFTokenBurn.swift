@@ -13,9 +13,9 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestNFTokenBurn: XCTestCase {
-    
+
     public static var baseTx: [String: AnyObject] = [:]
-    
+
     override class func setUp() {
         baseTx = [
             "TransactionType": "NFTokenBurn",
@@ -23,10 +23,10 @@ final class TestNFTokenBurn: XCTestCase {
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Fee": "5000000",
             "Sequence": 2470665,
-            "Flags": 2147483648,
+            "Flags": 2147483648
         ] as! [String: AnyObject]
     }
-    
+
     func testValid() {
         let tx = try! NFTokenBurn(json: TestNFTokenBurn.baseTx)
         do {
@@ -35,10 +35,9 @@ final class TestNFTokenBurn: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidLimitAmountNil() {
         TestNFTokenBurn.baseTx["NFTokenID"] = nil
         XCTAssertThrowsError(try TrustSet(json: TestNFTokenBurn.baseTx))
     }
 }
-

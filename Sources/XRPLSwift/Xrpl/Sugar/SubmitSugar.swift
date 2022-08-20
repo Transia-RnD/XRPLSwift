@@ -11,6 +11,7 @@ import Foundation
 import NIO
 
 /** Approximate time for a ledger to close, in milliseconds */
+// swiftlint:disable:next identifier_name
 let LEDGER_CLOSE_TIME = 4000
 
 /**
@@ -31,18 +32,18 @@ let LEDGER_CLOSE_TIME = 4000
  */
 
 public enum SubmitTransaction: Codable {
-    case tx(rTransaction)
+    case tx(Transaction)
     case string(String)
 }
 
 extension SubmitTransaction {
-    
-    enum rAmountCodingError: Error {
+
+    enum AmountCodingError: Error {
         case decoding(String)
     }
-    
+
     public init(from decoder: Decoder) throws {
-        if let value = try? rTransaction.init(from: decoder) {
+        if let value = try? Transaction.init(from: decoder) {
             self = .tx(value)
             return
         }
@@ -50,9 +51,9 @@ extension SubmitTransaction {
             self = .string(value)
             return
         }
-        throw rAmountCodingError.decoding("OOPS")
+        throw AmountCodingError.decoding("OOPS")
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         switch self {
         case .tx(let tx):
@@ -67,7 +68,7 @@ public class SubmitOptions {
     public var autofill: Bool?
     public var failHard: Bool?
     public var wallet: Wallet
-    
+
     public init(
         autofill: Bool?,
         failHard: Bool?,
@@ -81,9 +82,9 @@ public class SubmitOptions {
 
 func submit(
     this: XrplClient,
-    transaction: rTransaction,
+    transaction: Transaction,
     opts: SubmitOptions?
-//) async throws -> EventLoopFuture<TxResponse> {
+// ) async throws -> EventLoopFuture<TxResponse> {
 ) async throws -> EventLoopFuture<Any> {
     let signedTx = try await getSignedTx(client: this, transaction: transaction, opts: opts!)
     return try await submitRequest(client: this, signedTransaction: signedTx, failHard: opts?.failHard)
@@ -105,17 +106,17 @@ func submit(
 func submitAndWait(
     this: XrplClient,
     //  transaction: Transaction | string,
-    transaction: rTransaction,
+    transaction: Transaction,
     opts: SubmitOptions? = nil
-//) async throws -> EventLoopFuture<TxResponse> {
+// ) async throws -> EventLoopFuture<TxResponse> {
 ) async throws -> String {
     let signedTx = try await getSignedTx(client: this, transaction: transaction, opts: opts!)
-    
+
     let lastLedger: Int? = getLastLedgerSequence(transaction: signedTx)
     if lastLedger == nil {
         throw XrplError.validation("Transaction must contain a LastLedgerSequence value for reliable submission.")
     }
-    
+
     let response = try await submitRequest(client: this, signedTransaction: signedTx, failHard: opts?.failHard)
     print(response)
 //    let txHash = opts?.hashes.hashSignedTx(signedTx)
@@ -136,12 +137,12 @@ func submitRequest(
     //  signedTransaction: Transaction | string,
     signedTransaction: String,
     failHard: Bool? = false
-//) async throws -> EventLoopFuture<SubmitResponse> {
+// ) async throws -> EventLoopFuture<SubmitResponse> {
 ) async throws -> EventLoopFuture<Any> {
 //    if (!isSigned(transaction: signedTransaction)) {
 //        throw XrplError.validation("Transaction must be signed")
 //    }
-    
+
 //    let signedTxEncoded = signedTransaction is String ? signedTransaction : encode(signedTransaction)
     let encoder = JSONEncoder()
     let signedTxEncoded: String = try BinaryCodec.encode(data: try encoder.encode(signedTransaction))
@@ -153,19 +154,19 @@ func submitRequest(
     return try await client.request(req: request)!
 }
 
-///*
+/// *
 // * The core logic of reliable submission.  This polls the ledger until the result of the
 // * transaction can be considered final, meaning it has either been included in a
 // * validated ledger, or the transaction"s lastLedgerSequence has been surpassed by the
 // * latest ledger sequence (meaning it will never be included in a validated ledger).
 // */
 //// eslint-disable-next-line max-params, max-lines-per-function -- this function needs to display and do with more information.
-//func waitForFinalTransactionOutcome(
+// func waitForFinalTransactionOutcome(
 //  client: Client,
 //  txHash: string,
 //  lastLedger: number,
 //  submissionResult: string,
-//) -> async EventLoopFuture<TxResponse> {
+// ) -> async EventLoopFuture<TxResponse> {
 //  await sleep(LEDGER_CLOSE_TIME)
 //
 //  const latestLedger = await client.getLedgerIndex()
@@ -211,11 +212,11 @@ func submitRequest(
 //    lastLedger,
 //    submissionResult,
 //  )
-//}
+// }
 
 // checks if the transaction has been signed
-//func isSigned(transaction: Transaction | String) -> Bool {
-func isSigned(transaction: rTransaction) -> Bool {
+// func isSigned(transaction: Transaction | String) -> Bool {
+func isSigned(transaction: Transaction) -> Bool {
     return false
     //    let tx = transaction is String ? decode(transaction) : transaction
     //    return (
@@ -228,19 +229,19 @@ func isSigned(transaction: rTransaction) -> Bool {
 func getSignedTx(
     client: XrplClient,
     //  transaction: Transaction | string,
-    transaction: rTransaction,
+    transaction: Transaction,
     opts: SubmitOptions
-//) async throws -> EventLoopFuture<String> {
+// ) async throws -> EventLoopFuture<String> {
 ) async throws -> String {
     //    if isSigned(transaction: transaction) {
     //        return transaction
     //    }
-    
+
     if opts.wallet == nil {
         throw XrplError.validation("Wallet must be provided when submitting an unsigned transaction")
     }
-    
-    //    let tx = transaction is String ? (decode(transaction) as? rTransaction) : transaction
+
+    //    let tx = transaction is String ? (decode(transaction) as? Transaction) : transaction
     let encoder = JSONEncoder()
     print(transaction)
     let txs = try encoder.encode(transaction)
@@ -259,7 +260,7 @@ func getLastLedgerSequence(
 //    let tx = typeof transaction === "string" ? decode(transaction) : transaction
     let tx = transaction
     //   eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- converts LastLedgSeq to number if present.
-    
+
 //    return tx.LastLedgerSequence as? Int
     return 0
 }

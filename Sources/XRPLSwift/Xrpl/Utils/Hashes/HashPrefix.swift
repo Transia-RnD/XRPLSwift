@@ -23,26 +23,26 @@ import Foundation
  */
 public enum HashPrefix: Int {
     // transaction plus signature to give transaction ID 'TXN'
+    // swiftlint:disable:next identifier_name
     case TRANSACTION_ID = 0x54584e00
-    
     // transaction plus metadata 'TND'
+    // swiftlint:disable:next identifier_name
     case TRANSACTION_NODE = 0x534e4400
-    
     // inner node in tree 'MIN'
+    // swiftlint:disable:next identifier_name
     case INNER_NODE = 0x4d494e00
-    
     // leaf node in tree 'MLN'
+    // swiftlint:disable:next identifier_name
     case LEAF_NODE = 0x4d4c4e00
-    
     // inner transaction to sign 'STX'
+    // swiftlint:disable:next identifier_name
     case TRANSACTION_SIGN = 0x53545800
-    
     // inner transaction to sign (TESTNET) 'stx'
+    // swiftlint:disable:next identifier_name
     case TRANSACTION_SIGN_TESTNET = 0x73747800
-    
     // inner transaction to multisign 'SMT'
+    // swiftlint:disable:next identifier_name
     case TRANSACTION_MULTISIGN = 0x534d5400
-    
     // ledger 'LWR'
     case LEDGER = 0x4c575200
 }

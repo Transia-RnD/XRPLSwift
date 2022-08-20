@@ -49,7 +49,7 @@ open class Check: BaseLedgerEntry {
      * Check is successfully cashed, the destination is credited in the same
      * currency for up to this amount.
      */
-    public let sendMax: rAmount
+    public let sendMax: Amount
     /** The sequence number of the CheckCreate transaction that created this check. */
     public let sequence: Int
     /**
@@ -74,7 +74,7 @@ open class Check: BaseLedgerEntry {
      * hosted recipient at the sender's address.
      */
     public let sourceTag: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "Account"
         case destination = "Destination"
@@ -90,7 +90,7 @@ open class Check: BaseLedgerEntry {
         case invoiceId = "InvoiceID"
         case sourceTag = "SourceTag"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
@@ -99,7 +99,7 @@ open class Check: BaseLedgerEntry {
         ownerNode = try values.decode(String.self, forKey: .ownerNode)
         previousTxnId = try values.decode(String.self, forKey: .previousTxnId)
         previousTxnLgrSeq = try values.decode(Int.self, forKey: .previousTxnLgrSeq)
-        sendMax = try values.decode(rAmount.self, forKey: .sendMax)
+        sendMax = try values.decode(Amount.self, forKey: .sendMax)
         sequence = try values.decode(Int.self, forKey: .sequence)
         destinationNode = try? values.decode(String.self, forKey: .destinationNode)
         destinationTag = try? values.decode(Int.self, forKey: .destinationTag)

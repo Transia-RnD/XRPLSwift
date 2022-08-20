@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The `fee` command reports the current state of the open-ledger requirements
  * for the transaction cost. This requires the FeeEscalation amendment to be
@@ -33,18 +32,18 @@ public class FeeRequest: BaseRequest {
     ) {
         super.init(id: id, command: "fee", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
     }
 }
 
 public struct Drops: Codable {
-    
+
     /**
      * The transaction cost required for a reference transaction to be
      * included in a ledger under minimum load, represented in drops of XRP.
@@ -66,7 +65,7 @@ public struct Drops: Codable {
      * be included in the current open ledger, represented in drops of XRP.
      */
     public let openLedgerFee: String
-    
+
     enum CodingKeys: String, CodingKey {
         case baseFee = "baseFee"
         case medianFee = "medianFee"
@@ -96,7 +95,7 @@ public struct Levels: Codable {
      * levels.
      */
     public let referenceLevel: String
-    
+
     enum CodingKeys: String, CodingKey {
         case medianLevel = "medianLevel"
         case minimumLevel = "minimumLevel"
@@ -104,7 +103,6 @@ public struct Levels: Codable {
         case referenceLevel = "referenceLevel"
     }
 }
-
 
 /**
  * Response expected from a {@link FeeRequest}.
@@ -131,7 +129,7 @@ public class FeeResponse: Codable {
      * currently hold.
      */
     public let maxQueueSize: String
-    
+
     enum CodingKeys: String, CodingKey {
         case currentLedgerSize = "currentLedgerSize"
         case currentQueueSize = "currentQueueSize"
@@ -141,7 +139,7 @@ public class FeeResponse: Codable {
         case levels = "levels"
         case maxQueueSize = "maxQueueSize"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         currentLedgerSize = try values.decode(String.self, forKey: .currentLedgerSize)

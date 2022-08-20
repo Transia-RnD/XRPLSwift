@@ -11,7 +11,7 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestOfferCreate: XCTestCase {
-    
+
     func testValidOfferCreate() {
         let baseTx = [
             "Account": "r3rhWeE31Jt5sWmi4QiGLMZnY3ENgqw96W",
@@ -26,12 +26,12 @@ final class TestOfferCreate: XCTestCase {
             "TakerGets": [
                 "currency": "DSH",
                 "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
-                "value": "43.11584856965009",
+                "value": "43.11584856965009"
             ],
             "TakerPays": "12928290425",
             "TransactionType": "OfferCreate",
             "TxnSignature":
-                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91",
+                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91"
         ] as! [String: AnyObject]
         do {
             let tx = try OfferCreate(json: baseTx)
@@ -39,7 +39,7 @@ final class TestOfferCreate: XCTestCase {
         } catch {
             XCTAssertNil(error)
         }
-        
+
         let baseTx1 = [
             "Account": "r3rhWeE31Jt5sWmi4QiGLMZnY3ENgqw96W",
             "Fee": "10",
@@ -54,11 +54,11 @@ final class TestOfferCreate: XCTestCase {
             "TakerPays": [
                 "currency": "DSH",
                 "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
-                "value": "43.11584856965009",
+                "value": "43.11584856965009"
             ],
             "TransactionType": "OfferCreate",
             "TxnSignature":
-                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91",
+                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91"
         ] as! [String: AnyObject]
         do {
             let tx = try OfferCreate(json: baseTx1)
@@ -66,7 +66,7 @@ final class TestOfferCreate: XCTestCase {
         } catch {
             XCTAssertNil(error)
         }
-        
+
         let baseTx2 = [
             "Account": "r3rhWeE31Jt5sWmi4QiGLMZnY3ENgqw96W",
             "Fee": "10",
@@ -80,16 +80,16 @@ final class TestOfferCreate: XCTestCase {
             "TakerGets": [
                 "currency": "DSH",
                 "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
-                "value": "43.11584856965009",
+                "value": "43.11584856965009"
             ],
             "TakerPays": [
                 "currency": "DSH",
                 "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
-                "value": "43.11584856965009",
+                "value": "43.11584856965009"
             ],
             "TransactionType": "OfferCreate",
             "TxnSignature":
-                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91",
+                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91"
         ] as! [String: AnyObject]
         do {
             let tx = try OfferCreate(json: baseTx2)
@@ -98,7 +98,7 @@ final class TestOfferCreate: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidExpirationType() {
         let baseTx = [
             "Account": "r3rhWeE31Jt5sWmi4QiGLMZnY3ENgqw96W",
@@ -113,16 +113,16 @@ final class TestOfferCreate: XCTestCase {
             "TakerGets": [
                 "currency": "DSH",
                 "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
-                "value": "43.11584856965009",
+                "value": "43.11584856965009"
             ],
             "TakerPays": [
                 "currency": "DSH",
                 "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
-                "value": "43.11584856965009",
+                "value": "43.11584856965009"
             ],
             "TransactionType": "OfferCreate",
             "TxnSignature":
-                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91",
+                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91"
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try OfferCreate(json: baseTx))
     }
@@ -141,20 +141,20 @@ final class TestOfferCreate: XCTestCase {
             "TakerGets": [
                 "currency": "DSH",
                 "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
-                "value": "43.11584856965009",
+                "value": "43.11584856965009"
             ],
             "TakerPays": [
                 "currency": "DSH",
                 "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
-                "value": "43.11584856965009",
+                "value": "43.11584856965009"
             ],
             "TransactionType": "OfferCreate",
             "TxnSignature":
-                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91",
+                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91"
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try OfferCreate(json: baseTx))
     }
-    
+
     func testInvalidTakerPaysType() {
         let baseTx = [
             "Account": "r3rhWeE31Jt5sWmi4QiGLMZnY3ENgqw96W",
@@ -170,11 +170,11 @@ final class TestOfferCreate: XCTestCase {
             "TakerPays": 10,
             "TransactionType": "OfferCreate",
             "TxnSignature":
-                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91",
+                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91"
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try OfferCreate(json: baseTx))
     }
-    
+
     func testInvalidTakerGetsType() {
         let baseTx = [
             "Account": "r3rhWeE31Jt5sWmi4QiGLMZnY3ENgqw96W",
@@ -190,13 +190,12 @@ final class TestOfferCreate: XCTestCase {
             "TakerPays": [
                 "currency": "DSH",
                 "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
-                "value": "43.11584856965009",
+                "value": "43.11584856965009"
             ],
             "TransactionType": "OfferCreate",
             "TxnSignature":
-                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91",
+                "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91"
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try OfferCreate(json: baseTx))
     }
 }
-

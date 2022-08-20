@@ -8,7 +8,7 @@
 import Foundation
 
 //
-//let HEX_REGEX: String = "/^[0-9A-Fa-f]+$/u"
+// let HEX_REGEX: String = "/^[0-9A-Fa-f]+$/u"
 
 /**
  * Verify that all fields of an object are in fields.
@@ -21,7 +21,7 @@ public func onlyHasFields(
     obj: [String: AnyObject],
     fields: [String]
 ) -> Bool {
-    return obj.allSatisfy { (key: String, value: AnyObject) in
+    return obj.allSatisfy { (key: String, _: AnyObject) in
         return fields.contains(key)
     }
 }

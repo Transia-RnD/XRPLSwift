@@ -7,23 +7,23 @@
 //
 //// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/unsubscribe.ts
 //
-//import Foundation
+// import Foundation
 //
 //
-//struct Book {
+// struct Book {
 //  let taker_gets: Currency
 //  let taker_pays: Currency
 //  let both: Bool?
-//}
+// }
 //
-///**
+/// **
 // * The unsubscribe command tells the server to stop sending messages for a
 // * particular subscription or set of subscriptions. Expects a response in the
 // * form of an {@link UnsubscribeResponse}.
 // *
 // * @category Requests
 // */
-//open class UnsubscribeRequest: BaseRequest {
+// open class UnsubscribeRequest: BaseRequest {
 ////  command: String = "unsubscribe"
 //  /**
 //   * Array of string names of generic streams to unsubscribe from, including.
@@ -45,13 +45,13 @@
 //   * below.
 //   */
 //  books: Book[]?
-//}
+// }
 //
-///**
+/// **
 // * Response expected from a {@link UnsubscribeRequest}.
 // *
 // * @category Responses
 // */
-//open class UnsubscribeResponse: BaseResponse {
+// open class UnsubscribeResponse: BaseResponse {
 //  result: Record<String, never>
-//}
+// }

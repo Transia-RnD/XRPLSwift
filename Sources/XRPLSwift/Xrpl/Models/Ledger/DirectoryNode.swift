@@ -52,7 +52,7 @@ open class DirectoryNode: BaseLedgerEntry {
     let takerGetsCurrency: String?
     /** The issuer of the TakerGets amount from the offers in this directory. */
     let takerGetsIssuer: String?
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         flags = try values.decode(Int.self, forKey: .flags)
@@ -67,7 +67,7 @@ open class DirectoryNode: BaseLedgerEntry {
         takerGetsIssuer = try values.decode(String.self, forKey: .takerGetsIssuer)
         try super.init(from: decoder)
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case flags = "Flags"
         case rootIndex = "RootIndex"

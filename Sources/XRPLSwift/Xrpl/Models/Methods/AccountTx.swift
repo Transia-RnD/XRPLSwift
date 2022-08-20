@@ -10,7 +10,6 @@
 import Foundation
 import AnyCodable
 
-
 /**
  * The account_tx method retrieves a list of transactions that involved the
  * specified account. Expects a response in the form of a {@link
@@ -37,7 +36,7 @@ public class AccountTxRequest: BaseRequest {
     /** Use to look for transactions from a single ledger only. */
     public let ledgerHash: String?
     /** Use to look for transactions from a single ledger only. */
-    public let ledgerIndex: rLedgerIndex?
+    public let ledgerIndex: LedgerIndex?
     /**
      * If true, return transactions as hex strings instead of JSON. The default is
      * false.
@@ -59,7 +58,7 @@ public class AccountTxRequest: BaseRequest {
      * the server's range of available ledgers.
      */
     public let marker: AnyCodable?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case ledgerIndexMin = "ledger_index_min"
@@ -71,7 +70,7 @@ public class AccountTxRequest: BaseRequest {
         case limit = "limit"
         case marker = "marker"
     }
-    
+
     public init(
         // Required
         account: String,
@@ -82,7 +81,7 @@ public class AccountTxRequest: BaseRequest {
         ledgerIndexMin: Int? = nil,
         ledgerIndexMax: Int? = nil,
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil,
+        ledgerIndex: LedgerIndex? = nil,
         binary: Bool? = nil,
         forward: Bool? = nil,
         limit: Int? = nil,
@@ -101,11 +100,11 @@ public class AccountTxRequest: BaseRequest {
         self.marker = marker
         super.init(id: id, command: "account_tx", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -129,10 +128,10 @@ public struct AccountTransaction: Codable {
      * Otherwise, the transaction metadata is included in JSON format.
      */
     //    public let meta: String | TransactionMetadata
-    public let meta: rTransactionMetadata
+    public let meta: TransactionMetadata
     /** JSON object defining the transaction. */
     //    public let tx: Transaction? & ResponseOnlyTxInfo
-    public let tx: rTransaction?
+    public let tx: Transaction?
     /** Unique hashed String representing the transaction. */
     public let txBlob: String?
     /**
@@ -171,7 +170,7 @@ public class AccountTxResponse: Codable {
      * change.
      */
     public let validated: Bool?
-    
+
     /** The limit value used in the request. */
     public let limit: Int
     /**
@@ -179,7 +178,7 @@ public class AccountTxResponse: Codable {
      * to the next call to resume where this call left off.
      */
     public let marker: AnyCodable?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case transactions = "transactions"
@@ -189,7 +188,7 @@ public class AccountTxResponse: Codable {
         case limit = "limit"
         case marker = "marker"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)

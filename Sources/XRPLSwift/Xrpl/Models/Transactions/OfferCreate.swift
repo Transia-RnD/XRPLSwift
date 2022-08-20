@@ -9,7 +9,6 @@ import Foundation
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/offerCreate.ts
 
-
 /**
 Transactions of the OfferCreate type support additional values in the Flags field.
 This enum represents those options.
@@ -60,14 +59,14 @@ Offers can be partially fulfilled.
  */
 public class OfferCreate: BaseTransaction {
 
-    public let takerGets: rAmount
+    public let takerGets: Amount
      /*
     The amount and type of currency being provided by the sender of this
     transaction. This field is required.
     :meta hide-value:
       */
 
-    public let takerPays: rAmount
+    public let takerPays: Amount
       /*
     The amount and type of currency the sender of this transaction wants in
     exchange for the full ``taker_gets`` amount. This field is required.
@@ -85,48 +84,48 @@ public class OfferCreate: BaseTransaction {
     The Sequence number (or Ticket number) of a previous OfferCreate to cancel
     when placing this Offer.
     */
-    
+
     enum CodingKeys: String, CodingKey {
         case takerGets = "TakerGets"
         case takerPays = "TakerPays"
         case expiration = "Expiration"
         case offerSequence = "OfferSequence"
     }
-    
+
     public init(
-        takerGets: rAmount,
-        takerPays: rAmount,
+        takerGets: Amount,
+        takerPays: Amount,
         expiration: Int? = nil,
         offerSequence: Int? = nil
     ) {
-        
+
         self.takerGets = takerGets
         self.takerPays = takerPays
         self.expiration = expiration
         self.offerSequence = offerSequence
         super.init(account: "", transactionType: "OfferCreate")
     }
-    
+
     public override init(json: [String: AnyObject]) throws {
         let decoder: JSONDecoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-        let r = try decoder.decode(OfferCreate.self, from: data)
-        self.takerGets = r.takerGets
-        self.takerPays = r.takerPays
-        self.expiration = r.expiration
-        self.offerSequence = r.offerSequence
+        let decoded = try decoder.decode(OfferCreate.self, from: data)
+        self.takerGets = decoded.takerGets
+        self.takerPays = decoded.takerPays
+        self.expiration = decoded.expiration
+        self.offerSequence = decoded.offerSequence
         try super.init(json: json)
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        takerGets = try values.decode(rAmount.self, forKey: .takerGets)
-        takerPays = try values.decode(rAmount.self, forKey: .takerPays)
+        takerGets = try values.decode(Amount.self, forKey: .takerGets)
+        takerPays = try values.decode(Amount.self, forKey: .takerPays)
         expiration = try values.decodeIfPresent(Int.self, forKey: .expiration)
         offerSequence = try values.decodeIfPresent(Int.self, forKey: .offerSequence)
         try super.init(from: decoder)
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -143,29 +142,29 @@ public class OfferCreate: BaseTransaction {
  * @param tx - An OfferCreate Transaction.
  * @throws When the OfferCreate is Malformed.
  */
-public func validateOfferCreate(tx: [String: AnyObject]) throws -> Void {
+public func validateOfferCreate(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
-    
+
     if tx["TakerGets"] == nil {
         throw ValidationError.decoding("OfferCreate: missing field TakerGets")
     }
-    
+
     if tx["TakerPays"] == nil {
         throw ValidationError.decoding("OfferCreate: missing field TakerPays")
     }
-    
+
     if !(tx["TakerGets"] is String) && !isAmount(amount: tx["TakerGets"]) {
         throw ValidationError.decoding("OfferCreate: invalid TakerGets")
     }
-    
+
     if !(tx["TakerPays"] is String) && !isAmount(amount: tx["TakerPays"]) {
         throw ValidationError.decoding("OfferCreate: invalid TakerPays")
     }
-    
+
     if tx["Expiration"] != nil && !(tx["Expiration"] is Int) {
         throw ValidationError.decoding("OfferCreate: Expiration must be a Int")
     }
-    
+
     if tx["OfferSequence"] != nil && !(tx["OfferSequence"] is Int) {
         throw ValidationError.decoding("OfferCreate: OfferSequence must be a Int")
     }

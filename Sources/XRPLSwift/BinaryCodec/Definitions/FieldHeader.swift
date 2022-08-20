@@ -7,13 +7,12 @@
 
 import Foundation
 
-
 public struct FieldHeader: Hashable {
     /*
      A container class for simultaneous storage of a field's type code and
     field code.
     */
-    
+
     public var typeCode: Int
     public var fieldCode: Int
 
@@ -34,14 +33,14 @@ public struct FieldHeader: Hashable {
 //            return NotImplemented
 //        }
         return typeCode == other.typeCode && self.fieldCode == other.fieldCode
-            
+
     }
 
     func toHash() -> Int {
         // Two equal FieldHeaders must have the same hash value.
 //        return hash((self.typeCode, self.fieldCode))
         return 0
-        
+
     }
 
     func toBytes() -> [UInt8] {

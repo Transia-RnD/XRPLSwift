@@ -10,11 +10,9 @@
 import Foundation
 
 public class AddressCodec {
-    
+    // swiftlint:disable:next identifier_name
     final var MAX_32_BIT_UNSIGNED_INT: Int = 4294967295
-    
-    //    public init() {}
-    
+
     /**
      Returns the X-Address representation of the data.
      - parameters:
@@ -41,7 +39,7 @@ public class AddressCodec {
         let concatenatedCheck: [UInt8] = concatenated + check
         return String(base58Encoding: Data(concatenatedCheck))
     }
-    
+
     /**
      Returns a tuple containing the classic address, tag, and whether the address
      is on a test network for an X-Address.
@@ -70,10 +68,10 @@ public class AddressCodec {
         return [
             "classicAddress": classicAddress,
             "tag": tag as Any,
-            "isTest": isTest,
+            "isTest": isTest
         ] as [String: AnyObject]
     }
-    
+
     /**
      Returns whether a decoded X-Address is a test address.
      - parameters:
@@ -92,7 +90,7 @@ public class AddressCodec {
         }
         throw AddressCodecError.invalidAddress
     }
-    
+
     /**
      Returns the destination tag extracted from the suffix of the X-Address.
      - parameters:
@@ -104,7 +102,7 @@ public class AddressCodec {
      */
     static func tagFromBuffer(buffer: [UInt8]) throws -> UInt32? {
         let flags = buffer[22]
-        if (flags >= 2) {
+        if flags >= 2 {
             // No support for 64-bit tags at this time
             throw AddressCodecError.unsupportedAddress
         }
@@ -122,11 +120,11 @@ public class AddressCodec {
         }
         let tagBytes = buffer[23...]
         let data = Data(tagBytes)
-        let _tag: UInt64 = data.withUnsafeBytes { $0.pointee }
-        let tag: UInt32? = flags == 0x00 ? nil : UInt32(String(_tag))!
+        let tagInt: UInt64 = data.withUnsafeBytes { $0.pointee }
+        let tag: UInt32? = flags == 0x00 ? nil : UInt32(String(tagInt))!
         return tag
     }
-    
+
     /**
      Returns whether `xAddress` is a valid X-Address.
      - parameters:

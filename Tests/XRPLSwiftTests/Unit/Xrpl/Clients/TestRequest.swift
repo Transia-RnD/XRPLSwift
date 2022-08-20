@@ -13,9 +13,9 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestRequest: XCTestCase {
-    
+
     private var client: XrplClient!
-    
+
     override func setUp() async throws {
         do {
             client = try XrplClient(server: ReusableValues.server)
@@ -25,7 +25,7 @@ final class TestRequest: XCTestCase {
             print(error.localizedDescription)
         }
     }
-    
+
     func testClientConstructor() async {
         let exp = expectation(description: "WSS CALL")
         let builtRequest = AccountObjectsRequest(account: MockRippled1.account_objects.normal)

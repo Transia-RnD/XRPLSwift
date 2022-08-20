@@ -7,11 +7,11 @@
 //
 //// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/utils/hashes/SHAMap/index.ts
 //
-//import Foundation
+// import Foundation
 //
 //
 //
-//class SHAMap {
+// class SHAMap {
 //  public root: InnerNode
 //
 //  /**
@@ -40,4 +40,4 @@
 //  public func hash() -> String {
 //    return self.root.hash
 //  }
-//}
+// }

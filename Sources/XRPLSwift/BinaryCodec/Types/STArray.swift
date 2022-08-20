@@ -5,17 +5,19 @@
 //  Created by Denis Angell on 7/16/22.
 //
 
-
 // https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/types/st_array.py
 
 import Foundation
 
+// swiftlint:disable:next identifier_name
 internal let ARRAY_END_MARKER: [UInt8] = [0xF1]
+// swiftlint:disable:next identifier_name
 internal let ARRAY_END_MARKER_NAME: String = "ArrayEndMarker"
+// swiftlint:disable:next identifier_name
 internal let _OBJECT_END_MARKER: [UInt8] = [0xE1]
 
 class STArray: SerializedType {
-    
+
     /*
     Class for serializing and deserializing Lists of objects.
     See `Array Fields <https://xrpl.org/serialization.html#array-fields>`_
@@ -41,7 +43,7 @@ class STArray: SerializedType {
         bytestring += ARRAY_END_MARKER
         return STArray(bytestring)
     }
-    
+
     static func from(value: [[String: AnyObject]]) throws -> STArray {
 //        if value.count > 0 && value[0] is [String: AnyObject] {
 //            throw BinaryError.unknownError(error: "Cannot construct STArray from a list of non-dict")
@@ -55,7 +57,7 @@ class STArray: SerializedType {
         bytestring += ARRAY_END_MARKER
         return STArray(bytestring)
     }
-    
+
     func toJson() -> [[String: AnyObject]] {
         var result: [[String: AnyObject]] = []
         let parser: BinaryParser = BinaryParser(hex: self.str())
@@ -67,8 +69,8 @@ class STArray: SerializedType {
             }
 
             var outer: [String: AnyObject] = [:]
-            let _result: [String: Any] = STObject().fromParser(parser: parser).toJson()
-            outer[field.name] = _result as AnyObject
+            let copy: [String: Any] = STObject().fromParser(parser: parser).toJson()
+            outer[field.name] = copy as AnyObject
             result.append(outer)
         }
         return result

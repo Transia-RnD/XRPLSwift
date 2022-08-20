@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The deposit_authorized command indicates whether one account is authorized to
  * send payments directly to another. Expects a response in the form of a {@link
@@ -29,15 +28,15 @@ public class DepositAuthorizedRequest: BaseRequest {
      * The ledger index of the ledger to use, or a shortcut string to choose a
      * ledger automatically.
      */
-    public let ledgerIndex: rLedgerIndex?
-    
+    public let ledgerIndex: LedgerIndex?
+
     enum CodingKeys: String, CodingKey {
         case sourceAccount = "sourceAccount"
         case destinationAccount = "destinationAccount"
         case ledgerHash = "ledgerHash"
         case ledgerIndex = "ledgerIndex"
     }
-    
+
     public init(
         // Required
         sourceAccount: String,
@@ -47,7 +46,7 @@ public class DepositAuthorizedRequest: BaseRequest {
         apiVersion: Int? = nil,
         // Optional
         ledgerHash: String? = nil,
-        ledgerIndex: rLedgerIndex? = nil
+        ledgerIndex: LedgerIndex? = nil
     ) {
         // Required
         self.sourceAccount = sourceAccount
@@ -56,11 +55,11 @@ public class DepositAuthorizedRequest: BaseRequest {
         self.ledgerIndex = ledgerIndex
         super.init(id: id, command: "channel_verify", apiVersion: apiVersion)
     }
-    
+
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -105,7 +104,7 @@ public class DepositAuthorizedResponse: Codable {
     public let sourceAccount: String
     /** If true, the information comes from a validated ledger version. */
     public let validated: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case depositAuthorized = "depositAuthorized"
         case destinationAccount = "destinationAccount"
@@ -115,7 +114,7 @@ public class DepositAuthorizedResponse: Codable {
         case sourceAccount = "sourceAccount"
         case validated = "validated"
     }
-    
+
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         depositAuthorized = try values.decode(Bool.self, forKey: .depositAuthorized)
@@ -127,5 +126,5 @@ public class DepositAuthorizedResponse: Codable {
         validated = try values.decode(Bool.self, forKey: .validated)
         //        try super.init(from: decoder)
     }
-    
+
 }

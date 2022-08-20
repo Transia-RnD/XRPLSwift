@@ -13,9 +13,9 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestPaymentChannelCreate: XCTestCase {
-    
+
     public static var baseTx: [String: AnyObject] = [:]
-    
+
     override class func setUp() {
         baseTx = [
             "Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
@@ -26,10 +26,10 @@ final class TestPaymentChannelCreate: XCTestCase {
             "PublicKey": "32D2471DB72B27E3310F355BB33E339BF26F8392D5A93D3BC0FC3B566612DA0F0A",
             "CancelAfter": 533171558,
             "DestinationTag": 23480,
-            "SourceTag": 11747,
+            "SourceTag": 11747
         ] as! [String: AnyObject]
     }
-    
+
     func testValid() {
         let tx = try! PaymentChannelCreate(json: TestPaymentChannelCreate.baseTx)
         do {
@@ -38,7 +38,7 @@ final class TestPaymentChannelCreate: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testValidNoOptional() {
         TestPaymentChannelCreate.baseTx["CancelAfter"] = nil
         TestPaymentChannelCreate.baseTx["DestinationTag"] = nil
@@ -50,42 +50,42 @@ final class TestPaymentChannelCreate: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidAmountNil() {
         TestPaymentChannelCreate.baseTx["Amount"] = nil
         XCTAssertThrowsError(try PaymentChannelCreate(json: TestPaymentChannelCreate.baseTx))
     }
-    
+
     func testInvalidAmountType() {
         TestPaymentChannelCreate.baseTx["Amount"] = 1000 as AnyObject
         XCTAssertThrowsError(try PaymentChannelCreate(json: TestPaymentChannelCreate.baseTx))
     }
-    
+
     func testInvalidDestinationNil() {
         TestPaymentChannelCreate.baseTx["Destination"] = nil
         XCTAssertThrowsError(try PaymentChannelCreate(json: TestPaymentChannelCreate.baseTx))
     }
-    
+
     func testInvalidDestinationType() {
         TestPaymentChannelCreate.baseTx["Destination"] = 10 as AnyObject
         XCTAssertThrowsError(try PaymentChannelCreate(json: TestPaymentChannelCreate.baseTx))
     }
-    
+
     func testInvalidSettleDelayNil() {
         TestPaymentChannelCreate.baseTx["SettleDelay"] = nil
         XCTAssertThrowsError(try PaymentChannelCreate(json: TestPaymentChannelCreate.baseTx))
     }
-    
+
     func testInvalidSettleDelayType() {
         TestPaymentChannelCreate.baseTx["SettleDelay"] = "10" as AnyObject
         XCTAssertThrowsError(try PaymentChannelCreate(json: TestPaymentChannelCreate.baseTx))
     }
-    
+
     func testInvalidPublicKeyNil() {
         TestPaymentChannelCreate.baseTx["PublicKey"] = nil
         XCTAssertThrowsError(try PaymentChannelCreate(json: TestPaymentChannelCreate.baseTx))
     }
-    
+
     func testInvalidPublicKeyType() {
         TestPaymentChannelCreate.baseTx["PublicKey"] = 10 as AnyObject
         XCTAssertThrowsError(try PaymentChannelCreate(json: TestPaymentChannelCreate.baseTx))

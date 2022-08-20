@@ -14,11 +14,11 @@ let HEX: Int = 16
 /**
  * Class for SHAMap Leaf Node.
  */
-class LeafNode: Node {
+class LeafNode: HashesNode {
     public let tag: String
     public let type: NodeType
     public let data: String
-    
+
     /**
      * Leaf node in a SHAMap tree.
      *
@@ -32,7 +32,7 @@ class LeafNode: Node {
         self.type = type
         self.data = data
     }
-    
+
     /**
      * Add item to Leaf.
      *
@@ -40,11 +40,11 @@ class LeafNode: Node {
      * @param node - Node to insert.
      * @throws When called, because LeafNodes cannot addItem.
      */
-    public func addItem(_tag: String, _node: Node) throws -> Void {
+    public func addItem(tag: String, node: HashesNode) throws {
         throw XrplError.unknown("Cannot call addItem on a LeafNode")
         // try self.addItem(_tag: _tag, _node: _node)
     }
-    
+
     /**
      * Get the hash of a LeafNode.
      *
@@ -52,7 +52,7 @@ class LeafNode: Node {
      * @throws If node is of unknown type.
      */
     public func hash() throws -> String {
-        switch (self.type) {
+        switch self.type {
         case NodeType.ACCOUNT_STATE:
             let leafPrefix: String = HashPrefix.LEAF_NODE.rawValue.asBigByteArray.toHexString()
             return sha512Half(hex: leafPrefix + self.data + self.tag)

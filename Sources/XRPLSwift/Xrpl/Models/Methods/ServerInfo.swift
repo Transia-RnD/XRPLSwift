@@ -7,20 +7,20 @@
 //
 //// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/serverInfo.ts
 //
-//import Foundation
+// import Foundation
 //
-///**
+/// **
 // * The `server_info` command asks the server for a human-readable version of
 // * various information about the rippled server being queried. Expects a
 // * response in the form of a {@link ServerInfoResponse}.
 // *
 // * @category Requests
 // */
-//open class ServerInfoRequest: BaseRequest {
+// open class ServerInfoRequest: BaseRequest {
 //  command: String = "server_info"
-//}
+// }
 //
-//export type ServerState =
+// export type ServerState =
 //  | 'disconnected'
 //  | 'connected'
 //  | 'syncing'
@@ -29,25 +29,25 @@
 //  | 'validating'
 //  | 'proposing'
 //
-//open class StateAccounting {
+// open class StateAccounting {
 //    let duration_us: String
 //    let transitions: Int
-//}
+// }
 //
-//open class JobType {
+// open class JobType {
 //    let job_type: String
 //    let per_second: Int
 //    let peak_time?: Int
 //    let avg_time?: Int
 //    let in_progress?: Int
-//}
+// }
 //
-///**
+/// **
 // * Response expected from a {@link ServerInfoRequest}.
 // *
 // * @category Responses
 // */
-//open class ServerInfoResponse: BaseResponse {
+// open class ServerInfoResponse: BaseResponse {
 //  result: {
 //    info: {
 //      /**
@@ -238,4 +238,4 @@
 //      validator_list_expires?: String
 //    }
 //  }
-//}
+// }

@@ -11,7 +11,7 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestBlob: XCTestCase {
-    
+
     func testFromValue() {
         let value: String = "00AA"
         let valueBytes: [UInt8] = try! value.asHexArray()
@@ -21,11 +21,10 @@ final class TestBlob: XCTestCase {
 
         XCTAssertEqual(blob1.toBytes(), blob2.toBytes())
     }
-    
+
     // This test is not necessary in Swift?
 //    func testRaisesInvalidValueType() {
 //        let invalidValue = [1, 2, 3]
 //        XCTAssertThrowsError(Blob.from(value: invalidValue))
 //    }
 }
-

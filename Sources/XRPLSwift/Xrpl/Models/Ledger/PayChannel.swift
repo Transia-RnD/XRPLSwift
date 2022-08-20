@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The PayChannel object type represents a payment channel. Payment channels
  * enable small, rapid off-ledger payments of XRP that can be later reconciled
@@ -114,7 +113,7 @@ open class PayChannel: BaseLedgerEntry {
      * this object, in case the directory consists of multiple pages.
      */
     let destinationNode: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "Account"
         case destination = "Destination"
@@ -132,7 +131,7 @@ open class PayChannel: BaseLedgerEntry {
         case destinationTag = "DestinationTag"
         case destinationNode = "DestinationNode"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)

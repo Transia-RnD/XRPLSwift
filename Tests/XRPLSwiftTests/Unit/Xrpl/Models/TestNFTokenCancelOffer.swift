@@ -13,9 +13,9 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestNFTokenCancelOffer: XCTestCase {
-    
+
     public static var baseTx: [String: AnyObject] = [:]
-    
+
     override class func setUp() {
         baseTx = [
             "TransactionType": "NFTokenCancelOffer",
@@ -23,10 +23,10 @@ final class TestNFTokenCancelOffer: XCTestCase {
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "Fee": "5000000",
             "Sequence": 2470665,
-            "Flags": 2147483648,
+            "Flags": 2147483648
         ] as! [String: AnyObject]
     }
-    
+
     func testValid() {
         let tx = try! NFTokenCancelOffer(json: TestNFTokenCancelOffer.baseTx)
         do {
@@ -35,15 +35,14 @@ final class TestNFTokenCancelOffer: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidLimitAmountNil() {
         TestNFTokenCancelOffer.baseTx["NFTokenOffers"] = nil
         XCTAssertThrowsError(try NFTokenCancelOffer(json: TestNFTokenCancelOffer.baseTx))
     }
-    
+
     func testInvalidLimitAmountEmpty() {
         TestNFTokenCancelOffer.baseTx["NFTokenOffers"] = [] as AnyObject
         XCTAssertThrowsError(try NFTokenCancelOffer(json: TestNFTokenCancelOffer.baseTx))
     }
 }
-

@@ -8,7 +8,9 @@
 
 import Foundation
 import CryptoSwift
-//import XRPLSwift
+
+// swiftlint:disable all
+
 
 public protocol AbstractRippleKeystore {
     var addresses: [String]? {get}
@@ -66,7 +68,7 @@ public struct RippleKeystoreParamsV3: Decodable, Encodable {
     var crypto: RippleCryptoParamsV3
     var id: String?
     var version: Int
-    
+
     public init(address ad: String?, crypto cr: RippleCryptoParamsV3, id i: String, version ver: Int) {
         address = ad
         crypto = cr
@@ -75,13 +77,12 @@ public struct RippleKeystoreParamsV3: Decodable, Encodable {
     }
 }
 
-
 public class RippleKeystoreV3: AbstractRippleKeystore {
     // Class
     public func getAddress() -> String? {
         return self.address
     }
-        
+
     // Protocol
     public var addresses: [String]? {
         get {
@@ -92,7 +93,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         }
     }
     public var isHDKeystore: Bool = false
-    
+
     public func UNSAFE_getPrivateKeyData(password: String, account: String) throws -> Data {
         if self.addresses?.count == 1 && account == self.addresses?.last {
             guard let privateKey = try? self.getKeyData(password) else {throw AbstractRippleKeystoreError.invalidPasswordError}
@@ -100,7 +101,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         }
         throw AbstractRippleKeystoreError.invalidAccountError
     }
-    
+
     public func UNSAFE_getWallet(password: String, account: String) throws -> SeedWallet {
         if self.addresses?.count == 1 && account == self.addresses?.last {
             guard let privateKey = try? self.getKeyData(password) else {throw AbstractRippleKeystoreError.invalidPasswordError}
@@ -109,26 +110,25 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         }
         throw AbstractRippleKeystoreError.invalidAccountError
     }
-    
 
     // --------------
     private var address: String?
     public var keystoreParams: RippleKeystoreParamsV3?
-    
+
     public convenience init?(_ jsonString: String) {
         let lowercaseJSON = jsonString.lowercased()
         guard let jsonData = lowercaseJSON.data(using: .utf8) else {return nil}
         self.init(jsonData)
     }
-    
+
     public convenience init?(_ jsonData: Data) {
         guard let keystoreParams = try? JSONDecoder().decode(RippleKeystoreParamsV3.self, from: jsonData) else {return nil}
         self.init(keystoreParams)
     }
-    
+
     public init?(_ keystoreParams: RippleKeystoreParamsV3) {
-        if (keystoreParams.version != 3) {return nil}
-        if (keystoreParams.crypto.version != nil && keystoreParams.crypto.version != "1") {return nil}
+        if keystoreParams.version != 3 {return nil}
+        if keystoreParams.crypto.version != nil && keystoreParams.crypto.version != "1" {return nil}
         self.keystoreParams = keystoreParams
         if keystoreParams.address != nil {
             self.address = keystoreParams.address!
@@ -136,28 +136,28 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
             return nil
         }
     }
-    
+
     public init? (password: String = "xrp3swift", aesMode: String = "aes-128-cbc") throws {
         guard var newPrivateKey = SeedWallet().seed.data(using: .utf8) else {return nil}
         defer {Data.zero(&newPrivateKey)}
         try encryptDataToStorage(password, keyData: newPrivateKey, aesMode: aesMode)
     }
-    
+
     public init? (privateKey: Data, password: String = "xrp3swift", aesMode: String = "aes-128-cbc") throws {
         guard privateKey.count == 29 else {return nil}
         guard let seed = String(data: privateKey, encoding: .utf8), SeedWallet.validate(seed: seed) else {return nil}
         try encryptDataToStorage(password, keyData: privateKey, aesMode: aesMode)
     }
-    
+
     fileprivate func encryptDataToStorage(_ password: String, keyData: Data?, dkLen: Int=32, N: Int = 4096, R: Int = 6, P: Int = 1, aesMode: String = "aes-128-cbc") throws {
-        if (keyData == nil) { throw AbstractRippleKeystoreError.encryptionError("Encryption without key data") }
-        let saltLen = 32;
+        if keyData == nil { throw AbstractRippleKeystoreError.encryptionError("Encryption without key data") }
+        let saltLen = 32
         guard let saltData = Data.randomBytes(length: saltLen) else {throw AbstractRippleKeystoreError.noEntropyError}
         guard let derivedKey = scrypt(password: password, salt: saltData, length: dkLen, N: N, R: R, P: P) else {throw AbstractRippleKeystoreError.keyDerivationError}
         let last16bytes = Data(derivedKey[(derivedKey.count - 16)...(derivedKey.count-1)])
         let encryptionKey = Data(derivedKey[0...15])
         guard let IV = Data.randomBytes(length: 16) else {throw AbstractRippleKeystoreError.noEntropyError}
-        var aesCipher : AES?
+        var aesCipher: AES?
         switch aesMode {
         case "aes-128-cbc":
             aesCipher = try? AES(key: encryptionKey.bytes, blockMode: CBC(iv: IV.bytes), padding: .noPadding)
@@ -167,7 +167,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
             aesCipher = nil
         }
         if aesCipher == nil { throw AbstractRippleKeystoreError.aesError }
-        
+
         guard let seed = String(data: keyData!, encoding: .utf8) else {throw AbstractRippleKeystoreError.keyDerivationError}
         guard let bytes = try? SeedWallet.decode(seed: seed) else {throw AbstractRippleKeystoreError.noEntropyError}
         guard let encryptedKey = try aesCipher?.encrypt(bytes) else {throw AbstractRippleKeystoreError.aesError}
@@ -192,7 +192,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         let keystoreparams = RippleKeystoreParamsV3(address: wallet.address, crypto: crypto, id: UUID().uuidString.lowercased(), version: 3)
         self.keystoreParams = keystoreparams
     }
-    
+
     public func regenerate(oldPassword: String, newPassword: String, dkLen: Int=32, N: Int = 4096, R: Int = 6, P: Int = 1) throws {
         var keyData = try self.getKeyData(oldPassword)
         if keyData == nil {
@@ -201,7 +201,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         defer {Data.zero(&keyData!)}
         try self.encryptDataToStorage(newPassword, keyData: keyData!, aesMode: self.keystoreParams!.crypto.cipher)
     }
-    
+
     fileprivate func getKeyData(_ password: String) throws -> Data? {
         guard let keystoreParams = self.keystoreParams else {
             print("ERROR: PARAMS")
@@ -212,7 +212,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
             return nil
         }
         let derivedLen = keystoreParams.crypto.kdfparams.dklen
-        var passwordDerivedKey:Data?
+        var passwordDerivedKey: Data?
         switch keystoreParams.crypto.kdf {
         case "scrypt":
             guard let N = keystoreParams.crypto.kdfparams.n else {
@@ -230,7 +230,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
             passwordDerivedKey = scrypt(password: password, salt: saltData, length: derivedLen, N: N, R: R, P: P)
         case "pbkdf2":
             guard let algo = keystoreParams.crypto.kdfparams.prf else {return nil}
-            var hashVariant:HMAC.Variant?;
+            var hashVariant: HMAC.Variant?
             switch algo {
                 case "hmac-sha256" :
                     hashVariant = HMAC.Variant.sha256
@@ -257,14 +257,14 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         let derivedKeyLast16bytes = Data(derivedKey[(derivedKey.count - 16)...(derivedKey.count - 1)])
         dataForMAC.append(derivedKeyLast16bytes)
         guard let cipherText = Data.fromHex(keystoreParams.crypto.ciphertext) else {return nil}
-        if (cipherText.count != 16) {return nil}
+        if cipherText.count != 16 {return nil}
         dataForMAC.append(cipherText)
         let mac = dataForMAC.sha3(.keccak256)
         guard let calculatedMac = Data.fromHex(keystoreParams.crypto.mac), mac.constantTimeComparisonTo(calculatedMac) else {return nil}
         let cipher = keystoreParams.crypto.cipher
         let decryptionKey = derivedKey[0...15]
         guard let IV = Data.fromHex(keystoreParams.crypto.cipherparams.iv) else {return nil}
-        var decryptedPK:Array<UInt8>?
+        var decryptedPK: [UInt8]?
         switch cipher {
         case "aes-128-ctr":
             guard let aesCipher = try? AES(key: decryptionKey.bytes, blockMode: CTR(iv: IV.bytes), padding: .noPadding) else {return nil}
@@ -279,7 +279,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         guard decryptedPKString != nil else {return nil}
         return decryptedPKString?.data(using: .utf8)
     }
-    
+
     public func serialize() throws -> Data? {
         guard let params = self.keystoreParams else {return nil}
         let data = try JSONEncoder().encode(params)

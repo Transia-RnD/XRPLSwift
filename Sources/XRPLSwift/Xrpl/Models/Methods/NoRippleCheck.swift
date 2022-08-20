@@ -7,9 +7,9 @@
 //
 //// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/norippleCheck.ts
 //
-//import Foundation
+// import Foundation
 //
-///**
+/// **
 // * The `noripple_check` command provides a quick way to check the status of th
 // * default ripple field for an account and the No Ripple flag of its trust
 // * lines, compared with the recommended settings. Expects a response in the form
@@ -30,7 +30,7 @@
 // *
 // * @category Requests
 // */
-//open class NoRippleCheckRequest: BaseRequest {
+// open class NoRippleCheckRequest: BaseRequest {
 //    let command: String = "noripple_check"
 //  /** A unique identifier for the account, most commonly the account's address. */
 //    let account: String
@@ -58,14 +58,14 @@
 //   * ledger automatically.
 //   */
 //    let ledger_index?: LedgerIndex
-//}
+// }
 //
-///**
+/// **
 // * Response expected by a {@link NoRippleCheckRequest}.
 // *
 // * @category Responses
 // */
-//open class NoRippleCheckResponse: BaseResponse {
+// open class NoRippleCheckResponse: BaseResponse {
 //  result: {
 //    /** The ledger index of the ledger used to calculate these results. */
 //    ledger_current_index: Int

@@ -9,13 +9,15 @@
 
 import Foundation
 
-
 func numToBytes(num: Int) -> Data {
     return Data(bytes: Int(num).asBigByteArray.reversed(), count: 4)
 }
 
+// swiftlint:disable:next identifier_name
 let TRANSACTION_SIGNATURE_PREFIX: Data = Data(numToBytes(num: 0x53545800).bytes.reversed())
+// swiftlint:disable:next identifier_name
 let PAYMENT_CHANNEL_CLAIM_PREFIX: Data = Data(numToBytes(num: 0x434C4D00).bytes.reversed())
+// swiftlint:disable:next identifier_name
 let TRANSACTION_MULTISIG_PREFIX: Data = Data(numToBytes(num: 0x534D5400).bytes.reversed())
 
 class BinaryCodec {
@@ -29,12 +31,12 @@ class BinaryCodec {
     class func encode(json: [String: Any]) throws -> String {
         return try serializeJson(json: json)
     }
-    
+
     class func encode(data: Data) throws -> String {
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
-        return try serializeJson(json: jsonResult as! [String : Any])
+        return try serializeJson(json: jsonResult as! [String: Any])
     }
-    
+
     /*
      Encode a transaction into binary format in preparation for signing. (Only
      encodes fields that are intended to be signed.)
@@ -50,7 +52,7 @@ class BinaryCodec {
             signingOnly: true
         )
     }
-    
+
     /*
      Encode a `payment channel <https://xrpl.org/payment-channels.html>`_ Claim
      to be signed.
@@ -66,8 +68,7 @@ class BinaryCodec {
         let buffer: Data = prefix + channel.bytes + amount.bytes
         return buffer.toHex
     }
-    
-    
+
     /*
      Encode a transaction into binary format in preparation for providing one
      signature towards a multi-signed transaction.
@@ -87,7 +88,7 @@ class BinaryCodec {
             signingOnly: true
         )
     }
-    
+
     /*
      Decode a transaction from binary format to a JSON-like dictionary
      representation.
@@ -101,7 +102,7 @@ class BinaryCodec {
         let parsedType: SerializedType = try! parser.readType(type: STObject.self)
         return parsedType.toJson()
     }
-    
+
     class func serializeJson(
         json: [String: Any],
         prefix: Data? = nil,
@@ -112,13 +113,13 @@ class BinaryCodec {
         if prefix != nil {
             buffer += prefix!
         }
-        
+
         buffer += try STObject.from(value: json, onlySigning: signingOnly).bytes
-        
+
         if suffix != nil {
             buffer += suffix!
         }
-        
+
         return buffer.toHexString().uppercased()
     }
 }

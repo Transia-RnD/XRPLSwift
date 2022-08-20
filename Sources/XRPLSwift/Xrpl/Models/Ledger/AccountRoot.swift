@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  Returns the X-Address representation of the data.
  - parameters:
@@ -88,7 +87,7 @@ public class AccountRoot: BaseLedger {
      * account to each other.
      */
     public let transferRate: Int?
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
@@ -108,7 +107,7 @@ public class AccountRoot: BaseLedger {
         transferRate = try values.decode(Int.self, forKey: .transferRate)
         try super.init(from: decoder)
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "Account"
         case balance = "Balance"

@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The RippleState object type connects two accounts in a single currency.
  *
@@ -24,17 +23,17 @@ open class RippleState: BaseLedgerEntry {
      * negative balance indicates that the low account has issued currency to the
      * high account. The issuer is always the neutral value ACCOUNT_ONE.
      */
-    let balance: rIssuedCurrencyAmount
+    let balance: IssuedCurrencyAmount
     /**
      * The limit that the low account has set on the trust line. The issuer is
      * the address of the low account that set this limit.
      */
-    let lowLimit: rIssuedCurrencyAmount
+    let lowLimit: IssuedCurrencyAmount
     /**
      * The limit that the high account has set on the trust line. The issuer is
      * the address of the high account that set this limit.
      */
-    let highLimit: rIssuedCurrencyAmount
+    let highLimit: IssuedCurrencyAmount
     /**
      * The identifying hash of the transaction that most recently modified this
      * object.
@@ -79,7 +78,7 @@ open class RippleState: BaseLedgerEntry {
      * equivalent to 1 billion, or face value.
      */
     let highQualityOut: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case flags = "Flags"
         case balance = "Balance"
@@ -94,13 +93,13 @@ open class RippleState: BaseLedgerEntry {
         case highQualityIn = "HighQualityIn"
         case highQualityOut = "HighQualityOut"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         flags = try values.decode(Int.self, forKey: .flags)
-        balance = try values.decode(rIssuedCurrencyAmount.self, forKey: .balance)
-        lowLimit = try values.decode(rIssuedCurrencyAmount.self, forKey: .lowLimit)
-        highLimit = try values.decode(rIssuedCurrencyAmount.self, forKey: .highLimit)
+        balance = try values.decode(IssuedCurrencyAmount.self, forKey: .balance)
+        lowLimit = try values.decode(IssuedCurrencyAmount.self, forKey: .lowLimit)
+        highLimit = try values.decode(IssuedCurrencyAmount.self, forKey: .highLimit)
         previousTxnId = try values.decode(String.self, forKey: .previousTxnId)
         previousTxnLgrSeq = try values.decode(Int.self, forKey: .previousTxnLgrSeq)
         lowNode = try? values.decode(String.self, forKey: .lowNode)

@@ -9,16 +9,15 @@
 
 import Foundation
 
-
 class Hash: SerializedType {
-    
+
     internal var width: Int
-    
+
     init(_ bytes: [UInt8]? = nil) {
         self.width = bytes!.count
         super.init(bytes: bytes ?? [])
     }
-    
+
     class func from(value: String) throws -> Hash {
         let bytes: [UInt8] = try value.asHexArray()
         // TODO: Discuss workaround (Cannot access self in init aka self.getLength() doesnt work)
@@ -28,7 +27,7 @@ class Hash: SerializedType {
         }
         return Hash(bytes)
     }
-    
+
     /**
      * Read a Hash object from a BinaryParser
      *
@@ -41,7 +40,7 @@ class Hash: SerializedType {
     ) -> Hash {
         return Hash(try! parser.read(n: hint ?? self.width))
     }
-    
+
     /**
      * Overloaded operator for comparing two hash objects
      *
@@ -54,7 +53,7 @@ class Hash: SerializedType {
 //            (this.constructor as typeof Hash).from(other).bytes,
 //        )
     }
-    
+
     /**
      * @returns the hex-string representation of this Hash
      */
@@ -65,7 +64,7 @@ class Hash: SerializedType {
 //    override func toJson() -> String {
 //        return self.toJson()
 //    }
-    
+
     /**
        * Returns four bits at the specified depth within a hash
        *
@@ -74,20 +73,20 @@ class Hash: SerializedType {
        */
     func nibblet(depth: Int) -> Int {
         let byteIx = depth > 0 ? (depth / 2) | 0 : 0
-        var b: UInt8 = self.bytes[byteIx]
-        if (depth % 2 == 0) {
-          b = (b & 0xf0) >> 4
+        var bytes: UInt8 = self.bytes[byteIx]
+        if depth % 2 == 0 {
+            bytes = (bytes & 0xf0) >> 4
         } else {
-          b = b & 0x0f
+            bytes = bytes & 0x0f
         }
-        return Int(b)
+        return Int(bytes)
     }
-    
+
     class func getLength() -> Int {
         print("HERE")
         return 0
 //        throw BinaryError.notImplemented
 //        return try self.getLength()
     }
-    
+
 }

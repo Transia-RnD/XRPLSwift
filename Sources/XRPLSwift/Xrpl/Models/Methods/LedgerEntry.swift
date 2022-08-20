@@ -7,10 +7,10 @@
 //
 //// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/ledgerEntry.ts
 //
-//import Foundation
+// import Foundation
 //
 //
-///**
+/// **
 // * The `ledger_entry` method returns a single ledger object from the XRP Ledger
 // * in its raw format. Expects a response in the form of a {@link
 // * LedgerEntryResponse}.
@@ -26,7 +26,7 @@
 // *
 // * @category Requests
 // */
-//open class LedgerEntryRequest: BaseRequest {
+// open class LedgerEntryRequest: BaseRequest {
 //    let command: String = "ledger_entry"
 //  /**
 //   * If true, return the requested ledger object's contents as a hex string in
@@ -144,14 +144,14 @@
 //        ticket_sequence: Int
 //      }
 //    | String
-//}
+// }
 //
-///**
+/// **
 // * Response expected from a {@link LedgerEntryRequest}.
 // *
 // * @category Responses
 // */
-//open class LedgerEntryResponse: BaseResponse {
+// open class LedgerEntryResponse: BaseResponse {
 //  result: {
 //    /** The unique ID of this ledger object. */
 //      let index: String
@@ -166,4 +166,4 @@
 //      let node_binary?: String
 //      let validated?: Bool
 //  }
-//}
+// }

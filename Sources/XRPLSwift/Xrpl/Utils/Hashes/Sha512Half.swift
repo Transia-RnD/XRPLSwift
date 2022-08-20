@@ -10,6 +10,7 @@
 import Foundation
 import CommonCrypto
 
+// swiftlint:disable:next identifier_name
 let HASH_SIZE: Int = 32
 
 /**

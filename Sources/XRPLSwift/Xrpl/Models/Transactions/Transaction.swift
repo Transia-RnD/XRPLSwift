@@ -12,7 +12,7 @@ import Foundation
 /**
  
  */
-public enum rTransaction: Codable {
+public enum Transaction: Codable {
     case accountDelete(AccountDelete)
     case accountSet(AccountSet)
     case checkCancel(CheckCancel)
@@ -39,12 +39,13 @@ public enum rTransaction: Codable {
     case trustSet(TrustSet)
 }
 
-extension rTransaction {
-    
+extension Transaction {
+
     enum TransactionCodingError: Error {
         case decoding(String)
     }
-    
+
+    // swiftlint:disable:next cyclomatic_complexity
     public init?(_ json: [String: AnyObject]) throws {
         guard let transactionType: String = json["TransactionType"] as? String else {
             throw TransactionCodingError.decoding("Invalid Transaction Type")
@@ -131,13 +132,13 @@ extension rTransaction {
         }
         throw TransactionCodingError.decoding("Invalid Transaction Type")
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
-        return jsonResult as! [String : AnyObject]
+        return jsonResult as! [String: AnyObject]
     }
-    
+
     public func toAny() throws -> Any {
         switch self {
         case .accountDelete(let value):
@@ -190,7 +191,7 @@ extension rTransaction {
             return value
         }
     }
-    
+
     public init(from decoder: Decoder) throws {
         if let value = try? AccountDelete.init(from: decoder) {
             self = .accountDelete(value)
@@ -228,7 +229,7 @@ extension rTransaction {
             self = .nfTokenCreateOffer(value)
             return
         }
-        
+
         if let value = try? NFTokenMint.init(from: decoder) {
             self = .nfTokenMint(value)
             return
@@ -275,7 +276,7 @@ extension rTransaction {
         }
         throw TransactionCodingError.decoding("DENIS!!!")
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         switch self {
         case .accountDelete(let value):
@@ -328,7 +329,7 @@ extension rTransaction {
             try value.encode(to: encoder)
         }
     }
-    
+
     static func all() -> [String] {
         return [
             "AccountDelete",
@@ -359,15 +360,13 @@ extension rTransaction {
     }
 }
 
-
-
 /**
  * @category Transaction Models
  */
-public class rTransactionAndMetadata: Codable {
-    public let transaction: rTransaction
-    public let metadata: rTransactionMetadata
-    
+public class TransactionAndMetadata: Codable {
+    public let transaction: Transaction
+    public let metadata: TransactionMetadata
+
 //    enum CodingKeys: String, CodingKey {
 //        case transaction = "transaction"
 //        case metadata = "metadata"
@@ -375,8 +374,8 @@ public class rTransactionAndMetadata: Codable {
 //    
 //    required public init(from decoder: Decoder) throws {
 //        let values = try decoder.container(keyedBy: CodingKeys.self)
-//        transaction = try values.decode(rTransaction.self, forKey: .transaction)
-//        metadata = try values.decode(rTransactionMetadata.self, forKey: .metadata)
+//        transaction = try values.decode(Transaction.self, forKey: .transaction)
+//        metadata = try values.decode(TransactionMetadata.self, forKey: .metadata)
 //    }
 }
 
@@ -493,7 +492,7 @@ public func validate(transaction: [String: Any]) throws {
 //    case "TrustSet":
 //        validateTrustSet(tx)
 //        break
-        
+
 //    default:
 //        throw XrplError.validation("Invalid field TransactionType: ${tx.TransactionType}")
 //    }

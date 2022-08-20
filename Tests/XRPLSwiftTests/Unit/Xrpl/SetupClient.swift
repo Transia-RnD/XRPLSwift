@@ -8,12 +8,11 @@
 import XCTest
 @testable import XRPLSwift
 
-
 public class RippledMockTester: XCTestCase {
     internal var mockRippled: MockRippledSocket!
     public var _mockedServerPort: Int = 0
     public var client: XrplClient!
-    
+
     public override func setUp() async throws {
         self.mockRippled = MockRippledSocket(port: 9999)
         self.mockRippled.start()

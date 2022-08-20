@@ -7,17 +7,17 @@
 //
 //// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/utils/hashes/SHAMap/InnerNode.ts
 //
-//import Foundation
+// import Foundation
 //
-//let HEX_ZERO: String = "0000000000000000000000000000000000000000000000000000000000000000"
+// let HEX_ZERO: String = "0000000000000000000000000000000000000000000000000000000000000000"
 //
-//let SLOT_MAX: Int = 15
-//let HEX: Int = 16
+// let SLOT_MAX: Int = 15
+// let HEX: Int = 16
 //
-///**
+/// **
 // * Class for SHAMap InnerNode.
 // */
-//class InnerNode: Node {
+// class InnerNode: Node {
 //    public let leaves: [ [slot: Int]: Node? ]
 //    public let type: NodeType
 //    public let depth: Int
@@ -120,4 +120,4 @@
 //        let prefix = HashPrefix.INNER_NODE.toString(HEX)
 //        return sha512Half(prefix + hex)
 //    }
-//}
+// }

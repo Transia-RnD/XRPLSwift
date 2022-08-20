@@ -7,9 +7,9 @@
 //
 //// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/federatorInfo.ts
 //
-//import Foundation
+// import Foundation
 //
-///**
+/// **
 // * The `federator_info` command asks the federator for information
 // * about the door account and other bridge-related information. This
 // * method only exists on sidechain federators. Expects a response in
@@ -17,16 +17,16 @@
 // *
 // * @category Requests
 // */
-//open class FederatorInfoRequest: BaseRequest {
+// open class FederatorInfoRequest: BaseRequest {
 //  command: String = "federator_info"
-//}
+// }
 //
-///**
+/// **
 // * Response expected from a {@link FederatorInfoRequest}.
 // *
 // * @category Responses
 // */
-//open class FederatorInfoResponse: BaseResponse {
+// open class FederatorInfoResponse: BaseResponse {
 //  result: {
 //    info: {
 //      mainchain: {
@@ -84,4 +84,4 @@
 //      }
 //    }
 //  }
-//}
+// }

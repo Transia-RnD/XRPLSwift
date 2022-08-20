@@ -11,15 +11,15 @@ import XCTest
 // https://github.com/XRPLF/xrpl-py/blob/master/tests/unit/core/binarycodec/types/test_account_id.py
 
 final class TestAccountID: XCTestCase {
-    
+
     static let HEX_ENCODING: String = "5E7B112523F68D2F5E879DB4EAC51C6698A69304"
     static let BASE58_ENCODING: String = "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59"
-    
+
     func testFromValueHex() throws {
         let accountId = try AccountID.from(value: TestAccountID.HEX_ENCODING)
         XCTAssertEqual(accountId.toJson(), TestAccountID.BASE58_ENCODING)
     }
-    
+
     func testFromValueBase58() throws {
         let accountId = try AccountID.from(value: TestAccountID.BASE58_ENCODING)
         // Note that I converted the hex to uppercase here...
@@ -34,4 +34,3 @@ final class TestAccountID: XCTestCase {
 //        //        self.assertRaises(XRPLBinaryCodecException, AccountID.from_value, invalid_value)
 //    }
 }
-

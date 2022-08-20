@@ -11,11 +11,11 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestClient: XCTestCase {
-    
+
     func testClientConstructor() {
         _ = try! XrplClient(server: "wss://s1.ripple.com")
     }
-    
+
     func testClientInvalidOptions() {
         let options: ClientOptions = ClientOptions(
             timeout: Timer(),
@@ -25,12 +25,12 @@ final class TestClient: XCTestCase {
         )
         _ = try! XrplClient(server: "wss://s1.ripple.com", options: options)
     }
-    
+
     func testClientValidOptions() {
         let client = try! XrplClient(server: "wss://s:1")
         XCTAssertEqual(client.url(), "wss://s:1")
     }
-    
+
     // TODO: SHOULD FAIL
     func testClientInvalidConstructor() {
         XCTAssertThrowsError(try XrplClient(server: "wss://s:1"))

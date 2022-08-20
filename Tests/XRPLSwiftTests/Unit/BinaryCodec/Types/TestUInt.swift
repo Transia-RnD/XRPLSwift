@@ -11,12 +11,12 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestUInt: XCTestCase {
-    
+
     func test_from_value() {
         let value1 = xUInt8.from(value: 124)
         let value2 = xUInt8.from(value: 123)
         let value3 = xUInt8.from(value: 124)
-        
+
         XCTAssertGreaterThan(value1, value2)
         XCTAssertLessThan(value2, value1)
         XCTAssertNotEqual(value1, value2)

@@ -1,5 +1,5 @@
 //
-//  Currency.swift
+//  xCurrency.swift
 //  
 //
 //  Created by Denis Angell on 7/4/22.
@@ -9,6 +9,7 @@
 
 import Foundation
 
+// swiftlint:disable:next identifier_name
 let CURRENCY_CODE_LENGTH: Int = 20
 
 func isIsoCode(value: String) -> Bool {
@@ -17,7 +18,6 @@ func isIsoCode(value: String) -> Bool {
     let nsrange = NSRange(value.startIndex..<value.endIndex, in: value)
     return regex.matches(in: value, range: nsrange).isEmpty ? false : true
 }
-
 
 func isoCodeFromHex(value: [UInt8]) throws -> String? {
     let candidateIso: String = String(data: Data(value), encoding: .ascii)!
@@ -32,14 +32,12 @@ func isoCodeFromHex(value: [UInt8]) throws -> String? {
     return nil
 }
 
-
 func isHex(value: String) -> Bool {
     // Tests if value is a valid 40-char hex string.
     let regex = try! NSRegularExpression(pattern: "^[A-F0-9]{40}$")
     let nsrange = NSRange(value.startIndex..<value.endIndex, in: value)
     return regex.matches(in: value, range: nsrange).isEmpty ? false : true
 }
-
 
 func isoToBytes(iso: String) throws -> [UInt8] {
     /*
@@ -50,25 +48,26 @@ func isoToBytes(iso: String) throws -> [UInt8] {
     if !isIsoCode(value: iso) {
         throw BinaryError.unknownError(error: "Invalid ISO code: \(iso)")
     }
-    
+
     if iso == "XRP" {
         // This code (160 bit all zeroes) is used to indicate XRP in
         // rare cases where a field must specify a currency code for XRP.
         return [UInt8].init(repeating: 0x0, count: CURRENCY_CODE_LENGTH)
     }
-    
+
     return [UInt8].init(repeating: 0x0, count: 12) + iso.bytes + [UInt8].init(repeating: 0x0, count: 5)
 }
 
-class Currency: Hash160 {
-    
-    static var defaultCurrency: Currency = Currency([UInt8].init(repeating: 0x0, count: 20))
-    
-    public var iso: String? = nil
-    
+// swiftlint:disable:next type_name
+class xCurrency: Hash160 {
+
+    static var defaultCurrency: xCurrency = xCurrency([UInt8].init(repeating: 0x0, count: 20))
+
+    public var iso: String?
+
     override init(_ bytes: [UInt8]? = nil) {
-        super.init(bytes ?? Currency.defaultCurrency.bytes)
-        
+        super.init(bytes ?? xCurrency.defaultCurrency.bytes)
+
         print(self.bytes)
         let codeBytes: [UInt8] = [UInt8](self.bytes[12..<15])
         print(codeBytes)
@@ -88,26 +87,26 @@ class Currency: Hash160 {
             self.iso = try? isoCodeFromHex(value: codeBytes)
         }
     }
-    
-    override static func from(value: String) throws -> Currency {
+
+    override static func from(value: String) throws -> xCurrency {
         if isIsoCode(value: value) {
             print("ISO")
-            return Currency(try isoToBytes(iso: value))
+            return xCurrency(try isoToBytes(iso: value))
         }
         if isHex(value: value) {
             print("HEX")
-            return Currency(try value.asHexArray())
+            return xCurrency(try value.asHexArray())
         }
         throw BinaryError.unknownError(error: "Unsupported Currency representation: \(value)")
     }
-    
+
     override func fromParser(
         parser: BinaryParser,
         hint: Int? = nil
-    ) -> Currency {
-        return Currency(try! parser.read(n: hint ?? LENGTH20))
+    ) -> xCurrency {
+        return xCurrency(try! parser.read(n: hint ?? LENGTH20))
     }
-    
+
     override func toJson() -> String {
         if self.iso != nil {
             print("ISO NIL")
