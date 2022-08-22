@@ -111,8 +111,28 @@ public class AccountChannelsRequest: BaseRequest {
         super.init(id: id, command: "account_channels", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(AccountChannelsRequest.self, from: data)
+        self.account = decoded.account
+        self.destinationAccount = decoded.destinationAccount
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        self.limit = decoded.limit
+        self.marker = decoded.marker
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        account = try values.decode(String.self, forKey: .account)
+        destinationAccount = try values.decodeIfPresent(String.self, forKey: .destinationAccount)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        limit = try? values.decodeIfPresent(Int.self, forKey: .limit)
+        marker = try? values.decodeIfPresent(AnyCodable.self, forKey: .marker)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -125,25 +145,6 @@ public class AccountChannelsRequest: BaseRequest {
         if let limit = limit { try values.encode(limit, forKey: .limit) }
         if let marker = marker { try values.encode(marker, forKey: .marker) }
     }
-
-//    override func jsonData() throws -> Data {
-//        return try JSONEncoder().encode(self)
-//    }
-//
-//    override func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
-//        return String(data: try self.jsonData(), encoding: encoding)
-//    }
-
-//    required public init(from decoder: Decoder) throws {
-//        let values = try decoder.container(keyedBy: CodingKeys.self)
-//        account = try values.decode(String.self, forKey: .account)
-//        destinationAccount = try values.decode(String.self, forKey: .destinationAccount)
-//        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
-//        ledgerIndex = try values.decode(LedgerIndex.self, forKey: .ledgerIndex)
-//        limit = try values.decode(Int.self, forKey: .limit)
-//        marker = try values.decode(AnyCodable.self, forKey: .marker)
-//        try super.init(from: decoder)
-//    }
 }
 
 /**
@@ -192,7 +193,7 @@ open class AccountChannelsResponse: Codable {
         case marker = "marker"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
         channels = try values.decode([Channel].self, forKey: .channels)
@@ -201,5 +202,11 @@ open class AccountChannelsResponse: Codable {
         validated = try? values.decode(Bool.self, forKey: .validated)
         limit = try? values.decode(Int.self, forKey: .limit)
         marker = try? values.decode(AnyCodable.self, forKey: .marker)
+    }
+
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

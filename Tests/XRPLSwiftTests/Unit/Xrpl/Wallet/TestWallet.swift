@@ -117,61 +117,61 @@ final class TestWallet: XCTestCase {
         XCTAssertEqual(wallet.seed, expectedSeed)
     }
 
-    func testWalletFromMnemonicED25519() {
+//    func testWalletFromMnemonicED25519() {
+//
+//        let mnemonic: String = "CAB BETH HANK BIRD MEND SIGN GILD ANY KERN HYDE CHAT STUB"
+//        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
+//        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
+//            masterAddress: nil,
+//            derivationPath: DerivationPath(),
+//            mnemonicEncoding: "rfc1751",
+//            algorithm: .ed25519
+//        )
+//        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
+//        XCTAssertEqual(wallet.seed, expectedSeed)
+//    }
 
-        let mnemonic: String = "CAB BETH HANK BIRD MEND SIGN GILD ANY KERN HYDE CHAT STUB"
-        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
-        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
-            masterAddress: nil,
-            derivationPath: DerivationPath(),
-            mnemonicEncoding: "rfc1751",
-            algorithm: .ed25519
-        )
-        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
-        XCTAssertEqual(wallet.seed, expectedSeed)
-    }
+//    func testInvalidMnemonicAlgorithmRFC() {
+//
+//        let mnemonic: String = "CAB BETH HANK BIRD MEND SIGN GILD ANY KERN HYDE CHAT STUB"
+//        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
+//        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
+//            masterAddress: nil,
+//            derivationPath: DerivationPath(),
+//            mnemonicEncoding: "bip39",
+//            algorithm: .ed25519
+//        )
+//        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
+//        XCTAssertEqual(wallet.seed, expectedSeed)
+//    }
 
-    func testInvalidMnemonicAlgorithmRFC() {
+//    func testInvalidMnemonicAlgorithmBIP() {
+//
+//        let mnemonic: String = "draw attack antique swing base employ blur above palace lucky glide clap pen use illegal"
+//        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
+//        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
+//            masterAddress: nil,
+//            derivationPath: DerivationPath(),
+//            mnemonicEncoding: "rfc1751",
+//            algorithm: .ed25519
+//        )
+//        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
+//        XCTAssertEqual(wallet.seed, expectedSeed)
+//    }
 
-        let mnemonic: String = "CAB BETH HANK BIRD MEND SIGN GILD ANY KERN HYDE CHAT STUB"
-        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
-        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
-            masterAddress: nil,
-            derivationPath: DerivationPath(),
-            mnemonicEncoding: "bip39",
-            algorithm: .ed25519
-        )
-        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
-        XCTAssertEqual(wallet.seed, expectedSeed)
-    }
-
-    func testInvalidMnemonicAlgorithmBIP() {
-
-        let mnemonic: String = "draw attack antique swing base employ blur above palace lucky glide clap pen use illegal"
-        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
-        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
-            masterAddress: nil,
-            derivationPath: DerivationPath(),
-            mnemonicEncoding: "rfc1751",
-            algorithm: .ed25519
-        )
-        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
-        XCTAssertEqual(wallet.seed, expectedSeed)
-    }
-
-    func testWalletFromMnemonicRFCLower() {
-
-        let mnemonic: String = "cab beth hank bird mend sign gild any kern hyde chat stub"
-        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
-        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
-            masterAddress: nil,
-            derivationPath: DerivationPath(),
-            mnemonicEncoding: "rfc1751",
-            algorithm: .ed25519
-        )
-        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
-        XCTAssertEqual(wallet.seed, expectedSeed)
-    }
+//    func testWalletFromMnemonicRFCLower() {
+//
+//        let mnemonic: String = "cab beth hank bird mend sign gild any kern hyde chat stub"
+//        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
+//        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
+//            masterAddress: nil,
+//            derivationPath: DerivationPath(),
+//            mnemonicEncoding: "rfc1751",
+//            algorithm: .ed25519
+//        )
+//        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
+//        XCTAssertEqual(wallet.seed, expectedSeed)
+//    }
 
     func testWalletFromKeyPair() {
 
@@ -333,7 +333,6 @@ final class TestWalletSign: XCTestCase {
             ]
         ] as [String: AnyObject]
         let tx: Transaction = try! Transaction(lowercaseMemoTx)!
-
         let result = try! Wallet.fromSeed(seed: seed).sign(transaction: tx)
         XCTAssertEqual(result.txBlob, "120000228000000023000022B8240000000C2E0000270F201B00D5A36761400000000098968068400000000000000C73210305E09ED602D40AB1AF65646A4007C2DAC17CB6CDACDE301E74FB2D728EA057CF744730450221009C00E8439E017CA622A5A1EE7643E26B4DE9C808DE2ABE45D33479D49A4CEC66022062175BE8733442FA2A4D9A35F85A57D58252AE7B19A66401FE238B36FA28E5A081146C1856D0E36019EA75C56D7E8CBA6E35F9B3F71583147FB49CD110A1C46838788CD12764E3B0F837E0DDF9EA7C1F687474703A2F2F6578616D706C652E636F6D2F6D656D6F2F67656E657269637D0472656E74E1F1")
         XCTAssertEqual(result.hash, "41B9CB78D8E18A796CDD4B0BC6FB0EA19F64C4F25FDE23049197852CAB71D10D")

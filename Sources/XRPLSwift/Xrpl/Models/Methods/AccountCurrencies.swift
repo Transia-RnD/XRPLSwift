@@ -61,8 +61,26 @@ public class AccountCurrenciesRequest: BaseRequest {
         super.init(id: id, command: "account_currencies", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(AccountCurrenciesRequest.self, from: data)
+        // Required
+        self.account = decoded.account
+        // Optional
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        self.strict = decoded.strict
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        account = try values.decode(String.self, forKey: .account)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        strict = try values.decodeIfPresent(Bool.self, forKey: .strict)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -103,12 +121,18 @@ public class AccountCurrenciesResponse: Codable {
         case validated = "validated"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
         ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
         receiveCurrencies = try values.decode([String].self, forKey: .receiveCurrencies)
         sendCurrencies = try values.decode([String].self, forKey: .sendCurrencies)
         validated = try values.decode(Bool.self, forKey: .validated)
+    }
+
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

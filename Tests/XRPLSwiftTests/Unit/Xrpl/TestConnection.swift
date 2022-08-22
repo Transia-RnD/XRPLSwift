@@ -35,7 +35,7 @@ final class TestConnection: RippledMockTester {
     func testNotConnected() async {
         let exp = expectation(description: "WSS CALL")
         let connection = Connection(url: "url")
-        let request: BaseRequest = try! BaseRequest(json: [
+        let request: BaseRequest = try! BaseRequest([
             "command": "ledger",
             "ledger_index": "validated"
         ] as! [String: AnyObject])
@@ -51,7 +51,7 @@ final class TestConnection: RippledMockTester {
 
     func testDisconnected() async {
         let exp = expectation(description: "WSS CALL")
-        let request: BaseRequest = try! BaseRequest(json: [
+        let request: BaseRequest = try! BaseRequest([
             "command": "test_command",
             "data": [
                 "closeServer": true
@@ -97,7 +97,7 @@ final class TestConnection: RippledMockTester {
 
     func testResponseFormatError() async {
         let exp = expectation(description: "WSS CALL")
-        let request: BaseRequest = try! BaseRequest(json: [
+        let request: BaseRequest = try! BaseRequest([
             "command": "test_command",
             "data": [
                 "unrecognizedResponse": true
@@ -120,7 +120,7 @@ final class TestConnection: RippledMockTester {
 
     func testReconnectUnecpectedClose() async {
         let exp = expectation(description: "WSS CALL")
-        let request: BaseRequest = try! BaseRequest(json: [
+        let request: BaseRequest = try! BaseRequest([
             "command": "test_command",
             "data": [
                 "unrecognizedResponse": true
@@ -181,7 +181,7 @@ final class TestTrace: XCTestCase {
         let connection: Connection = Connection(url: "url", options: opts)
         connection.ws?.send([])
 
-        try! await connection.request(request: try! BaseRequest(json: mockedRequestData))
+        try! await connection.request(request: try! BaseRequest(mockedRequestData))
         //        connection.onMessage(mockedResponse)
         // TODO: Deep Equal
         //        XCTAssertEqual(messages, [])

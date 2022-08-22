@@ -10,15 +10,15 @@
 import XCTest
 @testable import XRPLSwift
 
-let TX_JSON: [String: Any] = [
+let TX_JSON: [String: AnyObject] = [
     "Account": "r9LqNeG6qHxjeUocjvVki2XR35weJ9mZgQ",
     "Destination": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
     "Flags": (1 << 31),  // tfFullyCanonicalSig
     "Sequence": 1,
     "TransactionType": "Payment"
-]
+] as [String: AnyObject]
 
-let jsonX1: [String: Any] = [
+let jsonX1: [String: AnyObject] = [
     "OwnerCount": 0,
     "Account": "XVXdn5wEVm5G4UhEHWDPqjvdeH361P7BsapL4m2D2XnPSwT",
     "PreviousTxnLgrSeq": 7,
@@ -27,9 +27,9 @@ let jsonX1: [String: Any] = [
     "Flags": 0,
     "Sequence": 1,
     "Balance": "10000000000"
-]
+] as [String: AnyObject]
 
-let jsonR1: [String: Any] = [
+let jsonR1: [String: AnyObject] = [
     "OwnerCount": 0,
     "Account": "rLs1MzkFWCxTbuAHgjeTZK4fcCDDnf2KRv",
     "PreviousTxnLgrSeq": 7,
@@ -39,9 +39,9 @@ let jsonR1: [String: Any] = [
     "Sequence": 1,
     "Balance": "10000000000",
     "SourceTag": 12345
-]
+] as [String: AnyObject]
 
-let jsonNullX: [String: Any] = [
+let jsonNullX: [String: AnyObject] = [
     "OwnerCount": 0,
     "Account": "rLs1MzkFWCxTbuAHgjeTZK4fcCDDnf2KRv",
     "Destination": "rLs1MzkFWCxTbuAHgjeTZK4fcCDDnf2KRv",
@@ -52,9 +52,9 @@ let jsonNullX: [String: Any] = [
     "Flags": 0,
     "Sequence": 1,
     "Balance": "10000000000"
-]
+] as [String: AnyObject]
 
-let jsonInvalidX: [String: Any] = [
+let jsonInvalidX: [String: AnyObject] = [
     "OwnerCount": 0,
     "Account": "rLs1MzkFWCxTbuAHgjeTZK4fcCDDnf2KRv",
     "Destination": "rLs1MzkFWCxTbuAHgjeTZK4fcCDDnf2KRv",
@@ -65,9 +65,9 @@ let jsonInvalidX: [String: Any] = [
     "Flags": 0,
     "Sequence": 1,
     "Balance": "10000000000"
-]
+] as [String: AnyObject]
 
-let jsonNullR: [String: Any] = [
+let jsonNullR: [String: AnyObject] = [
     "OwnerCount": 0,
     "Account": "rLs1MzkFWCxTbuAHgjeTZK4fcCDDnf2KRv",
     "Destination": "rLs1MzkFWCxTbuAHgjeTZK4fcCDDnf2KRv",
@@ -78,9 +78,9 @@ let jsonNullR: [String: Any] = [
     "Flags": 0,
     "Sequence": 1,
     "Balance": "10000000000"
-]
+] as [String: AnyObject]
 
-let invalidJsonIssuerTagged: [String: Any] = [
+let invalidJsonIssuerTagged: [String: AnyObject] = [
     "OwnerCount": 0,
     "Account": "rLs1MzkFWCxTbuAHgjeTZK4fcCDDnf2KRv",
     "Destination": "rLs1MzkFWCxTbuAHgjeTZK4fcCDDnf2KRv",
@@ -91,9 +91,9 @@ let invalidJsonIssuerTagged: [String: Any] = [
     "Flags": 0,
     "Sequence": 1,
     "Balance": "10000000000"
-]
+] as [String: AnyObject]
 
-var validJsonXAndTags: [String: Any] = [
+var validJsonXAndTags: [String: AnyObject] = [
     "TransactionType": "Payment",
     "Account": "XVXdn5wEVm5G4UhEHWDPqjvdeH361P7BsapL4m2D2XnPSwT",  // Tag: 12345
     "SourceTag": 12345,
@@ -102,9 +102,9 @@ var validJsonXAndTags: [String: Any] = [
     "Flags": 0,
     "Sequence": 1,
     "Amount": "1000000"
-]
+] as [String: AnyObject]
 
-let signingJson: [String: Any] = [
+let signingJson: [String: AnyObject] = [
     "Account": "r9LqNeG6qHxjeUocjvVki2XR35weJ9mZgQ",
     "Amount": "1000",
     "Destination": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
@@ -121,7 +121,50 @@ let signingJson: [String: Any] = [
     "SigningPubKey": (
         "ED5F5AC8B98974A3CA843326D9B88CEBD0560177B973EE0B149F782CFAA06DC66A"
     )
-]
+] as [String: AnyObject]
+
+final class TestBinarySimple: XCTestCase {
+    
+    func testSimple() {
+        let encoded = try! BinaryCodec.encode(json: TX_JSON)
+        let decoded = BinaryCodec.decode(buffer: encoded)
+        XCTAssert(TX_JSON == decoded)
+    }
+    
+    func testAmountFee() {
+        var clone = TX_JSON
+        clone["Amount"] = "1000" as AnyObject
+        clone["Fee"] = "10" as AnyObject
+        XCTAssert(BinaryCodec.decode(buffer: try! BinaryCodec.encode(json: clone)) == clone)
+    }
+    
+    func testInvalidAmountFee() {
+        var clone = TX_JSON
+        clone["Amount"] = "1000.789" as AnyObject
+        clone["Fee"] = "10.123" as AnyObject
+        XCTAssertThrowsError(try BinaryCodec.encode(json: clone))
+    }
+    
+    func testInvalidAmountInvalidFee() {
+        var clone = TX_JSON
+        clone["Amount"] = "1000.001" as AnyObject
+        clone["Fee"] = "10" as AnyObject
+        XCTAssertThrowsError(try BinaryCodec.encode(json: clone))
+    }
+    
+    func testInvalidAmountType() {
+        var clone = TX_JSON
+        clone["Amount"] = 1000 as AnyObject
+        XCTAssertThrowsError(try BinaryCodec.encode(json: clone))
+    }
+    
+    func testInvalidFeeType() {
+        var clone = TX_JSON
+        clone["Amount"] = "1000.789" as AnyObject
+        clone["Fee"] = 10 as AnyObject
+        XCTAssertThrowsError(try BinaryCodec.encode(json: clone))
+    }
+}
 
 final class TestBinaryCodec: XCTestCase {
 

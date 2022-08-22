@@ -57,8 +57,22 @@ public class AccountNFTsRequest: BaseRequest {
         super.init(id: id, command: "account_nfts", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(AccountLinesRequest.self, from: data)
+        self.account = decoded.account
+        self.limit = decoded.limit
+        self.marker = decoded.marker
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        account = try values.decode(String.self, forKey: .account)
+        limit = try? values.decodeIfPresent(Int.self, forKey: .limit)
+        marker = try? values.decodeIfPresent(AnyCodable.self, forKey: .marker)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -132,7 +146,7 @@ public class AccountNFTsResponse: Codable {
         case marker = "marker"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
         accountNfts = try values.decode([AccountNFToken].self, forKey: .accountNfts)
@@ -141,5 +155,11 @@ public class AccountNFTsResponse: Codable {
         limit = try values.decode(Int.self, forKey: .limit)
         marker = try values.decode(AnyCodable.self, forKey: .marker)
 //        try super.init(from: decoder)
+    }
+
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

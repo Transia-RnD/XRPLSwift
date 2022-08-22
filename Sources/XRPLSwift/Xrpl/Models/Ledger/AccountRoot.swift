@@ -21,7 +21,7 @@ import Foundation
  XRPLAddressCodecException: If the classic address does not have enough bytes
  or the tag is invalid.
  */
-public class AccountRoot: BaseLedger {
+public class AccountRoot: BaseLedgerEntry {
     public let ledgerEntryType: String = "AccountRoot"
     /** The identifying (classic) address of this account. */
     public let account: String
@@ -88,27 +88,8 @@ public class AccountRoot: BaseLedger {
      */
     public let transferRate: Int?
 
-    public required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        account = try values.decode(String.self, forKey: .account)
-        balance = try values.decode(String.self, forKey: .balance)
-        flags = try values.decode(Int.self, forKey: .flags)
-        ownerCount = try values.decode(Int.self, forKey: .ownerCount)
-        previousTxnId = try values.decode(String.self, forKey: .previousTxnId)
-        previousTxnLgrSeq = try values.decode(Int.self, forKey: .previousTxnLgrSeq)
-        sequence = try values.decode(Int.self, forKey: .sequence)
-        accountTxnId = try values.decode(String.self, forKey: .accountTxnId)
-        domain = try values.decode(String.self, forKey: .domain)
-        emailHash = try values.decode(String.self, forKey: .emailHash)
-        messageKey = try values.decode(String.self, forKey: .messageKey)
-        regularKey = try values.decode(String.self, forKey: .regularKey)
-        ticketCount = try values.decode(Int.self, forKey: .ticketCount)
-        tickSize = try values.decode(Int.self, forKey: .tickSize)
-        transferRate = try values.decode(Int.self, forKey: .transferRate)
-        try super.init(from: decoder)
-    }
-
     enum CodingKeys: String, CodingKey {
+        case ledgerEntryType = "LedgerEntryType"
         case account = "Account"
         case balance = "Balance"
         case flags = "Flags"
@@ -124,6 +105,53 @@ public class AccountRoot: BaseLedger {
         case ticketCount = "TicketCount"
         case tickSize = "TickSize"
         case transferRate = "TransferRate"
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        account = try values.decode(String.self, forKey: .account)
+        balance = try values.decode(String.self, forKey: .balance)
+        flags = try values.decode(Int.self, forKey: .flags)
+        ownerCount = try values.decode(Int.self, forKey: .ownerCount)
+        previousTxnId = try values.decode(String.self, forKey: .previousTxnId)
+        previousTxnLgrSeq = try values.decode(Int.self, forKey: .previousTxnLgrSeq)
+        sequence = try values.decode(Int.self, forKey: .sequence)
+        accountTxnId = try values.decodeIfPresent(String.self, forKey: .accountTxnId)
+        domain = try values.decodeIfPresent(String.self, forKey: .domain)
+        emailHash = try values.decodeIfPresent(String.self, forKey: .emailHash)
+        messageKey = try values.decodeIfPresent(String.self, forKey: .messageKey)
+        regularKey = try values.decodeIfPresent(String.self, forKey: .regularKey)
+        ticketCount = try values.decodeIfPresent(Int.self, forKey: .ticketCount)
+        tickSize = try values.decodeIfPresent(Int.self, forKey: .tickSize)
+        transferRate = try values.decodeIfPresent(Int.self, forKey: .transferRate)
+        try super.init(from: decoder)
+    }
+
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        try values.encode(ledgerEntryType, forKey: .ledgerEntryType)
+        try values.encode(account, forKey: .account)
+        try values.encode(balance, forKey: .balance)
+        try values.encode(flags, forKey: .flags)
+        try values.encode(ownerCount, forKey: .ownerCount)
+        try values.encode(previousTxnId, forKey: .previousTxnId)
+        try values.encode(previousTxnLgrSeq, forKey: .previousTxnLgrSeq)
+        try values.encode(sequence, forKey: .sequence)
+        if let accountTxnId = accountTxnId { try values.encode(accountTxnId, forKey: .accountTxnId) }
+        if let domain = domain { try values.encode(domain, forKey: .domain) }
+        if let emailHash = emailHash { try values.encode(emailHash, forKey: .emailHash) }
+        if let messageKey = messageKey { try values.encode(messageKey, forKey: .messageKey) }
+        if let regularKey = regularKey { try values.encode(regularKey, forKey: .regularKey) }
+        if let ticketCount = ticketCount { try values.encode(ticketCount, forKey: .ticketCount) }
+        if let tickSize = tickSize { try values.encode(tickSize, forKey: .tickSize) }
+        if let transferRate = transferRate { try values.encode(transferRate, forKey: .transferRate) }
+    }
+
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }
 

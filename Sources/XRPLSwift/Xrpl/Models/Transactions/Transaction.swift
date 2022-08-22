@@ -40,9 +40,17 @@ public enum Transaction: Codable {
 }
 
 extension Transaction {
+    
+    enum CodingKeys: String, CodingKey {
+        case tt = "TransactionType"
+    }
 
     enum TransactionCodingError: Error {
         case decoding(String)
+    }
+    
+    func toData() throws -> Data {
+        return try JSONEncoder().encode(self)
     }
 
     // swiftlint:disable:next cyclomatic_complexity
@@ -50,83 +58,83 @@ extension Transaction {
         guard let transactionType: String = json["TransactionType"] as? String else {
             throw TransactionCodingError.decoding("Invalid Transaction Type")
         }
-        if transactionType == "AccountDelete", let value = try? AccountDelete.init(json: json) {
+        if transactionType == "AccountDelete", let value = try? AccountDelete(json: json) {
             self = .accountDelete(value)
             return
         }
-        if transactionType == "AccountSet", let value = try? AccountSet.init(json: json) {
+        if transactionType == "AccountSet", let value = try? AccountSet(json: json) {
             self = .accountSet(value)
             return
         }
-        if transactionType == "CheckCancel", let value = try? CheckCancel.init(json: json) {
+        if transactionType == "CheckCancel", let value = try? CheckCancel(json: json) {
             self = .checkCancel(value)
             return
         }
-        if transactionType == "CheckCreate", let value = try? CheckCreate.init(json: json) {
+        if transactionType == "CheckCreate", let value = try? CheckCreate(json: json) {
             self = .checkCreate(value)
             return
         }
-        if transactionType == "EscrowFinish", let value = try? EscrowFinish.init(json: json) {
+        if transactionType == "EscrowFinish", let value = try? EscrowFinish(json: json) {
             self = .escrowFinish(value)
             return
         }
-        if transactionType == "NFTokenAcceptOffer", let value = try? NFTokenAcceptOffer.init(json: json) {
+        if transactionType == "NFTokenAcceptOffer", let value = try? NFTokenAcceptOffer(json: json) {
             self = .nfTokenAcceptOffer(value)
             return
         }
-        if transactionType == "NFTokenBurn", let value = try? NFTokenBurn.init(json: json) {
+        if transactionType == "NFTokenBurn", let value = try? NFTokenBurn(json: json) {
             self = .nfTokenBurn(value)
             return
         }
-        if transactionType == "NFTokenCancelOffer", let value = try? NFTokenCancelOffer.init(json: json) {
+        if transactionType == "NFTokenCancelOffer", let value = try? NFTokenCancelOffer(json: json) {
             self = .nfTokenCancelOffer(value)
             return
         }
-        if transactionType == "NFTokenCreateOffer", let value = try? NFTokenCreateOffer.init(json: json) {
+        if transactionType == "NFTokenCreateOffer", let value = try? NFTokenCreateOffer(json: json) {
             self = .nfTokenCreateOffer(value)
             return
         }
-        if transactionType == "NFTokenMint", let value = try? NFTokenMint.init(json: json) {
+        if transactionType == "NFTokenMint", let value = try? NFTokenMint(json: json) {
             self = .nfTokenMint(value)
             return
         }
-        if transactionType == "OfferCancel", let value = try? OfferCancel.init(json: json) {
+        if transactionType == "OfferCancel", let value = try? OfferCancel(json: json) {
             self = .offerCancel(value)
             return
         }
-        if transactionType == "OfferCreate", let value = try? OfferCreate.init(json: json) {
+        if transactionType == "OfferCreate", let value = try? OfferCreate(json: json) {
             self = .offerCreate(value)
             return
         }
-        if transactionType == "Payment", let value = try? Payment.init(json: json) {
+        if transactionType == "Payment", let value = try? Payment(json: json) {
             self = .payment(value)
             return
         }
-        if transactionType == "PaymentChannelClaim", let value = try? PaymentChannelClaim.init(json: json) {
+        if transactionType == "PaymentChannelClaim", let value = try? PaymentChannelClaim(json: json) {
             self = .paymentChannelClaim(value)
             return
         }
-        if transactionType == "PaymentChannelCreate", let value = try? PaymentChannelCreate.init(json: json) {
+        if transactionType == "PaymentChannelCreate", let value = try? PaymentChannelCreate(json: json) {
             self = .paymentChannelCreate(value)
             return
         }
-        if transactionType == "PaymentChannelFund", let value = try? PaymentChannelFund.init(json: json) {
+        if transactionType == "PaymentChannelFund", let value = try? PaymentChannelFund(json: json) {
             self = .paymentChannelFund(value)
             return
         }
-        if transactionType == "SetRegularKey", let value = try? SetRegularKey.init(json: json) {
+        if transactionType == "SetRegularKey", let value = try? SetRegularKey(json: json) {
             self = .setRegularKey(value)
             return
         }
-        if transactionType == "SignerListSet", let value = try? SignerListSet.init(json: json) {
+        if transactionType == "SignerListSet", let value = try? SignerListSet(json: json) {
             self = .signerListSet(value)
             return
         }
-        if transactionType == "TicketCreate", let value = try? TicketCreate.init(json: json) {
+        if transactionType == "TicketCreate", let value = try? TicketCreate(json: json) {
             self = .ticketCreate(value)
             return
         }
-        if transactionType == "TrustSet", let value = try? TrustSet.init(json: json) {
+        if transactionType == "TrustSet", let value = try? TrustSet(json: json) {
             self = .trustSet(value)
             return
         }
@@ -193,84 +201,86 @@ extension Transaction {
     }
 
     public init(from decoder: Decoder) throws {
-        if let value = try? AccountDelete.init(from: decoder) {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let tt = try values.decode(String.self, forKey: .tt)
+        if tt == "AccountDelete", let value = try? AccountDelete(from: decoder) {
             self = .accountDelete(value)
             return
         }
-        if let value = try? AccountSet.init(from: decoder) {
+        if tt == "AccountSet", let value = try? AccountSet(from: decoder) {
             self = .accountSet(value)
             return
         }
-        if let value = try? CheckCancel.init(from: decoder) {
+        if tt == "CheckCancel", let value = try? CheckCancel(from: decoder) {
             self = .checkCancel(value)
             return
         }
-        if let value = try? CheckCreate.init(from: decoder) {
+        if tt == "CheckCreate", let value = try? CheckCreate(from: decoder) {
             self = .checkCreate(value)
             return
         }
-        if let value = try? EscrowFinish.init(from: decoder) {
+        if tt == "EscrowFinish", let value = try? EscrowFinish(from: decoder) {
             self = .escrowFinish(value)
             return
         }
-        if let value = try? NFTokenAcceptOffer.init(from: decoder) {
+        if tt == "NFTokenAcceptOffer", let value = try? NFTokenAcceptOffer(from: decoder) {
             self = .nfTokenAcceptOffer(value)
             return
         }
-        if let value = try? NFTokenBurn.init(from: decoder) {
+        if tt == "NFTokenBurn", let value = try? NFTokenBurn(from: decoder) {
             self = .nfTokenBurn(value)
             return
         }
-        if let value = try? NFTokenCancelOffer.init(from: decoder) {
+        if tt == "NFTokenCancelOffer", let value = try? NFTokenCancelOffer(from: decoder) {
             self = .nfTokenCancelOffer(value)
             return
         }
-        if let value = try? NFTokenCreateOffer.init(from: decoder) {
+        if tt == "NFTokenCreateOffer", let value = try? NFTokenCreateOffer(from: decoder) {
             self = .nfTokenCreateOffer(value)
             return
         }
 
-        if let value = try? NFTokenMint.init(from: decoder) {
+        if tt == "NFTokenMint", let value = try? NFTokenMint(from: decoder) {
             self = .nfTokenMint(value)
             return
         }
-        if let value = try? OfferCancel.init(from: decoder) {
+        if tt == "OfferCancel", let value = try? OfferCancel(from: decoder) {
             self = .offerCancel(value)
             return
         }
-        if let value = try? OfferCreate.init(from: decoder) {
+        if tt == "OfferCreate", let value = try? OfferCreate(from: decoder) {
             self = .offerCreate(value)
             return
         }
-        if let value = try? Payment.init(from: decoder) {
+        if tt == "Payment", let value = try? Payment(from: decoder) {
             self = .payment(value)
             return
         }
-        if let value = try? PaymentChannelClaim.init(from: decoder) {
+        if tt == "PaymentChannelClaim", let value = try? PaymentChannelClaim(from: decoder) {
             self = .paymentChannelClaim(value)
             return
         }
-        if let value = try? PaymentChannelCreate.init(from: decoder) {
+        if tt == "PaymentChannelCreate", let value = try? PaymentChannelCreate(from: decoder) {
             self = .paymentChannelCreate(value)
             return
         }
-        if let value = try? PaymentChannelFund.init(from: decoder) {
+        if tt == "PaymentChannelFund", let value = try? PaymentChannelFund(from: decoder) {
             self = .paymentChannelFund(value)
             return
         }
-        if let value = try? SetRegularKey.init(from: decoder) {
+        if tt == "SetRegularKey", let value = try? SetRegularKey(from: decoder) {
             self = .setRegularKey(value)
             return
         }
-        if let value = try? SignerListSet.init(from: decoder) {
+        if tt == "SignerListSet", let value = try? SignerListSet(from: decoder) {
             self = .signerListSet(value)
             return
         }
-        if let value = try? TicketCreate.init(from: decoder) {
+        if tt == "TicketCreate", let value = try? TicketCreate(from: decoder) {
             self = .ticketCreate(value)
             return
         }
-        if let value = try? TrustSet.init(from: decoder) {
+        if tt == "TrustSet", let value = try? TrustSet(from: decoder) {
             self = .trustSet(value)
             return
         }

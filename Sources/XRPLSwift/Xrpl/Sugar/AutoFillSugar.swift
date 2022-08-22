@@ -25,7 +25,6 @@ private let autofillEventGroup = MultiThreadedEventLoopGroup(numberOfThreads: 4)
  * @returns The autofilled transaction.
  */
 public class AutoFillSugar {
-
     // Expire unconfirmed transactions after 20 ledger versions, approximately 1 minute, by default
     // swiftlint:disable:next identifier_name
     let LEDGER_OFFSET = 20
@@ -38,7 +37,7 @@ public class AutoFillSugar {
         client: XrplClient,
         transaction: T,
         signersCount: Int?
-    ) async -> EventLoopFuture<T> {
+    ) async throws -> EventLoopFuture<T> {
         let tx = transaction
 
         //      setValidAddresses(tx)
@@ -49,24 +48,20 @@ public class AutoFillSugar {
         if tx.sequence == nil {
             await promises.append(self.setNextValidSequenceNumber(client: client, tx: tx))
         }
-//        if (tx.fee == nil) {
-//            promises.append(calculateFeePeTransactionType(client, tx, signersCount))
-//        }
-//        if (tx.lastLedgerSequence == nil) {
-//            promises.append(setLatestValidatedLedgerSequence(client, tx))
-//        }
-//        if (tx.transactionType == "AccountDelete") {
-//            promises.append(checkAccountDeleteBlockers(client, tx))
-//        }
-
+        if tx.fee == nil {
+            await promises.append(try self.calculateFeePeTransactionType(client: client, tx: tx, signersCount: signersCount))
+        }
+        if tx.lastLedgerSequence == nil {
+            await promises.append(try self.setLatestValidatedLedgerSequence(client: client, tx: tx))
+        }
+        if tx.transactionType == "AccountDelete" {
+            await promises.append(try self.checkAccountDeleteBlockers(client: client, tx: tx))
+        }
         let promise = autofillEventGroup.next().makePromise(of: T.self)
         _ = promises.compactMap({ $0 })
         promise.succeed(tx)
         return promise.futureResult
-        //        return promise
-        //        return Promise.all(promises).then(() => tx)
     }
-
     //    func setValidAddresses(tx: Transaction) -> Void {
     //      validateAccountAddress(tx, "Account", "SourceTag")
     //      // eslint-disable-next-line @typescript-eslint/dot-notation -- Destination can exist on Transaction
@@ -140,11 +135,14 @@ public class AutoFillSugar {
         client: XrplClient,
         tx: BaseTransaction
     ) async {
-        let request: AccountInfoRequest = AccountInfoRequest(account: tx.account, ledgerIndex: .string("current"))
-        let response = try! await client.request(req: request)?.wait() as? BaseResponse<AccountInfoResponse>
+        let request = AccountInfoRequest(account: tx.account, ledgerIndex: .string("current"))
+        let response = try! await client.request(r: request).wait() as? BaseResponse<AccountInfoResponse>
+        print(response)
+        print(response!.result)
+        print(response!.result?.accountData.sequence)
         tx.sequence = response!.result?.accountData.sequence
     }
-
+    
     //    async func fetchAccountDeleteFee(client: Client): EventLoopFuture<Int> {
     //        let response = await client.request({ command: "server_state" })
     //      let fee = response.result.state.validated_ledger?.reserve_inc
@@ -155,86 +153,76 @@ public class AutoFillSugar {
     //
     //      return new BigNumber(fee)
     //    }
-
-    //    async func calculateFeePeTransactionType(
-    //      client: XrplClient,
-    //      tx: Transaction,
-    //      signersCount = 0,
-    //    ): Promise<Void> {
-    //      // netFee is usually 0.00001 XRP (10 drops)
-    //      let netFeeXRP = await getFeeXrp(client)
-    //        let netFeeDrops = xrpToDrops(netFeeXRP)
-    //      let baseFee = new BigNumber(netFeeDrops)
-    //
-    //      // EscrowFinish Transaction with Fulfillment
-    //      if (tx.TransactionType == "EscrowFinish" && tx.Fulfillment != nil) {
-    //        const fulfillmentBytesSize: number = Math.ceil(tx.Fulfillment.length / 2)
-    //        // 10 drops × (33 + (Fulfillment size in bytes / 16))
-    //        const product = new BigNumber(
-    //          // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- expected use of magic numbers
-    //          scaleValue(netFeeDrops, 33 + fulfillmentBytesSize / 16),
-    //        )
-    //        baseFee = product.dp(0, Int.ROUND_CEIL)
-    //      }
-    //
-    //      // AccountDelete Transaction
-    //      if (tx.TransactionType === "AccountDelete") {
-    //        baseFee = await fetchAccountDeleteFee(client)
-    //      }
-    //
-    //      /*
-    //       * Multi-signed Transaction
-    //       * 10 drops × (1 + Number of Signatures Provided)
-    //       */
-    //      if (signersCount > 0) {
-    //        baseFee = BigNumber.sum(baseFee, scaleValue(netFeeDrops, 1 + signersCount))
-    //      }
-    //
-    //      const maxFeeDrops = xrpToDrops(client.maxFeeXRP)
-    //      const totalFee =
-    //        tx.TransactionType === "AccountDelete"
-    //          ? baseFee
-    //          : BigNumber.min(baseFee, maxFeeDrops)
-    //
-    //      // Round up baseFee and return it as a string
-    //      // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-magic-numbers -- param reassign is safe, base 10 magic num
-    //      tx.Fee = totalFee.dp(0, Int.ROUND_CEIL).toString(10)
-    //    }
-    //
-    //    func scaleValue(value, multiplier): string {
-    //      return new Int(value).times(multiplier).toString()
-    //    }
-    //
-    //    async func setLatestValidatedLedgerSequence(
-    //      client: XrplClient,
-    //      tx: Transaction,
-    //    ): Promise<void> {
-    //      const ledgerSequence = await client.getLedgerIndex()
-    //      // eslint-disable-next-line no-param-reassign -- param reassign is safe
-    //      tx.LastLedgerSequence = ledgerSequence + LEDGER_OFFSET
-    //    }
-    //
-    //    async func checkAccountDeleteBlockers(
-    //      client: XrplClient,
-    //      tx: Transaction,
-    //    ): Promise<void> {
-    //      const request: AccountObjectsRequest = {
-    //        command: "account_objects",
-    //        account: tx.Account,
-    //        ledger_index: "validated",
-    //        deletion_blockers_only: true,
-    //      }
-    //      const response = await client.request(request)
-    //      return new Promise((resolve, reject) => {
-    //        if (response.result.account_objects.length > 0) {
-    //          reject(
-    //            new XrplError(
-    //              `Account ${tx.Account} cannot be deleted; there are Escrows, PayChannels, RippleStates, or Checks associated with the account.`,
-    //              response.result.account_objects,
-    //            ),
-    //          )
-    //        }
-    //        resolve()
-    //      })
-    //    }
+    
+    func calculateFeePeTransactionType(
+        client: XrplClient,
+        tx: BaseTransaction,
+        signersCount: Int? = 0
+    ) async throws {
+        // netFee is usually 0.00001 XRP (10 drops)
+//        let netFeeXRP = await getFeeXrp(client)
+//        let netFeeDrops = xrpToDrops(netFeeXRP)
+//        let baseFee = new BigNumber(netFeeDrops)
+        
+//        // EscrowFinish Transaction with Fulfillment
+//        if tx.TransactionType == "EscrowFinish" && tx.Fulfillment != nil {
+//            let fulfillmentBytesSize: Int = Math.ceil(tx.Fulfillment.length / 2)
+//            // 10 drops × (33 + (Fulfillment size in bytes / 16))
+//            let product = new BigNumber(scaleValue(netFeeDrops, 33 + fulfillmentBytesSize / 16))
+//            baseFee = product.dp(0, Int.ROUND_CEIL)
+//        }
+        
+//        // AccountDelete Transaction
+//        if tx.TransactionType == "AccountDelete" {
+//            baseFee = await fetchAccountDeleteFee(client)
+//        }
+        
+        /*
+         * Multi-signed Transaction
+         * 10 drops × (1 + Number of Signatures Provided)
+         */
+//        if (signersCount > 0) {
+//            baseFee = BigNumber.sum(baseFee, scaleValue(netFeeDrops, 1 + signersCount))
+//        }
+        
+//        let maxFeeDrops = xrpToDrops(client.maxFeeXRP)
+//        let totalFee = tx.TransactionType === "AccountDelete"
+//        ? baseFee
+//        : BigNumber.min(baseFee, maxFeeDrops)
+        
+        // Round up baseFee and return it as a string
+        // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-magic-numbers -- param reassign is safe, base 10 magic num
+//        tx.Fee = totalFee.dp(0, Int.ROUND_CEIL).toString(10)
+        tx.fee = "100"
+    }
+    
+    func scaleValue(value: String, multiplier: Int) -> String {
+        return String(Int(value)! * multiplier)
+    }
+    
+    func setLatestValidatedLedgerSequence(
+        client: XrplClient,
+        tx: BaseTransaction
+    ) async throws {
+        let ledgerSequence = try await client.getLedgerIndex()
+        tx.lastLedgerSequence = ledgerSequence + LEDGER_OFFSET
+    }
+    
+    func checkAccountDeleteBlockers(
+        client: XrplClient,
+        tx: BaseTransaction
+    ) async throws {
+        let request = try AccountObjectsRequest([
+            "command": "account_objects",
+            "account": tx.account,
+            "ledger_index": "validated",
+            "deletion_blockers_only": true
+        ] as [String: AnyObject])
+        let response = try await client.request(request).wait() as? BaseResponse<AccountObjectsResponse>
+        if let result = response?.result, result.accountObjects.count > 0 {
+            throw XrplError.unknown(
+                "Account \(tx.account) cannot be deleted; there are Escrows, PayChannels, RippleStates, or Checks associated with the account."
+            )
+        }
+    }
 }

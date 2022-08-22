@@ -73,7 +73,6 @@ public class BaseLedger: Codable {
 
     enum CodingKeys: String, CodingKey {
         case accountHash = "account_hash"
-        case accountState = "account_state"
         case closeFlags = "close_flags"
         case closeTime = "close_time"
         case closeTimeHuman = "close_time_human"
@@ -86,6 +85,7 @@ public class BaseLedger: Codable {
         case totalCoins = "total_coins"
         case transactionHash = "transaction_hash"
         case transactions = "transactions"
+        case accountState = "account_state"
     }
 
 //    required public init(from decoder: Decoder) throws {
@@ -93,6 +93,7 @@ public class BaseLedger: Codable {
 //        accountHash = try values.decode(String.self, forKey: .accountHash)
 //        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
 //        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
-//        validated = try values.decode(Bool.self, forKey: .validated)
+//        transactions = try values.decodeIfPresent(Bool.self, forKey: .transactions)
+//        accountState = try values.decodeIfPresent(Bool.self, forKey: .accountState)
 //    }
 }

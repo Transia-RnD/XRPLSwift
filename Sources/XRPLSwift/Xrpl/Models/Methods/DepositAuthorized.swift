@@ -31,10 +31,10 @@ public class DepositAuthorizedRequest: BaseRequest {
     public let ledgerIndex: LedgerIndex?
 
     enum CodingKeys: String, CodingKey {
-        case sourceAccount = "sourceAccount"
-        case destinationAccount = "destinationAccount"
-        case ledgerHash = "ledgerHash"
-        case ledgerIndex = "ledgerIndex"
+        case sourceAccount = "source_account"
+        case destinationAccount = "destination_account"
+        case ledgerHash = "ledger_hash"
+        case ledgerIndex = "ledger_index"
     }
 
     public init(
@@ -51,13 +51,32 @@ public class DepositAuthorizedRequest: BaseRequest {
         // Required
         self.sourceAccount = sourceAccount
         self.destinationAccount = destinationAccount
+        // Optional
         self.ledgerHash = ledgerHash
         self.ledgerIndex = ledgerIndex
-        super.init(id: id, command: "channel_verify", apiVersion: apiVersion)
+        super.init(id: id, command: "deposit_authorized", apiVersion: apiVersion)
+    }
+
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(DepositAuthorizedRequest.self, from: data)
+        // Required
+        self.sourceAccount = decoded.sourceAccount
+        self.destinationAccount = decoded.destinationAccount
+        // Optional
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        try super.init(json)
     }
 
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        sourceAccount = try values.decode(String.self, forKey: .sourceAccount)
+        destinationAccount = try values.decode(String.self, forKey: .destinationAccount)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -83,6 +102,8 @@ public class DepositAuthorizedResponse: Codable {
      * preauthorized.
      */
     public let depositAuthorized: Bool
+    /** The source account specified in the request. */
+    public let sourceAccount: String
     /** The destination account specified in the request. */
     public let destinationAccount: String
     /**
@@ -100,31 +121,34 @@ public class DepositAuthorizedResponse: Codable {
      * used to generate this response.
      */
     public let ledgerCurrentIndex: Int?
-    /** The source account specified in the request. */
-    public let sourceAccount: String
     /** If true, the information comes from a validated ledger version. */
     public let validated: Bool?
 
     enum CodingKeys: String, CodingKey {
-        case depositAuthorized = "depositAuthorized"
-        case destinationAccount = "destinationAccount"
-        case ledgerHash = "ledgerHash"
-        case ledgerIndex = "ledgerIndex"
-        case ledgerCurrentIndex = "ledgerCurrentIndex"
-        case sourceAccount = "sourceAccount"
+        case depositAuthorized = "deposit_authorized"
+        case sourceAccount = "source_account"
+        case destinationAccount = "destination_account"
+        case ledgerHash = "ledger_hash"
+        case ledgerIndex = "ledger_index"
+        case ledgerCurrentIndex = "ledger_current_index"
         case validated = "validated"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         depositAuthorized = try values.decode(Bool.self, forKey: .depositAuthorized)
-        destinationAccount = try values.decode(String.self, forKey: .destinationAccount)
-        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
-        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
-        ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
         sourceAccount = try values.decode(String.self, forKey: .sourceAccount)
-        validated = try values.decode(Bool.self, forKey: .validated)
+        destinationAccount = try values.decode(String.self, forKey: .destinationAccount)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerIndex)
+        ledgerCurrentIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerCurrentIndex)
+        validated = try values.decodeIfPresent(Bool.self, forKey: .validated)
         //        try super.init(from: decoder)
     }
-
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
+    }
 }

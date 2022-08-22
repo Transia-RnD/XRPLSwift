@@ -277,9 +277,11 @@ public class Connection {
         }
         // Create the connection timeout, in case the connection hangs longer than expected.
         // Connection listeners: these stay attached only until a connection is done/open.
-        let client: WebSocketClient = createWebSocket(url: self.url!, config: self.config)!
-        print(url)
-        try! client.connect(scheme: "ws", host: url!, port: 9999, onUpgrade: { (ws) -> Void in
+        guard let url = url, let uri = URL(string: url), let isport = uri.port, let isscheme = uri.scheme, let ishost = uri.host else {
+            throw XrplError.connection("Connection: unvalid url")
+        }
+        let client: WebSocketClient = createWebSocket(url: url, config: self.config)!
+        try client.connect(scheme: isscheme, host: ishost, port: isport, onUpgrade: { (ws) -> Void in
             self.ws = ws
         }).wait()
 
@@ -377,7 +379,7 @@ public class Connection {
             timeout: 10
         )
         //        self.trace("send", message)
-        print("SEND: \(message)")
+        print("REQUEST: \(message)")
         _ = await websocketSendAsync(ws: ws, message: message)
         // TODO: Workaround See `websocketSendAsync`: ws.send doesnt throw proper error so the request would hang until the `onClose` is called (Immediatly)
         //        _ = ws.onClose.map {

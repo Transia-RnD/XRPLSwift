@@ -51,8 +51,22 @@ public class SubmitMultisignedRequest: BaseRequest {
         super.init(id: id, command: "submit_multisigned", apiVersion: apiVersion)
     }
 
-    required public init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(SubmitMultisignedRequest.self, from: data)
+        // Required
+        self.txJson = decoded.txJson
+        // Optional
+        self.failHard = decoded.failHard
+        try super.init(json)
+    }
+
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        txJson = try values.decode(Transaction.self, forKey: .txJson)
+        failHard = try values.decodeIfPresent(Bool.self, forKey: .failHard)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -95,7 +109,7 @@ public class SubmitMultisignedResponse: Codable {
         case txJson = "tx_json"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         engineResult = try values.decode(String.self, forKey: .engineResult)
         engineResultCode = try values.decode(Int.self, forKey: .engineResultCode)
@@ -103,5 +117,11 @@ public class SubmitMultisignedResponse: Codable {
         txBlob = try values.decode(String.self, forKey: .txBlob)
         txJson = try values.decode(Transaction.self, forKey: .txJson)
         //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

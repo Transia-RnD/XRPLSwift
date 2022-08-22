@@ -140,7 +140,7 @@ internal class SECP256K1: SigningAlgorithm {
             secp256k1_context_destroy(ctx)
             throw SigningError.invalidSignature
         }
-
+        
         secp256k1_context_destroy(ctx)
         return [UInt8](tmp.prefix(through: size-1))
 
@@ -149,7 +149,10 @@ internal class SECP256K1: SigningAlgorithm {
     static func verify(signature: [UInt8], message: [UInt8], publicKey: [UInt8]) throws -> Bool {
         let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_VERIFY))
         var sig = secp256k1_ecdsa_signature()
-
+        
+        // remove one byte prefix from primary key
+//        let publicKey = [UInt8](publicKey.suffix(from: 1))
+        
         var _signatureData = Data(signature)
         var _pubKeyData = Data(publicKey)
         var _msgDigest = Data(sha512HalfHash(data: message))

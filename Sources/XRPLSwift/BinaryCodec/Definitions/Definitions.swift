@@ -177,10 +177,6 @@ public struct Definitions {
         The name of the field described by the given FieldHeader.
     */
     func getFieldNameFromHeader(fieldHeader: FieldHeader) -> String {
-//        print(fieldHeader)
-//        for (k, v) in definitions.FIELD_HEADER_NAME_MAP.sorted(by: { $0.key.typeCode < $1.key.typeCode }) {
-//            print(k)
-//        }
         return definitions.FIELD_HEADER_NAME_MAP[fieldHeader]!
     }
 

@@ -33,7 +33,7 @@ public class BinaryParser {
      * @returns The first byte of the BinaryParser
      */
     public func peek() throws -> UInt8 {
-        guard bytes.isEmpty else {
+        guard !bytes.isEmpty else {
             throw BinaryError.unknownError(error: "Invalid Bytes Length")
         }
         return bytes[0]
@@ -122,7 +122,6 @@ public class BinaryParser {
      */
     func readLengthPrefix() throws -> Int {
         let b1: Int = Int(self.readUInt8())
-        print(b1)
         if b1 <= 192 {
             return b1
         } else if b1 <= 240 {
@@ -183,14 +182,47 @@ public class BinaryParser {
         if type is AccountID {
             return AccountID().fromParser(parser: self, hint: nil)
         }
-        if type is Amount {
-            return try! xAmount().fromParser(parser: self, hint: nil)
+        if type is xAmount {
+            return try xAmount().fromParser(parser: self, hint: nil)
         }
         if type is Blob {
             return Blob().fromParser(parser: self, hint: nil)
         }
+        if type is xCurrency {
+            return xCurrency().fromParser(parser: self, hint: nil)
+        }
+        if type is Hash256 {
+            return Hash256().fromParser(parser: self, hint: nil)
+        }
+        if type is Hash160 {
+            return Hash160().fromParser(parser: self, hint: nil)
+        }
+        if type is Hash128 {
+            return Hash128().fromParser(parser: self, hint: nil)
+        }
+        if type is Hash {
+            return Hash().fromParser(parser: self, hint: nil)
+        }
+        if type is STArray {
+            return STArray().fromParser(parser: self, hint: nil)
+        }
         if type is STObject.Type {
             return STObject().fromParser(parser: self, hint: nil)
+        }
+        if type is xUInt64.Type {
+            return xUInt64().fromParser(parser: self, hint: nil)
+        }
+        if type is xUInt32.Type {
+            return xUInt32().fromParser(parser: self, hint: nil)
+        }
+        if type is xUInt16.Type {
+            return xUInt16().fromParser(parser: self, hint: nil)
+        }
+        if type is xUInt8.Type {
+            return xUInt8().fromParser(parser: self, hint: nil)
+        }
+        if type is Vector256.Type {
+            return Vector256().fromParser(parser: self, hint: nil)
         }
         fatalError("Invalid Serialized Type")
     }
@@ -212,22 +244,17 @@ public class BinaryParser {
      * @return The value associated with the given field
      */
     func readFieldValue(field: FieldInstance) throws -> SerializedType? {
-        print("----------------------")
-        print("----------------------")
-        let av: AssociatedValue = AssociatedValue(field: field, parser: self)
-        print("NAME: \(field.name)")
-        print("NTH: \(field.nth)")
-        print("TYPE: \(field.type)")
-        print("ENCODED: \(field.isVLEncoded)")
+//        print("READING FIELD...")
+//        print("FIELD NAME: \(field.name)")
+        let associatedValue = AssociatedValue(field: field, parser: self)
         let sizeHint: Int? = field.isVLEncoded
         ? try self.readLengthPrefix()
         : nil
-        print("HINT: \(sizeHint)")
-        let value: SerializedType = av.fromParser(hint: sizeHint ?? nil)!
+        let value = associatedValue.fromParser(hint: sizeHint)!
         if value.bytes.isEmpty {
             throw BinaryError.unknownError(error: "fromParser for (\(field.name), \(field.type) -> nil ")
         }
-        print("VALUE: \(value.toJson())")
+//        print("FIELD NAME: \(value.toJson())")
         return value
     }
 

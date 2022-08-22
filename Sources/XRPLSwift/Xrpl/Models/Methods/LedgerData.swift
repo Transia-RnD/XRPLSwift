@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  LedgerData.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -7,8 +7,8 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/ledgerData.ts
 
-import Foundation
 import AnyCodable
+import Foundation
 
 /**
  * The `ledger_data` method retrieves contents of the specified ledger. You can
@@ -16,14 +16,13 @@ import AnyCodable
  * ledger version.
  *
  * @example
- * ```ts
- * const ledgerData: LedgerDataRequest = {
- *   "id": 2,
- *   "ledger_hash": "842B57C1CC0613299A686D3E9F310EC0422C84D3911E5056389AA7E5808A93C8",
- *   "command": "ledger_data",
- *   "limit": 5,
- *   "binary": true
- * }
+ * ```swift
+ * let ledgerDataRequest: LedgerDataRequest(
+ *   id: 2,
+ *   ledgerHash: "842B57C1CC0613299A686D3E9F310EC0422C84D3911E5056389AA7E5808A93C8",
+ *   limit: 5,
+ *   binary: true
+ * )
  * ```
  *
  * @category Requests
@@ -81,8 +80,26 @@ public class LedgerDataRequest: BaseRequest {
         super.init(id: id, command: "ledger_data", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LedgerDataRequest.self, from: data)
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        self.binary = decoded.binary
+        self.limit = decoded.limit
+        self.marker = decoded.marker
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        binary = try? values.decodeIfPresent(Bool.self, forKey: .binary)
+        limit = try? values.decodeIfPresent(Int.self, forKey: .limit)
+        marker = try? values.decodeIfPresent(AnyCodable.self, forKey: .marker)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -98,12 +115,9 @@ public class LedgerDataRequest: BaseRequest {
 
 // type LabeledLedgerEntry = { ledgerEntryType: String } & LedgerEntry
 
-public struct BinaryLedgerEntry {
-    let data: String
-}
-
 public struct State: Codable {
-    public let index: String
+    let data: String
+    let index: String
 }
 
 // type State = { index: String } & (BinaryLedgerEntry | LabeledLedgerEntry)
@@ -138,7 +152,7 @@ public class LedgerDataResponse: Codable {
         case validated = "validated"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         state = try values.decode([State].self, forKey: .state)
         ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
@@ -146,5 +160,11 @@ public class LedgerDataResponse: Codable {
         marker = try values.decode(AnyCodable.self, forKey: .marker)
         validated = try values.decode(Bool.self, forKey: .validated)
         //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

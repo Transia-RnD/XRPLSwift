@@ -14,7 +14,7 @@ class Hash: SerializedType {
     internal var width: Int
 
     init(_ bytes: [UInt8]? = nil) {
-        self.width = bytes!.count
+        self.width = bytes?.count ?? 0
         super.init(bytes: bytes ?? [])
     }
 
@@ -47,7 +47,6 @@ class Hash: SerializedType {
      * @param other The Hash to compare this to
      */
     func compareTo(other: Hash) -> Int {
-        print()
         return 0
 //        return self.bytes.compare(
 //            (this.constructor as typeof Hash).from(other).bytes,

@@ -24,7 +24,6 @@ import Foundation
  * @category Requests
  */
 public class LedgerCurrentRequest: BaseRequest {
-//    let command: String = "ledger_current"
     public init(
         // Base
         id: Int? = nil,
@@ -33,8 +32,12 @@ public class LedgerCurrentRequest: BaseRequest {
         super.init(id: id, command: "ledger_current", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -58,5 +61,11 @@ public class LedgerCurrentResponse: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
         //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

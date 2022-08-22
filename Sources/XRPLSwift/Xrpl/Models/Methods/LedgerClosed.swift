@@ -34,8 +34,12 @@ public class LedgerClosedRequest: BaseRequest {
         super.init(id: id, command: "ledger_closed", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -62,5 +66,11 @@ public class LedgerClosedResponse: Codable {
         ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
         ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
         //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

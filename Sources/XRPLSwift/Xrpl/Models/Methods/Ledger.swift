@@ -11,53 +11,52 @@ import Foundation
 import AnyCodable
 
 public class LedgerRequest: BaseRequest {
-
     /** A 20-byte hex string for the ledger version to use. */
-    var ledgerHash: String?
+    public let ledgerHash: String?
     /**
      * The ledger index of the ledger to use, or a shortcut string to choose a
      * ledger automatically.
      */
-    var ledgerIndex: LedgerIndex?
+    public let ledgerIndex: LedgerIndex?
     /**
      * Admin required If true, return full information on the entire ledger.
      * Ignored if you did not specify a ledger version. Defaults to false.
      */
-    var full: Bool?
+    public let full: Bool?
     /**
      * Admin required. If true, return information on accounts in the ledger.
      * Ignored if you did not specify a ledger version. Defaults to false.
      */
-    var accounts: Bool?
+    public let accounts: Bool?
     /**
      * If true, return information on transactions in the specified ledger
      * version. Defaults to false. Ignored if you did not specify a ledger
      * version.
      */
-    var transactions: Bool?
+    public let transactions: Bool?
     /**
      * Provide full JSON-formatted information for transaction/account
      * information instead of only hashes. Defaults to false. Ignored unless you
      * request transactions, accounts, or both.
      */
-    var expand: Bool?
+    public let expand: Bool?
     /**
      * If true, include owner_funds field in the metadata of OfferCreate
      * transactions in the response. Defaults to false. Ignored unless
      * transactions are included and expand is true.
      */
-    var ownerFunds: Bool?
+    public let ownerFunds: Bool?
     /**
      * If true, and transactions and expand are both also true, return
      * transaction information in binary format (hexadecimal string) instead of
      * JSON format.
      */
-    var binary: Bool?
+    public let binary: Bool?
     /**
      * If true, and the command is requesting the current ledger, includes an
      * array of queued transactions in the results.
      */
-    var queue: Bool?
+    public let queue: Bool?
 
     enum CodingKeys: String, CodingKey {
         case ledgerHash = "ledger_hash"
@@ -71,7 +70,7 @@ public class LedgerRequest: BaseRequest {
         case queue = "queue"
     }
 
-    init( id: Int? = nil, apiVersion: Int? = nil ) { super.init(id: id, command: "ledger", apiVersion: apiVersion) }
+//    init( id: Int? = nil, apiVersion: Int? = nil ) { super.init(id: id, command: "ledger", apiVersion: apiVersion) }
 
     init(
         id: Int? = nil,
@@ -86,17 +85,60 @@ public class LedgerRequest: BaseRequest {
         binary: Bool? = nil,
         queue: Bool? = nil
     ) {
-        super.init(id: id, command: "ledger", apiVersion: apiVersion)
         self.ledgerHash = ledgerHash
+        self.ledgerIndex = ledgerIndex
         self.full = full
         self.accounts = accounts
         self.transactions = transactions
         self.expand = expand
         self.ownerFunds = ownerFunds
+        self.binary = binary
+        self.queue = queue
+        super.init(id: id, command: "ledger", apiVersion: apiVersion)
+    }
+
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LedgerRequest.self, from: data)
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        self.full = decoded.full
+        self.accounts = decoded.accounts
+        self.transactions = decoded.transactions
+        self.expand = decoded.expand
+        self.ownerFunds = decoded.ownerFunds
+        self.binary = decoded.binary
+        self.queue = decoded.queue
+        try super.init(json)
     }
 
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        full = try values.decodeIfPresent(Bool.self, forKey: .full)
+        accounts = try? values.decodeIfPresent(Bool.self, forKey: .accounts)
+        transactions = try? values.decodeIfPresent(Bool.self, forKey: .transactions)
+        expand = try? values.decodeIfPresent(Bool.self, forKey: .expand)
+        ownerFunds = try? values.decodeIfPresent(Bool.self, forKey: .ownerFunds)
+        binary = try? values.decodeIfPresent(Bool.self, forKey: .binary)
+        queue = try? values.decodeIfPresent(Bool.self, forKey: .queue)
+        try super.init(from: decoder)
+    }
+
+    override public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: encoder)
+        if let ledgerHash = ledgerHash { try values.encode(ledgerHash, forKey: .ledgerHash) }
+        if let ledgerIndex = ledgerIndex { try values.encode(ledgerIndex, forKey: .ledgerIndex) }
+        if let full = full { try values.encode(full, forKey: .full) }
+        if let accounts = accounts { try values.encode(accounts, forKey: .accounts) }
+        if let transactions = transactions { try values.encode(transactions, forKey: .transactions) }
+        if let expand = expand { try values.encode(expand, forKey: .expand) }
+        if let ownerFunds = ownerFunds { try values.encode(ownerFunds, forKey: .ownerFunds) }
+        if let binary = binary { try values.encode(binary, forKey: .binary) }
+        if let queue = queue { try values.encode(queue, forKey: .queue) }
     }
 }
 
@@ -167,8 +209,8 @@ struct LedgerQueueData {
 }
 
 class BinaryLedger: BaseLedger {
-    public var aaccountState: [LedgerEntry]?
-    public var ttransactions: [BaseTransaction]?
+    var aaccountState: [LedgerEntry]?
+    var ttransactions: [BaseTransaction]?
 }
 
 enum LOQueueData: Codable {
@@ -228,13 +270,19 @@ public class LedgerResponse: Codable {
 //        case queueData = "queue_data"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ledger = try values.decode(BaseLedger.self, forKey: .ledger)
         ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
         ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
-        validated = try values.decode(Bool.self, forKey: .validated)
+        validated = try values.decodeIfPresent(Bool.self, forKey: .validated)
 //        queueData = try values.decode([rQueueData].self, forKey: .queueData)
 //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

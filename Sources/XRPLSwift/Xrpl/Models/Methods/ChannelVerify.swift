@@ -56,8 +56,25 @@ public class ChannelVerifyRequest: BaseRequest {
         super.init(id: id, command: "channel_verify", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(ChannelVerifyRequest.self, from: data)
+        // Required
+        self.amount = decoded.amount
+        self.channelId = decoded.channelId
+        self.publicKey = decoded.publicKey
+        self.signature = decoded.signature
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        amount = try values.decode(String.self, forKey: .amount)
+        channelId = try values.decode(String.self, forKey: .channelId)
+        publicKey = try values.decode(String.self, forKey: .publicKey)
+        signature = try values.decode(String.self, forKey: .signature)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -90,5 +107,11 @@ public class ChannelVerifyResponse: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         signatureVerified = try values.decode(Bool.self, forKey: .signatureVerified)
         //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

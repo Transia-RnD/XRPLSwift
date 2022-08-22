@@ -7,6 +7,7 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/bookOffers.ts
 
+import AnyCodable
 import Foundation
 
 public struct TakerAmount: Codable {
@@ -86,8 +87,30 @@ public class BookOffersRequest: BaseRequest {
         super.init(id: id, command: "book_offers", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(BookOffersRequest.self, from: data)
+        // Required
+        self.takerGets = decoded.takerGets
+        self.takerPays = decoded.takerPays
+        // Optional
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        self.limit = decoded.limit
+        self.taker = decoded.taker
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        takerGets = try values.decode(TakerAmount.self, forKey: .takerGets)
+        takerPays = try values.decode(TakerAmount.self, forKey: .takerPays)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        limit = try? values.decodeIfPresent(Int.self, forKey: .limit)
+        taker = try? values.decodeIfPresent(String.self, forKey: .taker)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -171,19 +194,25 @@ public class BookOffersResponse: Codable {
 
     enum CodingKeys: String, CodingKey {
         case offers = "offers"
-        case ledgerCurrentIndex = "ledger_curren_index"
+        case ledgerCurrentIndex = "ledger_current_index"
         case ledgerHash = "ledger_hash"
         case ledgerIndex = "ledger_index"
         case validated = "validated"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         offers = try values.decode([BookOffer].self, forKey: .offers)
-        ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
-        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
-        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
-        validated = try values.decode(Bool.self, forKey: .validated)
+        ledgerCurrentIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerCurrentIndex)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerIndex)
+        validated = try values.decodeIfPresent(Bool.self, forKey: .validated)
         //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

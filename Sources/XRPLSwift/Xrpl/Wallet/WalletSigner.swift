@@ -87,11 +87,11 @@ public class WalletSigner: Wallet {
      * @category Utilities
      */
     public static func verifySignature(tx: String) -> Bool {
-        let decodedTx: Transaction = WalletSigner.getDecodedTransaction(tx: tx)
+        let decodedTx: Transaction = self.getDecodedTransaction(tx: tx)
         let json: [String: AnyObject] = try! decodedTx.toJson()
         return Keypairs.verify(
-            signature: try! BinaryCodec.encodeForSigning(json: json).bytes,
-            message: (json["TxnSignature"] as! String).bytes,
+            signature: Data(hex: json["TxnSignature"] as! String).bytes,
+            message: Data(hex: try! BinaryCodec.encodeForSigning(json: json)).bytes,
             publicKey: json["SigningPubKey"] as! String
         )
     }

@@ -33,8 +33,12 @@ public class FeeRequest: BaseRequest {
         super.init(id: id, command: "fee", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -67,10 +71,10 @@ public struct Drops: Codable {
     public let openLedgerFee: String
 
     enum CodingKeys: String, CodingKey {
-        case baseFee = "baseFee"
-        case medianFee = "medianFee"
-        case minimumFee = "minimumFee"
-        case openLedgerFee = "openLedgerFee"
+        case baseFee = "base_fee"
+        case medianFee = "median_fee"
+        case minimumFee = "minimum_fee"
+        case openLedgerFee = "open_ledger_fee"
     }
 }
 
@@ -97,10 +101,10 @@ public struct Levels: Codable {
     public let referenceLevel: String
 
     enum CodingKeys: String, CodingKey {
-        case medianLevel = "medianLevel"
-        case minimumLevel = "minimumLevel"
-        case openLedgerLevel = "openLedgerLevel"
-        case referenceLevel = "referenceLevel"
+        case medianLevel = "median_level"
+        case minimumLevel = "minimum_level"
+        case openLedgerLevel = "open_ledger_level"
+        case referenceLevel = "reference_level"
     }
 }
 
@@ -131,16 +135,16 @@ public class FeeResponse: Codable {
     public let maxQueueSize: String
 
     enum CodingKeys: String, CodingKey {
-        case currentLedgerSize = "currentLedgerSize"
-        case currentQueueSize = "currentQueueSize"
+        case currentLedgerSize = "current_ledger_size"
+        case currentQueueSize = "current_queue_size"
         case drops = "drops"
-        case expectedLedgerSize = "expectedLedgerSize"
-        case ledgerCurrentIndex = "ledgerCurrentIndex"
+        case expectedLedgerSize = "expected_ledger_size"
+        case ledgerCurrentIndex = "ledger_current_index"
         case levels = "levels"
-        case maxQueueSize = "maxQueueSize"
+        case maxQueueSize = "max_queue_size"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         currentLedgerSize = try values.decode(String.self, forKey: .currentLedgerSize)
         currentQueueSize = try values.decode(String.self, forKey: .currentQueueSize)
@@ -150,5 +154,11 @@ public class FeeResponse: Codable {
         levels = try values.decode(Levels.self, forKey: .levels)
         maxQueueSize = try values.decode(String.self, forKey: .maxQueueSize)
         //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

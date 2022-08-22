@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Submit.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -41,8 +41,19 @@ public class SubmitRequest: BaseRequest {
         case txBlob = "tx_blob"
         case failHard = "fail_hard"
     }
+    
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(SubmitRequest.self, from: data)
+        // Required
+        self.txBlob = decoded.txBlob
+        // Optional
+        self.failHard = decoded.failHard
+        try super.init(json)
+    }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         txBlob = try values.decode(String.self, forKey: .txBlob)
         failHard = try values.decode(Bool.self, forKey: .failHard)
@@ -62,7 +73,7 @@ public class SubmitRequest: BaseRequest {
  *
  * @category Responses
  */
-open class SubmitResponse: RippleBaseResponse {
+open class SubmitResponse: Codable {
     /**
      * Text result code indicating the preliminary result of the transaction,
      * for example `tesSUCCESS`.
@@ -75,7 +86,7 @@ open class SubmitResponse: RippleBaseResponse {
     /** The complete transaction in hex string format. */
     public let txBlob: String
     /** The complete transaction in JSON format. */
-//    public let tx_json: Transaction & [ hash: String? ]
+    public let txJson: Transaction
     /**
      * The value true indicates that the transaction was applied, queued,
      * broadcast, or kept for later. The value `false` indicates that none of
@@ -132,7 +143,7 @@ open class SubmitResponse: RippleBaseResponse {
         case engineResultCode = "engine_result_code"
         case engineResultMessage = "engine_result_message"
         case txBlob = "tx_blob"
-//        case txJson = "tx_json"
+        case txJson = "tx_json"
         case accepted = "accepted"
         case accountSequenceAvailable = "account_sequence_available"
         case accountSequenceNext = "account_sequence_next"
@@ -144,13 +155,13 @@ open class SubmitResponse: RippleBaseResponse {
         case validatedLedgerIndex = "validated_ledger_index"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         engineResult = try values.decode(String.self, forKey: .engineResult)
         engineResultCode = try values.decode(Int.self, forKey: .engineResultCode)
         engineResultMessage = try values.decode(String.self, forKey: .engineResultMessage)
         txBlob = try values.decode(String.self, forKey: .txBlob)
-//        txJson = try values.decode(String.self, forKey: .txJson)
+        txJson = try values.decode(Transaction.self, forKey: .txJson)
         accepted = try values.decode(Bool.self, forKey: .accepted)
         accountSequenceAvailable = try values.decode(Int.self, forKey: .accountSequenceAvailable)
         accountSequenceNext = try values.decode(Int.self, forKey: .accountSequenceNext)
@@ -160,6 +171,12 @@ open class SubmitResponse: RippleBaseResponse {
         queued = try values.decode(Bool.self, forKey: .queued)
         openLedgerCost = try values.decode(String.self, forKey: .openLedgerCost)
         validatedLedgerIndex = try values.decode(Int.self, forKey: .validatedLedgerIndex)
-        try super.init(from: decoder)
+//        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

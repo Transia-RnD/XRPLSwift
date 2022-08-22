@@ -51,16 +51,16 @@ public class AccountDelete: BaseTransaction {
         super.init(account: "", transactionType: "AccountSet")
     }
 
-    public override init(json: [String: AnyObject]) throws {
+    override public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(AccountDelete.self, from: data)
         self.destination = decoded.destination
-        self.destinationTag = decoded.destinationTag ?? nil
+        self.destinationTag = decoded.destinationTag
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         destination = try values.decode(String.self, forKey: .destination)
         destinationTag = try values.decodeIfPresent(Int.self, forKey: .destinationTag)

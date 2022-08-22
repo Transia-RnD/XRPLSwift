@@ -139,11 +139,31 @@ public class AccountLinesRequest: BaseRequest {
         self.peer = peer
         self.limit = limit
         self.marker = marker
-        super.init(id: id, command: "account_currencies", apiVersion: apiVersion)
+        super.init(id: id, command: "account_lines", apiVersion: apiVersion)
+    }
+
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(AccountLinesRequest.self, from: data)
+        self.account = decoded.account
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        self.peer = decoded.peer
+        self.limit = decoded.limit
+        self.marker = decoded.marker
+        try super.init(json)
     }
 
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        account = try values.decode(String.self, forKey: .account)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        peer = try? values.decodeIfPresent(Int.self, forKey: .peer)
+        limit = try? values.decodeIfPresent(Int.self, forKey: .limit)
+        marker = try? values.decodeIfPresent(AnyCodable.self, forKey: .marker)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -205,7 +225,7 @@ open class AccountLinesResponse: Codable {
         case marker = "marker"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
         lines = try values.decode([Trustline].self, forKey: .lines)
@@ -214,5 +234,11 @@ open class AccountLinesResponse: Codable {
         ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
         marker = try values.decode(AnyCodable.self, forKey: .marker)
 //        try super.init(from: decoder)
+    }
+
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

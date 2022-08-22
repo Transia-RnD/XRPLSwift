@@ -101,8 +101,36 @@ public class AccountTxRequest: BaseRequest {
         super.init(id: id, command: "account_tx", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(AccountTxRequest.self, from: data)
+        // Required
+        self.account = decoded.account
+        // Optional
+        self.ledgerIndexMin = decoded.ledgerIndexMin
+        self.ledgerIndexMax = decoded.ledgerIndexMax
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        self.binary = decoded.binary
+        self.forward = decoded.forward
+        self.limit = decoded.limit
+        self.marker = decoded.marker
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        account = try values.decode(String.self, forKey: .account)
+        ledgerIndexMin = try values.decodeIfPresent(Int.self, forKey: .ledgerIndexMin)
+        ledgerIndexMax = try values.decodeIfPresent(Int.self, forKey: .ledgerIndexMax)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        binary = try values.decodeIfPresent(Bool.self, forKey: .binary)
+        forward = try values.decodeIfPresent(Bool.self, forKey: .forward)
+        limit = try values.decodeIfPresent(Int.self, forKey: .limit)
+        marker = try values.decodeIfPresent(AnyCodable.self, forKey: .marker)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -122,7 +150,7 @@ public class AccountTxRequest: BaseRequest {
 
 public struct AccountTransaction: Codable {
     /** The ledger index of the ledger version that included this transaction. */
-    public let ledgerIndex: Int
+//    public let ledgerIndex: Int
     /**
      * If binary is True, then this is a hex string of the transaction metadata.
      * Otherwise, the transaction metadata is included in JSON format.
@@ -139,6 +167,29 @@ public struct AccountTransaction: Codable {
      * transaction not yet in a validated ledger is subject to change.
      */
     public let validated: Bool
+
+    enum CodingKeys: String, CodingKey {
+//        case ledgerIndex = "ledger_index"
+        case meta = "meta"
+        case tx = "tx"
+        case txBlob = "tx_blob"
+        case validated = "validated"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+//        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
+        meta = try values.decode(TransactionMetadata.self, forKey: .meta)
+        tx = try values.decodeIfPresent(Transaction.self, forKey: .tx)
+        txBlob = try values.decodeIfPresent(String.self, forKey: .txBlob)
+        validated = try values.decode(Bool.self, forKey: .validated)
+    }
+
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
+    }
 }
 
 /**
@@ -189,15 +240,21 @@ public class AccountTxResponse: Codable {
         case marker = "marker"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
         transactions = try values.decode([AccountTransaction].self, forKey: .transactions)
         ledgerIndexMin = try values.decode(Int.self, forKey: .ledgerIndexMin)
         ledgerIndexMax = try values.decode(Int.self, forKey: .ledgerIndexMax)
-        validated = try values.decode(Bool.self, forKey: .validated)
+        validated = try values.decodeIfPresent(Bool.self, forKey: .validated)
         limit = try values.decode(Int.self, forKey: .limit)
-        marker = try values.decode(AnyCodable.self, forKey: .marker)
+        marker = try values.decodeIfPresent(AnyCodable.self, forKey: .marker)
         //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

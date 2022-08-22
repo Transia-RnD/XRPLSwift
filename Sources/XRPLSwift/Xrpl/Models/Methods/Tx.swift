@@ -66,8 +66,26 @@ public class TxRequest: BaseRequest {
         super.init(id: id, command: "tx", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(TxRequest.self, from: data)
+        // Required
+        self.transaction = decoded.transaction
+        // Optional
+        self.binary = decoded.binary
+        self.minLedger = decoded.minLedger
+        self.maxLedger = decoded.maxLedger
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        transaction = try values.decode(String.self, forKey: .transaction)
+        binary = try values.decodeIfPresent(Bool.self, forKey: .binary)
+        minLedger = try? values.decodeIfPresent(Int.self, forKey: .minLedger)
+        maxLedger = try? values.decodeIfPresent(Int.self, forKey: .maxLedger)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -119,7 +137,7 @@ open class TxResponse: Codable {
         case searchedAll = "searchedAll"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         hash = try values.decode(String.self, forKey: .hash)
         ledgerIndex = try? values.decode(Int.self, forKey: .ledgerIndex)
@@ -128,5 +146,11 @@ open class TxResponse: Codable {
         date = try? values.decode(Int.self, forKey: .date)
         searchedAll = try? values.decode(Bool.self, forKey: .searchedAll)
         //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

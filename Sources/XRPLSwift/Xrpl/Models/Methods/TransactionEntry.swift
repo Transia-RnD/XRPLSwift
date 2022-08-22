@@ -52,8 +52,24 @@ public class TransactionEntryRequest: BaseRequest {
         super.init(id: id, command: "transaction_entry", apiVersion: apiVersion)
     }
 
-    required public init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(TransactionEntryRequest.self, from: data)
+        // Required
+        self.txHash = decoded.txHash
+        // Optional
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        try super.init(json)
+    }
+
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        txHash = try values.decode(String.self, forKey: .txHash)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -97,12 +113,18 @@ public class TransactionEntryResponse: Codable {
         case txJson = "tx_json"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
         ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
         metadata = try values.decode(TransactionMetadata.self, forKey: .metadata)
         txJson = try values.decode(Transaction.self, forKey: .txJson)
 //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

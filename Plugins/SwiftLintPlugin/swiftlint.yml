@@ -23,7 +23,7 @@ opt_in_rules:
     - discouraged_none_name
     - discouraged_object_literal
     - empty_collection_literal
-    - empty_count
+#    - empty_count
     - empty_string
     - empty_xctest_method
     - enum_case_associated_values_count
@@ -91,7 +91,8 @@ opt_in_rules:
 
 identifier_name:
     excluded:
-    - tx
+    - tx # transaction
+    - ic # issued currency
     - id
     - k
     - v
@@ -100,7 +101,7 @@ identifier_name:
 # Metrics rules
 cyclomatic_complexity:
     ignores_case_statements: true
-    warning: 7
+    warning: 50
 file_length:
     warning: 600
 function_body_length:

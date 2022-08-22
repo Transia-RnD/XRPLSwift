@@ -39,7 +39,7 @@ final class TestAutoFill: XCTestCase {
         tx.sequence = TestAutoFill.sequence
         tx.lastLedgerSequence = TestAutoFill.lastLedgerSequence
         let baseTx: Transaction = Transaction.depositPreauth(tx)
-        let txResult = await AutoFillSugar().autofill(client: self.client, transaction: tx, signersCount: 0)
+        let txResult = try! await AutoFillSugar().autofill(client: self.client, transaction: tx, signersCount: 0)
         print(baseTx)
         let newTx = try! txResult.wait()
         print(newTx)

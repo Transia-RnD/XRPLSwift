@@ -75,11 +75,33 @@ public class AccountOffersRequest: BaseRequest {
         self.limit = limit
         self.marker = marker
         self.strict = strict
-        super.init(id: id, command: "account_objects", apiVersion: apiVersion)
+        super.init(id: id, command: "account_offers", apiVersion: apiVersion)
+    }
+
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(AccountOffersRequest.self, from: data)
+        // Required
+        self.account = decoded.account
+        // Optional
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        self.limit = decoded.limit
+        self.marker = decoded.marker
+        self.strict = decoded.strict
+        try super.init(json)
     }
 
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        account = try values.decode(String.self, forKey: .account)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        limit = try? values.decodeIfPresent(Int.self, forKey: .limit)
+        marker = try? values.decodeIfPresent(AnyCodable.self, forKey: .marker)
+        strict = try? values.decodeIfPresent(Bool.self, forKey: .strict)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -172,19 +194,23 @@ public class AccountOffersResponse: Codable {
         case ledgerCurrentIndex = "ledger_current_index"
         case ledgerHash = "ledger_hash"
         case ledgerIndex = "ledger_index"
-//        case limit = "limit"
         case marker = "marker"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
         offers = try values.decode([AccountOffer].self, forKey: .offers)
-        ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
-        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
-        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
-//        limit = try values.decode(Int.self, forKey: .limit)
-        marker = try values.decode(AnyCodable.self, forKey: .marker)
+        ledgerCurrentIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerCurrentIndex)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerIndex)
+        marker = try values.decodeIfPresent(AnyCodable.self, forKey: .marker)
 //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

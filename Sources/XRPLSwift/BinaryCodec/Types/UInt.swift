@@ -16,36 +16,43 @@ class xUInt: SerializedType {
         super.init(bytes: bytes)
     }
 
-    // TODO: REVIEW THIS: See Tests...
-    func value() -> Int {
-        let data = Data(self.bytes)
+    var value: Int {
+        let data = Data(self.bytes.reversed())
         let value = Int(bigEndian: data.withUnsafeBytes { $0.pointee })
-        return value
+        return value.bigEndian
     }
 
-//    class func from(value: Int) throws -> xUInt {
-//        return xUInt(try! value.asHexArray())
-//    }
+    /**
+    Convert a UInt object to JSON.
 
+    Returns:
+        The JSON representation of the UInt object.
+    */
+    override func toJson() -> Any {
+        if self.value is Int {
+            return Int(self.value)
+        }
+        return String(self.value)
+    }
 }
 
 extension xUInt: Comparable {
     public static func == (lhs: xUInt, rhs: xUInt) -> Bool {
-        return lhs.value() == rhs.value() ? true : false
+        return lhs.value == rhs.value ? true : false
     }
     public static func != (lhs: xUInt, rhs: xUInt) -> Bool {
-        return lhs.value() != rhs.value() ? true : false
+        return lhs.value != rhs.value ? true : false
     }
     static func < (lhs: xUInt, rhs: xUInt) -> Bool {
-        return lhs.value() < rhs.value() ? true : false
+        return lhs.value < rhs.value ? true : false
     }
     static func <= (lhs: xUInt, rhs: xUInt) -> Bool {
-        return lhs.value() <= rhs.value() ? true : false
+        return lhs.value <= rhs.value ? true : false
     }
     static func > (lhs: xUInt, rhs: xUInt) -> Bool {
-        return lhs.value() > rhs.value() ? true : false
+        return lhs.value > rhs.value ? true : false
     }
     static func >= (lhs: xUInt, rhs: xUInt) -> Bool {
-        return lhs.value() >= rhs.value() ? true : false
+        return lhs.value >= rhs.value ? true : false
     }
 }

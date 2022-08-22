@@ -77,8 +77,30 @@ public class AccountInfoRequest: BaseRequest {
         super.init(id: id, command: "account_info", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(AccountInfoRequest.self, from: data)
+        // Required
+        self.account = decoded.account
+        // Optional
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        self.queue = decoded.queue
+        self.signerLists = decoded.signerLists
+        self.strict = decoded.strict
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        account = try values.decode(String.self, forKey: .account)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        queue = try values.decodeIfPresent(Bool.self, forKey: .queue)
+        signerLists = try values.decodeIfPresent(Bool.self, forKey: .signerLists)
+        strict = try values.decodeIfPresent(Bool.self, forKey: .strict)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -162,7 +184,9 @@ public class AccountInfoResponse: Codable {
      * information. The information does not contain any changes from ledger
      * versions newer than this one.
      */
+    // TODO: Ledger Hash isnt listed on this object, but is returned...
     public let ledgerIndex: Int?
+    public let ledgerHash: String?
     /**
      * Information about queued transactions sent by this account. This
      * information describes the state of the local rippled server, which may be
@@ -182,17 +206,25 @@ public class AccountInfoResponse: Codable {
         case signerLists = "signer_lists"
         case ledgerCurrentIndex = "ledger_current_index"
         case ledgerIndex = "ledger_index"
+        case ledgerHash = "ledger_hash"
         case queueData = "queue_data"
         case validated = "validated"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         accountData = try values.decode(AccountRoot.self, forKey: .accountData)
-        signerLists = try values.decode([SignerList].self, forKey: .signerLists)
-        ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
-        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
-        queueData = try values.decode(QueueData.self, forKey: .queueData)
-        validated = try values.decode(Bool.self, forKey: .validated)
+        signerLists = try values.decodeIfPresent([SignerList].self, forKey: .signerLists)
+        ledgerCurrentIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerCurrentIndex)
+        ledgerIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerIndex)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        queueData = try values.decodeIfPresent(QueueData.self, forKey: .queueData)
+        validated = try values.decodeIfPresent(Bool.self, forKey: .validated)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

@@ -149,7 +149,6 @@ public class BinarySerializer {
      * @param bl BytesList to write to BinarySerializer
      */
     func writeBytesList(bl: BytesList) {
-//        print("SINK: \(self.sink.toHex())")
         bl.toBytesSink(list: self.sink)
     }
 

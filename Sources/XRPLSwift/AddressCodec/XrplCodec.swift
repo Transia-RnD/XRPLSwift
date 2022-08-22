@@ -52,8 +52,6 @@ public class XrplCodec {
      */
     public static func encode(bytes: [UInt8], prefix: [UInt8], expectedLength: Int) throws -> String {
         if bytes.count != expectedLength {
-            print("BYTES COUNT: \(bytes.count)")
-            print("EXP COUNT: \(expectedLength)")
             let errorMessage: String = "`\(bytes.count)` does not match \(expectedLength). Ensure that the bytes are a [UInt8]."
             throw AddressCodecError.unexpectedPayloadLength(error: errorMessage)
         }
@@ -96,11 +94,9 @@ public class XrplCodec {
      */
     public static func encodeSeed(entropy: [UInt8], type: AlgorithmType) throws -> String {
         if entropy.count != SEED_LENGTH {
-            print("Entropy must have length \(SEED_LENGTH)")
             throw AddressCodecError.invalidLength(error: "Entropy must have length \(SEED_LENGTH)")
         }
         if !AlgorithmType.types.contains(type) {
-            print("Encoding type must be one of \(AlgorithmType.types)")
             throw AddressCodecError.invalidType(error: "Encoding type must be one of \(AlgorithmType.types)")
         }
         let prefix: [UInt8] = type == .ed25519 ? _ED25519_SEED_PREFIX : _FAMILY_SEED_PREFIX

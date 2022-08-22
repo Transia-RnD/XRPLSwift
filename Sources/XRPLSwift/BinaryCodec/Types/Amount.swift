@@ -100,17 +100,10 @@ func verifyIouValue(issuedCurrencyValue: String) throws {
 
 func calculatePrecision(value: String) -> Int {
     // Calculate the precision of given value as a string.
-//    print("STRING: \(value)")
     let decimalValue: Decimal = Decimal(string: value)!
-//    print("DECIMAL: \(decimalValue)")
-//    print("DECIMAL INT: \(decimalValue.asInt)")
-//    print("EXPONENT: \(decimalValue.exponent)")
-//    if decimalValue == Int(value: decimalValue) {
     if decimalValue.exponent == decimalValue.asInt {
-//        print("PRECISION0: \(decimalValue.digits().count)")
         return decimalValue.digits().count
     }
-//    print("PRECISION1: \(decimalValue.digits().count)")
     return decimalValue.digits().count
 }
 
@@ -121,17 +114,13 @@ func verifyNoDecimal(decimal: Decimal) throws {
     :param decimal: A Decimal object.
     */
     let actualExponent: Int = decimal.exponentXrp
-//    print(actualExponent)
     let exponent = Decimal(string: "1e" + String(-(Int(actualExponent) - 15)))
     var intNumberString: String = ""
     if actualExponent == 0 {
-//        print("0")
         intNumberString = decimal.digits().joined(separator: "")
     } else {
-//        print("1")
         intNumberString = "\(decimal * exponent!)"
     }
-//    print("FINAL: \(intNumberString)")
     if !containsDecimal(string: intNumberString) {
         throw BinaryError.unknownError(error: "Decimal place found in intNumberString")
     }
@@ -154,9 +143,6 @@ func serializeIssuedCurrencyValue(value: String) throws -> [UInt8] {
     let digits: [String] = decimalValue.digits()
     var exp: Int = decimalValue.exponent
     var mantissa: Int = Int(digits.map({ String($0) }).joined(separator: ""))!
-    print("SIGN: \(sign)")
-    print("DIGITS: \(digits)")
-    print("EXP: \(exp)")
 
     // Canonicalize to expected range ---------------------------------------
     while mantissa < MIN_IOU_MANTISSA && exp > MIN_IOU_EXPONENT {
@@ -209,7 +195,7 @@ func serializeXrpAmount(value: String) throws -> [UInt8] {
     */
     try verifyXrpValue(xrpValue: value)
     // set the "is positive" bit (this is backwards from usual two's complement!)
-    let valueWithPosBit: Int = Int(value)! | POS_SIGN_BIT_MASK
+    let valueWithPosBit = Int(value)! | POS_SIGN_BIT_MASK
     return try valueWithPosBit.data.toArray(type: UInt8.self).reversed()
 }
 
@@ -248,7 +234,6 @@ class xAmount: SerializedType {
     }
 
     static func from(value: [String: String]) throws -> xAmount {
-//        if IssuedCurrencyAmount.is_dict_of_model(value):
         return try xAmount(bytes: serializeIssuedCurrencyAmount(value: value))
     }
 
@@ -256,20 +241,14 @@ class xAmount: SerializedType {
         parser: BinaryParser,
         hint: Int? = nil
     ) throws -> xAmount {
-//        print(parser.bytes)
         let parserFirstByte = try parser.peek()
-//        print(parserFirstByte)
         let notXrp: Int = (parserFirstByte != 0 ? Int(parserFirstByte) : 0x00) & 0x80
-//        print(notXrp)
         var numBytes: Int = 0
         if notXrp != 0 {
-//            print("CURRENCY AMOUNT LENGTH")
             numBytes = CURRENCY_AMOUNT_BYTE_LENGTH
         } else {
-//            print("NATIVE AMOUNT LENGTH")
             numBytes = NATIVE_AMOUNT_BYTE_LENGTH
         }
-//        print(numBytes)
         return xAmount(bytes: try parser.read(n: numBytes))
     }
 
@@ -283,7 +262,7 @@ class xAmount: SerializedType {
 
         if self.isNative() {
             let sign: String = self.isPositive() ? "" : "-"
-            let maskedBytes: Int = Int(self.bytes.toHexString(), radix: 16)! & 0x3FFFFFFFFFFFFFFF
+            let maskedBytes = Int(self.bytes.toHexString(), radix: 16)! & 0x3FFFFFFFFFFFFFFF
             return "\(sign)\(maskedBytes)"
         }
 

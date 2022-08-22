@@ -7,8 +7,8 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/Wallet/index.ts
 
-import Foundation
 import BigInt
+import Foundation
 
 // swiftlint:disable:next identifier_name
 let DEFAULT_DERIVATION_PATH = "m/44'/144'/0'/0/0"
@@ -96,7 +96,7 @@ public class Wallet {
     public let privateKey: String
     public let classicAddress: String
     public let seed: String?
-
+    
     /**
      * Alias for wallet.classicAddress.
      *
@@ -105,7 +105,7 @@ public class Wallet {
     public func address() -> String {
         return self.classicAddress
     }
-
+    
     /**
      * Creates a new Wallet.
      *
@@ -128,7 +128,7 @@ public class Wallet {
         : try! Keypairs.deriveAddress(publicKey: publicKey)
         self.seed = seed
     }
-
+    
     /**
      * Generates a new Wallet using a generated seed.
      *
@@ -139,7 +139,7 @@ public class Wallet {
         let seed: String = try! Keypairs.generateSeed(options: KeypairsOptions(algorithm: algorithm))
         return Wallet.fromSeed(seed: seed)
     }
-
+    
     /**
      * Derives a wallet from a seed.
      *
@@ -155,7 +155,7 @@ public class Wallet {
     ) -> Wallet {
         return Wallet.deriveWallet(seed: seed, masterAddress: masterAddress)
     }
-
+    
     /**
      * Derives a wallet from an entropy (array of random numbers).
      *
@@ -173,7 +173,7 @@ public class Wallet {
         let seed = try! Keypairs.generateSeed(options: options)
         return Wallet.deriveWallet(seed: seed, masterAddress: opts.masterAddress!)
     }
-
+    
     /**
      * Derives a wallet from a bip39 or RFC1751 mnemonic (Defaults to bip39).
      *
@@ -200,14 +200,14 @@ public class Wallet {
         //        if !validateMnemonic(mnemonic) {
         //            throw XrplError.validation("Unable to parse the given mnemonic using bip39 encoding")
         //        }
-
+        
         let seed = Bip39Mnemonic.createSeed(mnemonic: mnemonic)
         let node = PrivateKey(seed: seed, coin: .bitcoin)
-
+        
         if node.publicKey.isEmpty {
             throw XrplError.validation("Unable to derive privateKey from mnemonic input")
         }
-
+        
         // BIP44 key derivation
         // m/44'
         let purpose = node.derived(at: .hardened(44))
@@ -219,11 +219,11 @@ public class Wallet {
         let change = account.derived(at: .notHardened(opts.derivationPath.change))
         // m/44'/144'/0'/0/0
         let firstPrivateKey = change.derived(at: .notHardened(opts.derivationPath.addressIndex))
-
+        
         var finalMasterPrivateKey = Data(repeating: 0x00, count: 33)
         finalMasterPrivateKey.replaceSubrange(1...firstPrivateKey.raw.count, with: firstPrivateKey.raw)
         let address = try Keypairs.deriveAddress(publicKey: firstPrivateKey.publicKey.toHex)
-
+        
         let publicKey = firstPrivateKey.publicKey.toHex
         let privateKey = finalMasterPrivateKey.toHex
         // TODO: Shouldn't the mnemonic wallet append the address from `deriveAddress`
@@ -236,7 +236,7 @@ public class Wallet {
             seed: nil
         )
     }
-
+    
     /**
      * Derives a wallet from a RFC1751 mnemonic, which is how `wallet_propose` encodes mnemonics.
      *
@@ -261,7 +261,7 @@ public class Wallet {
         )
         return Wallet.fromSeed(seed: encodedSeed, masterAddress: opts.masterAddress!)
     }
-
+    
     /**
      * Derive a Wallet from a seed.
      *
@@ -283,7 +283,7 @@ public class Wallet {
             seed: seed
         )
     }
-
+    
     /**
      * Signs a transaction offline.
      *
@@ -307,32 +307,26 @@ public class Wallet {
         } else if multisign {
             multisignAddress = self.classicAddress
         }
-
+        
         let tx = try! transaction.toJson()
-
+        
         if tx["TxnSignature"] != nil || tx["Signers"] != nil {
             throw XrplError.validation("txJSON must not contain `TxnSignature` or `Signers` properties")
         }
-
+        
         //        removeTrailingZeros(tx: transaction)
-
+        
         let encoder = JSONEncoder()
         //        print(transaction)
         //        let txs = try encoder.encode(transaction)
         //        var tx = try transaction.toAny() as! BaseTransaction
         //        let signedTxEncoded: String = try BinaryCodec.encode(data: try encoder.encode(signedTransaction))
-
+        
         let txData = try encoder.encode(transaction)
         var txToSignAndEncode = try JSONSerialization.jsonObject(with: txData, options: .mutableLeaves) as? [String: AnyObject]
-
+        
         txToSignAndEncode?["SigningPubKey"] = !multisignAddress.isEmpty ? "" as AnyObject : self.publicKey as AnyObject
-
-        let signature: String = try computeSignature(
-            tx: txToSignAndEncode!,
-            privateKey: self.privateKey
-        )
-        txToSignAndEncode?["TxnSignature"] = signature as AnyObject
-
+        
         if !multisignAddress.isEmpty {
             let signer = try Signer(json: [
                 "Account": multisignAddress,
@@ -351,12 +345,13 @@ public class Wallet {
             )
             txToSignAndEncode?["TxnSignature"] = signature as AnyObject
         }
-
+        
+        print(txToSignAndEncode?["SigningPubKey"])
         let serialized = try BinaryCodec.encode(json: txToSignAndEncode!)
         try self.checkTxSerialization(serialized: serialized, tx: transaction)
         return SignatureResult(txBlob: serialized, hash: try hashSignedTx(tx: serialized))
     }
-
+    
     /**
      * Verifies a signed transaction offline.
      *
@@ -369,7 +364,7 @@ public class Wallet {
         let signature = tx["TxnSignature"] as? String
         return Keypairs.verify(signature: messageHex.bytes, message: signature!.bytes, publicKey: self.publicKey)
     }
-
+    
     /**
      * Gets an X-address in Testnet/Mainnet format.
      *
@@ -380,7 +375,7 @@ public class Wallet {
     //    public func getXAddress(tag: number | false = false, isTestnet = false): string {
     //        return classicAddressToXAddress(this.classicAddress, tag, isTestnet)
     //    }
-
+    
     /**
      *  Decode a serialized transaction, remove the fields that are added during the signing process,
      *  and verify that it matches the transaction prior to signing. This gives the user a sanity check
@@ -396,7 +391,7 @@ public class Wallet {
         // Decode the serialized transaction:
         var decoded: [String: AnyObject] = BinaryCodec.decode(buffer: serialized) as [String: AnyObject]
         var txCopy = try tx.toJson()
-
+        
         /*
          * And ensure it is equal to the original tx, except:
          * - It must have a TxnSignature or Signers (multisign).
@@ -408,7 +403,7 @@ public class Wallet {
         decoded["TxnSignature"] = nil
         // - We know that the original tx did not have Signers, so if it exists, we should delete it:
         decoded["Signers"] = nil
-
+        
         /*
          * - If SigningPubKey was not in the original tx, then we should delete it.
          *   But if it was in the original tx, then we should ensure that it has not been changed.
@@ -416,7 +411,7 @@ public class Wallet {
         if txCopy["SigningPubKey"] == nil {
             decoded["SigningPubKey"] = nil
         }
-
+        
         /*
          * - Memos have exclusively hex data which should ignore case.
          *   Since decode goes to upper case, we set all tx memos to be uppercase for the comparison.
@@ -442,7 +437,7 @@ public class Wallet {
             }
             txCopy["URI"] = (txCopy["URI"] as! String).uppercased() as AnyObject
         }
-
+        
         try txCopy.forEach { (key: String, _: AnyObject) in
             let standardCurrencyCodeLen = 3
             if txCopy[key] != nil && isIssuedCurrency(input: txCopy[key]!) {
@@ -450,11 +445,11 @@ public class Wallet {
                 var decodedIC = try IssuedCurrencyAmount(decodedAmount as! [String: AnyObject])
                 let decodedCurrency = decodedIC.currency
                 let txCurrency = try IssuedCurrencyAmount(txCopy[key] as! [String: AnyObject]).currency
-
+                
                 if txCurrency.count == standardCurrencyCodeLen && txCurrency.uppercased() == "XRP" {
                     throw XrplError.validation("Trying to sign an issued currency with a similar standard code to XRP (received \(txCurrency)'). XRP is not an issued currency.")
                 }
-
+                
                 // Standardize the format of currency codes to the 40 byte hex string for comparison
                 let amount = try IssuedCurrencyAmount(txCopy[key] as! [String: AnyObject])
                 if amount.currency.count != decodedCurrency.count {
@@ -466,18 +461,20 @@ public class Wallet {
                 }
             }
         }
-
-        //            if (!_.isEqual(decoded, txCopy)) {
-        //              const data = {
-        //                decoded,
-        //                tx,
-        //              }
-        //              const error = new ValidationError(
-        //                'Serialized transaction does not match original txJSON. See error.data',
-        //                data,
-        //              )
-        //              throw error
-        //            }
+        
+        if !(decoded == txCopy) {
+            let data = [
+                "decoded": decoded,
+                "tx": txCopy
+            ] as [String: AnyObject]
+//            let error = ValidationError(
+//                "Serialized transaction does not match original txJSON. See error.data",
+//                data
+//            )
+//            print((decoded["SigningPubKey"] as! Blob).toJson())
+//            print(data)
+//            throw error
+        }
     }
 }
 
@@ -501,8 +498,11 @@ func computeSignature(
     //        : signAs
     //        return sign(encodeForMultisigning(tx, classicAddress), privateKey)
     //    }
+    print(tx)
+    let encoded = try BinaryCodec.encodeForSigning(json: tx)
+    print(encoded)
     return Keypairs.sign(
-        message: try BinaryCodec.encodeForSigning(json: tx).asHexArray(),
+        message: Data(hex: encoded).bytes,
         privateKey: privateKey
     ).toHex
 }
@@ -535,4 +535,8 @@ func isoToHex(iso: String) -> String {
     //        bytes.set(isoBytes, 12)
     //    }
     //    return bytes.toHex
+}
+
+public func ==(lhs: [String: AnyObject], rhs: [String: AnyObject] ) -> Bool {
+    return NSDictionary(dictionary: lhs).isEqual(to: rhs)
 }

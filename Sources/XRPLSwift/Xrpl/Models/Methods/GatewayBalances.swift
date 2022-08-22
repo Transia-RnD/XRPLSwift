@@ -15,15 +15,14 @@ import Foundation
  * a response in the form of a {@link GatewayBalancesResponse}.
  *
  * @example
- * ```ts
- * const gatewayBalances: GatewayBalanceRequest = {
- *   "id": "example_gateway_balances_1",
- *   "command": "gateway_balances",
- *   "account": "rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q",
- *   "strict": true,
- *   "hotwallet": ["rKm4uWpg9tfwbVSeATv4KxDe6mpE9yPkgJ","ra7JkEzrgeKHdzKgo4EUUVBnxggY4z37kt"],
- *   "ledger_index": "validated"
- * }
+ * ```swift
+ * let gatewayBalances = GatewayBalanceRequest(
+ *   id: "example_gateway_balances_1",
+ *   account: "rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q",
+ *   strict: true,
+ *   hotwallet: ["rKm4uWpg9tfwbVSeATv4KxDe6mpE9yPkgJ","ra7JkEzrgeKHdzKgo4EUUVBnxggY4z37kt"],
+ *   ledgerIndex: "validated"
+ * )
  * ```
  *
  */
@@ -54,8 +53,8 @@ public class GatewayBalancesRequest: BaseRequest {
         case account = "account"
         case strict = "strict"
         case hotwallet = "hotwallet"
-        case ledgerHash = "ledgerHash"
-        case ledgerIndex = "ledgerIndex"
+        case ledgerHash = "ledger_hash"
+        case ledgerIndex = "ledger-index"
     }
 
     public init(
@@ -72,6 +71,7 @@ public class GatewayBalancesRequest: BaseRequest {
     ) {
         // Required
         self.account = account
+        // Optional
         self.strict = strict
         self.hotwallet = hotwallet
         self.ledgerHash = ledgerHash
@@ -79,8 +79,28 @@ public class GatewayBalancesRequest: BaseRequest {
         super.init(id: id, command: "gateway_balances", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(GatewayBalancesRequest.self, from: data)
+        // Required
+        self.account = decoded.account
+        // Optional
+        self.strict = decoded.strict
+        self.hotwallet = decoded.hotwallet
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        account = try values.decode(String.self, forKey: .account)
+        strict = try values.decodeIfPresent(Bool.self, forKey: .strict)
+        hotwallet = try values.decodeIfPresent(String.self, forKey: .hotwallet)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -146,26 +166,38 @@ public class GatewayBalancesResponse: Codable {
      * response.
      */
       public let ledgerCurrentIndex: Int?
+    /**
+     * validated
+     */
+      public let validated: Bool?
 
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case obligations = "obligations"
         case balances = "balances"
         case assets = "assets"
-        case ledgerHash = "ledgerHash"
-        case ledgerCurrentIndex = "ledgerCurrentIndex"
-        case ledgerIndex = "ledgerIndex"
+        case ledgerHash = "ledger_hash"
+        case ledgerCurrentIndex = "ledger_current_index"
+        case ledgerIndex = "ledger_index"
+        case validated = "validated"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
-        obligations = try values.decode(BaseCurrency.self, forKey: .obligations)
-        balances = try values.decode(BaseBalance.self, forKey: .balances)
-        assets = try values.decode(BaseBalance.self, forKey: .assets)
-        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
-        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
-        ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
+        obligations = try values.decodeIfPresent(BaseCurrency.self, forKey: .obligations)
+        balances = try values.decodeIfPresent(BaseBalance.self, forKey: .balances)
+        assets = try values.decodeIfPresent(BaseBalance.self, forKey: .assets)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerIndex)
+        ledgerCurrentIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerCurrentIndex)
+        validated = try values.decodeIfPresent(Bool.self, forKey: .validated)
         //        try super.init(from: decoder)
+    }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

@@ -68,9 +68,7 @@ class xCurrency: Hash160 {
     override init(_ bytes: [UInt8]? = nil) {
         super.init(bytes ?? xCurrency.defaultCurrency.bytes)
 
-        print(self.bytes)
         let codeBytes: [UInt8] = [UInt8](self.bytes[12..<15])
-        print(codeBytes)
         // Determine whether this currency code is in standard or nonstandard format:
         // https://xrpl.org/currency-formats.html#nonstandard-currency-codes
         if bytes?[0] != 0 {

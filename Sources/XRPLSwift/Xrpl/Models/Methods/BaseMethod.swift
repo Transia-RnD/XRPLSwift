@@ -48,8 +48,8 @@ public class BaseRequest: Codable, Equatable {
         self.data = data
     }
 
-    public init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+    public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(BaseRequest.self, from: data)
         self.id = decoded.id
@@ -162,6 +162,7 @@ open class ErrorResponse: Error, Codable {
     public var error: String
     public var errorCode: Int?
     public var errorMessage: String?
+    public var errorException: String?
     public var request: AnyCodable?
     public var apiVersion: Int?
 
@@ -172,6 +173,7 @@ open class ErrorResponse: Error, Codable {
         case error = "error"
         case errorCode = "error_code"
         case errorMessage = "error_message"
+        case errorException = "error_exception"
         case request = "request"
         case apiVersion = "api_version"
     }

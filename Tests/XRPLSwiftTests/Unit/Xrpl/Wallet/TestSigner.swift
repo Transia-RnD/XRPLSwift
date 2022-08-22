@@ -205,11 +205,15 @@ final class TestSigner: XCTestCase {
         let signedTx = try! self.verifyWallet.sign(transaction: self.tx)
         XCTAssertTrue(WalletSigner.verifySignature(tx: signedTx.txBlob))
     }
-//
-//    func testValidSignatureTx() {
-//        let signedTx = try! self.verifyWallet.sign(transaction: self.tx)
-//        XCTAssertTrue(rSigner.verifySignature(signedTx.txBlob))
-//    }
+
+    func testValidSignatureTx() {
+        let signedTx = try! self.verifyWallet.sign(transaction: self.tx)
+        XCTAssertTrue(WalletSigner.verifySignature(tx: signedTx.txBlob))
+    }
+    
+//    535458001200002400000001614000000001312D0068400000000000000C7321030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D81142AF1861DEC1316AEEC995C94FF9E2165B1B784608314FDB08D07AAA0EB711793A3027304D688E10C3648
+//    53545800120000614000000001312D0068400000000000000C7321030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D81142AF1861DEC1316AEEC995C94FF9E2165B1B784608314FDB08D07AAA0EB711793A3027304D688E10C3648
+//    3045022100CAF99A63B241F5F62B456C68A593D2835397101533BB5D0C4DC17362AC22046F022016A2CA2CF56E777B10E43B56541A4C2FB553E7E298CDD39F7A8A844DA491E51D00
 //
 //    func testInvalidSignatureTx() {
 //        let signedTx = try! self.verifyWallet.sign(transaction: self.tx)

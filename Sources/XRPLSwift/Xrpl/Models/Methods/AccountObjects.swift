@@ -176,8 +176,32 @@ public class AccountObjectsRequest: BaseRequest {
         super.init(id: id, command: "account_objects", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(AccountObjectsRequest.self, from: data)
+        // Required
+        self.account = decoded.account
+        // Optional
+        self.type = decoded.type
+        self.deletionBlockersOnly = decoded.deletionBlockersOnly
+        self.ledgerHash = decoded.ledgerHash
+        self.ledgerIndex = decoded.ledgerIndex
+        self.limit = decoded.limit
+        self.marker = decoded.marker
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        account = try values.decode(String.self, forKey: .account)
+        type = try values.decodeIfPresent(AccountObjectType.self, forKey: .type)
+        deletionBlockersOnly = try values.decodeIfPresent(Bool.self, forKey: .deletionBlockersOnly)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        ledgerIndex = try values.decodeIfPresent(LedgerIndex.self, forKey: .ledgerIndex)
+        limit = try? values.decodeIfPresent(Int.self, forKey: .limit)
+        marker = try? values.decodeIfPresent(AnyCodable.self, forKey: .marker)
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -247,7 +271,7 @@ public class AccountObjectsResponse: Codable {
         case validated = "validated"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
         accountObjects = try values.decode([AccountObject].self, forKey: .accountObjects)
@@ -258,5 +282,11 @@ public class AccountObjectsResponse: Codable {
         marker = try? values.decode(AnyCodable.self, forKey: .marker)
         validated = try? values.decode(Bool.self, forKey: .validated)
 //        try super.init(from: decoder)
+    }
+
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
     }
 }

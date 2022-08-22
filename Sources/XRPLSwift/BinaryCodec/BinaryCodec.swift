@@ -98,7 +98,7 @@ class BinaryCodec {
      A JSON-like dictionary representation of the transaction.
      */
     class func decode(buffer: String) -> [String: AnyObject] {
-        let parser: BinaryParser = BinaryParser(hex: buffer)
+        let parser = BinaryParser(hex: buffer)
         let parsedType: SerializedType = try! parser.readType(type: STObject.self)
         return parsedType.toJson()
     }
@@ -109,15 +109,15 @@ class BinaryCodec {
         suffix: Data? = nil,
         signingOnly: Bool = false
     ) throws -> String {
-        var buffer: Data = Data()
-        if prefix != nil {
-            buffer += prefix!
+        var buffer = Data()
+        if let prefix = prefix {
+            buffer += prefix
         }
 
         buffer += try STObject.from(value: json, onlySigning: signingOnly).bytes
 
-        if suffix != nil {
-            buffer += suffix!
+        if let suffix = suffix {
+            buffer += suffix
         }
 
         return buffer.toHexString().uppercased()

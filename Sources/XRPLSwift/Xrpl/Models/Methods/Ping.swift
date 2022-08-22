@@ -26,8 +26,12 @@ public class PingRequest: BaseRequest {
         super.init(id: id, command: "ping", apiVersion: apiVersion)
     }
 
+    override public init(_ json: [String: AnyObject]) throws {
+        try super.init(json)
+    }
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        try super.init(from: decoder)
     }
 
     override public func encode(to encoder: Encoder) throws {
@@ -55,4 +59,11 @@ public class PingResponse: Codable {
         unlimited = try values.decode(Bool.self, forKey: .unlimited)
 //        try super.init(from: decoder)
     }
+    
+    func toJson() throws -> [String: AnyObject] {
+        let data = try JSONEncoder().encode(self)
+        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+        return jsonResult as! [String: AnyObject]
+    }
+    
 }
