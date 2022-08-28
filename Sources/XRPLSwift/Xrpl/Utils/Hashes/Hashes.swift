@@ -1,24 +1,27 @@
-////
-////  Hashes.swift
-////  
-////
-////  Created by Denis Angell on 8/6/22.
-////
 //
-//// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/utils/hashes/index.ts
+//  Hashes.swift
 //
-// import Foundation
 //
-// let HEX: Int = 16
-// let BYTE_LENGTH: Int = 4
+//  Created by Denis Angell on 8/6/22.
 //
-// func addressToHex(address: String) -> String {
-//    return try! XrplCodec.decodeClassicAddress(classicAddress: address).toHexString()
-// }
-//
-// func ledgerSpaceHex(name: keyof typeof ledgerSpaces) -> String {
-//    return ledgerSpaces[name].charCodeAt(0).toString(HEX).padStart(4, "0")
-// }
+
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/utils/hashes/index.ts
+
+import Foundation
+
+// swiftlint:disable:next identifier_name
+let HASH_HEX: Int = 16
+// swiftlint:disable:next identifier_name
+let BYTE_LENGTH: Int = 4
+
+func addressToHex(address: String) -> String {
+    return try! XrplCodec.decodeClassicAddress(classicAddress: address).toHex
+}
+
+func ledgerSpaceHex(_ name: String) -> String {
+    let lsvalue = Character(LedgerSpaces(name).rawValue).asciiValue!
+    return [UInt8].init(repeating: 0x0, count: 1).toHex + String(lsvalue, radix: HASH_HEX)
+}
 //
 // let MASK: Int = 0xff
 // func currencyToHex(currency: String) -> String {
@@ -149,25 +152,25 @@
 // public func hashEscrow(address: String, sequence: Int) -> String {
 //    return sha512Half(hex: ledgerSpaceHex("escrow") + addressToHex(address: address) + sequence.toString(HEX).padStart(BYTE_LENGTH * 2, "0"))
 // }
-//
-/// **
-// * Compute the hash of a Payment Channel.
-// *
-// * @param address - Account of the Payment Channel.
-// * @param dstAddress - Destination Account of the Payment Channel.
-// * @param sequence - Sequence number of the Transaction that created the Payment Channel.
-// * @returns Hash of the Payment Channel.
-// * @category Utilities
-// */
-// public func hashPaymentChannel(
-//    address: String,
-//    dstAddress: String,
-//    sequence: Int
-// ) -> String {
-//    return sha512Half(
-//        ledgerSpaceHeader("paychan") +
-//        addressToHex(address: address) +
-//        addressToHex(dstAddress) +
-//        sequence.toString(HEX).padStart(BYTE_LENGTH * 2, "0")
-//    )
-// }
+
+/**
+ * Compute the hash of a Payment Channel.
+ *
+ * @param address - Account of the Payment Channel.
+ * @param dstAddress - Destination Account of the Payment Channel.
+ * @param sequence - Sequence number of the Transaction that created the Payment Channel.
+ * @returns Hash of the Payment Channel.
+ * @category Utilities
+ */
+public func hashPaymentChannel(
+    address: String,
+    dstAddress: String,
+    sequence: Int
+) -> String {
+    let hexString: String = ledgerSpaceHex("paychan") +
+    addressToHex(address: address) +
+    addressToHex(address: dstAddress) +
+    [UInt8].init(repeating: 0x0, count: BYTE_LENGTH * 2).toHex +
+    String(sequence, radix: HASH_HEX)
+    return sha512Half(hex: hexString)
+}

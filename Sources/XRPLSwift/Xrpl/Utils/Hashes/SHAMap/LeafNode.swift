@@ -9,7 +9,7 @@
 
 import Foundation
 
-let HEX: Int = 16
+// let HEX: Int = 16
 
 /**
  * Class for SHAMap Leaf Node.

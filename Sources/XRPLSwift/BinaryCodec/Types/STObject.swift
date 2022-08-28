@@ -69,27 +69,6 @@ struct AssociatedValue {
     //        }
     //    }
 
-    //    let Types: [String: SerializedType.Type] = [
-    //        "AccountID": AccountID.self,
-    //        "Amount": Amount.self,
-    //        "Blob": Blob.self,
-    //        "Currency": Currency.self,
-    //        "Hash": Hash.self,
-    //        "Hash128": Hash128.self,
-    //        "Hash160": Hash160.self,
-    //        "Hash256": Hash256.self,
-    //    //    "PathSet": PathSet.self,
-    //        "SerializedType": SerializedType.self,
-    //        "STArray": STArray.self,
-    //        "STObject": STObject.self,
-    //        "UInt": xUInt.self,
-    //        "UInt8": xUInt8.self,
-    //        "UInt16": xUInt16.self,
-    //        "UInt32": xUInt32.self,
-    //        "UInt64": xUInt64.self,
-    //        "Vector256": Vector256.self,
-    //    ]
-
     func from() throws -> SerializedType? {
         if field.associatedType.self is AccountID.Type {
             return try AccountID.from(value: xaddressDecoded[field.name]! as! String)
@@ -121,10 +100,9 @@ struct AssociatedValue {
         if field.associatedType.self is Hash.Type {
             return try Hash.from(value: xaddressDecoded[field.name]! as! String)
         }
-        //        if let av = field.associatedType.self as? PathSet.Type {
-        //            print("PathSet")
-        //            return try! av.from(value: xaddressDecoded[field.name]! as! PathSet)
-        //        }
+        if field.associatedType.self is xPath.Type {
+            return try xPath.from(value: xaddressDecoded[field.name]! as! [[String: AnyObject]])
+        }
         if field.associatedType.self is STArray.Type {
             return try! STArray.from(value: xaddressDecoded[field.name]! as! [[String: AnyObject]])
         }
@@ -180,10 +158,9 @@ struct AssociatedValue {
         if field.associatedType.self is Hash256.Type {
             return try! Hash256().fromParser(parser: self.parser)
         }
-        //        if let av = field.associatedType.self as? PathSet.Type {
-        //            print("PathSet")
-        //            return try! av.from(value: xaddressDecoded[field.name]! as! PathSet)
-        //        }
+        if field.associatedType.self is xPath.Type {
+            return try! xPath(bytes: []).fromParser(parser: self.parser)
+        }
         if field.associatedType.self is STArray.Type {
             return try! STArray().fromParser(parser: self.self.parser, hint: hint)
         }
@@ -271,7 +248,7 @@ class STObject: SerializedType {
         parser: BinaryParser,
         hint: Int? = nil
     ) -> STObject {
-        let serializer: BinarySerializer = BinarySerializer()
+        let serializer = BinarySerializer()
 
         while !parser.end() {
             let field = parser.readField()
@@ -290,7 +267,7 @@ class STObject: SerializedType {
     }
 
     class func from(value: [String: Any], onlySigning: Bool = false) throws -> STObject {
-        let serializer: BinarySerializer = BinarySerializer()
+        let serializer = BinarySerializer()
 
         var xaddressDecoded: [String: AnyObject] = [:]
         // swiftlint:disable:next identifier_name
@@ -365,11 +342,14 @@ class STObject: SerializedType {
             // The Account field must not be a part of the UNLModify pseudotransaction
             // encoding, due to a bug in rippled
 
+            print(field.name)
+            print(associatedValue)
             serializer.writeFieldAndValue(
                 field: field,
                 value: associatedValue!,
                 isUNLModifyWorkaround: isUnlModifyWorkaround
             )
+            print(serializer.sink.toBytes().toHex)
             if field.type == ST_OBJECT {
                 _ = serializer.sink.put(bytesArg: OBJECT_END_MARKER_BYTE)
             }

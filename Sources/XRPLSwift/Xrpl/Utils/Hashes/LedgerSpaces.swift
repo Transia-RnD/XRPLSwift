@@ -38,4 +38,46 @@ public enum LedgerSpaces: String {
     case paychan = "x"
     case check = "C"
     case depositPreauth = "p"
+
+    public init(_ string: String) {
+        switch string {
+        case "account":
+            self = .account
+        case "dirNode":
+            self = .dirNode
+        case "generatorMap":
+            self = .generatorMap
+        case "rippleState":
+            self = .rippleState
+        case "offer":
+            self = .offer
+        case "ownerDir":
+            self = .ownerDir
+        case "bookDir":
+            self = .bookDir
+        case "contract":
+            self = .contract
+        case "skipList":
+            self = .skipList
+        case "escrow":
+            self = .escrow
+        case "amendment":
+            self = .amendment
+        case "feeSettings":
+            self = .feeSettings
+        case "ticket":
+            self = .ticket
+        case "signerList":
+            self = .signerList
+        case "paychan":
+            self = .paychan
+        case "check":
+            self = .check
+        case "depositPreauth":
+            self = .depositPreauth
+        default:
+            // TODO: Why?
+            self = .account
+        }
+    }
 }

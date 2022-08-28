@@ -7,8 +7,8 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/accountObjects.ts
 
-import Foundation
 import AnyCodable
+import Foundation
 
 /**
  * Account Objects can be a Check, a DepositPreauth, an Escrow, an Offer, a
@@ -33,6 +33,27 @@ public enum AccountObject: Codable {
     case signerList(SignerList)
 //    case ticket(Ticket)
     case rippleState(RippleState)
+    
+    public func toAny() -> Any {
+        switch self {
+        case .check(let check):
+            return check
+        case .depositPreauth(let depositPreauth):
+            return depositPreauth
+        case .escrow(let escrow):
+            return escrow
+        case .offer(let offer):
+            return offer
+        case .paymentChannel(let paymentChannel):
+            return paymentChannel
+        case .signerList(let signerList):
+            return signerList
+//        case .ticket(let depositPreauth):
+//            try ticket.encode(to: encoder)
+        case .rippleState(let rippleState):
+            return rippleState
+        }
+    }
 }
 
 extension AccountObject {

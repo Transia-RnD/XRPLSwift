@@ -50,7 +50,8 @@ opt_in_rules:
     - overridden_super_call
     - override_in_extension
     - pattern_matching_keywords
-    - prefer_self_in_static_references
+#    TODO: Review this lint
+#    - prefer_self_in_static_references
     - prefer_self_type_over_type_of_self
     - private_action
     - private_outlet

@@ -18,7 +18,7 @@ let binaryTypes: [String: SerializedType.Type] = [
     "Hash128": Hash128.self,
     "Hash160": Hash160.self,
     "Hash256": Hash256.self,
-//    "PathSet": PathSet.self,
+    "PathSet": xPathSet.self,
     "SerializedType": SerializedType.self,
     "STArray": STArray.self,
     "STObject": STObject.self,
@@ -66,6 +66,8 @@ class FieldInstance {
         :param field_name: The field's string name.
         :param field_header: A FieldHeader object with the type_code and field_code.
         */
+        print("CONSTRUCT FIELD INSTANCE")
+        print(fieldInfo.type)
         self.nth = fieldInfo.nth
         self.isVLEncoded = fieldInfo.isVLEncoded
         self.isSerialized = fieldInfo.isSerialized

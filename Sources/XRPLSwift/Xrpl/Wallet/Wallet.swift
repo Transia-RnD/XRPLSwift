@@ -441,7 +441,7 @@ public class Wallet {
         try txCopy.forEach { (key: String, _: AnyObject) in
             let standardCurrencyCodeLen = 3
             if txCopy[key] != nil && isIssuedCurrency(input: txCopy[key]!) {
-                let decodedAmount: Any = (decoded[key] as! xAmount).toJson()
+                let decodedAmount: Any = try xAmount.from(value: decoded[key] as! [String: String]).toJson()
                 var decodedIC = try IssuedCurrencyAmount(decodedAmount as! [String: AnyObject])
                 let decodedCurrency = decodedIC.currency
                 let txCurrency = try IssuedCurrencyAmount(txCopy[key] as! [String: AnyObject]).currency
@@ -539,4 +539,15 @@ func isoToHex(iso: String) -> String {
 
 public func ==(lhs: [String: AnyObject], rhs: [String: AnyObject] ) -> Bool {
     return NSDictionary(dictionary: lhs).isEqual(to: rhs)
+}
+
+
+extension Dictionary where Key == String, Value: Any {
+    func object<T: Decodable>() -> T? {
+        if let data = try? JSONSerialization.data(withJSONObject: self, options: []) {
+            return try? JSONDecoder().decode(T.self, from: data)
+        } else {
+            return nil
+        }
+    }
 }

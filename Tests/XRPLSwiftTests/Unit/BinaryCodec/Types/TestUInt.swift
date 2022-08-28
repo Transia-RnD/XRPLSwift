@@ -26,9 +26,9 @@ final class TestUInt: XCTestCase {
     // TODO: Review these: // 8/16/32 all need .bigEndian
     func testCompare() {
         let value1: xUInt8 = xUInt8.from(value: 124)
-        XCTAssertEqual(value1.value.bigEndian, 124)
-        XCTAssertLessThan(value1.value.bigEndian, 125)
-        XCTAssertGreaterThan(value1.value.bigEndian, 123)
+        XCTAssertEqual(value1.value, 124)
+        XCTAssertLessThan(value1.value, 125)
+        XCTAssertGreaterThan(value1.value, 123)
     }
 
     func testCompareDifferent() {

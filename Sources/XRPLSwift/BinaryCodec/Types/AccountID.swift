@@ -15,7 +15,7 @@ internal let HEX_REGEX: String = #"^[A-F0-9]{40}$"#
 internal let LENGTH20: Int = 20
 
 class AccountID: Hash160 {
-    private let LENGTH: Int = 20
+    static let LENGTH: Int = 20
     static var defaultAccountID = AccountID([UInt8].init(repeating: 0x0, count: 20))
 
     override init(_ bytes: [UInt8]? = nil) {
@@ -58,7 +58,7 @@ class AccountID: Hash160 {
         return AccountID(try! parser.read(n: hint ?? LENGTH20))
     }
 
-    override func toJson() -> Any {
+    override func toJson() -> String {
         return try! XrplCodec.encodeClassicAddress(bytes: self.bytes)
     }
 }

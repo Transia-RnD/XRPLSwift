@@ -74,6 +74,14 @@ extension Transaction {
             self = .checkCreate(value)
             return
         }
+        if transactionType == "CheckCash", let value = try? CheckCash(json: json) {
+            self = .checkCash(value)
+            return
+        }
+        if transactionType == "DepositPreauth", let value = try? DepositPreauth(json: json) {
+            self = .depositPreauth(value)
+            return
+        }
         if transactionType == "EscrowFinish", let value = try? EscrowFinish(json: json) {
             self = .escrowFinish(value)
             return
@@ -200,6 +208,7 @@ extension Transaction {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let tt = try values.decode(String.self, forKey: .tt)
@@ -217,6 +226,14 @@ extension Transaction {
         }
         if tt == "CheckCreate", let value = try? CheckCreate(from: decoder) {
             self = .checkCreate(value)
+            return
+        }
+        if tt == "CheckCash", let value = try? CheckCash(from: decoder) {
+            self = .checkCash(value)
+            return
+        }
+        if tt == "DepositPreauth", let value = try? DepositPreauth(from: decoder) {
+            self = .depositPreauth(value)
             return
         }
         if tt == "EscrowFinish", let value = try? EscrowFinish(from: decoder) {
@@ -239,7 +256,6 @@ extension Transaction {
             self = .nfTokenCreateOffer(value)
             return
         }
-
         if tt == "NFTokenMint", let value = try? NFTokenMint(from: decoder) {
             self = .nfTokenMint(value)
             return

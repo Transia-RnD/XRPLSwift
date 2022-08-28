@@ -86,39 +86,46 @@ public func verifySubmittedTransaction(
     //    assert.strictEqual(data.result.meta, "tesSUCCESS")
     //  }
 }
-//
-//export function testTransaction(
-//  client: Client,
-//  transaction: Transaction,
-//  wallet: Wallet,
-//) -> async Promise<void> {
-//  // Accept any un-validated changes.
-//  await ledgerAccept(client)
-//
-//  // sign/submit the transaction
-//  const response = await client.submit(transaction, { wallet })
-//
-//  // check that the transaction was successful
-//  assert.equal(response.type, "response")
-//  assert.equal(
-//    response.result.engine_result,
-//    "tesSUCCESS",
-//    response.result.engine_result_message,
-//  )
-//
-//  // check that the transaction is on the ledger
-//  const signedTx = _.omit(response.result.tx_json, "hash")
-//  await ledgerAccept(client)
-//  await verifySubmittedTransaction(client, signedTx as Transaction)
-//}
-//
-//public func getXRPBalance(
-//  client: XrplClient,
-//  wallet: Wallet,
-//) -> async Promise<string> {
-//  let request: AccountInfoRequest = {
-//    command: "account_info",
-//    account: wallet.classicAddress,
-//  }
-//  return (await client.request(request)).result.account_data.Balance
-//}
+
+public func testTransaction(
+    client: XrplClient,
+    transaction: Transaction,
+    wallet: Wallet
+) async {
+    // Accept any un-validated changes.
+    await ledgerAccept(client: client)
+    
+    // sign/submit the transaction
+    let response = try! await client.submit(
+        transaction: transaction,
+        opts: SubmitOptions(
+            autofill: false,
+            failHard: false,
+            wallet: wallet
+        )
+    ).wait() as! BaseResponse<SubmitResponse>
+    
+    //  // check that the transaction was successful
+    //  assert.equal(response.type, "response")
+    //  assert.equal(
+    //    response.result.engine_result,
+    //    "tesSUCCESS",
+    //    response.result.engine_result_message,
+    //  )
+    
+    // check that the transaction is on the ledger
+    // TODO: SubmitResponse needs to inherit from Base Response and include the type.
+    var signedTx = try! response.result?.txJson.toJson()
+    signedTx?["hash"] = nil
+    await ledgerAccept(client: client)
+    let fTx = try! Transaction(signedTx!)
+    await verifySubmittedTransaction(client: client, tx: fTx!)
+}
+
+public func getXRPBalance(
+    client: XrplClient,
+    wallet: Wallet
+) async -> String {
+    let request = AccountInfoRequest(account: wallet.classicAddress)
+    return ( try! await client.request(request).wait() as! BaseResponse<AccountInfoResponse>).result!.accountData.balance
+}

@@ -17,8 +17,8 @@ class Hash256: Hash {
     `See Hash Fields <https://xrpl.org/serialization.html#hash-fields>`_
     */
 
-    static internal var WIDTH256: Int = 32
-    static internal var ZERO256: Hash256 = Hash256([UInt8].init(repeating: 0x0, count: Hash256.WIDTH256))
+    internal static var WIDTH256: Int = 32
+    internal static var ZERO256 = Hash256([UInt8].init(repeating: 0x0, count: Hash256.WIDTH256))
 
     override init(_ bytes: [UInt8]? = nil) {
         super.init(bytes ?? Hash256.ZERO256.bytes)

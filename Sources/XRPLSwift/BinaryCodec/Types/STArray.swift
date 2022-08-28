@@ -58,16 +58,14 @@ class STArray: SerializedType {
         return STArray(bytestring)
     }
 
-    func toJson() -> [[String: AnyObject]] {
+    override func toJson() -> [[String: AnyObject]] {
         var result: [[String: AnyObject]] = []
-        let parser: BinaryParser = BinaryParser(hex: self.str())
-
+        let parser = BinaryParser(hex: self.str())
         while !parser.end() {
             let field = parser.readField()
                 if field.name == ARRAY_END_MARKER_NAME {
                 break
             }
-
             var outer: [String: AnyObject] = [:]
             let copy: [String: Any] = STObject().fromParser(parser: parser).toJson()
             outer[field.name] = copy as AnyObject
