@@ -28,7 +28,7 @@ final class TestPaymentChannelClaim: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValid() {
+    func testA() {
         let tx = try! PaymentChannelClaim(json: TestPaymentChannelClaim.baseTx)
         do {
             try validatePaymentChannelClaim(tx: tx.toJson())
@@ -37,7 +37,7 @@ final class TestPaymentChannelClaim: XCTestCase {
         }
     }
 
-    func testValidNoOptional() {
+    func testB() {
         TestPaymentChannelClaim.baseTx["Balance"] = nil
         TestPaymentChannelClaim.baseTx["Amount"] = nil
         TestPaymentChannelClaim.baseTx["Signature"] = nil

@@ -24,7 +24,7 @@ final class TestAutoFill: XCTestCase {
         try await super.setUp()
     }
 
-    func testNoOverright() async {
+    func _testNoOverright() async {
         //        let tx: Transaction = {
         //          TransactionType: "DepositPreauth",
         //          Account: "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf",

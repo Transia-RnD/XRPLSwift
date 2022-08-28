@@ -12,7 +12,7 @@ import XCTest
 
 final class TestCheckCancel: XCTestCase {
 
-    func testValidCheckCancel() {
+    func testA() {
         let baseTx = [
             "TransactionType": "CheckCancel",
             "Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",

@@ -27,7 +27,7 @@ final class TestNFTokenAcceptOffer: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValidBuyOffer() {
+    func testA() {
         let tx = try! NFTokenAcceptOffer(json: TestNFTokenAcceptOffer.baseTx)
         do {
             try validateNFTokenAcceptOffer(tx: tx.toJson())
@@ -36,7 +36,7 @@ final class TestNFTokenAcceptOffer: XCTestCase {
         }
     }
 
-    func testValidSellOffer() {
+    func testB() {
         TestNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = nil
         TestNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
         let tx = try! NFTokenAcceptOffer(json: TestNFTokenAcceptOffer.baseTx)

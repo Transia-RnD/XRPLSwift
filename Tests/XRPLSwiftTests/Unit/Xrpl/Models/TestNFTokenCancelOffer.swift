@@ -27,7 +27,7 @@ final class TestNFTokenCancelOffer: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValid() {
+    func testA() {
         let tx = try! NFTokenCancelOffer(json: TestNFTokenCancelOffer.baseTx)
         do {
             try validateNFTokenCancelOffer(tx: tx.toJson())

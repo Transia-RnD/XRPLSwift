@@ -30,7 +30,7 @@ final class TestPaymentChannelCreate: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValid() {
+    func testA() {
         let tx = try! PaymentChannelCreate(json: TestPaymentChannelCreate.baseTx)
         do {
             try validatePaymentChannelCreate(tx: tx.toJson())
@@ -39,7 +39,7 @@ final class TestPaymentChannelCreate: XCTestCase {
         }
     }
 
-    func testValidNoOptional() {
+    func testB() {
         TestPaymentChannelCreate.baseTx["CancelAfter"] = nil
         TestPaymentChannelCreate.baseTx["DestinationTag"] = nil
         TestPaymentChannelCreate.baseTx["SourceTag"] = nil

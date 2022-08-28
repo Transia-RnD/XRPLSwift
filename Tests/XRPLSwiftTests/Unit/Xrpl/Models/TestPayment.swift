@@ -40,7 +40,7 @@ final class TestPayment: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValid() {
+    func testA() {
         let tx = try! Payment(json: TestPayment.baseTx)
         do {
             try validatePayment(tx: tx.toJson())

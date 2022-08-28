@@ -31,7 +31,7 @@ public enum AccountObject: Codable {
     case offer(Offer)
     case paymentChannel(PayChannel)
     case signerList(SignerList)
-//    case ticket(Ticket)
+    case ticket(Ticket)
     case rippleState(RippleState)
     
     public func toAny() -> Any {
@@ -48,8 +48,8 @@ public enum AccountObject: Codable {
             return paymentChannel
         case .signerList(let signerList):
             return signerList
-//        case .ticket(let depositPreauth):
-//            try ticket.encode(to: encoder)
+        case .ticket(let ticket):
+            return ticket
         case .rippleState(let rippleState):
             return rippleState
         }
@@ -87,15 +87,15 @@ extension AccountObject {
             self = .signerList(value)
             return
         }
-//        if let value = try? Ticket.init(from: decoder) {
-//            self = .ticket(value)
-//            return
-//        }
+        if let value = try? Ticket.init(from: decoder) {
+            self = .ticket(value)
+            return
+        }
         if let value = try? RippleState.init(from: decoder) {
             self = .rippleState(value)
             return
         }
-        throw AccountObjectCodingError.decoding("OOPS")
+        throw AccountObjectCodingError.decoding("AccountObject has not been mapped")
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -112,8 +112,8 @@ extension AccountObject {
             try paymentChannel.encode(to: encoder)
         case .signerList(let signerList):
             try signerList.encode(to: encoder)
-//        case .ticket(let depositPreauth):
-//            try ticket.encode(to: encoder)
+        case .ticket(let ticket):
+            try ticket.encode(to: encoder)
         case .rippleState(let rippleState):
             try rippleState.encode(to: encoder)
         }

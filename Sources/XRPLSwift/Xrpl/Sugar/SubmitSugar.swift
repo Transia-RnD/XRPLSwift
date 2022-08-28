@@ -51,7 +51,7 @@ extension SubmitTransaction {
             self = .string(value)
             return
         }
-        throw AmountCodingError.decoding("OOPS")
+        throw AmountCodingError.decoding("SubmitTransaction not mapped")
     }
 
     public func encode(to encoder: Encoder) throws {

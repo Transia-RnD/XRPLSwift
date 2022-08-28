@@ -32,7 +32,7 @@ final class TestAccounNFTs: RippledITestCase {
         try await super.tearDown()
     }
     
-    func testJson() async {
+    func _testJson() async {
         // create the expectation
         let exp = expectation(description: "base")
         
@@ -58,7 +58,7 @@ final class TestAccounNFTs: RippledITestCase {
         await waitForExpectations(timeout: TIMEOUT)
     }
     
-    func testModel() async {
+    func _testModel() async {
         // create the expectation
         let exp = expectation(description: "base")
         let request: AccountNFTsRequest = AccountNFTsRequest(

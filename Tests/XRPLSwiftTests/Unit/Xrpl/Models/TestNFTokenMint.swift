@@ -14,7 +14,7 @@ import XCTest
 
 final class TestNFTokenMint: XCTestCase {
 
-    func testValid() {
+    func testA() {
         let baseTx = [
             "TransactionType": "NFTokenMint",
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
@@ -33,8 +33,8 @@ final class TestNFTokenMint: XCTestCase {
             XCTAssertNil(error)
         }
     }
-
-    func testValidNoTaxon() {
+    
+    func testInvalidNoTokenTaxon() {
         let baseTx = [
             "TransactionType": "NFTokenMint",
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
@@ -42,16 +42,11 @@ final class TestNFTokenMint: XCTestCase {
             "Sequence": 2470665,
             "Flags": NFTokenMintFlags.tfTransferable.rawValue,
 //            "NFTokenTaxon": 0,
-            "Issuer": "r9LqNeG6qHxjeUocjvVki2XR35weJ9mZgQ",
+            "Issuer": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "TransferFee": 1,
             "URI": "http://xrpl.org".bytes.toHex
         ] as! [String: AnyObject]
-        let tx = try! NFTokenMint(json: baseTx)
-        do {
-            try validateNFTokenMint(tx: tx.toJson())
-        } catch {
-            XCTAssertNil(error)
-        }
+        XCTAssertThrowsError(try NFTokenMint(json: baseTx))
     }
 
     func testInvalidNoAccountEqualIssuer() {

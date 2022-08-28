@@ -297,14 +297,6 @@ public class RequestManager {
             try self.resolve(responseObj.id, responseObj, nil)
             return
         }
-        if map.requestType.self is LedgerRequest.Type {
-            let responseObj = BaseResponse(
-                response: baseResponse,
-                result: CodableHelper.decode(LedgerResponse.self, from: jsonData).decodableObj
-            )
-            try self.resolve(responseObj.id, responseObj, nil)
-            return
-        }
         if map.requestType.self is LedgerClosedRequest.Type {
             let responseObj = BaseResponse(
                 response: baseResponse,

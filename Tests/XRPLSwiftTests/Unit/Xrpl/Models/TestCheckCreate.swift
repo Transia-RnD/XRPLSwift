@@ -12,7 +12,7 @@ import XCTest
 
 final class TestCheckCreate: XCTestCase {
 
-    func testValidCheckCreate() {
+    func testA() {
         let baseTx = [
             "TransactionType": "CheckCreate",
             "Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
@@ -71,8 +71,9 @@ final class TestCheckCreate: XCTestCase {
             "Fee": "12"
         ] as! [String: AnyObject]
         // MARK: Required Fields are validated on init Optional validated on validated
-        let tx = try! CheckCreate(json: baseTx)
-        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+//        let tx = try! CheckCreate(json: baseTx)
+        XCTAssertThrowsError(try CheckCreate(json: baseTx))
+//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidExpiration() {
@@ -86,8 +87,10 @@ final class TestCheckCreate: XCTestCase {
             "InvoiceID": "6F1DFD1D0FE8A32E40E1F2C05CF1C15545BAB56B617F9C6C2D63A6B704BEF59B",
             "Fee": "12"
         ] as! [String: AnyObject]
-        let tx = try! CheckCreate(json: baseTx)
-        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+        // MARK: Required Fields are validated on init Optional validated on validated
+//        let tx = try! CheckCreate(json: baseTx)
+        XCTAssertThrowsError(try CheckCreate(json: baseTx))
+//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidInvoiceID() {
@@ -101,7 +104,9 @@ final class TestCheckCreate: XCTestCase {
             "InvoiceID": 789656963258531,
             "Fee": "12"
         ] as! [String: AnyObject]
-        let tx = try! CheckCreate(json: baseTx)
-        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+        // MARK: Required Fields are validated on init Optional validated on validated
+//        let tx = try! CheckCreate(json: baseTx)
+        XCTAssertThrowsError(try CheckCreate(json: baseTx))
+//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 }

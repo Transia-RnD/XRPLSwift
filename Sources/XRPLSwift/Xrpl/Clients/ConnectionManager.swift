@@ -30,6 +30,7 @@ public class ConnectionManager {
      * Resolves all awaiting connections.
      */
     public func resolveAllAwaiting() {
+        print(promisesAwaitingConnection)
         _ = self.promisesAwaitingConnection.map { resolve in
             resolve.succeed("")
         }

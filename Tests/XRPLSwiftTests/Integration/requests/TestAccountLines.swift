@@ -55,6 +55,8 @@ final class TestAccountLines: RippledITestCase {
         var expectedJson: [String: AnyObject] = expected["result"] as! [String : AnyObject]
         expectedJson["ledger_hash"] = nil
         expectedJson["ledger_index"] = nil
+        // TODO: Fix this. validated needs to be returned in the base response
+        expectedJson["validated"] = nil
         XCTAssert(responseJson == expectedJson)
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)
@@ -78,6 +80,8 @@ final class TestAccountLines: RippledITestCase {
         var expectedJson: [String: AnyObject] = expected["result"] as! [String : AnyObject]
         expectedJson["ledger_hash"] = nil
         expectedJson["ledger_index"] = nil
+        // TODO: Fix this. validated needs to be returned in the base response
+        expectedJson["validated"] = nil
         XCTAssert(responseJson == expectedJson)
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)

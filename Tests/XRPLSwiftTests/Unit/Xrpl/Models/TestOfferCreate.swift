@@ -12,7 +12,7 @@ import XCTest
 
 final class TestOfferCreate: XCTestCase {
 
-    func testValidOfferCreate() {
+    func testA() {
         let baseTx = [
             "Account": "r3rhWeE31Jt5sWmi4QiGLMZnY3ENgqw96W",
             "Fee": "10",

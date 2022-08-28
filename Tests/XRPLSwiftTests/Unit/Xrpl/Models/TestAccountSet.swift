@@ -26,7 +26,7 @@ final class TestAccountSet: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValid() {
+    func testA() {
         let tx = try! AccountSet(json: TestAccountSet.baseTx)
         do {
             try validateAccountSet(tx: tx.toJson())
@@ -39,49 +39,57 @@ final class TestAccountSet: XCTestCase {
     // The decoded response does not include the invalid SetFlag
     func testInvalidRange() {
         TestAccountSet.baseTx["SetFlag"] = 12 as AnyObject
-        let tx = try! AccountSet(json: TestAccountSet.baseTx)
-        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
+//        let tx = try! AccountSet(json: TestAccountSet.baseTx)
+        XCTAssertThrowsError(try AccountSet(json: TestAccountSet.baseTx))
+//        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
     }
 
     func testInvalidType() {
         TestAccountSet.baseTx["SetFlag"] = "abc" as AnyObject
-        let tx = try! AccountSet(json: TestAccountSet.baseTx)
-        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
+//        let tx = try! AccountSet(json: TestAccountSet.baseTx)
+        XCTAssertThrowsError(try AccountSet(json: TestAccountSet.baseTx))
+//        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
     }
 
     func testInvalidClearFlag() {
         TestAccountSet.baseTx["ClearFlag"] = 12 as AnyObject
-        let tx = try! AccountSet(json: TestAccountSet.baseTx)
-        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
+//        let tx = try! AccountSet(json: TestAccountSet.baseTx)
+        XCTAssertThrowsError(try AccountSet(json: TestAccountSet.baseTx))
+//        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
     }
 
     func testInvalidDomain() {
         TestAccountSet.baseTx["Domain"] = 6578616 as AnyObject
-        let tx = try! AccountSet(json: TestAccountSet.baseTx)
-        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
+//        let tx = try! AccountSet(json: TestAccountSet.baseTx)
+        XCTAssertThrowsError(try AccountSet(json: TestAccountSet.baseTx))
+//        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
     }
 
     func testInvalidEmailHash() {
         TestAccountSet.baseTx["Domain"] = 6578616 as AnyObject
-        let tx = try! AccountSet(json: TestAccountSet.baseTx)
-        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
+//        let tx = try! AccountSet(json: TestAccountSet.baseTx)
+        XCTAssertThrowsError(try AccountSet(json: TestAccountSet.baseTx))
+//        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
     }
 
     func testInvalidMessageKey() {
         TestAccountSet.baseTx["Domain"] = 6578656789876543 as AnyObject
-        let tx = try! AccountSet(json: TestAccountSet.baseTx)
-        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
+//        let tx = try! AccountSet(json: TestAccountSet.baseTx)
+        XCTAssertThrowsError(try AccountSet(json: TestAccountSet.baseTx))
+//        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
     }
 
     func testInvalidTransferRate() {
         TestAccountSet.baseTx["TransferRate"] = "1000000001" as AnyObject
-        let tx = try! AccountSet(json: TestAccountSet.baseTx)
-        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
+//        let tx = try! AccountSet(json: TestAccountSet.baseTx)
+        XCTAssertThrowsError(try AccountSet(json: TestAccountSet.baseTx))
+//        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
     }
 
     func testInvalidTicksize() {
         TestAccountSet.baseTx["TransferRate"] = 20 as AnyObject
-        let tx = try! AccountSet(json: TestAccountSet.baseTx)
-        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
+//        let tx = try! AccountSet(json: TestAccountSet.baseTx)
+        XCTAssertThrowsError(try AccountSet(json: TestAccountSet.baseTx))
+//        XCTAssertThrowsError(try validateAccountSet(tx: tx.toJson()))
     }
 }

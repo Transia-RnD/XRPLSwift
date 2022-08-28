@@ -26,7 +26,7 @@ final class TestPaymentChannelFund: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValid() {
+    func testA() {
         let tx = try! PaymentChannelFund(json: TestPaymentChannelFund.baseTx)
         do {
             try validatePaymentChannelFund(tx: tx.toJson())
@@ -35,7 +35,7 @@ final class TestPaymentChannelFund: XCTestCase {
         }
     }
 
-    func testValidNoOptional() {
+    func testB() {
         TestPaymentChannelFund.baseTx["Expiration"] = nil
         let tx = try! PaymentChannelFund(json: TestPaymentChannelFund.baseTx)
         do {

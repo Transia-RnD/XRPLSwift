@@ -14,7 +14,7 @@ import XCTest
 
 final class TestNFTokenCreateOffer: XCTestCase {
 
-    func testValidBuySide() {
+    func testA() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
             "NFTokenID": "00090032B5F762798A53D543A014CAF8B297CFF8F2F937E844B17C9E00000003",
@@ -34,7 +34,7 @@ final class TestNFTokenCreateOffer: XCTestCase {
         }
     }
 
-    func testValidSellSide() {
+    func testB() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
             "NFTokenID": "00090032B5F762798A53D543A014CAF8B297CFF8F2F937E844B17C9E00000003",
@@ -54,7 +54,7 @@ final class TestNFTokenCreateOffer: XCTestCase {
         }
     }
 
-    func testValidSellSideZero() {
+    func testC() {
         let baseTx = [
             "TransactionType": "NFTokenCreateOffer",
             "NFTokenID": "00090032B5F762798A53D543A014CAF8B297CFF8F2F937E844B17C9E00000003",

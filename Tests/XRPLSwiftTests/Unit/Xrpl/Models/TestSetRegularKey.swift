@@ -26,7 +26,7 @@ final class TestSetRegularKey: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValid() {
+    func testA() {
         let tx = try! SetRegularKey(json: TestSetRegularKey.baseTx)
         do {
             try validateSetRegularKey(tx: tx.toJson())
@@ -35,7 +35,7 @@ final class TestSetRegularKey: XCTestCase {
         }
     }
 
-    func testValidNoOptional() {
+    func testB() {
         TestSetRegularKey.baseTx["RegularKey"] = nil
         let tx = try! SetRegularKey(json: TestSetRegularKey.baseTx)
         do {

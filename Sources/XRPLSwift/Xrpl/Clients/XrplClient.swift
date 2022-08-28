@@ -101,7 +101,57 @@ public protocol XrplClientDelegate {
  *
  * @category Clients
  */
-public class XrplClient: EventEmitter {
+public class XrplClient: ConnectionDelegate {
+    public func error(code: Int, message: Any, data: Data) {
+//        self.emit("error", errorCode, errorMessage, data)
+    }
+    
+    public func connected() {
+//        self.emit("connected")
+    }
+    
+    public func disconnected(code: Int) {
+//        let finalCode = code
+//                    /*
+//                     * 4000: Connection uses a 4000 code internally to indicate a manual disconnect/close
+//                     * Since 4000 is a normal disconnect reason, we convert this to the standard exit code 1000
+//                     */
+//                    if (finalCode === INTENTIONAL_DISCONNECT_CODE) {
+//                        finalCode = NORMAL_DISCONNECT_CODE
+//                    }
+//                    self.emit("disconnected", finalCode)
+    }
+    
+    public func ledgerClosed(ledger: Any) {
+//        self.emit("ledgerClosed", ledger)
+    }
+    
+    public func transaction(tx: Any) {
+        // mutates `tx` to add warnings
+        //            handleStreamPartialPayment(tx, self.connection.trace)
+        //            self.emit("transaction", tx)
+    }
+    
+    public func validationReceived(validation: Any) {
+//        self.emit("validationReceived", validation)
+    }
+    
+    public func manifestReceived(manifest: Any) {
+//        self.emit("manifestReceived", manifest)
+    }
+    
+    public func peerStatusChange(status: Any) {
+//        self.emit("peerStatusChange", status)
+    }
+    
+    public func consensusPhase(consensus: Any) {
+//        self.emit("consensusPhase", consensus)
+    }
+    
+    public func pathFind(path: Any) {
+//        self.emit("path_find", path)
+    }
+    
     /*
      * Underlying connection to rippled.
      */
@@ -132,65 +182,12 @@ public class XrplClient: EventEmitter {
      */
     // eslint-disable-next-line max-lines-per-function -- okay because we have to set up all the connection handlers
     public init(server: String, options: ClientOptions? = nil) throws {
-        
-        print(server.isValidWss)
         if server.isValidWss {
             throw XrplError.validation("server URI must start with `wss://`, `ws://`, `wss+unix://`, or `ws+unix://`.")
         }
         self.feeCushion = options?.feeCushion ?? Int(DEFAULT_FEE_CUSHION)
         self.maxFeeXRP = options?.maxFeeXRP ?? DEFAULT_MAX_FEE_XRP
         self.connection = Connection(url: server, options: options)
-        print(connection)
-        print("HERE")
-        //        self.connection.on("error", (errorCode, errorMessage, data) => {
-        //            self.emit("error", errorCode, errorMessage, data)
-        //        })
-        
-        //        self.connection.on("connected", () => {
-        //            self.emit("connected")
-        //        })
-        
-        //        self.connection.on("disconnected", (code: Int) => {
-        //            let finalCode = code
-        //            /*
-        //             * 4000: Connection uses a 4000 code internally to indicate a manual disconnect/close
-        //             * Since 4000 is a normal disconnect reason, we convert this to the standard exit code 1000
-        //             */
-        //            if (finalCode === INTENTIONAL_DISCONNECT_CODE) {
-        //                finalCode = NORMAL_DISCONNECT_CODE
-        //            }
-        //            self.emit("disconnected", finalCode)
-        //        })
-        //
-        //        self.connection.on("ledgerClosed", (ledger) => {
-        //            self.emit("ledgerClosed", ledger)
-        //        })
-        //
-        //        self.connection.on("transaction", (tx) => {
-        //            // mutates `tx` to add warnings
-        //            handleStreamPartialPayment(tx, self.connection.trace)
-        //            self.emit("transaction", tx)
-        //        })
-        //
-        //        self.connection.on("validationReceived", (validation) => {
-        //            self.emit("validationReceived", validation)
-        //        })
-        //
-        //        self.connection.on("manifestReceived", (manifest) => {
-        //            self.emit("manifestReceived", manifest)
-        //        })
-        //
-        //        self.connection.on("peerStatusChange", (status) => {
-        //            self.emit("peerStatusChange", status)
-        //        })
-        //
-        //        self.connection.on("consensusPhase", (consensus) => {
-        //            self.emit("consensusPhase", consensus)
-        //        })
-        //
-        //        self.connection.on("path_find", (path) => {
-        //            self.emit("path_find", path)
-        //        })
     }
     
     /**

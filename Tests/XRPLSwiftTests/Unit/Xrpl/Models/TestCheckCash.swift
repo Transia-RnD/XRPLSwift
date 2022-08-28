@@ -12,7 +12,7 @@ import XCTest
 
 final class TestCheckCash: XCTestCase {
 
-    func testValidCheckCash() {
+    func testA() {
         let baseTx = [
             "TransactionType": "CheckCash",
             "Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",

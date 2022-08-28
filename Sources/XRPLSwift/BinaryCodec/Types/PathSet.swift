@@ -40,6 +40,7 @@ internal func isPathSet(value: [[[String: AnyObject]]]) -> Bool {
 
 // swiftlint:disable:next type_name
 class xPathStep: SerializedType {
+    
     static func from(value: [String: AnyObject]) throws -> xPathStep {
         var dataType: Int = 0x00
         var buffer: [UInt8] = []
@@ -58,9 +59,9 @@ class xPathStep: SerializedType {
             buffer += issuer.bytes
             dataType |= TYPE_ISSUER
         }
-        return xPathStep(bytes: Data().bytes + buffer)
+        return xPathStep(bytes: Data(hex: String(dataType, radix: 16).uppercased()).bytes + buffer)
     }
-    override func fromParser(
+    class func fromParser(
         parser: BinaryParser,
         hint: Int? = nil
     ) -> SerializedType {
@@ -75,9 +76,9 @@ class xPathStep: SerializedType {
         if (dataType & TYPE_ISSUER) != 0 {
             buffer += try! parser.read(n: AccountID.getLength())
         }
-        return xPathStep(bytes: dataType.asBigByteArray + buffer)
+        return xPathStep(bytes: Data(hex: String(dataType, radix: 16).uppercased()).bytes + buffer)
     }
-
+    
     override func toJson() -> [String: AnyObject] {
         /* Return a list of hashes encoded as hex strings.
          Returns:
@@ -86,25 +87,26 @@ class xPathStep: SerializedType {
          XRPLBinaryCodecException: If the number of bytes in the buffer
          is not a multiple of the hash length.
          */
-        let parser = BinaryParser(hex: self.str())
-        let dataType: Int = parser.readUInt8() as! Int
+        print(self.toHex())
+        let parser = BinaryParser(hex: self.toHex())
+        let dataType = Int(parser.readUInt8())
         var json: [String: AnyObject] = [:]
-
+        
         if (dataType & TYPE_ACCOUNT) != 0 {
             let accountId: String = AccountID().fromParser(parser: parser).toJson()
             json["account"] = accountId as AnyObject
-            if (dataType & TYPE_CURRENCY) != 0 {
-                let currency: String = xCurrency().fromParser(parser: parser).toJson()
-                json["currency"] = currency as AnyObject
-            }
-            if (dataType & TYPE_ISSUER) != 0 {
-                let issuer: String = AccountID().fromParser(parser: parser).toJson()
-                json["issuer"] = issuer as AnyObject
-            }
-            return json
         }
+        if (dataType & TYPE_CURRENCY) != 0 {
+            let currency: String = xCurrency().fromParser(parser: parser).toJson()
+            json["currency"] = currency as AnyObject
+        }
+        if (dataType & TYPE_ISSUER) != 0 {
+            let issuer: String = AccountID().fromParser(parser: parser).toJson()
+            json["issuer"] = issuer as AnyObject
+        }
+        return json
     }
-
+    
     func type() -> Int {
         /*
          Get a number representing the type of this PathStep.
@@ -119,7 +121,7 @@ class xPathStep: SerializedType {
 // swiftlint:disable:next type_name
 class xPath: SerializedType {
     // Class for serializing/deserializing Paths.
-
+    
     static func from(value: [[String: AnyObject]]) throws -> xPath {
         var buffer: [UInt8] = []
         for dict in value {
@@ -128,14 +130,14 @@ class xPath: SerializedType {
         }
         return xPath(bytes: buffer)
     }
-
-    override func fromParser(
+    
+    class func fromParser(
         parser: BinaryParser,
         hint: Int? = nil
     ) -> SerializedType {
         var buffer: [UInt8] = []
         while !parser.end() {
-            let pathstep = xPathStep(bytes: []).fromParser(parser: parser)
+            let pathstep = xPathStep.fromParser(parser: parser)
             buffer += pathstep.bytes
             if try! parser.peek() == PATHSET_END_BYTE || parser.peek() == PATH_SEPARATOR_BYTE {
                 break
@@ -143,12 +145,12 @@ class xPath: SerializedType {
         }
         return xPath(bytes: buffer)
     }
-
+    
     override func toJson() -> [[String: AnyObject]] {
         var json: [[String: AnyObject]] = []
-        let pathParser = BinaryParser(hex: self.str())
+        let pathParser = BinaryParser(hex: self.toHex())
         while !pathParser.end() {
-            let pathstep = xPathStep(bytes: []).fromParser(parser: pathParser)
+            let pathstep = xPathStep.fromParser(parser: pathParser)
             json.append(pathstep.toJson())
         }
         return json
@@ -157,45 +159,49 @@ class xPath: SerializedType {
 
 // swiftlint:disable:next type_name
 class xPathSet: SerializedType {
-    func from(value: [[[String: AnyObject]]]) throws -> xPathSet {
+    
+    static func from(value: [[[String: AnyObject]]]) throws -> xPathSet {
         if isPathSet(value: value) {
             var buffer: [UInt8] = []
             for pathDict in value {
+                print(pathDict)
                 let path = try! xPath.from(value: pathDict)
+                print(path.bytes)
                 buffer.append(contentsOf: path.bytes)
+                print([UInt8(PATH_SEPARATOR_BYTE)])
                 buffer.append(contentsOf: [UInt8(PATH_SEPARATOR_BYTE)])
             }
-            buffer[-1] = UInt8(PATHSET_END_BYTE)
+            buffer[buffer.count - 1] = UInt8(PATHSET_END_BYTE)
             return xPathSet(bytes: buffer)
         }
         throw BinaryError.unknownError(error: "Cannot construct PathSet from given value")
     }
-    override func fromParser(
+    class func fromParser(
         parser: BinaryParser,
         hint: Int? = nil
     ) throws -> SerializedType {
-        var buffer: [[UInt8]] = []
+        var buffer: [UInt8] = []
         while !parser.end() {
-            let path = xPath(bytes: []).fromParser(parser: parser)
-            buffer.append(path.bytes)
-            buffer.append(try parser.read(n: 1))
-            if buffer[-1][0] == UInt8(PATHSET_END_BYTE) {
+            let path = xPath.fromParser(parser: parser)
+            buffer.append(contentsOf: path.bytes)
+            buffer.append(contentsOf: try parser.read(n: 1))
+            if buffer[buffer.count - 1] == UInt8(PATHSET_END_BYTE) {
                 break
             }
         }
-        // TODO: Fix see link above
-        return xPathSet(bytes: buffer[0])
-
+        // TODO: Review this function
+        return xPathSet(bytes: buffer)
+        
     }
-
-    func toJson() throws -> [[[String: AnyObject]]] {
+    
+    override func toJson() -> [[[String: AnyObject]]] {
         var json: [[[String: AnyObject]]] = []
         let pathsetParser = BinaryParser(hex: self.toHex())
         while !pathsetParser.end() {
-            let path = xPath(bytes: []).fromParser(parser: pathsetParser)
+            let path = xPath.fromParser(parser: pathsetParser)
             let pathJson: [[String: AnyObject]] = path.toJson()
             json.append(pathJson)
-            try pathsetParser.skip(n: 1)
+            try! pathsetParser.skip(n: 1)
         }
         return json
     }

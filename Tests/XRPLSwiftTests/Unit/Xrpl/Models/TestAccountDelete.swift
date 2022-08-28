@@ -12,7 +12,7 @@ import XCTest
 
 final class TestAccountDelete: XCTestCase {
 
-    func testValidAccount() {
+    func testA() {
         let txJson: [String: AnyObject] = [
             "TransactionType": "AccountDelete",
             "Account": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
@@ -59,7 +59,6 @@ final class TestAccountDelete: XCTestCase {
             "Sequence": 2470665,
             "Flags": 2147483648
         ] as! [String: AnyObject]
-        print(txJson)
         let tx = try! AccountDelete(json: txJson)
         XCTAssertThrowsError(try validateAccountDelete(tx: tx.toJson()))
     }
@@ -74,8 +73,9 @@ final class TestAccountDelete: XCTestCase {
             "Sequence": 2470665,
             "Flags": 2147483648
         ] as! [String: AnyObject]
-        print(txJson)
-        let tx = try! AccountDelete(json: txJson)
-        XCTAssertThrowsError(try validateAccountDelete(tx: tx.toJson()))
+        // TODO: Review
+        // The second (validation) is not reached because types are checked at decode, and validation is checked later
+        XCTAssertThrowsError(try AccountDelete(json: txJson))
+//        XCTAssertThrowsError(try validateAccountDelete(tx: tx.toJson()))
     }
 }

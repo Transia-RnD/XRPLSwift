@@ -44,7 +44,8 @@ opt_in_rules:
     - modifier_order
     - nimble_operator
     - nslocalizedstring_key
-    - number_separator
+#    TODO: Review this lint
+#    - number_separator
     - object_literal
     - operator_usage_whitespace
     - overridden_super_call
@@ -94,6 +95,7 @@ identifier_name:
     excluded:
     - tx # transaction
     - ic # issued currency
+    - ws # Websocket
     - id
     - k
     - v

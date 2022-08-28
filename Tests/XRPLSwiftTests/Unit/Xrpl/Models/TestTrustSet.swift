@@ -30,7 +30,7 @@ final class TestTrustSet: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValid() {
+    func testA() {
         let tx = try! TrustSet(json: TestTrustSet.baseTx)
         do {
             try validateTrustSet(tx: tx.toJson())

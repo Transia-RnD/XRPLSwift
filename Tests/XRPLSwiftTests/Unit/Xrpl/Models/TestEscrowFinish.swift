@@ -26,7 +26,7 @@ final class TestEscrowFinish: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValidEscrowFinish() {
+    func testA() {
         print(TestEscrowFinish.baseTx)
         let tx = try! EscrowFinish(json: TestEscrowFinish.baseTx)
         do {

@@ -27,7 +27,7 @@ final class TestNFTokenBurn: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValid() {
+    func testA() {
         let tx = try! NFTokenBurn(json: TestNFTokenBurn.baseTx)
         do {
             try validateNFTokenBurn(tx: tx.toJson())

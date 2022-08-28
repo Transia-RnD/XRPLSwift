@@ -44,7 +44,7 @@ final class TestSignerListSet: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValid() {
+    func testA() {
         let tx = try! SignerListSet(json: TestSignerListSet.baseTx)
         do {
             try validateSetRegularKey(tx: tx.toJson())

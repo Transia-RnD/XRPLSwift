@@ -30,7 +30,7 @@ final class TestOfferCancel: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValidOfferCancel() {
+    func testA() {
         let tx = try! OfferCancel(json: TestOfferCancel.baseTx)
         do {
             try validateOfferCancel(tx: tx.toJson())

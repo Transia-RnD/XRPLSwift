@@ -541,7 +541,6 @@ public func ==(lhs: [String: AnyObject], rhs: [String: AnyObject] ) -> Bool {
     return NSDictionary(dictionary: lhs).isEqual(to: rhs)
 }
 
-
 extension Dictionary where Key == String, Value: Any {
     func object<T: Decodable>() -> T? {
         if let data = try? JSONSerialization.data(withJSONObject: self, options: []) {

@@ -229,10 +229,10 @@ open class AccountLinesResponse: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
         lines = try values.decode([Trustline].self, forKey: .lines)
-        ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
-        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
-        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
-        marker = try values.decode(AnyCodable.self, forKey: .marker)
+        ledgerCurrentIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerCurrentIndex)
+        ledgerIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerIndex)
+        ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
+        marker = try values.decodeIfPresent(AnyCodable.self, forKey: .marker)
 //        try super.init(from: decoder)
     }
 

@@ -21,7 +21,7 @@ final class TestDepositPreauth: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValidAuthorize() {
+    func testA() {
         TestDepositPreauth.baseTx["Authorize"] = "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW" as AnyObject
         let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         do {
@@ -31,7 +31,7 @@ final class TestDepositPreauth: XCTestCase {
         }
     }
 
-    func testValidUnauthorize() {
+    func testB() {
         TestDepositPreauth.baseTx["Unauthorize"] = "raKEEVSGnKSD9Zyvxu4z6Pqpm4ABH8FS6n" as AnyObject
         let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         do {
@@ -55,8 +55,9 @@ final class TestDepositPreauth: XCTestCase {
 
     func testInvalidAuthorize() {
         TestDepositPreauth.baseTx["Authorize"] = 1234 as AnyObject
-        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
-        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+//        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
+        XCTAssertThrowsError(try DepositPreauth(json: TestDepositPreauth.baseTx))
+//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidAuthorizeOwn() {
@@ -67,8 +68,9 @@ final class TestDepositPreauth: XCTestCase {
 
     func testInvalidUnauthorize() {
         TestDepositPreauth.baseTx["Unauthorize"] = 1234 as AnyObject
-        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
-        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+//        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
+        XCTAssertThrowsError(try DepositPreauth(json: TestDepositPreauth.baseTx))
+//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidUnauthorizeOwn() {

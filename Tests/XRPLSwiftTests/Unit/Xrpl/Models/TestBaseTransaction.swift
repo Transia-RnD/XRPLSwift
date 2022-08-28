@@ -12,7 +12,7 @@ import XCTest
 
 final class TestBaseTransaction: XCTestCase {
 
-    func testValidBaseTx() {
+    func testA() {
         do {
             let baseTx = [
                 "Account": "r97KeayHuEsDwyU1yPBVtMLLoQr79QcRFe",

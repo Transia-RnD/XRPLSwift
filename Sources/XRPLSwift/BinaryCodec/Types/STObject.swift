@@ -70,6 +70,7 @@ struct AssociatedValue {
     //    }
 
     func from() throws -> SerializedType? {
+        print(field.associatedType.self)
         if field.associatedType.self is AccountID.Type {
             return try AccountID.from(value: xaddressDecoded[field.name]! as! String)
         }
@@ -100,8 +101,8 @@ struct AssociatedValue {
         if field.associatedType.self is Hash.Type {
             return try Hash.from(value: xaddressDecoded[field.name]! as! String)
         }
-        if field.associatedType.self is xPath.Type {
-            return try xPath.from(value: xaddressDecoded[field.name]! as! [[String: AnyObject]])
+        if field.associatedType.self is xPathSet.Type {
+            return try xPathSet.from(value: xaddressDecoded[field.name]! as! [[[String: AnyObject]]])
         }
         if field.associatedType.self is STArray.Type {
             return try! STArray.from(value: xaddressDecoded[field.name]! as! [[String: AnyObject]])
@@ -158,8 +159,8 @@ struct AssociatedValue {
         if field.associatedType.self is Hash256.Type {
             return try! Hash256().fromParser(parser: self.parser)
         }
-        if field.associatedType.self is xPath.Type {
-            return try! xPath(bytes: []).fromParser(parser: self.parser)
+        if field.associatedType.self is xPathSet.Type {
+            return try! xPathSet.fromParser(parser: self.parser)
         }
         if field.associatedType.self is STArray.Type {
             return try! STArray().fromParser(parser: self.self.parser, hint: hint)

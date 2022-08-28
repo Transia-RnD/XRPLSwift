@@ -51,7 +51,7 @@ extension LedgerIndex {
             self = .number(value)
             return
         }
-        throw LedgerIndexCodingError.decoding("OOPS")
+        throw LedgerIndexCodingError.decoding("LedgerIndex not mapped")
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -134,7 +134,7 @@ extension Amount {
             self = .ic(value)
             return
         }
-        throw AmountCodingError.decoding("OOPS")
+        throw AmountCodingError.decoding("Amount not mapped")
     }
 
     public func encode(to encoder: Encoder) throws {

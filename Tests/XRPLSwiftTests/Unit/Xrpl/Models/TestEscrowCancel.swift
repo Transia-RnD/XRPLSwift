@@ -23,7 +23,7 @@ final class TestEscrowCancel: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValidEscrowCreate() {
+    func testA() {
         print(TestEscrowCancel.baseTx)
         let tx = try! EscrowCancel(json: TestEscrowCancel.baseTx)
         do {

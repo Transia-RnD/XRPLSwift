@@ -22,7 +22,7 @@ final class TestICheckCash: RippledITestCase {
         try await super.tearDown()
     }
     
-    func testJson() async {
+    func _testJson() async {
         // create the expectation
         let exp = expectation(description: "base")
         

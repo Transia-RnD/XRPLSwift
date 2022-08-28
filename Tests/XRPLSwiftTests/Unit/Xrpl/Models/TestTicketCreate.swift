@@ -24,7 +24,7 @@ final class TestTicketCreate: XCTestCase {
         ] as! [String: AnyObject]
     }
 
-    func testValid() {
+    func testA() {
         let tx = try! TicketCreate(json: TestTicketCreate.baseTx)
         do {
             try validateTicketCreate(tx: tx.toJson())
