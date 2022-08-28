@@ -3,3 +3,4 @@
 XRPLSwift.xcodeproj
 !.gitignore
 .DS_Store
+.env

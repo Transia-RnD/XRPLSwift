@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/Flight-School/AnyCodable.git",
         "state": {
           "branch": null,
-          "revision": "22f302d4c048aafcda09a4ab5b8c0b03855316fb",
-          "version": "0.6.3"
+          "revision": "f9fda69a7b704d46fb5123005f2f7e43dbb8a0fa",
+          "version": "0.6.5"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/krzyzanowskim/CryptoSwift.git",
         "state": {
           "branch": null,
-          "revision": "12f2389aca4a07e0dd54c86ec23d0721ed88b8db",
-          "version": "1.4.3"
+          "revision": "039f56c5d7960f277087a0be51f5eb04ed0ec073",
+          "version": "1.5.1"
         }
       },
       {
@@ -38,12 +38,21 @@
         }
       },
       {
+        "package": "swift-atomics",
+        "repositoryURL": "https://github.com/apple/swift-atomics.git",
+        "state": {
+          "branch": null,
+          "revision": "919eb1d83e02121cdb434c7bfc1f0c66ef17febe",
+          "version": "1.0.2"
+        }
+      },
+      {
         "package": "swift-nio",
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "154f1d32366449dcccf6375a173adf4ed2a74429",
-          "version": "2.38.0"
+          "revision": "b4e0a274f7f34210e97e2f2c50ab02a10b549250",
+          "version": "2.41.1"
         }
       },
       {
@@ -51,8 +60,17 @@
         "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
         "state": {
           "branch": null,
-          "revision": "52a486ff6de9bc3e26bf634c5413c41c5fa89ca5",
-          "version": "2.17.2"
+          "revision": "0265283d3539ced108b9b8287eb3328c9d85acdc",
+          "version": "2.21.0"
+        }
+      },
+      {
+        "package": "swift-nio-transport-services",
+        "repositoryURL": "https://github.com/apple/swift-nio-transport-services.git",
+        "state": {
+          "branch": null,
+          "revision": "4e02d9cf35cabfb538c96613272fb027dd0c8692",
+          "version": "1.13.1"
         }
       },
       {
@@ -60,8 +78,8 @@
         "repositoryURL": "https://github.com/vapor/websocket-kit.git",
         "state": {
           "branch": null,
-          "revision": "ff8fbce837ef01a93d49c6fb49a72be0f150dac7",
-          "version": "2.3.0"
+          "revision": "2d9d2188a08eef4a869d368daab21b3c08510991",
+          "version": "2.6.1"
         }
       }
     ]

@@ -1,0 +1,299 @@
+//
+//  File.swift
+//  
+//
+//  Created by Denis Angell on 7/26/22.
+//
+
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/common/index.ts
+
+import Foundation
+
+public enum AccountObjectType: String, Codable {
+    case check
+    case depositPreauth
+    case escrow
+    case offer
+    case paymentChannel
+    case signerList
+    case ticket
+    case state
+
+    enum CodingKeys: String, CodingKey {
+        case check = "check"
+        case depositPreauth = "deposit_preauth"
+        case escrow = "escrow"
+        case offer = "offer"
+        case paymentChannel = "paymentChannel"
+        case signerList = "signerList"
+        case ticket = "ticket"
+        case state = "state"
+    }
+}
+
+public enum LedgerIndex: Codable {
+    case string(String) // ('validated' | 'closed' | 'current')
+    case number(Int)
+}
+
+extension LedgerIndex {
+
+    enum LedgerIndexCodingError: Error {
+        case decoding(String)
+    }
+
+    public init(from decoder: Decoder) throws {
+        if let value = try? String.init(from: decoder) {
+            self = .string(value)
+            return
+        }
+        if let value = try? Int.init(from: decoder) {
+            self = .number(value)
+            return
+        }
+        throw LedgerIndexCodingError.decoding("LedgerIndex not mapped")
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        switch self {
+        case .string(let string):
+            try string.encode(to: encoder)
+        case .number(let number):
+            try number.encode(to: encoder)
+        }
+    }
+}
+
+struct XRP: Codable {
+    var currency: String = "XRP"
+}
+
+protocol IssuedCurrency: Codable {
+    var currency: String { get set }
+    var issuer: String { get set }
+}
+
+enum Currency {
+    case xrp (XRP)
+    case issuedCurrency (IssuedCurrency)
+}
+
+public struct IssuedCurrencyAmount: IssuedCurrency, Codable {
+    public var currency: String
+    public var issuer: String
+    public var value: String
+
+    enum CodingKeys: String, CodingKey {
+        case currency = "currency"
+        case issuer = "issuer"
+        case value = "value"
+    }
+
+    public init(_ json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(IssuedCurrencyAmount.self, from: data)
+        self.currency = decoded.currency
+        self.issuer = decoded.issuer
+        self.value = decoded.value
+    }
+}
+
+enum AmountType {
+    case string
+    case ic
+}
+
+public enum Amount: Codable {
+    case string(String)
+    case ic(IssuedCurrencyAmount)
+}
+
+extension Amount {
+
+    enum AmountCodingError: Error {
+        case decoding(String)
+    }
+
+    public var value: Any {
+        switch self {
+        case .string(let string):
+            return string
+        case .ic(let ic):
+            return ic
+        }
+    }
+
+    public init(from decoder: Decoder) throws {
+        print(decoder.self)
+        if let value = try? String.init(from: decoder) {
+            self = .string(value)
+            return
+        }
+        if let value = try? IssuedCurrencyAmount.init(from: decoder) {
+            self = .ic(value)
+            return
+        }
+        throw AmountCodingError.decoding("Amount not mapped")
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        switch self {
+        case .string(let string):
+            try string.encode(to: encoder)
+        case .ic(let ic):
+            try ic.encode(to: encoder)
+        }
+    }
+}
+
+public class BaseSigner: Codable {
+    public let account: String
+    public let txnSignature: String
+    public let signingPubKey: String
+
+    enum CodingKeys: String, CodingKey {
+        case account = "Account"
+        case txnSignature = "TxnSignature"
+        case signingPubKey = "SigningPubKey"
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        account = try values.decode(String.self, forKey: .account)
+        txnSignature = try values.decode(String.self, forKey: .txnSignature)
+        signingPubKey = try values.decode(String.self, forKey: .signingPubKey)
+    }
+}
+
+public class Signer: Codable {
+    enum CodingKeys: String, CodingKey {
+        case signer = "Signer"
+    }
+
+    public let signer: BaseSigner
+
+    public init(json: [String: AnyObject]) throws {
+        let decoder: JSONDecoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(Signer.self, from: data)
+        self.signer = decoded.signer
+    }
+}
+
+public class BaseMemo: Codable {
+    public let memoData: String
+    public let memoType: String
+    public let memoFormat: String
+
+    enum CodingKeys: String, CodingKey {
+        case memoData = "MemoData"
+        case memoType = "MemoType"
+        case memoFormat = "MemoFormat"
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        memoData = try values.decode(String.self, forKey: .memoData)
+        memoType = try values.decode(String.self, forKey: .memoType)
+        memoFormat = try values.decode(String.self, forKey: .memoFormat)
+    }
+}
+
+public class Memo: Codable {
+    public let memo: BaseMemo
+    enum CodingKeys: String, CodingKey {
+        case memo = "Memo"
+    }
+}
+
+// export type StreamType =
+//  | 'consensus'
+//  | 'ledger'
+//  | 'manifests'
+//  | 'peer_status'
+//  | 'transactions'
+//  | 'transactions_proposed'
+//  | 'server'
+//  | 'validations'
+//
+public struct PathStep: Codable {
+    public var account: String?
+    public var currency: String?
+    public var issuer: String
+}
+
+public typealias Path = [PathStep]
+
+// export interface SignerEntry {
+//  SignerEntry: {
+//    Account: string
+//    SignerWeight: number
+//  }
+// }
+//
+/// **
+// * This information is added to Transactions in request responses, but is not part
+// * of the canonical Transaction information on ledger. These fields are denoted with
+// * lowercase letters to indicate this in the rippled responses.
+// */
+// export interface ResponseOnlyTxInfo {
+//  /**
+//   * The date/time when this transaction was included in a validated ledger.
+//   */
+//  date?: number
+//  /**
+//   * An identifying hash value unique to this transaction, as a hex string.
+//   */
+//  hash?: string
+//  /**
+//   * The sequence number of the ledger that included this transaction.
+//   */
+//  ledger_index?: number
+// }
+//
+/// **
+// * One offer that might be returned from either an {@link NFTBuyOffersRequest}
+// * or an {@link NFTSellOffersRequest}.
+// *
+// * @category Responses
+// */
+// export interface NFTOffer {
+//  amount: Amount
+//  flags: number
+//  nft_offer_index: string
+//  owner: string
+//  destination?: string
+//  expiration?: number
+// }
+
+import AnyCodable
+
+public struct XRPLWebSocketResponse: Codable {
+    public let id: String
+    public let status: String
+    public let type: String
+    private let rresult: AnyCodable
+    public var result: [String: AnyObject] {
+        return rresult.value as! [String: AnyObject]
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case status
+        case type
+        case rresult = "result"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        id = try values.decode(String.self, forKey: .id)
+        status = try values.decode(String.self, forKey: .status)
+        type = try values.decode(String.self, forKey: .type)
+        rresult = try values.decode(AnyCodable.self, forKey: .rresult)
+    }
+}
+
+public struct JsonRpcResponse<T> {
+    public var result: T
+}
