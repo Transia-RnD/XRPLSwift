@@ -1,3 +1,5 @@
+> THIS REPOSITORY IS NOT FINISHED. README IS NOT UP TO DATE. EXPECT DRAGONS. SEE TESTS FOR CURRENT IMPLEMENTATIONS.
+
 # XRPLSwift
 
 A pure Swift implementation for interacting with the XRP Ledger, the `XRPLSwift` library simplifies the hardest parts of XRP Ledger interaction, like serialization and transaction signing, by providing native Swift methods and models for [XRP Ledger transactions](https://xrpl.org/transaction-formats.html) and core server [API](https://xrpl.org/api-conventions.html) ([`rippled`](https://github.com/ripple/rippled)) objects.
