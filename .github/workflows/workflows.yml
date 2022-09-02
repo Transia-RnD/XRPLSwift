@@ -47,6 +47,7 @@ jobs:
           --health-cmd="wget localhost:6006 || exit 1" --health-interval=5s --health-retries=10 --health-timeout=2s
 
     steps:
+    - uses: docker-practice/actions-setup-docker@master
     - uses: actions/checkout@v3
     - name: Use Swift "5.6.0"
       uses: swift-actions/setup-swift@v1
