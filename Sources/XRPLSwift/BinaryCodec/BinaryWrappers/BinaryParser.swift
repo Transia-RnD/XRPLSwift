@@ -14,23 +14,26 @@ public enum BinaryError: Error {
     case unknownError(error: String)
 }
 
+/**
+ Deserializes from hex-encoded XRPL binary format to JSON fields and values.
+ */
 public class BinaryParser {
 
     public var bytes: [UInt8]
 
     /**
-     * Initialize bytes to a hex string
-     *
-     * @param hex a hex string
+     Initialize bytes to a hex string
+     - parameters:
+        - hex: A hex string
      */
     public init(hex: String) {
         bytes = try! hex.asHexArray()
     }
 
     /**
-     * Peek the first byte of the BinaryParser
-     *
-     * @returns The first byte of the BinaryParser
+     Peek the first byte of the BinaryParser
+     - returns:
+     The first byte of the BinaryParser
      */
     public func peek() throws -> UInt8 {
         guard !bytes.isEmpty else {
@@ -40,9 +43,9 @@ public class BinaryParser {
     }
 
     /**
-     * Consume the first n bytes of the BinaryParser
-     *
-     * @param n the number of bytes to skip
+     Consume the first n bytes of the BinaryParser
+     - parameters:
+        - n: The number of bytes to skip
      */
     // swiftlint:disable:next identifier_name
     public func skip(n: Int) throws {
@@ -53,10 +56,11 @@ public class BinaryParser {
     }
 
     /**
-     * read the first n bytes from the BinaryParser
-     *
-     * @param n The number of bytes to read
-     * @return The bytes
+     Read the first n bytes from the BinaryParser
+     - parameters:
+        - n: The number of bytes to read
+     - returns:
+     The bytes
      */
     // swiftlint:disable:next identifier_name
     public func read(n: Int) throws -> [UInt8] {
@@ -69,10 +73,11 @@ public class BinaryParser {
     }
 
     /**
-     * Read an integer of given size
-     *
-     * @param n The number of bytes to read
-     * @return The number represented by those bytes
+     Read an integer of given size
+     - parameters:
+        - n: The number of bytes to read
+     - returns:
+     The number represented by those bytes
      */
     // swiftlint:disable:next identifier_name
     public func readUIntN(n: Int) throws -> Int {
@@ -85,40 +90,67 @@ public class BinaryParser {
         }
     }
 
+    /**
+     Read 1 byte from parser and return as unsigned int.
+     - returns:
+     The byte read.
+     */
     public func readUInt8() -> UInt8 {
         return try! UInt8(readUIntN(n: 1))
     }
 
+    /**
+     Read 2 bytes from parser and return as unsigned int.
+     - returns:
+     The byte read.
+     */
     public func readUInt16() -> UInt16 {
         return try! UInt16(readUIntN(n: 2))
     }
 
+    /**
+     Read 4 bytes from parser and return as unsigned int.
+     - returns:
+     The byte read.
+     */
     public func readUInt32() -> UInt32 {
         return try! UInt32(readUIntN(n: 4))
     }
 
+    /**
+     Return the byte count
+     - returns:
+     The byte count.
+     */
     public func size() -> Int {
         return bytes.count
     }
-
-    // TODO: GUARD
+    
+    /**
+     Returns whether the binary parser has finished parsing (e.g. there is nothing
+     left in the buffer that needs to be processed).
+     - parameters:
+        - customEnd: An ending byte-phrase.
+     - returns:
+     Whether or not it's the end.
+     */
     public func end(customEnd: Int? = nil) -> Bool {
         return bytes.isEmpty || (customEnd != nil && bytes.count <= customEnd!)
     }
 
     /**
-     * Reads variable length encoded bytes
-     *
-     * @return The variable length bytes
+     Reads variable length encoded bytes
+     - returns:
+     The variable length bytes
      */
     func readVariableLength() -> [UInt8] {
         return try! read(n: readLengthPrefix())
     }
 
     /**
-     * Reads the length of the variable length encoded bytes
-     *
-     * @return The length of the variable length encoded bytes
+     Reads variable length prefix
+     - returns:
+     The variable length prefix
      */
     func readLengthPrefix() throws -> Int {
         let b1: Int = Int(self.readUInt8())
@@ -136,9 +168,11 @@ public class BinaryParser {
     }
 
     /**
-     * Reads the field ordinal from the BinaryParser
-     *
-     * @return Field ordinal
+     Reads the field ordinal from the BinaryParser
+     - parameters:
+        - customEnd: An ending byte-phrase.
+     - returns:
+     Field ordinal
      */
     func readFieldHeader() throws -> FieldHeader {
         var type: UInt8 = readUInt8()
@@ -162,9 +196,9 @@ public class BinaryParser {
     }
 
     /**
-     * Read the field from the BinaryParser
-     *
-     * @return The field represented by the bytes at the head of the BinaryParser
+     Read the field from the BinaryParser
+     - returns:
+     The field represented by the bytes at the head of the BinaryParser
      */
     func readField() -> FieldInstance {
         let fieldHeader: FieldHeader = try! self.readFieldHeader()
@@ -173,10 +207,11 @@ public class BinaryParser {
     }
 
     /**
-     * Read a given type from the BinaryParser
-     *
-     * @param type The type that you want to read from the BinaryParser
-     * @return The instance of that type read from the BinaryParser
+     Read a given type from the BinaryParser
+     - parameters:
+        - type: The type that you want to read from the BinaryParser
+     - returns:
+     The instance of that type read from the BinaryParser
      */
     func readType(type: Any) throws -> SerializedType {
         if type is AccountID {
@@ -228,20 +263,22 @@ public class BinaryParser {
     }
 
     /**
-     * Get the type associated with a given field
-     *
-     * @param field The field that you want to get the type of
-     * @return The type associated with the given field
+     Get the type associated with a given field
+     - parameters:
+        - type: The field that you want to get the type of
+     - returns:
+     The type associated with the given field
      */
     func typeForField(field: FieldInstance) -> SerializedType.Type {
         return field.associatedType.self
     }
 
     /**
-     * Read value of the type specified by field from the BinaryParser
-     *
-     * @param field The field that you want to get the associated value for
-     * @return The value associated with the given field
+     Read value of the type specified by field from the BinaryParser
+     - parameters:
+        - field: The field tinstance that you are reading
+     - returns:
+     The value associated with the given field
      */
     func readFieldValue(field: FieldInstance) throws -> SerializedType? {
 //        print("READING FIELD...")
@@ -259,9 +296,9 @@ public class BinaryParser {
     }
 
     /**
-     * Get the next field and value from the BinaryParser
-     *
-     * @return The field and value
+     Get the next field and value from the BinaryParser
+     - returns:
+     The field and value
      */
     func readFieldAndValue() -> (FieldInstance, SerializedType) {
         let field = readField()

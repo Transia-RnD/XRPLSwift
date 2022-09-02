@@ -215,17 +215,28 @@ func checkPartialPayment(tx: [String: AnyObject]) throws {
         if tx["Flags"] == nil {
             throw ValidationError.decoding("Payment: tfPartialPayment flag required with DeliverMin")
         }
+        if let flags = tx["Flags"] as? Int {
+            let isTfPartialPayment = isFlagEnabled(flags: flags, checkFlag: PaymentFlags.tfPartialPayment.rawValue)
+            if !isTfPartialPayment {
+                throw ValidationError.decoding("Payment: tfPartialPayment flag required with DeliverMin")
+            }
 
-        let flags = tx["Flags"] as! PaymentFlags
-        let isTfPartialPayment = flags is Int ? isFlagEnabled(flags: flags.rawValue, checkFlag: PaymentFlags.tfPartialPayment.rawValue) : (flags.rawValue == PaymentFlags.tfPartialPayment.rawValue)
-
-        if !isTfPartialPayment {
-            throw ValidationError.decoding("Payment: tfPartialPayment flag required with DeliverMin")
+            if !isAmount(amount: tx["DeliverMin"] as Any) {
+                throw ValidationError.decoding("Payment: invalid DeliverMin")
+            }
         }
-
-        if !isAmount(amount: tx["DeliverMin"] as Any) {
-            throw ValidationError.decoding("Payment: invalid DeliverMin")
-        }
+        // For Flags Interface
+//        if let flags = tx["Flags"] as? Int {
+//            let isTfPartialPayment = flags.rawValue == PaymentFlags.tfPartialPayment.rawValue
+//
+//            if !isTfPartialPayment {
+//                throw ValidationError.decoding("Payment: tfPartialPayment flag required with DeliverMin")
+//            }
+//
+//            if !isAmount(amount: tx["DeliverMin"] as Any) {
+//                throw ValidationError.decoding("Payment: invalid DeliverMin")
+//            }
+//        }
     }
 }
 

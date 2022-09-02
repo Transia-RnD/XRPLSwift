@@ -35,21 +35,24 @@ swiftlint analyze
 ## Running Tests
 For integration tests, we use a `rippled` node in standalone mode to test XRPLSwift code against. To set this up, you can either run `rippled` locally, or set up the Docker container `natenichols/rippled-standalone:latest` for this purpose. The latter will require you to [install Docker](https://docs.docker.com/get-docker/).
 
+### Single Test
+
+`swift test -s BasicTests.PathTests/testContains`
+
 ### Unit Tests
 
 ```bash
 swift build -v
-swift test -v
+swift test -v --filter TestU
 ```
 
 ### Integration Tests
 
 ```bash
-npm install
 # sets up the rippled standalone Docker container - you can skip this step if you already have it set up
 docker run -p 6006:6006 -it natenichols/rippled-standalone:latest
 swift build -v
-swift test:integration -v
+swift test -v --filter TestI
 ```
 
 ## Generate reference docs

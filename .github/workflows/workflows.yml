@@ -20,3 +20,64 @@ jobs:
       run: swiftlint lint
     - name: Tests
       run: swift test -v
+
+# This workflow will do a clean install of swift dependencies, build the source code and run tests across different versions of swift
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-swift-with-github-actions
+
+name: Swift CI
+
+on:
+  push:
+    branches: [ main, 1.x ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-lint:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Swift "5.6.0"
+      uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: "5.6.0"
+    - run: swift build -v
+    - run: swiftlint lint
+
+  unit:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Swift "5.6.0"
+      uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: "5.6.0"
+    - run: swift build -v
+    - run: swiftlint lint
+    - run: swift test -v --filter Unit
+
+  integration:
+    runs-on: macos-latest
+
+    services:
+      rippled:
+        image: natenichols/rippled-standalone:latest
+        ports:
+        - 6006:6006
+        options:
+          --health-cmd="wget localhost:6006 || exit 1" --health-interval=5s --health-retries=10 --health-timeout=2s
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Swift "5.6.0"
+      uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: "5.6.0"
+    - run: swift build -v
+    - run: swiftlint lint
+    - run: swift test -v --filter Integration
+      env:
+        HOST: localhost
+        PORT: ${{ job.services.rippled.ports['6006'] }}

@@ -134,7 +134,7 @@ extension Amount {
             self = .ic(value)
             return
         }
-        throw AmountCodingError.decoding("Amount not mapped")
+        throw AmountCodingError.decoding("Invalid Amount: Amount should be string or dict")
     }
 
     public func encode(to encoder: Encoder) throws {
