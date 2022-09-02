@@ -33,7 +33,7 @@ jobs:
         swift-version: "5.6.0"
     - run: swift build -v
     - run: swiftlint lint
-    - run: swift test -v --filter Unit
+    - run: swift test -v --filter TestU
 
   integration:
     runs-on: macos-latest
@@ -54,7 +54,7 @@ jobs:
         swift-version: "5.6.0"
     - run: swift build -v
     - run: swiftlint lint
-    - run: swift test -v --filter Integration
+    - run: swift test -v --filter TestI
       env:
         HOST: localhost
         PORT: ${{ job.services.rippled.ports['6006'] }}
