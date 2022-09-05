@@ -1,36 +1,45 @@
 ////
 ////  File.swift
-////  
+////
 ////
 ////  Created by Denis Angell on 8/6/22.
 ////
 //
-// import Foundation
+//// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/Wallet/fundWallet.ts
 //
-// public struct FaucetAccount {
+//import Foundation
+//
+//public struct FaucetAccount: Codable {
 //    let xAddress: String
 //    let classicAddress: String?
 //    let secret: String
-// }
+//}
 //
-// public struct FaucetWallet {
-//  account: FaucetAccount
-//  amount: Int
-//  balance: Int
-// }
+//public struct FaucetWallet: Codable {
+//    let account: FaucetAccount
+//    let amount: Double
+//    let balance: Double
+//}
 //
-// enum FaucetNetwork: String {
-//  case Testnet = "faucet.altnet.rippletest.net",
-//  case Devnet = "faucet.devnet.rippletest.net",
-//  case NFTDevnet = "faucet-nft.ripple.com",
-// }
+//public struct Funded {
+//    let wallet: Wallet
+//    let balance: Double
+//}
+//
+//enum FaucetNetwork: String {
+//    case testnet = "faucet.altnet.rippletest.net",
+//    case devnet = "faucet.devnet.rippletest.net",
+//    case nftDevnet = "faucet-nft.ripple.com",
+//}
 //
 //// Interval to check an account balance
-// let INTERVAL_SECONDS = 1
+//// swiftlint:disable:next identifier_name
+//let INTERVAL_SECONDS = 1
 //// Maximum attempts to retrieve a balance
-// let MAX_ATTEMPTS = 20
+//// swiftlint:disable:next identifier_name
+//let MAX_ATTEMPTS = 20
 //
-/// **
+///**
 // * Generates a random wallet with some amount of XRP (usually 1000 XRP).
 // *
 // * @example
@@ -49,200 +58,233 @@
 // * faucet host in devnet or testnet, you should provide the host using this
 // * option.
 // * @returns A Wallet on the Testnet or Devnet that contains some amount of XRP,
-// * and that wallet's balance in XRP.
-// * @throws When either Client isn't connected or unable to fund wallet address.
+// * and that wallet"s balance in XRP.
+// * @throws When either Client isn"t connected or unable to fund wallet address.
 // */
-// async func fundWallet(
-//  this: Client,
-//  wallet: Wallet? = nil,
-//  faucetHost: String,
-// ) -> Promise<{
-//  wallet: Wallet
-//  balance: number
-// }> {
-//  if (!this.isConnected()) {
-//    throw new RippledError('Client not connected, cannot call faucet')
-//  }
-//
-//  // Generate a new Wallet if no existing Wallet is provided or its address is invalid to fund
-//  const walletToFund =
-//    wallet && isValidClassicAddress(wallet.classicAddress)
-//      ? wallet
-//      : Wallet.generate()
-//
-//  // Create the POST request body
-//  const postBody = Buffer.from(
-//    new TextEncoder().encode(
-//      JSON.stringify({
-//        destination: walletToFund.classicAddress,
-//      }),
-//    ),
-//  )
-//
-//  let startingBalance = 0
-//  try {
-//    startingBalance = Number(
-//      await this.getXrpBalance(walletToFund.classicAddress),
+//func fundWallet(
+//    this: XrplClient,
+//    wallet: Wallet? = nil,
+//    faucetHost: String
+//) async throws -> Funded {
+//    if !this.isConnected() {
+//        throw ValidationError.validation("Client not connected, cannot call faucet")
+//    }
+//    
+//    // Generate a new Wallet if no existing Wallet is provided or its address is invalid to fund
+//    let walletToFund = wallet != nil && XrplCodec.isValidClassicAddress(classicAddress: wallet!.classicAddress) ? wallet : Wallet.generate()
+//    
+//    // Create the POST request body
+//    let params = [
+//        "destination": walletToFund!.classicAddress
+//    ] as [String : Any]
+//    let postBody = try JSONSerialization.data(withJSONObject: params, options: .prettyPrinted)
+//    
+//    var startingBalance: Double = 0.0
+//    do {
+//        startingBalance = Double(await this.getXrpBalance(address: walletToFund!.classicAddress))
+//    } catch {
+//        /* startingBalance remains "0" */
+//    }
+//    
+//    // Options to pass to https.request
+//    let httpOptions: URLRequest = getHTTPOptions(client: this, postBody: postBody, hostname: faucetHost)
+//    
+//    return returnPromise(
+//        httpOptions,
+//        this,
+//        startingBalance,
+//        walletToFund,
+//        postBody
 //    )
-//  } catch {
-//    /* startingBalance remains '0' */
-//  }
-//
-//  // Options to pass to https.request
-//  const httpOptions = getHTTPOptions(this, postBody, options?.faucetHost)
-//
-//  return returnPromise(
-//    httpOptions,
-//    this,
-//    startingBalance,
-//    walletToFund,
-//    postBody,
-//  )
-// }
+//}
 //
 //// eslint-disable-next-line max-params -- Helper function created for organizational purposes
-// async function returnPromise(
-//  options: RequestOptions,
-//  client: Client,
-//  startingBalance: number,
-//  walletToFund: Wallet,
-//  postBody: Buffer,
-// ): Promise<{
-//  wallet: Wallet
-//  balance: number
-// }> {
-//  return new Promise((resolve, reject) => {
-//    const request = httpsRequest(options, (response) => {
-//      const chunks: Uint8Array[] = []
-//      response.on('data', (data) => chunks.push(data))
-//      // eslint-disable-next-line @typescript-eslint/no-misused-promises -- not actually misused, different resolve/reject
-//      response.on('end', async () =>
-//        onEnd(
-//          response,
-//          chunks,
-//          client,
-//          startingBalance,
-//          walletToFund,
-//          resolve,
-//          reject,
-//        ),
-//      )
-//    })
-//    // POST the body
-//    request.write(postBody)
+//func returnPromise(
+//    options: URLRequest,
+//    client: XrplClient,
+//    startingBalance: Double,
+//    walletToFund: Wallet,
+//    postBody: Data,
+//    completion: @escaping (Funded?, Error?) -> Void) {
+//        // Handle Address to String Better
+//        
+//        let session = URLSession.shared
+//        session.dataTask(with: options, completionHandler: { data, response, error in
+//            guard error == nil else {
+//                DispatchQueue.main.async {
+//                    print(error!.localizedDescription)
+//                    completion(nil, error)
+//                }
+//                return
+//            }
+//            guard let data = data else {
+//                completion(nil, nil)
+//                return
+//            }
+//            if let httpResponse = response as? HTTPURLResponse {
+//                if httpResponse.statusCode == 200 {
+//                    do {
+//                        DispatchQueue.main.async {
+//                            return onEnd(
+//                                response,
+//                                data,
+//                                client,
+//                                startingBalance,
+//                                walletToFund,
+//                                completion,
+//                            ),
+//                        }
+//                    } catch let error {
+//                        DispatchQueue.main.async {
+//                            completion(nil, error)
+//                        }
+//                    }
+//                } else {
+//                    do {
+//                        let response = try JSONDecoder().decode(FaucetWallet.self, from: data)
+//                        DispatchQueue.main.async {
+//                            let error: NSError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: response.statusText])
+//                            completion(nil, error)
+//                        }
+//                    } catch let error {
+//                        DispatchQueue.main.async {
+//                            completion(nil, error)
+//                        }
+//                    }
+//                }
+//            }
+//        }).resume()
+//        
+////    return new Promise((resolve, reject) => {
+////        let request = httpsRequest(options, (response) => {
+////            let chunks: Uint8Array[] = []
+////            response.on("data", (data) => chunks.push(data))
+////            // eslint-disable-next-line @typescript-eslint/no-misused-promises -- not actually misused, different resolve/reject
+////            response.on("end", async () =>
+////                onEnd(
+////                    response,
+////                    chunks,
+////                    client,
+////                    startingBalance,
+////                    walletToFund,
+////                    resolve,
+////                    reject,
+////                ),
+////            )
+////        })
+////        // POST the body
+////        request.write(postBody)
+////
+////        request.on("error", (error) => {
+////            reject(error)
+////        })
+////
+////        request.end()
+////    })
+//}
 //
-//    request.on('error', (error) => {
-//      reject(error)
-//    })
-//
-//    request.end()
-//  })
-// }
-//
-// function getHTTPOptions(
-//  client: Client,
-//  postBody: Uint8Array,
-//  hostname?: string,
-// ): RequestOptions {
-//  return {
-//    hostname: hostname ?? getFaucetHost(client),
-//    port: 443,
-//    path: '/accounts',
-//    method: 'POST',
-//    headers: {
-//      'Content-Type': 'application/json',
-//      'Content-Length': postBody.length,
-//    },
-//  }
-// }
+//func getHTTPOptions(
+//    client: XrplClient,
+//    postBody: [UInt8],
+//    hostname: String? = nil,
+//) -> URLRequest {
+//    let url = URL(string: hostname != nil ? hostname : getFaucetHost(client))
+//    var request = URLRequest(url: url!)
+//    request.httpMethod = "POST"
+//    request.httpBody = postBody
+//    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//    request.setValue("application/json", forHTTPHeaderField: "Accept")
+//    return request
+//}
 //
 //// eslint-disable-next-line max-params -- Helper function created for organizational purposes
-// async function onEnd(
-//  response: IncomingMessage,
-//  chunks: Uint8Array[],
-//  client: Client,
-//  startingBalance: number,
-//  walletToFund: Wallet,
-//  resolve: (response: { wallet: Wallet; balance: number }) => void,
-//  reject: (err: ErrorConstructor | Error | unknown) => void,
-// ): Promise<void> {
-//  const body = Buffer.concat(chunks).toString()
-//
-//  // "application/json; charset=utf-8"
-//  if (response.headers['content-type']?.startsWith('application/json')) {
-//    await processSuccessfulResponse(
-//      client,
-//      body,
-//      startingBalance,
-//      walletToFund,
-//      resolve,
-//      reject,
-//    )
-//  } else {
-//    reject(
-//      new XRPLFaucetError(
-//        `Content type is not \`application/json\`: ${JSON.stringify({
-//          statusCode: response.statusCode,
-//          contentType: response.headers['content-type'],
-//          body,
-//        })}`,
-//      ),
-//    )
-//  }
-// }
+//func onEnd(
+//    response: HTTPURLResponse,
+//    chunks: Data,
+//    client: XrplClient,
+//    startingBalance: Double,
+//    walletToFund: Wallet
+////    resolve: (response: { wallet: Wallet; balance: number }) => void,
+////    reject: (err: ErrorConstructor | Error | unknown) => void,
+//) -> async Void {
+//    let body = try JSONDecoder().decode(FaucetWallet.self, from: chunks)
+//    
+//    // "application/json; charset=utf-8"
+//    if (response.headers["content-type"]?.startsWith("application/json")) {
+//        await processSuccessfulResponse(
+//            client,
+//            body,
+//            startingBalance,
+//            walletToFund,
+////            resolve,
+////            reject,
+//        )
+//    } else {
+//        reject(
+//        
+//        reject(
+//            new XRPLFaucetError("Content type is not \`application/json\`: ${JSON.stringify({
+//                statusCode: response.statusCode,
+//                contentType: response.headers["content-type"],
+//                    body,
+//                })}`,
+//            )
+//        )
+//    }
+//}
 //
 //// eslint-disable-next-line max-params, max-lines-per-function -- Only used as a helper function, lines inc due to added balance.
-// async function processSuccessfulResponse(
-//  client: Client,
-//  body: string,
-//  startingBalance: number,
-//  walletToFund: Wallet,
-//  resolve: (response: { wallet: Wallet; balance: number }) => void,
-//  reject: (err: ErrorConstructor | Error | unknown) => void,
-// ): Promise<void> {
-//  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- We know this is safe and correct
-//  const faucetWallet: FaucetWallet = JSON.parse(body)
-//  const classicAddress = faucetWallet.account.classicAddress
-//
-//  if (!classicAddress) {
-//    reject(new XRPLFaucetError(`The faucet account is undefined`))
-//    return
-//  }
-//  try {
-//    // Check at regular interval if the address is enabled on the XRPL and funded
-//    const updatedBalance = await getUpdatedBalance(
-//      client,
-//      classicAddress,
-//      startingBalance,
-//    )
-//
-//    if (updatedBalance > startingBalance) {
-//      resolve({
-//        wallet: walletToFund,
-//        balance: await getUpdatedBalance(
-//          client,
-//          walletToFund.classicAddress,
-//          startingBalance,
-//        ),
-//      })
-//    } else {
-//      reject(
-//        new XRPLFaucetError(
-//          `Unable to fund address with faucet after waiting ${
-//            INTERVAL_SECONDS * MAX_ATTEMPTS
-//          } seconds`,
-//        ),
-//      )
+//func processSuccessfulResponse(
+//    client: Client,
+//    body: string,
+//    startingBalance: number,
+//    walletToFund: Wallet,
+//    resolve: (response: { wallet: Wallet; balance: number }) => void,
+//    reject: (err: ErrorConstructor | Error | unknown) => void,
+//) -> async Void {
+//    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- We know this is safe and correct
+//    const faucetWallet: FaucetWallet = JSON.parse(body)
+//    const classicAddress = faucetWallet.account.classicAddress
+//    
+//    if (!classicAddress) {
+//        reject(new XRPLFaucetError(`The faucet account is undefined`))
+//        return
 //    }
-//  } catch (err) {
-//    if (err instanceof Error) {
-//      reject(new XRPLFaucetError(err.message))
+//    try {
+//        // Check at regular interval if the address is enabled on the XRPL and funded
+//        const updatedBalance = await getUpdatedBalance(
+//            client,
+//            classicAddress,
+//            startingBalance,
+//        )
+//        
+//        if (updatedBalance > startingBalance) {
+//            resolve({
+//            wallet: walletToFund,
+//            balance: await getUpdatedBalance(
+//                client,
+//                walletToFund.classicAddress,
+//                startingBalance,
+//            ),
+//            })
+//        } else {
+//            reject(
+//                new XRPLFaucetError(
+//                    `Unable to fund address with faucet after waiting ${
+//                        INTERVAL_SECONDS * MAX_ATTEMPTS
+//                    } seconds`,
+//                ),
+//            )
+//        }
+//    } catch (err) {
+//        if (err instanceof Error) {
+//            reject(new XRPLFaucetError(err.message))
+//        }
+//        reject(err)
 //    }
-//    reject(err)
-//  }
-// }
+//}
 //
-/// **
+///**
 // * Check at regular interval if the address is enabled on the XRPL and funded.
 // *
 // * @param client - Client.
@@ -250,80 +292,67 @@
 // * @param originalBalance - The initial balance before the funding.
 // * @returns A Promise boolean.
 // */
-// async function getUpdatedBalance(
-//  client: Client,
-//  address: string,
-//  originalBalance: number,
-// ): Promise<number> {
-//  return new Promise((resolve, reject) => {
-//    let attempts = MAX_ATTEMPTS
-//    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Not actually misused here, different resolve
-//    const interval = setInterval(async () => {
-//      if (attempts < 0) {
-//        clearInterval(interval)
-//        resolve(originalBalance)
-//      } else {
-//        attempts -= 1
-//      }
+//func getUpdatedBalance(
+//    client: XrplClient,
+//    address: String,
+//    originalBalance: Double,
+//) async -> Double {
+//    return new Promise((resolve, reject) => {
+//        let attempts = MAX_ATTEMPTS
+//        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Not actually misused here, different resolve
+//        const interval = setInterval(async () => {
+//            if (attempts < 0) {
+//                clearInterval(interval)
+//                resolve(originalBalance)
+//            } else {
+//                attempts -= 1
+//            }
+//            
+//            try {
+//                let newBalance
+//                try {
+//                    newBalance = Number(await client.getXrpBalance(address))
+//                } catch {
+//                    /* newBalance remains undefined */
+//                }
+//                
+//                if (newBalance > originalBalance) {
+//                    clearInterval(interval)
+//                    resolve(newBalance)
+//                }
+//            } catch (err) {
+//                clearInterval(interval)
+//                if (err instanceof Error) {
+//                    reject(throw XRPLFaucetError("Unable to check if the address \(address) balance has increased. Error: \(err.message)"))
+//                }
+//                reject(err)
+//            }
+//        }, INTERVAL_SECONDS * 1000)
+//    })
+//}
 //
-//      try {
-//        let newBalance
-//        try {
-//          newBalance = Number(await client.getXrpBalance(address))
-//        } catch {
-//          /* newBalance remains undefined */
-//        }
-//
-//        if (newBalance > originalBalance) {
-//          clearInterval(interval)
-//          resolve(newBalance)
-//        }
-//      } catch (err) {
-//        clearInterval(interval)
-//        if (err instanceof Error) {
-//          reject(
-//            new XRPLFaucetError(
-//              `Unable to check if the address ${address} balance has increased. Error: ${err.message}`,
-//            ),
-//          )
-//        }
-//        reject(err)
-//      }
-//    }, INTERVAL_SECONDS * 1000)
-//  })
-// }
-//
-/// **
+///**
 // * Get the faucet host based on the Client connection.
 // *
 // * @param client - Client.
 // * @returns A {@link FaucetNetwork}.
 // * @throws When the client url is not on altnet or devnet.
 // */
-// function getFaucetHost(client: Client): FaucetNetwork | undefined {
-//  const connectionUrl = client.url
-//
-//  // 'altnet' for Ripple Testnet server and 'testnet' for XRPL Labs Testnet server
-//  if (connectionUrl.includes('altnet') || connectionUrl.includes('testnet')) {
-//    return FaucetNetwork.Testnet
-//  }
-//
-//  if (connectionUrl.includes('devnet')) {
-//    return FaucetNetwork.Devnet
-//  }
-//
-//  if (connectionUrl.includes('xls20-sandbox')) {
-//    return FaucetNetwork.NFTDevnet
-//  }
-//
-//  throw new XRPLFaucetError('Faucet URL is not defined or inferrable.')
-// }
-//
-// export default fundWallet
-//
-// const _private = {
-//  FaucetNetwork,
-//  getFaucetHost,
-// }
-//
-// export { _private }
+//func getFaucetHost(_ client: XrplClient) -> FaucetNetwork? {
+//    let connectionUrl: String = client.url()
+//    connectionUrl.contains(where: { $0 == "altnet" })
+//    // "altnet" for Ripple Testnet server and "testnet" for XRPL Labs Testnet server
+//    if connectionUrl.contains(where: { $0 == "altnet" }) || connectionUrl.contains(where: { $0 == "testnet" }) {
+//        return FaucetNetwork.testnet
+//    }
+//    
+//    if connectionUrl.contains(where: { $0 == "devnet" }) {
+//        return FaucetNetwork.devnet
+//    }
+//    
+//    if connectionUrl.contains(where: { $0 == "xls20-sandbox" }) {
+//        return FaucetNetwork.nftDevnet
+//    }
+//    
+//    throw XRPLFaucetError.unknown("Faucet URL is not defined or inferrable.")
+//}

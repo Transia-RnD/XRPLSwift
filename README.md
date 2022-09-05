@@ -11,7 +11,7 @@ A pure Swift implementation for interacting with the XRP Ledger, the `XRPLSwift`
 let client = try XrplClient(server: "https://s.altnet.rippletest.net:51234/")
 
 // create a wallet on the testnet
-let testWallet: Wallet = generateFaucetWallet(client)
+let testWallet: Wallet = client.fundWallet()
 print(testWallet)
 // publicKey: ED3CC1BBD0952A60088E89FA502921895FC81FBD79CAE9109A8FE2D23659AD5D56
 // privateKey: -HIDDEN-
@@ -134,7 +134,7 @@ print(walletFromSeed)
 To create a wallet from a Testnet faucet:
 
 ```swift
-let testWallet: Wallet = generateFaucetWallet(client: client)
+let testWallet: Wallet = fundWallet(client: client)
 let testAccount: String = testWallet.classicAddress
 print("Classic address: \(testAccount)")
 // Classic address: rEQB2hhp3rg7sHj6L8YyR4GG47Cb7pfcuw

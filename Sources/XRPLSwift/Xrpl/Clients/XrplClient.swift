@@ -647,13 +647,15 @@ public class XrplClient: ConnectionDelegate {
     //    /**
     //     * @deprecated Use autofill instead, provided for users familiar with v1
     //     */
-    //    public prepareTransaction = autofill
-    //
+//    public func autofill() async throws -> Int {
+//        return try await XRPLSwift.autofill(client: self)
+//    }
     //    /**
     //     * @category Abstraction
     //     */
-    //    public getXrpBalance = getXrpBalance
-    //
+    public func getXrpBalance(address: String) async throws -> String {
+        return try await XRPLSwift.getXrpBalance(this: self, address: address)
+    }
     //    /**
     //     * @category Abstraction
     //     */

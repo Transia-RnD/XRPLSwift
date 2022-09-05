@@ -23,7 +23,7 @@ final class TestICheckCancel: RippledITestCase {
         try await super.tearDown()
     }
     
-    func _testJson() async {
+    func testJson() async {
         // create the expectation
         let exp = expectation(description: "base")
         

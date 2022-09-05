@@ -840,7 +840,7 @@ let serializerDefinitions = """
     [
       "HookReturnCode",
       {
-        "nth": 19,
+        "nth": 18,
         "isVLEncoded": false,
         "isSerialized": true,
         "isSigningField": true,
