@@ -189,7 +189,7 @@ final class TestUWallet: XCTestCase {
     }
 }
 
-//final class TestWalletFromMnemonic: XCTestCase {
+// final class TestWalletFromMnemonic: XCTestCase {
 //
 //    let mnemonic: String = "assault rare scout seed design extend noble drink talk control guitar quote"
 //    let publicKey: String = "035953FCD81D001CF634EB44A87940F3F98ADF2483D09C914BAED0539BE50F385D"
@@ -234,7 +234,7 @@ final class TestUWallet: XCTestCase {
 //        XCTAssertEqual(wallet.privateKey, privateKey)
 //        XCTAssertEqual(wallet.classicAddress, masterAddress)
 //    }
-//}
+// }
 
 final class TestWalletFromEntropy: XCTestCase {
     var entropy: Entropy = Entropy()

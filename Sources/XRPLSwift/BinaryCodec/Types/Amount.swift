@@ -39,7 +39,6 @@ internal let MIN_IOU_MANTISSA: Int = Int(10**15)
 // swiftlint:disable:next identifier_name
 internal let MAX_IOU_MANTISSA: Int = Int(10**16 - 1)
 
-
 func containsDecimal(string: String) -> Bool {
     // Returns True if the given string contains a decimal point character.
     return !string.contains(where: { $0 == "." })

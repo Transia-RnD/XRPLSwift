@@ -30,21 +30,23 @@ let binaryTypes: [String: SerializedType.Type] = [
     "Vector256": Vector256.self
 ]
 
+/**
+ Convert the string name of a class to the class object itself.
+ - parameters:
+    - name: The name of the class.
+ - returns:
+ The corresponding class object.
+ */
 func getTypeByName(name: String) -> SerializedType.Type? {
-    /*
-    Convert the string name of a class to the class object itself.
-    Args:
-        name: the name of the class.
-    Returns:
-        The corresponding class object.
-    */
     var typeMap: [String: SerializedType.Type] = [:]
     for (name, objectType) in binaryTypes { typeMap[name] = objectType.self }
     return typeMap[name]
 }
 
+/**
+ A collection of serialization information about a specific field type.
+ */
 class FieldInstance {
-    // A collection of serialization information about a specific field type.
     public var nth: Int
     public var isVLEncoded: Bool
     public var isSerialized: Bool
@@ -55,17 +57,18 @@ class FieldInstance {
     public var ordinal: Int
     public var associatedType: SerializedType.Type
 
+    /**
+     Construct a FieldInstance.
+     - parameters:
+        - fieldInfo: The field's serialization info from definitions.json.
+        - fieldName: The field's string name.
+        - fieldHeader: A FieldHeader object with the typeCode and fieldCode.
+     */
     init(
         fieldInfo: FieldInfo,
         fieldName: String,
         fieldHeader: FieldHeader
     ) {
-        /*
-        Construct a FieldInstance.
-        :param field_info: The field's serialization info from definitions.json.
-        :param field_name: The field's string name.
-        :param field_header: A FieldHeader object with the type_code and field_code.
-        */
         print("CONSTRUCT FIELD INSTANCE")
         print(fieldInfo.type)
         self.nth = fieldInfo.nth

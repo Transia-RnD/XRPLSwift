@@ -142,7 +142,7 @@ public class AutoFillSugar {
         print(response!.result?.accountData.sequence)
         tx.sequence = response!.result?.accountData.sequence
     }
-    
+
     //    async func fetchAccountDeleteFee(client: Client): EventLoopFuture<Int> {
     //        let response = await client.request({ command: "server_state" })
     //      let fee = response.result.state.validated_ledger?.reserve_inc
@@ -153,7 +153,7 @@ public class AutoFillSugar {
     //
     //      return new BigNumber(fee)
     //    }
-    
+
     func calculateFeePeTransactionType(
         client: XrplClient,
         tx: BaseTransaction,
@@ -163,7 +163,7 @@ public class AutoFillSugar {
 //        let netFeeXRP = await getFeeXrp(client)
 //        let netFeeDrops = xrpToDrops(netFeeXRP)
 //        let baseFee = new BigNumber(netFeeDrops)
-        
+
 //        // EscrowFinish Transaction with Fulfillment
 //        if tx.TransactionType == "EscrowFinish" && tx.Fulfillment != nil {
 //            let fulfillmentBytesSize: Int = Math.ceil(tx.Fulfillment.length / 2)
@@ -171,12 +171,12 @@ public class AutoFillSugar {
 //            let product = new BigNumber(scaleValue(netFeeDrops, 33 + fulfillmentBytesSize / 16))
 //            baseFee = product.dp(0, Int.ROUND_CEIL)
 //        }
-        
+
 //        // AccountDelete Transaction
 //        if tx.TransactionType == "AccountDelete" {
 //            baseFee = await fetchAccountDeleteFee(client)
 //        }
-        
+
         /*
          * Multi-signed Transaction
          * 10 drops × (1 + Number of Signatures Provided)
@@ -184,22 +184,22 @@ public class AutoFillSugar {
 //        if (signersCount > 0) {
 //            baseFee = BigNumber.sum(baseFee, scaleValue(netFeeDrops, 1 + signersCount))
 //        }
-        
+
 //        let maxFeeDrops = xrpToDrops(client.maxFeeXRP)
 //        let totalFee = tx.TransactionType === "AccountDelete"
 //        ? baseFee
 //        : BigNumber.min(baseFee, maxFeeDrops)
-        
+
         // Round up baseFee and return it as a string
         // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-magic-numbers -- param reassign is safe, base 10 magic num
 //        tx.Fee = totalFee.dp(0, Int.ROUND_CEIL).toString(10)
         tx.fee = "100"
     }
-    
+
     func scaleValue(value: String, multiplier: Int) -> String {
         return String(Int(value)! * multiplier)
     }
-    
+
     func setLatestValidatedLedgerSequence(
         client: XrplClient,
         tx: BaseTransaction
@@ -207,7 +207,7 @@ public class AutoFillSugar {
         let ledgerSequence = try await client.getLedgerIndex()
         tx.lastLedgerSequence = ledgerSequence + LEDGER_OFFSET
     }
-    
+
     func checkAccountDeleteBlockers(
         client: XrplClient,
         tx: BaseTransaction

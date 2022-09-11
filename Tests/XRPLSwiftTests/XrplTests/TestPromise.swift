@@ -5,10 +5,10 @@
 ////  Created by Denis Angell on 8/18/22.
 ////
 //
-//import XCTest
-//@testable import XRPLSwift
+// import XCTest
+// @testable import XRPLSwift
 //
-//public class PromiseTestCase: XCTestCase {
+// public class PromiseTestCase: XCTestCase {
 //    
 //    public func setupIClient() async throws -> Promise<Any?> {
 //    //        self.client = try XrplClient(server: ServerUrl.serverUrl)
@@ -32,4 +32,4 @@
 //            print("FINISHED")
 //        }
 //    }
-//}
+// }

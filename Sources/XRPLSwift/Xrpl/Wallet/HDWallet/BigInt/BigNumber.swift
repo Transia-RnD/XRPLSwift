@@ -6,7 +6,6 @@
 //  Copyright © 2019 Essentia. All rights reserved.
 //
 
-
 import Foundation
 // swiftlint:disable all
 

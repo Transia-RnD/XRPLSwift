@@ -66,7 +66,7 @@ class SerializedType {
          */
         return bytes
     }
-    
+
     func toJson() -> [[[String: AnyObject]]] {
         /*
          Returns the JSON representation of a SerializedType.
@@ -76,7 +76,7 @@ class SerializedType {
          */
         return []
     }
-    
+
     func toJson() -> [[String: AnyObject]] {
         /*
          Returns the JSON representation of a SerializedType.

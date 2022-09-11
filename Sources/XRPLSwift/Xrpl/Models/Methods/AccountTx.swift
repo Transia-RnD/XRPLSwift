@@ -175,7 +175,7 @@ public struct AccountTransaction: Codable {
         case txBlob = "tx_blob"
         case validated = "validated"
     }
-    
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 //        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
@@ -251,7 +251,7 @@ public class AccountTxResponse: Codable {
         marker = try values.decodeIfPresent(AnyCodable.self, forKey: .marker)
         //        try super.init(from: decoder)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

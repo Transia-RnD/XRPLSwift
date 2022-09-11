@@ -8,13 +8,12 @@
 import BigInt
 import Foundation
 
-
 // swiftlint:disable:next identifier_name
 let DROPS_PER_XRP: Double = 1000000.0
 // swiftlint:disable:next identifier_name
 let MAX_FRACTION_LENGTH: Int = 6
 // swiftlint:disable:next identifier_name
-//let BASE_TEN: Int = 10
+// let BASE_TEN: Int = 10
 // swiftlint:disable:next identifier_name
 let SANITY_CHECK: String = "/^-?[0-9.]+$/u"
 
@@ -33,17 +32,17 @@ public func dropsToXrp(_ dropsToConvert: Any) throws -> String {
      * Important: specify base BASE_10 to avoid exponential notation, e.g. '1e-7'.
      */
     let drops = String(BigInt(dropsToConvert as! Double), radix: BASE_TEN)
-    
+
     // check that the value is valid and actually a number
     if dropsToConvert is String && !drops.isNumber {
         throw ValidationError.validation("dropsToXrp: invalid value '\(dropsToConvert)', should be a BigNumber or string-encoded number.")
     }
-    
+
     // drops are only whole units
     if drops.contains(where: { $0 == "." }) {
         throw ValidationError.validation("dropsToXrp: value '\(drops)' has too many decimal places.")
     }
-    
+
     /*
      * This should never happen; the value has already been
      * validated above. This just ensures BigNumber did not do
@@ -56,7 +55,7 @@ public func dropsToXrp(_ dropsToConvert: Any) throws -> String {
     //        " does not match (^-?[0-9]+$).",
     //    )
     //  }
-    
+
     return String(BigInt(drops)! / BigInt(DROPS_PER_XRP), radix: BASE_10)
 }
 
@@ -71,14 +70,14 @@ public func dropsToXrp(_ dropsToConvert: Any) throws -> String {
 public func xrpToDrops(_ xrpToConvert: Any) throws -> String {
     // Important: specify base BASE_TEN to avoid exponential notation, e.g. '1e-7'.
     let xrp = String(BigInt(xrpToConvert as! Double), radix: BASE_TEN)
-    
+
     // check that the value is valid and actually a number
     if xrpToConvert is String && !xrp.isNumber {
         throw ValidationError.validation(
             "xrpToDrops: invalid value '${xrpToConvert}', should be a BigNumber or string-encoded number."
         )
     }
-    
+
     /*
      * This should never happen; the value has already been
      * validated above. This just ensures BigNumber did not do
@@ -89,16 +88,16 @@ public func xrpToDrops(_ xrpToConvert: Any) throws -> String {
     //      `xrpToDrops: failed sanity check - value '${xrp}', does not match (^-?[0-9.]+$).`,
     //    )
     //  }
-    
+
     let components = xrp.split(separator: ".")
     if components.count > 2 {
         throw ValidationError.validation("xrpToDrops: failed sanity check - value '${xrp}' has too many decimal points.")
     }
-    
+
     let fraction = components[1] != nil ? String(components[1]) : "0"
     if fraction.count > MAX_FRACTION_LENGTH {
         throw ValidationError.validation("xrpToDrops: value '${xrp}' has too many decimal places.")
     }
-    
+
     return String(BigInt(xrp)! * BigInt(DROPS_PER_XRP), radix: BASE_TEN)
 }

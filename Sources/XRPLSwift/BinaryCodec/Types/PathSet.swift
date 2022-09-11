@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 // Constant for masking types of a PathStep
 
 // swiftlint:disable:next identifier_name
@@ -40,7 +39,7 @@ internal func isPathSet(value: [[[String: AnyObject]]]) -> Bool {
 
 // swiftlint:disable:next type_name
 class xPathStep: SerializedType {
-    
+
     static func from(value: [String: AnyObject]) throws -> xPathStep {
         var dataType: Int = 0x00
         var buffer: [UInt8] = []
@@ -78,7 +77,7 @@ class xPathStep: SerializedType {
         }
         return xPathStep(bytes: Data(hex: String(dataType, radix: 16).uppercased()).bytes + buffer)
     }
-    
+
     override func toJson() -> [String: AnyObject] {
         /* Return a list of hashes encoded as hex strings.
          Returns:
@@ -91,7 +90,7 @@ class xPathStep: SerializedType {
         let parser = BinaryParser(hex: self.toHex())
         let dataType = Int(parser.readUInt8())
         var json: [String: AnyObject] = [:]
-        
+
         if (dataType & TYPE_ACCOUNT) != 0 {
             let accountId: String = AccountID().fromParser(parser: parser).toJson()
             json["account"] = accountId as AnyObject
@@ -106,7 +105,7 @@ class xPathStep: SerializedType {
         }
         return json
     }
-    
+
     func type() -> Int {
         /*
          Get a number representing the type of this PathStep.
@@ -121,7 +120,7 @@ class xPathStep: SerializedType {
 // swiftlint:disable:next type_name
 class xPath: SerializedType {
     // Class for serializing/deserializing Paths.
-    
+
     static func from(value: [[String: AnyObject]]) throws -> xPath {
         var buffer: [UInt8] = []
         for dict in value {
@@ -130,7 +129,7 @@ class xPath: SerializedType {
         }
         return xPath(bytes: buffer)
     }
-    
+
     class func fromParser(
         parser: BinaryParser,
         hint: Int? = nil
@@ -145,7 +144,7 @@ class xPath: SerializedType {
         }
         return xPath(bytes: buffer)
     }
-    
+
     override func toJson() -> [[String: AnyObject]] {
         var json: [[String: AnyObject]] = []
         let pathParser = BinaryParser(hex: self.toHex())
@@ -159,7 +158,7 @@ class xPath: SerializedType {
 
 // swiftlint:disable:next type_name
 class xPathSet: SerializedType {
-    
+
     static func from(value: [[[String: AnyObject]]]) throws -> xPathSet {
         if isPathSet(value: value) {
             var buffer: [UInt8] = []
@@ -191,9 +190,9 @@ class xPathSet: SerializedType {
         }
         // TODO: Review this function
         return xPathSet(bytes: buffer)
-        
+
     }
-    
+
     override func toJson() -> [[[String: AnyObject]]] {
         var json: [[[String: AnyObject]]] = []
         let pathsetParser = BinaryParser(hex: self.toHex())

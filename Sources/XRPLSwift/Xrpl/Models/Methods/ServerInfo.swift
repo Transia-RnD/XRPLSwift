@@ -117,7 +117,7 @@ public class Load: Codable {
     public let jobTypes: [JobType]
     /** (Admin only) The number of threads in the server's main job pool. */
     public let threads: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case jobTypes = "job_types"
         case threads = "threads"
@@ -131,7 +131,7 @@ public class ClosedLedger: Codable {
     public let reserveBaseXrp: Int
     public let reserveIncXrp: Int
     public let seq: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case age = "age"
         case baseFeeXrp = "base_fee_xrp"
@@ -363,7 +363,7 @@ public class ServerInfoWrapper: Codable {
         validationQuorum = try values.decode(Int.self, forKey: .validationQuorum)
         validatorListExpires = try values.decode(String.self, forKey: .validatorListExpires)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

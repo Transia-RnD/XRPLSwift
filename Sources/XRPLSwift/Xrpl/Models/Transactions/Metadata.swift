@@ -18,7 +18,7 @@ public struct AccountRootNodeField: Codable {
     public var flags: Int?
     public var ownerCount: Int?
     public var sequence: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "Account"
         case balance = "Balance"
@@ -26,7 +26,7 @@ public struct AccountRootNodeField: Codable {
         case ownerCount = "OwnerCount"
         case sequence = "Sequence"
     }
-    
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decodeIfPresent(String.self, forKey: .account)
@@ -51,23 +51,23 @@ public struct PayChannelNodeField: Codable {
 }
 
 public typealias LedgerEntryType = String
-//public enum LedgerEntryType: Codable {
+// public enum LedgerEntryType: Codable {
 //    case accountRoot
 //    case directory
 //    case paychannel
 //    case unknown
-//}
+// }
 
 public enum NewField: Codable {
     case account(AccountRootNodeField)
     case directory(DirectoryNodeField)
     case paychannel(PayChannelNodeField)
     case unknown
-    
+
     enum NewFieldCodingError: Error {
         case decoding(String)
     }
-    
+
     public init(from decoder: Decoder) throws {
         if let value = try? AccountRootNodeField(from: decoder) {
             self = .account(value)
@@ -89,13 +89,13 @@ public struct CreatedNodeData: Codable {
     public var ledgerEntryType: LedgerEntryType
     public var ledgerIndex: String
     public var newFields: NewField?
-    
+
     enum CodingKeys: String, CodingKey {
         case ledgerEntryType = "LedgerEntryType"
         case ledgerIndex = "LedgerIndex"
         case newFields = "NewFields"
     }
-    
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ledgerEntryType = try values.decode(LedgerEntryType.self, forKey: .ledgerEntryType)
@@ -106,11 +106,11 @@ public struct CreatedNodeData: Codable {
 
 public struct CreatedNode: Codable {
     public var createdNode: CreatedNodeData
-    
+
     enum CodingKeys: String, CodingKey {
         case createdNode = "CreatedNode"
     }
-    
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         createdNode = try values.decode(CreatedNodeData.self, forKey: .createdNode)
@@ -122,11 +122,11 @@ public enum FinalField: Codable {
     case directory(DirectoryNodeField)
     case paychannel(PayChannelNodeField)
     case unknown
-    
+
     enum FinalFieldCodingError: Error {
         case decoding(String)
     }
-    
+
     public init(from decoder: Decoder) throws {
         if let value = try? AccountRootNodeField(from: decoder) {
             self = .account(value)
@@ -151,7 +151,7 @@ public struct ModifiedNodeData: Codable {
     public var previousFields: FinalField?
     public var previoudTxnId: String?
     public var previoudTxnLgrSeq: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case ledgerEntryType = "LedgerEntryType"
         case ledgerIndex = "LedgerIndex"
@@ -160,7 +160,7 @@ public struct ModifiedNodeData: Codable {
         case previoudTxnId = "PrevioudTxnID"
         case previoudTxnLgrSeq = "PrevioudTxnLgrSeq"
     }
-    
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ledgerEntryType = try values.decode(LedgerEntryType.self, forKey: .ledgerEntryType)
@@ -174,11 +174,11 @@ public struct ModifiedNodeData: Codable {
 
 public struct ModifiedNode: Codable {
     public var modifiedNode: ModifiedNodeData
-    
+
     enum CodingKeys: String, CodingKey {
         case modifiedNode = "ModifiedNode"
     }
-    
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         modifiedNode = try values.decode(ModifiedNodeData.self, forKey: .modifiedNode)
@@ -251,14 +251,14 @@ public class TransactionMetadata: Codable {
         self.transactionResult = transactionResult
         self.transactionIndex = transactionIndex
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case affectedNodes = "AffectedNodes"
         case transactionResult = "TransactionResult"
         case transactionIndex = "TransactionIndex"
         case deliveredAmount = "delivered_amount"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         affectedNodes = try values.decodeIfPresent([Node].self, forKey: .affectedNodes)

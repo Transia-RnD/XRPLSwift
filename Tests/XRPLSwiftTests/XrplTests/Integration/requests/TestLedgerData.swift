@@ -11,10 +11,10 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestILedgerData: RippledITestCase {
-    
+
     let TIMEOUT: Double = 20
     var expected: [String: AnyObject] = [:]
-    
+
     override func setUp() async throws {
         try await super.setUp()
         expected = [
@@ -26,26 +26,26 @@ final class TestILedgerData: RippledITestCase {
                 "state": [
                     [
                         "data": "string",
-                        "index": "string",
-                    ],
-                ],
+                        "index": "string"
+                    ]
+                ]
             ],
-            "type": "response",
+            "type": "response"
         ] as [String: AnyObject]
     }
-    
+
     override func tearDown() async throws {
         try await super.tearDown()
     }
-    
+
     func testJson() async {
         // create the expectation
         let exp = expectation(description: "base")
-        
+
         let json = [
             "command": "ledger_data",
             "limit": 5,
-            "binary": true,
+            "binary": true
         ] as [String: AnyObject]
         let request: LedgerDataRequest = try! LedgerDataRequest(json)
         let response: BaseResponse = try! await self.client.request(r: request).wait() as! BaseResponse<LedgerDataResponse>
@@ -56,7 +56,7 @@ final class TestILedgerData: RippledITestCase {
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)
     }
-    
+
     func testModel() async {
         // create the expectation
         let exp = expectation(description: "base")

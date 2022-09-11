@@ -11,17 +11,17 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestIEscrowCancel: RippledITestCase {
-    
+
     let TIMEOUT: Double = 20
-    
+
     override func setUp() async throws {
         try await super.setUp()
     }
-    
+
     override func tearDown() async throws {
         try await super.tearDown()
     }
-    
+
     func _testJson() async {
         // create the expectation
         let exp = expectation(description: "base")
@@ -38,7 +38,7 @@ final class TestIEscrowCancel: RippledITestCase {
             "Amount": "10000",
             "Destination": wallet1.classicAddress,
             "CancelAfter": closed_time + 3,
-            "FinishAfter": closed_time + 2,
+            "FinishAfter": closed_time + 2
         ] as [String: AnyObject]
         let tx: Transaction = try! Transaction(jsonTx)!
         await testTransaction(
@@ -46,14 +46,14 @@ final class TestIEscrowCancel: RippledITestCase {
             transaction: tx,
             wallet: self.wallet
         )
-        
+
         let initialBalanceWallet1 = await getXRPBalance(client: self.client, wallet: wallet1)
 
         // get object created
         let result1 = [
             "command": "account_objects",
             "account": self.wallet.classicAddress,
-            "type": "check",
+            "type": "check"
         ] as [String: AnyObject]
         let response1 = try! await self.client.request(AccountObjectsRequest(result1)).wait() as! BaseResponse<AccountObjectsResponse>
         XCTAssertEqual(response1.result?.accountObjects.count, 1)
@@ -62,8 +62,7 @@ final class TestIEscrowCancel: RippledITestCase {
             XCTFail()
             return
         }
-        
-        
+
 //        let txRequest = TxRequest(transaction: escrow.previousTxnId)
 //        guard let txResponse = try! await self.client.request(r: txRequest).wait() as! BaseResponse<TxResponse> else {
 //            XCTFail()

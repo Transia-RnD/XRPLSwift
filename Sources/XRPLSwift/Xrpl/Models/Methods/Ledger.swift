@@ -279,7 +279,7 @@ public class LedgerResponse: Codable {
 //        queueData = try values.decode([rQueueData].self, forKey: .queueData)
 //        try super.init(from: decoder)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

@@ -19,10 +19,10 @@ public func ledgerAccept(client: XrplClient) async {
     _ = try! await client.connection.request(request: BaseRequest(request))
 }
 
-//public func subscribeDone(client: Client, done: Mocha.Done): void {
+// public func subscribeDone(client: Client, done: Mocha.Done): void {
 //  client.removeAllListeners()
 //  done()
-//}
+// }
 
 public func fundAccount(
     client: XrplClient,
@@ -33,7 +33,7 @@ public func fundAccount(
         "Account": masterAccount,
         "Destination": wallet.classicAddress,
         // 2 times the amount needed for a new account (20 XRP)
-        "Amount": "400000000",
+        "Amount": "400000000"
     ] as [String: AnyObject]
     let payment: Transaction = try! Transaction(json)!
     let opts: SubmitOptions = SubmitOptions(autofill: nil, failHard: nil, wallet: Wallet.fromSeed(seed: masterSecret))
@@ -67,7 +67,7 @@ public func verifySubmittedTransaction(
     //        "command": "tx",
     //        "transaction": hash,
     //    ] as [String: AnyObject])
-    
+
     //  assert(data.result)
     //  assert.deepEqual(
     //    _.omit(data.result, [
@@ -94,7 +94,7 @@ public func testTransaction(
 ) async {
     // Accept any un-validated changes.
     await ledgerAccept(client: client)
-    
+
     // sign/submit the transaction
     let response = try! await client.submit(
         transaction: transaction,
@@ -104,7 +104,7 @@ public func testTransaction(
             wallet: wallet
         )
     ).wait() as! BaseResponse<SubmitResponse>
-    
+
     //  // check that the transaction was successful
     //  assert.equal(response.type, "response")
     //  assert.equal(
@@ -112,7 +112,7 @@ public func testTransaction(
     //    "tesSUCCESS",
     //    response.result.engine_result_message,
     //  )
-    
+
     // check that the transaction is on the ledger
     // TODO: SubmitResponse needs to inherit from Base Response and include the type.
     var signedTx = try! response.result?.txJson.toJson()

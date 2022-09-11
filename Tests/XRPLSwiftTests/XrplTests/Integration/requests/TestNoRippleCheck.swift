@@ -11,10 +11,10 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestINoRippleCheck: RippledITestCase {
-    
+
     let TIMEOUT: Double = 20
     var expected: [String: AnyObject] = [:]
-    
+
     override func setUp() async throws {
         try await super.setUp()
         expected = [
@@ -28,28 +28,28 @@ final class TestINoRippleCheck: RippledITestCase {
                         "Fee": 10,
                         "Sequence": 1268,
                         "SetFlag": 8,
-                        "TransactionType": "AccountSet",
-                    ],
-                ],
+                        "TransactionType": "AccountSet"
+                    ]
+                ]
             ],
-            "type": "response",
+            "type": "response"
         ] as [String: AnyObject]
     }
-    
+
     override func tearDown() async throws {
         try await super.tearDown()
     }
-    
+
     func testJson() async {
         // create the expectation
         let exp = expectation(description: "base")
-        
+
         let json = [
             "command": "noripple_check",
             "account": self.wallet.classicAddress,
             "role": "gateway",
             "ledger_index": "current",
-            "transactions": true,
+            "transactions": true
         ] as [String: AnyObject]
         let request: NoRippleCheckRequest = try! NoRippleCheckRequest(json)
         let response: BaseResponse = try! await self.client.request(r: request).wait() as! BaseResponse<NoRippleCheckResponse>
@@ -57,17 +57,17 @@ final class TestINoRippleCheck: RippledITestCase {
 //        XCTAssert(response.result?.ledgerHash is String)
 //        XCTAssert(response.result?.ledgerIndex is Int)
 //        XCTAssert(response.result?.marker is Any)
-        
+
         //        assert.equal(response.type, expected.type)
         //            assert.equal(typeof response.result.transactions[0].Fee, "number")
         //            assert.equal(typeof response.result.transactions[0].Sequence, "number")
         //            assert.equal(typeof response.result.problems, "object")
         //            assert.equal(typeof response.result.problems[0], "string")
-        
+
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)
     }
-    
+
     func testModel() async {
         // create the expectation
         let exp = expectation(description: "base")

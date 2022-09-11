@@ -41,7 +41,7 @@ public class SubmitRequest: BaseRequest {
         case txBlob = "tx_blob"
         case failHard = "fail_hard"
     }
-    
+
     override public init(_ json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
@@ -173,7 +173,7 @@ open class SubmitResponse: Codable {
         validatedLedgerIndex = try values.decode(Int.self, forKey: .validatedLedgerIndex)
 //        try super.init(from: decoder)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

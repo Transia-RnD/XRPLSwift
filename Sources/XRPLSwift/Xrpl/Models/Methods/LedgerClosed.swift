@@ -67,7 +67,7 @@ public class LedgerClosedResponse: Codable {
         ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
         //        try super.init(from: decoder)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

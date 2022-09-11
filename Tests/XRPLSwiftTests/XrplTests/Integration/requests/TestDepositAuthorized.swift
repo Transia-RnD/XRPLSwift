@@ -11,11 +11,11 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestIDepositAuthorized: RippledITestCase {
-    
+
     let TIMEOUT: Double = 20
     var expected: [String: AnyObject] = [:]
     var wallet2: Wallet!
-    
+
     override func setUp() async throws {
         try await super.setUp()
         expected = [
@@ -27,30 +27,30 @@ final class TestIDepositAuthorized: RippledITestCase {
                 "deposit_authorized": 1,
                 "validated": 0,
                 "source_account": "rBfoZmA95RX7Ax1txZ3SzGnr3SkJB7zc75"
-            ],
+            ]
         ] as [String: AnyObject]
         wallet2 = await generateFundedWallet(client: self.client)
     }
-    
+
     override func tearDown() async throws {
         try await super.tearDown()
     }
-    
+
     func testJson() async {
         // create the expectation
         let exp = expectation(description: "base")
-        
+
         let json = [
             "command": "deposit_authorized",
             "source_account": self.wallet.classicAddress,
-            "destination_account": wallet2.classicAddress,
+            "destination_account": wallet2.classicAddress
         ] as [String: AnyObject]
         let request: DepositAuthorizedRequest = try! DepositAuthorizedRequest(json)
         let response: BaseResponse = try! await self.client.request(r: request).wait() as! BaseResponse<DepositAuthorizedResponse>
         XCTAssertEqual(response.type, expected["type"] as! String)
-        
+
         let responseJson: [String: AnyObject] = try! response.result!.toJson()
-        var expectedJson: [String: AnyObject] = expected["result"] as! [String : AnyObject]
+        var expectedJson: [String: AnyObject] = expected["result"] as! [String: AnyObject]
         expectedJson["deposit_authorized"] = true as AnyObject
         expectedJson["destination_account"] = responseJson["destination_account"]
         expectedJson["ledger_current_index"] = responseJson["ledger_current_index"]
@@ -60,7 +60,7 @@ final class TestIDepositAuthorized: RippledITestCase {
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)
     }
-    
+
     func testModel() async {
         // create the expectation
         let exp = expectation(description: "base")
@@ -70,9 +70,9 @@ final class TestIDepositAuthorized: RippledITestCase {
         )
         let response: BaseResponse = try! await self.client.request(r: request).wait() as! BaseResponse<DepositAuthorizedResponse>
         XCTAssertEqual(response.type, expected["type"] as! String)
-        
+
         let responseJson: [String: AnyObject] = try! response.result!.toJson()
-        var expectedJson: [String: AnyObject] = expected["result"] as! [String : AnyObject]
+        var expectedJson: [String: AnyObject] = expected["result"] as! [String: AnyObject]
         expectedJson["deposit_authorized"] = true as AnyObject
         expectedJson["destination_account"] = responseJson["destination_account"]
         expectedJson["ledger_current_index"] = responseJson["ledger_current_index"]

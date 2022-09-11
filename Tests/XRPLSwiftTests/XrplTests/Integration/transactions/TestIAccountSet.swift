@@ -11,23 +11,23 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestIAccountSet: RippledITestCase {
-    
+
     let TIMEOUT: Double = 20
-    
+
     override func setUp() async throws {
         try await super.setUp()
     }
-    
+
     override func tearDown() async throws {
         try await super.tearDown()
     }
-    
+
     func testJson() async {
         // create the expectation
         let exp = expectation(description: "base")
         let json = [
             "TransactionType": "AccountSet",
-            "Account": self.wallet.classicAddress,
+            "Account": self.wallet.classicAddress
         ] as [String: AnyObject]
         let tx: Transaction = try! Transaction(json)!
         await testTransaction(

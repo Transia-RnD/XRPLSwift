@@ -14,7 +14,7 @@ import NIO
 public class ClientOptions: ConnectionUserOptions {
     public var feeCushion: Int?
     public var maxFeeXRP: String?
-    
+
     init(
         timeout: Timer,
         proxy: String? = nil,
@@ -105,11 +105,11 @@ public class XrplClient: ConnectionDelegate {
     public func error(code: Int, message: Any, data: Data) {
 //        self.emit("error", errorCode, errorMessage, data)
     }
-    
+
     public func connected() {
 //        self.emit("connected")
     }
-    
+
     public func disconnected(code: Int) {
 //        let finalCode = code
 //                    /*
@@ -121,42 +121,42 @@ public class XrplClient: ConnectionDelegate {
 //                    }
 //                    self.emit("disconnected", finalCode)
     }
-    
+
     public func ledgerClosed(ledger: Any) {
 //        self.emit("ledgerClosed", ledger)
     }
-    
+
     public func transaction(tx: Any) {
         // mutates `tx` to add warnings
         //            handleStreamPartialPayment(tx, self.connection.trace)
         //            self.emit("transaction", tx)
     }
-    
+
     public func validationReceived(validation: Any) {
 //        self.emit("validationReceived", validation)
     }
-    
+
     public func manifestReceived(manifest: Any) {
 //        self.emit("manifestReceived", manifest)
     }
-    
+
     public func peerStatusChange(status: Any) {
 //        self.emit("peerStatusChange", status)
     }
-    
+
     public func consensusPhase(consensus: Any) {
 //        self.emit("consensusPhase", consensus)
     }
-    
+
     public func pathFind(path: Any) {
 //        self.emit("path_find", path)
     }
-    
+
     /*
      * Underlying connection to rippled.
      */
     public var connection: Connection
-    
+
     /**
      * Factor to multiply estimated fee by to provide a cushion in case the
      * required fee rises during submission of a transaction. Defaults to 1.2.
@@ -164,7 +164,7 @@ public class XrplClient: ConnectionDelegate {
      * @category Fee
      */
     public let feeCushion: Int
-    
+
     /**
      * Maximum transaction cost to allow, in decimal XRP. Must be a string-encoded
      * number. Defaults to "2".
@@ -172,7 +172,7 @@ public class XrplClient: ConnectionDelegate {
      * @category Fee
      */
     public let maxFeeXRP: String
-    
+
     /**
      * Creates a new Client with a websocket connection to a rippled server.
      *
@@ -189,7 +189,7 @@ public class XrplClient: ConnectionDelegate {
         self.maxFeeXRP = options?.maxFeeXRP ?? DEFAULT_MAX_FEE_XRP
         self.connection = Connection(url: server, options: options)
     }
-    
+
     /**
      * Get the url that the client is connected to.
      *
@@ -199,7 +199,7 @@ public class XrplClient: ConnectionDelegate {
     func url() -> String {
         return self.connection.getUrl()
     }
-    
+
     /**
      * @category Network
      */
@@ -347,13 +347,13 @@ public class XrplClient: ConnectionDelegate {
         //            requestDict["account"] = nil
         //        }
         let response = try! await self.connection.request(request: r)
-        
+
         // mutates `response` to add warnings
         //        handlePartialPayment(req.command, response)
-        
+
         return response
     }
-    
+
     public func request<R: BaseRequest>(_ rdict: R) async throws -> EventLoopFuture<Any> {
         print(rdict)
         let data = try JSONSerialization.data(withJSONObject: rdict, options: .prettyPrinted)
@@ -361,7 +361,7 @@ public class XrplClient: ConnectionDelegate {
         let base = try decoder.decode(R.self, from: data)
         return try await request(req: base)!
     }
-    
+
     /**
      * Makes a request to the client with the given command and
      * additional request body parameters.
@@ -373,7 +373,7 @@ public class XrplClient: ConnectionDelegate {
     func ensureClassicAddress(_ account: String) -> String {
         return account
     }
-    
+
     public func request<R: BaseRequest>(req: R) async throws -> EventLoopFuture<Any>? {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Necessary for overloading
         //        print(req)
@@ -388,13 +388,13 @@ public class XrplClient: ConnectionDelegate {
         //            requestDict["account"] = nil
         //        }
         let response = try await self.connection.request(request: req)
-        
+
         //        // mutates `response` to add warnings
         //        handlePartialPayment(req.command, response)
-        
+
         return response
     }
-    
+
     //  /**
     //   * @category Network
     //   */
@@ -587,7 +587,7 @@ public class XrplClient: ConnectionDelegate {
     //    } while (Boolean(marker) && count < countTo && lastBatchLength !== 0)
     //    return results
     //  }
-    
+
     /**
      * Tells the Client instance to connect to its rippled server.
      *
@@ -597,7 +597,7 @@ public class XrplClient: ConnectionDelegate {
     public func connect() async throws -> EventLoopFuture<Any> {
         return try await self.connection.connect()
     }
-    
+
     /**
      * Tells the Client instance to disconnect from it"s rippled server.
      *
@@ -611,7 +611,7 @@ public class XrplClient: ConnectionDelegate {
          */
         await self.connection.disconnect()
     }
-    
+
     /**
      * Checks if the Client instance is connected to its rippled server.
      *
@@ -621,7 +621,7 @@ public class XrplClient: ConnectionDelegate {
     public func isConnected() -> Bool {
         return self.connection.isConnected()
     }
-    
+
     //    /**
     //     * @category Core
     //     */

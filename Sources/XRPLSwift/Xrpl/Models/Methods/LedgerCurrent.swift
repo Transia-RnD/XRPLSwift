@@ -62,7 +62,7 @@ public class LedgerCurrentResponse: Codable {
         ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
         //        try super.init(from: decoder)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

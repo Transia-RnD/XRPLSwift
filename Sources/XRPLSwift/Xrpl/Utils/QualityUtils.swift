@@ -19,13 +19,13 @@ func percentToDecimal(percent: String) throws -> String {
     if !percent.hasSuffix("%") {
         throw ValidationError.validation("Value \(percent) must end with %")
     }
-    
+
     // Split the string on % and filter out any empty strings
     let split = percent.split(separator: "%").filter({ !$0.isEmpty })
     if split.count != 1 {
         throw ValidationError.unknown("Value \(percent) contains too many % signs")
     }
-    
+
     return String((BigInt(split[0])! / 100), radix: BASE_TEN)
 }
 
@@ -44,21 +44,21 @@ public func decimalToTransferRate(decimal: String) throws -> Int {
     if rate < BigInt(ONE_BILLION)! || rate > BigInt(TWO_BILLION)! {
         throw ValidationError.validation("Decimal value must be between 0 and 1.00.")
     }
-    
+
     let billionths = String(rate, radix: BASE_TEN)
-    
+
     if billionths == ONE_BILLION {
         return 0
     }
-    
+
     if !billionths.isNumber {
         throw ValidationError.validation("Value is not a number")
     }
-    
+
     if billionths.contains(".") {
         throw ValidationError.validation("Decimal exceeds maximum precision.")
     }
-    
+
     return Int(billionths)!
 }
 
@@ -87,21 +87,21 @@ public func percentToTransferRate(percent: String) throws -> Int {
  */
 public func decimalToQuality(decimal: String) throws -> Int {
     let rate = BigInt(decimal)! * BigInt(ONE_BILLION)!
-    
+
     let billionths = String(rate, radix: BASE_TEN)
-    
+
     if !billionths.isNumber {
         throw ValidationError.validation("Value is not a number")
     }
-    
+
     if billionths.contains("-") {
         throw ValidationError.validation("Cannot have negative Quality")
     }
-    
+
     if billionths == ONE_BILLION {
         return 0
     }
-    
+
     if billionths.contains(".") {
         throw ValidationError.validation("Decimal exceeds maximum precision.")
     }
@@ -120,17 +120,17 @@ public func qualityToDecimal(quality: Int) throws -> String {
     if !(quality is Int) {
         throw ValidationError.validation("Quality must be an integer")
     }
-    
+
     if quality < 0 {
         throw ValidationError.validation("Negative quality not allowed")
     }
-    
+
     if quality == 0 {
         return "1"
     }
-    
+
     let decimal = BigInt(exactly: quality)! / BigInt(ONE_BILLION)!
-    
+
     return String(decimal, radix: BASE_TEN)
 }
 
@@ -146,17 +146,17 @@ public func transferRateToDecimal(rate: Int) throws -> String {
     if !(rate is Int) {
         throw ValidationError.validation("Error decoding, transfer Rate must be an integer")
     }
-    
+
     if rate == 0 {
         return "0"
     }
-    
+
     let decimal = BigInt(exactly: rate)! - BigInt(ONE_BILLION)! / BigInt(ONE_BILLION)!
-    
+
     if decimal < 0 {
         throw ValidationError.validation("Error decoding, negative transfer rate")
     }
-    
+
     return String(decimal, radix: BASE_TEN)
 }
 

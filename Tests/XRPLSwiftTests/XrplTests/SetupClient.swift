@@ -14,7 +14,7 @@ public class RippledMockTester: XCTestCase {
     internal var mockRippled: MockRippledSocket!
     public var _mockedServerPort: Int = 0
     public var client: XrplClient!
-    
+
     public var wallet: Wallet!
 
     public override func setUp() async throws {
@@ -27,7 +27,6 @@ public class RippledMockTester: XCTestCase {
         }
     }
 }
-
 
 struct MockAO {
     public var normal: String = "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn"

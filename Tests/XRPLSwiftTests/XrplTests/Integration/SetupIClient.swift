@@ -12,9 +12,9 @@ import XCTest
 
 public class RippledITestCase: XCTestCase {
     public var client: XrplClient!
-    
+
     public var wallet: Wallet!
-    
+
     public override func setUp() async throws {
         print("Setting Up I Client")
         self.wallet = Wallet.generate(algorithm: .secp256k1)
@@ -22,7 +22,7 @@ public class RippledITestCase: XCTestCase {
         _ = try await self.client.connect().wait()
         await fundAccount(client: self.client, wallet: self.wallet)
     }
-    
+
     public override func tearDown() async throws {
 //        self.client.removeAllListeners()
         _ = await self.client.disconnect()

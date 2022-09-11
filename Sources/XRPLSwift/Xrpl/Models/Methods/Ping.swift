@@ -59,11 +59,11 @@ public class PingResponse: Codable {
         unlimited = try values.decode(Bool.self, forKey: .unlimited)
 //        try super.init(from: decoder)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
         return jsonResult as! [String: AnyObject]
     }
-    
+
 }

@@ -10,37 +10,39 @@
 import Foundation
 
 public class FieldIdCodec {
-
-    /*
-     Returns the unique field ID for a given field name.
+    
+    /**
      This field ID consists of the type code and field code, in 1 to 3 bytes
      depending on whether those values are "common" (<16) or "uncommon" (>=16)
-     Args:
-     field_name: The name of the field to get the serialization data type for.
-     Returns:
+     - parameters:
+        - fieldName: The name of the field to get the serialization data type for.
+     - returns:
      The serialization data type for the given field name.
      */
     class func encode(fieldName: String) throws -> Data {
         let fieldHeader: FieldHeader = Definitions().getFieldHeaderFromName(fieldName: fieldName)
         return try self.encodeFieldId(fieldHeader: fieldHeader)
     }
-
-    /*
+    
+    /**
      Returns the field name represented by the given field ID.
-     Args:
-     field_id: The field_id to decode.
-     Returns:
+     - parameters:
+        - fieldId: The field_id to decode.
+     - returns:
      The field name represented by the given field ID.
      */
     class func decode(fieldId: String) throws -> String {
         let fieldHeader: FieldHeader = try self.decodeFieldId(fieldId: fieldId)
         return Definitions().getFieldNameFromHeader(fieldHeader: fieldHeader)
     }
-
-    /*
-     Returns the unique field ID for a given field header.
-     This field ID consists of the type code and field code, in 1 to 3 bytes
+    
+    /**
+     Returns the unique field ID for a given field header. This field ID consists of the type code and field code, in 1 to 3 bytes
      depending on whether those values are "common" (<16) or "uncommon" (>=16)
+     - parameters:
+        - fieldHeader: The fieldHeader to decode.
+     - returns:
+     The unique field as data
      */
     class func encodeFieldId(fieldHeader: FieldHeader) throws -> Data {
         let typeCode = fieldHeader.typeCode
@@ -80,10 +82,14 @@ public class FieldIdCodec {
             return [0x0] + byte2 + byte3
         }
     }
-
-    /*
+    
+    /**
      Returns a FieldHeader object representing the type code and field code of
      a decoded field ID.
+     - parameters:
+        - fieldId: The fieldId to decode.
+     - returns:
+     A FieldHeader object representing the type code and field code of
      */
     class func decodeFieldId(fieldId: String) throws -> FieldHeader {
         let byteArray = try! fieldId.asHexArray()
@@ -110,6 +116,13 @@ public class FieldIdCodec {
         throw BinaryError.unknownError(error: "Field ID must be between 1 and 3 bytes. This field ID contained \(byteArray.count) bytes.")
     }
 
+    /**
+     Returns a Data representation of  the FieldId Codec
+     - parameters:
+        - i: The integer to convert to bytes
+     - returns:
+     A Data representation of  the FieldId Codec
+     */
     // swiftlint:disable:next identifier_name
     class func uint8ToBytes(i: Int) -> Data {
         return Data(bytes: i.data.bytes, count: 1)

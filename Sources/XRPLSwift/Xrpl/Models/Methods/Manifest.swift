@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  * The `manifest` method reports the current "manifest" information for a given
  * validator public key. The "manifest" is the public portion of that
@@ -32,11 +31,11 @@ public class ManifestRequest: BaseRequest {
      * master public key or ephemeral public key.
      */
     public let publicKey: String
-    
+
     enum CodingKeys: String, CodingKey {
         case publicKey = "public_key"
     }
-    
+
     public init(
         // Required
         publicKey: String,
@@ -70,7 +69,7 @@ public class ManifestDetails: Codable {
     public let ephemeralKey: String
     public let masterKey: String
     public let seq: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case domain = "domain"
         case ephemeralKey = "ephemeral_key"
@@ -98,7 +97,7 @@ public class ManifestResponse: Codable {
      * manifest for the public_key from the request.
      */
     public let manifest: String?
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         requested = try values.decode(String.self, forKey: .requested)
@@ -106,7 +105,7 @@ public class ManifestResponse: Codable {
         manifest = try values.decodeIfPresent(String.self, forKey: .manifest)
         //        try super.init(from: decoder)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

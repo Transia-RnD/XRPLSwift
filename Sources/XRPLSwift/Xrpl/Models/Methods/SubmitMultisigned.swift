@@ -118,7 +118,7 @@ public class SubmitMultisignedResponse: Codable {
         txJson = try values.decode(Transaction.self, forKey: .txJson)
         //        try super.init(from: decoder)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

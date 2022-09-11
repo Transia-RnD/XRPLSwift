@@ -125,7 +125,7 @@ public class BinaryParser {
     public func size() -> Int {
         return bytes.count
     }
-    
+
     /**
      Returns whether the binary parser has finished parsing (e.g. there is nothing
      left in the buffer that needs to be processed).

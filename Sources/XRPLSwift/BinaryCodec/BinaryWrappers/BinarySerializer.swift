@@ -60,100 +60,120 @@ let _MAX_LENGTH_VALUE: Int = 918744
 
 public class BytesList {
     private var bytesArray: [UInt8] = []
-
+    
     /**
-     * Get the total number of bytes in the BytesList
-     *
-     * @return the number of bytes
+     Get the total number of bytes in the BytesList
+     - returns:
+     the number of bytes
      */
     public func getLength() -> Int {
         return self.bytesArray.count
     }
-
+    
     /**
-     * Put bytes in the BytesList
-     *
-     * @param bytesArg A Buffer
-     * @return this BytesList
+     Put bytes in the BytesList
+     - parameters:
+     - bytesArg: A Buffer
+     - returns:
+     this BytesList
      */
     public func put(bytesArg: [UInt8]) -> BytesList {
         let bytes = bytesArg
         self.bytesArray.append(contentsOf: bytes)
         return self
     }
-
+    
+    
     /**
-     * Write this BytesList to the back of another bytes list
-     *
-     *  @param list The BytesList to write to
+     Write this BytesList to the back of another bytes list
+     - parameters:
+     - list: The BytesList to write to
      */
     public func toBytesSink(list: BytesList) {
         list.put(bytesArg: toBytes())
     }
-
+    
+    /**
+     Put bytes in the BytesList
+     - returns:
+     this BytesList
+     */
     public func toBytes() -> [UInt8] {
         return self.bytesArray
     }
-
+    
+    /**
+     Put bytes in the BytesList
+     - returns:
+     this bytes as hex
+     */
     func toHex() -> String {
-        return toBytes().toHexString()
+        return toBytes().toHex
     }
 }
 
 public class BinarySerializer {
     // Serializes JSON to XRPL binary format.
-
+    
     public var sink: BytesList = BytesList()
-
+    
     init() { self.sink = BytesList() }
-
+    
     private func UInt8Byte(_ int: Int) -> Data {
         return Data([UInt8(int)])
     }
-
+    
     private func UInt8Byte(_ int: UInt8) -> Data {
         return int.bigEndian.data
     }
-
+    
+    
     /**
-     * Write a value to this BinarySerializer
-     *
-     * @param value a SerializedType value
+     Write a value to this BinarySerializer
+     - parameters:
+     - value: A SerializedType value
      */
     func write(value: SerializedType) {
         value.toBytesSink(list: self.sink)
     }
-
+    
     /**
-     * Write bytes to this BinarySerializer
-     *
-     * @param bytes the bytes to write
+     Write bytes to this BinarySerializer
+     - parameters:
+     - bytes: The bytes to write
      */
     func put(bytes: Data) {
         sink.put(bytesArg: [UInt8](bytes))
     }
-
+    
     /**
-     * Write a value of a given type to this BinarySerializer
-     *
-     * @param type the type to write
-     * @param value a value of that type
+     Write a value of a given type to this BinarySerializer
+     - parameters:
+     - type: The type to write
+     - value: A value of that type
      */
     func writeType(type: SerializedType, value: SerializedType) {
         self.write(value: try! SerializedType.from(value: value))
     }
-
+    
     /**
-     * Write BytesList to this BinarySerializer
-     *
-     * @param bl BytesList to write to BinarySerializer
+     Write BytesList to this BinarySerializer
+     - parameters:
+     - bl: BytesList to write to BinarySerializer
      */
     func writeBytesList(bl: BytesList) {
         bl.toBytesSink(list: self.sink)
     }
-
+    
+    /**
+     Encode the varibale length
+     - parameters:
+     - length: The length of the encode variable
+     - returns:
+     The byte arrary encoded length
+     */
     func encodeVariableLength(length: Int) -> Data {
-        var lenBytes: Data = Data([UInt8].init(repeating: 0x0, count: 3))
+        var lenBytes = Data([UInt8].init(repeating: 0x0, count: 3))
         var len = length
         if length <= 192 {
             lenBytes[0] = UInt8(length)
@@ -172,13 +192,12 @@ public class BinarySerializer {
         }
         fatalError("VariableLength field must be <= 918744 bytes long")
     }
-
-    /*
+    
+    /**
      Write a variable length encoded value to the BinarySerializer.
-     Args:
-     value: The SerializedType object to write to bytesink.
-     encode_value: Does not encode the value; just encodes `00` in its place.
-     Used in the UNLModify encoding workaround. The default is True.
+     - parameters:
+     - value: The SerializedType object to write to bytesink.
+     - isUnlModifyWorkaround: Does not encode the value; just encodes `00` in its place.
      */
     func writeLengthEncoded(
         value: SerializedType,
@@ -191,13 +210,13 @@ public class BinarySerializer {
         self.put(bytes: encodeVariableLength(length: byteObject.getLength()))
         self.writeBytesList(bl: byteObject)
     }
-
-    /*
+    
+    /**
      Write field and value to the buffer.
-     Args:
-     field: The field to write to the buffer.
-     value: The value to write to the buffer.
-     is_unl_modify_workaround: Encode differently for UNLModify
+     - parameters:
+     - field: The field to write to the buffer.
+     - value: The value to write to the buffer.'
+     - isUNLModifyWorkaround: Encode differently for UNLModify
      pseudotransactions, due to a bug in rippled. Only True for the Account
      field in UNLModify pseudotransactions. The default is False.
      */
@@ -213,5 +232,5 @@ public class BinarySerializer {
             self.put(bytes: Data(value.bytes))
         }
     }
-
+    
 }

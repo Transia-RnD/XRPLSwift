@@ -7,48 +7,51 @@
 
 import Foundation
 
+/**
+ A container class for simultaneous storage of a field's type code and field code.
+ */
 public struct FieldHeader: Hashable {
-    /*
-     A container class for simultaneous storage of a field's type code and
-    field code.
-    */
-
+    
     public var typeCode: Int
     public var fieldCode: Int
-
+    
+    /**
+     Construct a FieldHeader.
+     - parameters:
+        - typeCode: The code for this field's serialization type.
+        - fieldCode: The sort code that orders fields of the same type.
+     */
     init(typeCode: Int, fieldCode: Int) {
-        /*
-        Construct a FieldHeader.
-        `See Field Order <https://xrpl.org/serialization.html#canonical-field-order>`_
-        :param type_code: The code for this field's serialization type.
-        :param field_code: The sort code that orders fields of the same type.
-        */
         self.typeCode = typeCode
         self.fieldCode = fieldCode
     }
-
+    
+    /**
+     Two FieldHeaders are equal if both type code and field_code are the same.
+     */
     func isEqual(other: FieldHeader) -> Bool {
-        // Two FieldHeaders are equal if both type code and field_code are the same.
-//        if  !isinstance(other, FieldHeader) {
-//            return NotImplemented
-//        }
+        //        if  !isinstance(other, FieldHeader) {
+        //            return NotImplemented
+        //        }
         return typeCode == other.typeCode && self.fieldCode == other.fieldCode
-
+        
     }
-
+    
+    /**
+     Two equal FieldHeaders must have the same hash value.
+     */
     func toHash() -> Int {
-        // Two equal FieldHeaders must have the same hash value.
-//        return hash((self.typeCode, self.fieldCode))
+        //        return hash((self.typeCode, self.fieldCode))
         return 0
-
+        
     }
-
+    
+    /**
+     Get the bytes representation of a FieldHeader.
+     - returns:
+     The bytes representation of the FieldHeader.
+     */
     func toBytes() -> [UInt8] {
-        /*
-        Get the bytes representation of a FieldHeader.
-        Returns:
-            The bytes representation of the FieldHeader.
-        */
         var header: [UInt8] = []
         if self.typeCode < 16 {
             if self.fieldCode < 16 {

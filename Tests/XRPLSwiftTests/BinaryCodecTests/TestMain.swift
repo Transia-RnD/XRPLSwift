@@ -124,40 +124,40 @@ let signingJson: [String: AnyObject] = [
 ] as [String: AnyObject]
 
 final class TestUBinarySimple: XCTestCase {
-    
+
     func testSimple() {
         let encoded = try! BinaryCodec.encode(json: TX_JSON)
         let decoded = BinaryCodec.decode(buffer: encoded)
         XCTAssert(TX_JSON == decoded)
     }
-    
+
     func testAmountFee() {
         var clone = TX_JSON
         clone["Amount"] = "1000" as AnyObject
         clone["Fee"] = "10" as AnyObject
         XCTAssert(BinaryCodec.decode(buffer: try! BinaryCodec.encode(json: clone)) == clone)
     }
-    
+
     func testInvalidAmountFee() {
         var clone = TX_JSON
         clone["Amount"] = "1000.789" as AnyObject
         clone["Fee"] = "10.123" as AnyObject
         XCTAssertThrowsError(try BinaryCodec.encode(json: clone))
     }
-    
+
     func testInvalidAmountInvalidFee() {
         var clone = TX_JSON
         clone["Amount"] = "1000.001" as AnyObject
         clone["Fee"] = "10" as AnyObject
         XCTAssertThrowsError(try BinaryCodec.encode(json: clone))
     }
-    
+
     func testInvalidAmountType() {
         var clone = TX_JSON
         clone["Amount"] = 1000 as AnyObject
         XCTAssertThrowsError(try BinaryCodec.encode(json: clone))
     }
-    
+
     func testInvalidFeeType() {
         var clone = TX_JSON
         clone["Amount"] = "1000.789" as AnyObject

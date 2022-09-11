@@ -13,9 +13,9 @@ class WebSocketTester: XRPLWebSocketDelegate {
 //        self.completion(response)
     }
 
-    var completion: (XRPLWebSocketResponse)->Void
+    var completion: (XRPLWebSocketResponse) -> Void
 
-    init(completion: @escaping (XRPLWebSocketResponse)->Void) {
+    init(completion: @escaping (XRPLWebSocketResponse) -> Void) {
         self.completion = completion
     }
 

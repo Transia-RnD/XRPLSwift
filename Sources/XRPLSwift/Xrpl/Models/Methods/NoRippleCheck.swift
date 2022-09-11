@@ -59,7 +59,7 @@ public class NoRippleCheckRequest: BaseRequest {
      * ledger automatically.
      */
     public let ledgerIndex: LedgerIndex?
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "account"
         case role = "role"
@@ -68,7 +68,7 @@ public class NoRippleCheckRequest: BaseRequest {
         case ledgerHash = "ledger_hash"
         case ledgerIndex = "ledger_index"
     }
-    
+
     public init(
         // Required
         account: String,
@@ -154,13 +154,13 @@ public class NoRippleCheckResponse: Codable {
      * described at the same index into that array.
      */
     public let transactions: [Transaction]
-    
+
     enum CodingKeys: String, CodingKey {
         case ledgerCurrentIndex = "ledger_current_index"
         case problems = "problems"
         case transactions = "transactions"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
@@ -168,7 +168,7 @@ public class NoRippleCheckResponse: Codable {
         transactions = try values.decode([Transaction].self, forKey: .transactions)
         //        try super.init(from: decoder)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

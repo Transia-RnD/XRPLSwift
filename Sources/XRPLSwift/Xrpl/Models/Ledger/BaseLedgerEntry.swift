@@ -16,7 +16,7 @@ open class BaseLedgerEntry: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         index = try values.decode(String.self, forKey: .index)
     }
-    
+
 //    func toJson() throws -> [String: AnyObject] {
 //        let data = try JSONEncoder().encode(self)
 //        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

@@ -40,7 +40,7 @@ public enum Transaction: Codable {
 }
 
 extension Transaction {
-    
+
     enum CodingKeys: String, CodingKey {
         case tt = "TransactionType"
     }
@@ -48,7 +48,7 @@ extension Transaction {
     enum TransactionCodingError: Error {
         case decoding(String)
     }
-    
+
     func toData() throws -> Data {
         return try JSONEncoder().encode(self)
     }

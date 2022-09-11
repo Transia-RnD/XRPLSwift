@@ -48,7 +48,7 @@ public class AddressCodec {
      - returns:
      A dict containing: classicAddress: the base58 classic address, tag: the destination tag, isTest: whether the address is on the test network (or main)
      - throws:
-     AddressCodecError:If the base decoded value is invalid or the base58 check is invalid
+     AddressCodecError: If the base decoded value is invalid or the base58 check is invalid
      */
     public static func xAddressToClassicAddress(
         xAddress: String

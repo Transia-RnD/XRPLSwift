@@ -18,83 +18,82 @@ let expectedJson: [[[String: AnyObject]]] = [
         [
             "account": "r9hEDb4xBGRfBCcX3E4FirDWQBAYtpxC8K",
             "currency": "BTC",
-            "issuer": "r9hEDb4xBGRfBCcX3E4FirDWQBAYtpxC8K",
+            "issuer": "r9hEDb4xBGRfBCcX3E4FirDWQBAYtpxC8K"
         ],
         [
             "account": "rM1oqKtfh1zgjdAgbFmaRm3btfGBX25xVo",
             "currency": "BTC",
-            "issuer": "rM1oqKtfh1zgjdAgbFmaRm3btfGBX25xVo",
+            "issuer": "rM1oqKtfh1zgjdAgbFmaRm3btfGBX25xVo"
         ],
         [
             "account": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
             "currency": "BTC",
-            "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+            "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
         ],
         [
             "currency": "USD",
-            "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
-        ],
+            "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
+        ]
     ],
     [
         [
             "account": "r9hEDb4xBGRfBCcX3E4FirDWQBAYtpxC8K",
             "currency": "BTC",
-            "issuer": "r9hEDb4xBGRfBCcX3E4FirDWQBAYtpxC8K",
+            "issuer": "r9hEDb4xBGRfBCcX3E4FirDWQBAYtpxC8K"
         ],
         [
             "account": "rM1oqKtfh1zgjdAgbFmaRm3btfGBX25xVo",
             "currency": "BTC",
-            "issuer": "rM1oqKtfh1zgjdAgbFmaRm3btfGBX25xVo",
+            "issuer": "rM1oqKtfh1zgjdAgbFmaRm3btfGBX25xVo"
         ],
         [
             "account": "rpvfJ4mR6QQAeogpXEKnuyGBx8mYCSnYZi",
             "currency": "BTC",
-            "issuer": "rpvfJ4mR6QQAeogpXEKnuyGBx8mYCSnYZi",
+            "issuer": "rpvfJ4mR6QQAeogpXEKnuyGBx8mYCSnYZi"
         ],
         [
             "currency": "USD",
-            "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
-        ],
+            "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
+        ]
     ],
     [
         [
             "account": "r9hEDb4xBGRfBCcX3E4FirDWQBAYtpxC8K",
             "currency": "BTC",
-            "issuer": "r9hEDb4xBGRfBCcX3E4FirDWQBAYtpxC8K",
+            "issuer": "r9hEDb4xBGRfBCcX3E4FirDWQBAYtpxC8K"
         ],
         [
             "account": "r3AWbdp2jQLXLywJypdoNwVSvr81xs3uhn",
             "currency": "BTC",
-            "issuer": "r3AWbdp2jQLXLywJypdoNwVSvr81xs3uhn",
+            "issuer": "r3AWbdp2jQLXLywJypdoNwVSvr81xs3uhn"
         ],
         ["currency": "XRP"],
         [
             "currency": "USD",
-            "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
-        ],
+            "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
+        ]
     ]
 ] as [[[String: AnyObject]]]
-
 
 final class TestUPathSet: XCTestCase {
     func testFromValue() {
         let pathset = try! xPathSet.from(value: expectedJson)
         XCTAssertEqual(buffer.bytes, pathset.bytes)
     }
-    
+
     func testFromValueToJson() {
         let pathset = try! xPathSet.from(value: expectedJson)
         let result: [[[String: AnyObject]]] = pathset.toJson()
         XCTAssertEqual(result.count, expectedJson.count)
     }
-    
+
     func testFromParserToJson() {
         let parser = BinaryParser(hex: buffer.bytes.toHex)
         let pathset = try! xPathSet.fromParser(parser: parser)
         let result: [[[String: AnyObject]]] = pathset.toJson()
         XCTAssertEqual(result.count, expectedJson.count)
     }
-    
+
     // This test is not necessary in Swift?
     //    func testRaisesInvalidValueType() {
     //        let invalidValue: Int = 1

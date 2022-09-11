@@ -33,7 +33,7 @@ final class TestUNFTokenMint: XCTestCase {
             XCTAssertNil(error)
         }
     }
-    
+
     func testInvalidNoTokenTaxon() {
         let baseTx = [
             "TransactionType": "NFTokenMint",

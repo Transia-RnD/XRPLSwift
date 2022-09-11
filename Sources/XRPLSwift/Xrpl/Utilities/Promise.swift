@@ -7,25 +7,24 @@
 
 import Foundation
 
-
 class Future<Value> {
     typealias Result = Swift.Result<Value, Error>
-    
+
     fileprivate var result: Result? {
         // Observe whenever a result is assigned, and report it:
         didSet { result.map(report) }
     }
     private var callbacks = [(Result) -> Void]()
-    
+
     func observe(using callback: @escaping (Result) -> Void) {
         // If a result has already been set, call the callback directly:
         if let result = result {
             return callback(result)
         }
-        
+
         callbacks.append(callback)
     }
-    
+
     private func report(result: Result) {
         callbacks.forEach { $0(result) }
         callbacks = []
@@ -35,16 +34,16 @@ class Future<Value> {
 class Promise<Value>: Future<Value> {
     init(value: Value? = nil) {
         super.init()
-        
+
         // If the value was already known at the time the promise
         // was constructed, we can report it directly:
         result = value.map(Result.success)
     }
-    
+
     func resolve(with value: Value) {
         result = .success(value)
     }
-    
+
     func reject(with error: Error) {
         result = .failure(error)
     }
@@ -58,9 +57,9 @@ class Promise<Value>: Future<Value> {
 ////  Created by Tibor Bödecs on 2017. 09. 27..
 ////  Copyright © 2017. Tibor Bödecs. All rights reserved.
 ////
-//import Dispatch
+// import Dispatch
 //
-//public struct Future<T> {
+// public struct Future<T> {
 //
 //    public enum Result<T> {
 //        case success(T)
@@ -98,10 +97,10 @@ class Promise<Value>: Future<Value> {
 //    public var isRejected: Bool {
 //        return self.error != nil
 //    }
-//}
+// }
 //
 //
-//open class Promise<T> {
+// open class Promise<T> {
 //
 //    fileprivate struct Callback<T> {
 //
@@ -295,9 +294,9 @@ class Promise<Value>: Future<Value> {
 //            }
 //        })
 //    }
-//}
+// }
 //
-//public extension Promise {
+// public extension Promise {
 //
 //    @discardableResult
 //    func tap(queue: DispatchQueue? = nil, _ block: @escaping (() -> Void)) -> Promise<T> {
@@ -349,9 +348,9 @@ class Promise<Value>: Future<Value> {
 //        }
 //    }
 //
-//}
+// }
 //
-//public enum Promises {
+// public enum Promises {
 //
 //    public enum Errors: Error {
 //        case validation
@@ -499,4 +498,4 @@ class Promise<Value>: Future<Value> {
 //            .then(success: fulfill, failure: reject)
 //        }
 //    }
-//}
+// }

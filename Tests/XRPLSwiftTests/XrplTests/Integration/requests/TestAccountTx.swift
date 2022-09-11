@@ -11,10 +11,10 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestIAccounTx: RippledITestCase {
-    
+
     let TIMEOUT: Double = 20
     var expected: [String: AnyObject] = [:]
-    
+
     override func setUp() async throws {
         try await super.setUp()
         expected = [
@@ -40,34 +40,34 @@ final class TestIAccounTx: RippledITestCase {
                             "date": 685747005,
                             "hash": "2E68BC15813B4A836FAC4D80E42E6FDA6410E99AB973937DEA5E6C2E9A116BAB",
                             "inLedger": 1734,
-                            "ledger_index": 1734,
-                        ],
-                    ],
-                ],
+                            "ledger_index": 1734
+                        ]
+                    ]
+                ]
             ],
-            "type": "response",
+            "type": "response"
         ] as [String: AnyObject]
     }
-    
+
     override func tearDown() async throws {
         try await super.tearDown()
     }
-    
+
     func testJson() async {
         // create the expectation
         let exp = expectation(description: "base")
-        
+
         let json = [
             "command": "account_tx",
             "account": self.wallet.classicAddress,
-            "ledger_index": "validated",
+            "ledger_index": "validated"
         ] as [String: AnyObject]
         let request: AccountTxRequest = try! AccountTxRequest(json)
         let response: BaseResponse = try! await self.client.request(r: request).wait() as! BaseResponse<AccountTxResponse>
         XCTAssertEqual(response.type, expected["type"] as! String)
         //        XCTAssert(response.result?.ledgerHash is String)
         //        XCTAssert(response.result?.ledgerIndex is Int)
-        
+
         var responseJson: [String: AnyObject] = try! response.result!.transactions[0].tx!.toJson()
         responseJson["Flags"] = nil
         responseJson["LastLedgerSequence"] = nil
@@ -77,7 +77,7 @@ final class TestIAccounTx: RippledITestCase {
         responseJson["ledger_index"] = nil
         responseJson["TxnSignature"] = nil
         responseJson["Sequence"] = nil
-        let expectedResult = expected["result"] as! [String : AnyObject]
+        let expectedResult = expected["result"] as! [String: AnyObject]
         let expectedTxs = expectedResult["transactions"] as! [[String: AnyObject]]
         var expectedJson = expectedTxs[0] as [String: AnyObject]
         expectedJson = expectedJson["tx"] as! [String: AnyObject]
@@ -95,7 +95,7 @@ final class TestIAccounTx: RippledITestCase {
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)
     }
-    
+
     // TODO: Finish this function copy above
 //    func testModel() async {}
 }

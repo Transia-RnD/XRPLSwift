@@ -33,7 +33,7 @@ public enum AccountObject: Codable {
     case signerList(SignerList)
     case ticket(Ticket)
     case rippleState(RippleState)
-    
+
     public func toAny() -> Any {
         switch self {
         case .check(let check):

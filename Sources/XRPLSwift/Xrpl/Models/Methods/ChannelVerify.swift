@@ -108,7 +108,7 @@ public class ChannelVerifyResponse: Codable {
         signatureVerified = try values.decode(Bool.self, forKey: .signatureVerified)
         //        try super.init(from: decoder)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

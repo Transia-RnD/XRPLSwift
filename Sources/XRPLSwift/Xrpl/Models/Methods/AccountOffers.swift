@@ -207,7 +207,7 @@ public class AccountOffersResponse: Codable {
         marker = try values.decodeIfPresent(AnyCodable.self, forKey: .marker)
 //        try super.init(from: decoder)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

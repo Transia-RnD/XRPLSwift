@@ -221,7 +221,7 @@ public class AccountInfoResponse: Codable {
         queueData = try values.decodeIfPresent(QueueData.self, forKey: .queueData)
         validated = try values.decodeIfPresent(Bool.self, forKey: .validated)
     }
-    
+
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
