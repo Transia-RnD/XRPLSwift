@@ -178,7 +178,7 @@ final class TestUAddressCodec: XCTestCase {
     func testXAddressToClassicAddress() {
         for testCase in TestUAddressCodec.testCases {
             let classicAddress: String = testCase[0] as! String
-            let tag: UInt32? = testCase[1] as? UInt32 ?? nil
+//            let tag: UInt32? = testCase[1] as? UInt32 ?? nil
             let expectedMainXaddress: String = testCase[2] as! String
             let expectedTestXaddress: String = testCase[3] as! String
 
@@ -269,19 +269,11 @@ final class TestUAddressCodec: XCTestCase {
         XCTAssertTrue(result)
     }
 
-    // TODO: FIX FAILING TEST
-//    func testIsValidClassicAddressInvalid() {
-//        let classicAddress = "rU6K7V3Po4snVhBBaU29sesqs2qTQJWDw2"
-//        let result = XrplCodec.isValidClassicAddress(classicAddress: classicAddress)
-//        XCTAssertFalse(result)
-//    }
-
-    // MARK: NOT VALID SWIFT IMPLEMENTATION
-//    func testIsValidClassicAddressEmpty() {
-//        let classicAddress = ""
-//        let result = XrplCodec.isValidClassicAddress(classicAddress: classicAddress)
-//        XCTAssertFalse(result)
-//    }
+    func testIsValidClassicAddressInvalid() {
+        let classicAddress = "rU6K7V3Po4snVhBBaU29sesqs2qTQJWDw2"
+        let result = XrplCodec.isValidClassicAddress(classicAddress: classicAddress)
+        XCTAssertFalse(result)
+    }
 
     func testIsValidXAddress() {
         let xAddress = "X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqZ"

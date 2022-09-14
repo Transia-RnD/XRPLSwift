@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 7/24/22.
 //
 
-//
+// https://github.com/XRPLF/xrpl-py/blob/master/tests/unit/core/binarycodec/fixtures/data_driven_fixtures.py
 
 import Foundation
 
@@ -49,8 +49,7 @@ internal class DataDrivenFixtures {
         var testList: [ValueTest] = []
         let tests = self.FIXTURES_JSON["values_tests"] as! [[String: AnyObject]]
         for result in tests {
-            let valueTestDict = result
-            testList.append(constructValueTest(valueTestDict: valueTestDict))
+            testList.append(constructValueTest(valueTestDict: result))
         }
         return testList
     }
@@ -80,22 +79,49 @@ internal class DataDrivenFixtures {
     }
 
     func constructValueTest(valueTestDict: [String: AnyObject]) -> ValueTest {
-        let typeId = valueTestDict["type_id"] as? String
-        let isNative = valueTestDict["is_native"] as? Bool
-        let expectedHex = valueTestDict["expected_hex"] as? String
-        let isNegative = valueTestDict["is_negative"] as? Bool
-        let typeSpecialisationField = valueTestDict["type_specialisation_field"] as? String
-        let _error = valueTestDict["error"] as? String
+        let type = valueTestDict["type"] as! String
+        let typeId = valueTestDict["type_id"] as? Int ?? 0
+        let isNative = valueTestDict["is_native"] as? Bool ?? false
+        let expectedHex = valueTestDict["expected_hex"] as? String ?? ""
+        let isNegative = valueTestDict["is_negative"] as? Bool ?? false
+        let typeSpecialisationField = valueTestDict["type_specialisation_field"] as? String ?? ""
+        let _error = valueTestDict["error"] as? String ?? ""
+        
+        if let testJson = valueTestDict["test_json"] as? [String: AnyObject] {
+            return ValueTest(
+                testJson: testJson,
+                typeId: typeId,
+                typeString: type,
+                isNative: isNative,
+                expectedHex: expectedHex,
+                isNegative: isNegative,
+                typeSpecializationField: typeSpecialisationField,
+                error: _error
+            )
+        }
+        
+        if let testJson = valueTestDict["test_json"] as? Int {
+            return ValueTest(
+                testString: String(testJson),
+                typeId: typeId,
+                typeString: type,
+                isNative: isNative,
+                expectedHex: expectedHex,
+                isNegative: isNegative,
+                typeSpecializationField: typeSpecialisationField,
+                error: _error
+            )
+        }
 
         return ValueTest(
-            testJson: valueTestDict["test_json"] as! [String: AnyObject],
-            typeId: typeId!,
-            typeString: valueTestDict["type"] as! String,
-            isNative: isNative!,
-            expectedHex: expectedHex!,
-            isNegative: isNegative!,
-            typeSpecializationField: typeSpecialisationField!,
-            error: _error!
+            testString: valueTestDict["test_json"] as! String,
+            typeId: typeId,
+            typeString: type,
+            isNative: isNative,
+            expectedHex: expectedHex,
+            isNegative: isNegative,
+            typeSpecializationField: typeSpecialisationField,
+            error: _error
         )
     }
 
@@ -133,7 +159,8 @@ class FieldTest {
 class ValueTest {
 
     internal var testJson: [String: AnyObject] = [:]
-    internal var typeId: String = ""
+    internal var testString: String = ""
+    internal var typeId: Int = 0
     internal var type: String = ""
     internal var isNative: Bool = false
     internal var expectedHex: String = ""
@@ -143,7 +170,7 @@ class ValueTest {
 
     init(
         testJson: [String: AnyObject],
-        typeId: String,
+        typeId: Int,
         typeString: String,
         isNative: Bool,
         expectedHex: String,
@@ -152,6 +179,26 @@ class ValueTest {
         error: String
     ) {
         self.testJson = testJson
+        self.typeId = typeId
+        self.type = typeString
+        self.isNative = isNative
+        self.expectedHex = expectedHex
+        self.isNegative = isNegative
+        self.typeSpecializationField = typeSpecializationField
+        self.error = error
+    }
+    
+    init(
+        testString: String,
+        typeId: Int,
+        typeString: String,
+        isNative: Bool,
+        expectedHex: String,
+        isNegative: Bool,
+        typeSpecializationField: String,
+        error: String
+    ) {
+        self.testString = testString
         self.typeId = typeId
         self.type = typeString
         self.isNative = isNative

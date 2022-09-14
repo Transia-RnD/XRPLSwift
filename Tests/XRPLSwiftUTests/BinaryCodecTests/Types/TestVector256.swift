@@ -30,12 +30,6 @@ final class TestUVector256: XCTestCase {
 
     func testToJson() {
         let vector256Object: Vector256 = try! Vector256.from(value: HASH_LIST)
-        XCTAssertEqual(try vector256Object.toJson(), HASH_LIST)
+        XCTAssertEqual(vector256Object.toJson(), HASH_LIST)
     }
-
-//    // This test is not necessary in Swift?
-//    func testRaisesInvalidValueType() {
-//        let invalidValue: Int = 1
-//        XCTAssertThrowsError(try! Vector256(bytes: []).from(value: invalidValue))
-//    }
 }

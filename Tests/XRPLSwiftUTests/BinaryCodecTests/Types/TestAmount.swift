@@ -40,19 +40,19 @@ let IOU_CASES: [String: [String: String]] = [
         "value": "2.1",
         "currency": "USD",
         "issuer": "rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw"
+    ],
+    "D48775F05A07400000000000000000000000000000000000000000000000000000000000000000000000000000000000":
+    [
+        "currency": "XRP",
+        "value": "2.1",
+        "issuer": "rrrrrrrrrrrrrrrrrrrrrhoLvTp",
+    ],
+    "D843F28CB71571C700000000000000000000000055534400000000000000000000000000000000000000000000000001":
+    [
+        "currency": "USD",
+        "value": "1111111111111111",
+        "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji",
     ]
-//    "D48775F05A07400000000000000000000000000000000000000000000000000000000000000000000000000000000000":
-//    [
-//        "currency": "XRP",
-//        "value": "2.1",
-//        "issuer": "rrrrrrrrrrrrrrrrrrrrrhoLvTp",
-//    ],
-//    "D843F28CB71571C700000000000000000000000055534400000000000000000000000000000000000000000000000001":
-//    [
-//        "currency": "USD",
-//        "value": "1111111111111111",
-//        "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji",
-//    ],
 ]
 
 let XRP_CASES: [String: String] = [
@@ -114,7 +114,6 @@ final class TestUAmount: XCTestCase {
     func testFromValueIssuedCurrency() {
         for (serialized, json) in IOU_CASES {
             let amountObject: xAmount = try! xAmount.from(value: json)
-            print(amountObject.bytes)
             XCTAssertEqual(amountObject.toHex(), serialized)
         }
     }
@@ -128,11 +127,9 @@ final class TestUAmount: XCTestCase {
 
     func testToJsonIssuedCurrency() {
         for (serialized, json) in IOU_CASES {
-            print("TESTING: \(serialized)")
             let parser: BinaryParser = BinaryParser(hex: serialized)
             let amountObject: xAmount = try! xAmount().fromParser(parser: parser)
             let result: Any = amountObject.toJson()
-            print(result)
             XCTAssertEqual(result as! [String: String], json)
         }
     }
@@ -142,13 +139,13 @@ final class TestUAmount: XCTestCase {
             let parser: BinaryParser = BinaryParser(hex: serialized)
             let amountObject: xAmount = try! xAmount().fromParser(parser: parser)
             let result: Any = amountObject.toJson()
-            print(result)
             XCTAssertEqual(result as! String, json)
         }
     }
-
-//    func test_fixtures() {
-//        for fixture in data_driven_fixtures_for_type("Amount"):
-//            self.fixture_test(fixture)
-//    }
+    
+    func testFixtures() {
+        for fixture in dataDrivenFixturesForType(typeString: "Amount") {
+            TestUSerializedType.fixtureTest(fixture: fixture)
+        }
+    }
 }

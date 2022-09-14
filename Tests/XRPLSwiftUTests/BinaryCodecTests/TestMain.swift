@@ -128,6 +128,8 @@ final class TestUBinarySimple: XCTestCase {
     func testSimple() {
         let encoded = try! BinaryCodec.encode(json: TX_JSON)
         let decoded = BinaryCodec.decode(buffer: encoded)
+        print(TX_JSON)
+        print(decoded)
         XCTAssert(TX_JSON == decoded)
     }
 
@@ -241,23 +243,16 @@ final class TestMainFixtures: XCTestCase {
     func checkBinaryAndJson(test: [String: AnyObject]) {
         let testBinary: String = test["binary"] as! String
         let testJson: [String: AnyObject] = test["json"] as! [String: AnyObject]
-        let result = try! BinaryCodec.encode(json: testJson)
-//        if !(testBinary == result) {
-//            print(testBinary)
-//            print(result)
-//            print("FAILURE")
-//        }
         XCTAssertEqual(try BinaryCodec.encode(json: testJson), testBinary)
-//        XCTAssertEqual(try BinaryCodec.decode(buffer: testBinary), testJson)
+//        XCTAssertTrue(BinaryCodec.decode(buffer: testBinary) == testJson)
     }
-
+    
+    
     func checkXaddressJsons(test: [String: AnyObject]) {
-        return
         let xJson: [String: AnyObject] = test["xjson"] as! [String: AnyObject]
         let rJson: [String: AnyObject] = test["rjson"] as! [String: AnyObject]
-
         XCTAssertEqual(try BinaryCodec.encode(json: xJson), try BinaryCodec.encode(json: rJson))
-//        XCTAssertEqual(try BinaryCodec.decode(buffer: try BinaryCodec.encode(json: xJson)), rJson)
+        XCTAssertTrue(BinaryCodec.decode(buffer: try BinaryCodec.encode(json: xJson)) == rJson)
     }
 
     func runFixturesTest(filename: String, category: String, testMethod: Any) {
@@ -322,7 +317,7 @@ final class TestMainFixtures: XCTestCase {
         let wholeObjectTests = DataDrivenFixtures().getWholeObjectTests()
         for wholeObject in wholeObjectTests {
             XCTAssertEqual(try BinaryCodec.encode(json: wholeObject.txJson), wholeObject.expectedHex)
-//            XCTAssertEqual(try BinaryCodec.decode(buffer: wholeObject.expectedHex), wholeObject.txJson)
+            XCTAssertTrue(BinaryCodec.decode(buffer: wholeObject.expectedHex) == wholeObject.txJson)
         }
     }
 }
