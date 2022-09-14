@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUSTObject: XCTestCase {
+final class TestSTObject: XCTestCase {
 
     public static let maxDiff: Int = 1000
 

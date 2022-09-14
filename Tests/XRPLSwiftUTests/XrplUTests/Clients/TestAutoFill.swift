@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUAutoFill: XCTestCase {
+final class TestAutoFill: XCTestCase {
 
     private static let fee: String = "10"
     private static let sequence: Int = 1432
@@ -35,9 +35,9 @@ final class TestUAutoFill: XCTestCase {
         //        }
         let tx: DepositPreauth = DepositPreauth(authorize: "rpZc4mVfWUif9CRoHRKKcmhu1nx2xktxBo")
         tx.account = "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf"
-        tx.fee = TestUAutoFill.fee
-        tx.sequence = TestUAutoFill.sequence
-        tx.lastLedgerSequence = TestUAutoFill.lastLedgerSequence
+        tx.fee = TestAutoFill.fee
+        tx.sequence = TestAutoFill.sequence
+        tx.lastLedgerSequence = TestAutoFill.lastLedgerSequence
         let baseTx: Transaction = Transaction.depositPreauth(tx)
         let txResult = try! await AutoFillSugar().autofill(client: self.client, transaction: tx, signersCount: 0)
         print(baseTx)

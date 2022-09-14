@@ -41,7 +41,7 @@ class AccountID: Hash160 {
         if AddressCodec.isValidXAddress(xAddress: value) {
             let classicDict: [String: AnyObject] = try AddressCodec.xAddressToClassicAddress(xAddress: value)
             let classic: String = classicDict["classicAddress"] as! String
-            let tag: Int = classicDict["tag"] as! Int
+            let tag: Int = classicDict["tag"] as? Int ?? 0
             if tag != 0 {
               throw BinaryError.unknownError(error: "Only allowed to have tag on Account or Destination")
             }

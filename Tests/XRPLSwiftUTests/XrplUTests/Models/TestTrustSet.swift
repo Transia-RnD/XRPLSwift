@@ -1,5 +1,5 @@
 //
-//  TestUTrustSet.swift
+//  TestTrustSet.swift
 //
 //
 //  Created by Denis Angell on 8/13/22.
@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUTrustSet: XCTestCase {
+final class TestTrustSet: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
@@ -31,8 +31,8 @@ final class TestUTrustSet: XCTestCase {
     }
 
     func testA() {
-        TestUTrustSet.setUp()
-        let tx = try! TrustSet(json: TestUTrustSet.baseTx)
+        TestTrustSet.setUp()
+        let tx = try! TrustSet(json: TestTrustSet.baseTx)
         do {
             try validateTrustSet(tx: tx.toJson())
         } catch {
@@ -41,25 +41,25 @@ final class TestUTrustSet: XCTestCase {
     }
 
     func testInvalidLimitAmountNil() {
-        TestUTrustSet.setUp()
-        TestUTrustSet.baseTx["LimitAmount"] = nil
-        XCTAssertThrowsError(try TrustSet(json: TestUTrustSet.baseTx))
+        TestTrustSet.setUp()
+        TestTrustSet.baseTx["LimitAmount"] = nil
+        XCTAssertThrowsError(try TrustSet(json: TestTrustSet.baseTx))
     }
 
     func testInvalidLimitAmountType() {
-        TestUTrustSet.setUp()
-        TestUTrustSet.baseTx["LimitAmount"] = 1234 as AnyObject
-        XCTAssertThrowsError(try TrustSet(json: TestUTrustSet.baseTx))
+        TestTrustSet.setUp()
+        TestTrustSet.baseTx["LimitAmount"] = 1234 as AnyObject
+        XCTAssertThrowsError(try TrustSet(json: TestTrustSet.baseTx))
     }
 
     func testInvalidQualityInType() {
-        TestUTrustSet.setUp()
-        TestUTrustSet.baseTx["QualityIn"] = "1234" as AnyObject
-        XCTAssertThrowsError(try TrustSet(json: TestUTrustSet.baseTx))
+        TestTrustSet.setUp()
+        TestTrustSet.baseTx["QualityIn"] = "1234" as AnyObject
+        XCTAssertThrowsError(try TrustSet(json: TestTrustSet.baseTx))
     }
     func testInvalidQualityOutType() {
-        TestUTrustSet.setUp()
-        TestUTrustSet.baseTx["QualityOut"] = "4321" as AnyObject
-        XCTAssertThrowsError(try TrustSet(json: TestUTrustSet.baseTx))
+        TestTrustSet.setUp()
+        TestTrustSet.baseTx["QualityOut"] = "4321" as AnyObject
+        XCTAssertThrowsError(try TrustSet(json: TestTrustSet.baseTx))
     }
 }

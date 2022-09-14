@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUBlob: XCTestCase {
+final class TestBlob: XCTestCase {
 
     func testFromValue() {
         let value: String = "00AA"

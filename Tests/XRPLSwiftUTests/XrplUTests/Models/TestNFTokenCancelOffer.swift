@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUNFTokenCancelOffer: XCTestCase {
+final class TestNFTokenCancelOffer: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
@@ -28,7 +28,7 @@ final class TestUNFTokenCancelOffer: XCTestCase {
     }
 
     func testA() {
-        let tx = try! NFTokenCancelOffer(json: TestUNFTokenCancelOffer.baseTx)
+        let tx = try! NFTokenCancelOffer(json: TestNFTokenCancelOffer.baseTx)
         do {
             try validateNFTokenCancelOffer(tx: tx.toJson())
         } catch {
@@ -37,12 +37,12 @@ final class TestUNFTokenCancelOffer: XCTestCase {
     }
 
     func testInvalidLimitAmountNil() {
-        TestUNFTokenCancelOffer.baseTx["NFTokenOffers"] = nil
-        XCTAssertThrowsError(try NFTokenCancelOffer(json: TestUNFTokenCancelOffer.baseTx))
+        TestNFTokenCancelOffer.baseTx["NFTokenOffers"] = nil
+        XCTAssertThrowsError(try NFTokenCancelOffer(json: TestNFTokenCancelOffer.baseTx))
     }
 
     func testInvalidLimitAmountEmpty() {
-        TestUNFTokenCancelOffer.baseTx["NFTokenOffers"] = [] as AnyObject
-        XCTAssertThrowsError(try NFTokenCancelOffer(json: TestUNFTokenCancelOffer.baseTx))
+        TestNFTokenCancelOffer.baseTx["NFTokenOffers"] = [] as AnyObject
+        XCTAssertThrowsError(try NFTokenCancelOffer(json: TestNFTokenCancelOffer.baseTx))
     }
 }

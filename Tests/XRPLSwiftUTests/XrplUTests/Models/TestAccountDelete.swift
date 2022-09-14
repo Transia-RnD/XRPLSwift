@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUAccountDelete: XCTestCase {
+final class TestAccountDelete: XCTestCase {
 
     func testA() {
         let txJson: [String: AnyObject] = [

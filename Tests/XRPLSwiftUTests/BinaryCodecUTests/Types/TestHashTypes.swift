@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUHash128: XCTestCase {
+final class TestHash128: XCTestCase {
 
     public var hex_128_bits: String = ""
     public var parser: BinaryParser?
@@ -41,7 +41,7 @@ final class TestUHash128: XCTestCase {
 //    }
 }
 
-final class TestUHash160: XCTestCase {
+final class TestHash160: XCTestCase {
     // 20 bytes, 40 nibbles
     public var hex_160_bits: String = ""
     public var parser: BinaryParser?
@@ -72,7 +72,7 @@ final class TestUHash160: XCTestCase {
 //    }
 }
 
-final class TestUHash256: XCTestCase {
+final class TestHash256: XCTestCase {
     // 32 bytes, 64 nibbles
     public var hex_256_bits: String = ""
     public var parser: BinaryParser?

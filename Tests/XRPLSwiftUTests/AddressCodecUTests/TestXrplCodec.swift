@@ -8,7 +8,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUXrplCodec: XCTestCase {
+final class TestXrplCodec: XCTestCase {
 
     // Seed Tests
 

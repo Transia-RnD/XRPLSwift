@@ -24,7 +24,7 @@ let BUFFER: String = MEMO_HEX + MEMO_HEX + ARRAY_END_MARKER.toHexString().upperc
 import XCTest
 @testable import XRPLSwift
 
-final class TestUSTArray: XCTestCase {
+final class TestSTArray: XCTestCase {
     public static let maxDiff: Int = 1000
 
     func testFromValue() {

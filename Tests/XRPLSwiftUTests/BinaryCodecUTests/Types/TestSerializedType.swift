@@ -23,7 +23,7 @@ func dataDrivenFixturesForType(typeString: String) -> [ValueTest] {
     return testArray
 }
 
-final class TestUSerializedType: XCTestCase {
+final class TestSerializedType: XCTestCase {
     static func fixtureTest(fixture: ValueTest) {
         // Run the appropriate test for given fixture case.
         var jsonValue: Any = ""

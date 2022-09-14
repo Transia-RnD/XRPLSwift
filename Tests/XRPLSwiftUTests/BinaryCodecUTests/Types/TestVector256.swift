@@ -13,7 +13,7 @@ import XCTest
 private let HASH1: String = "42426C4D4F1009EE67080A9B7965B44656D7714D104A72F9B4369F97ABF044EE"
 private let HASH2: String = "4C97EBA926031A7CF7D7B36FDE3ED66DDA5421192D63DE53FFB46E43B9DC8373"
 
-final class TestUVector256: XCTestCase {
+final class TestVector256: XCTestCase {
 
     private let HASH_LIST: [String] = [HASH1, HASH2]
     private let SERIALIZED: String = HASH1 + HASH2

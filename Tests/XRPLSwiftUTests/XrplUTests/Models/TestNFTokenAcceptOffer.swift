@@ -1,5 +1,5 @@
 //
-//  TestUNFTokenAcceptOffer.swift
+//  TestNFTokenAcceptOffer.swift
 //
 //
 //  Created by Denis Angell on 8/13/22.
@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUNFTokenAcceptOffer: XCTestCase {
+final class TestNFTokenAcceptOffer: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
@@ -28,7 +28,7 @@ final class TestUNFTokenAcceptOffer: XCTestCase {
     }
 
     func testA() {
-        let tx = try! NFTokenAcceptOffer(json: TestUNFTokenAcceptOffer.baseTx)
+        let tx = try! NFTokenAcceptOffer(json: TestNFTokenAcceptOffer.baseTx)
         do {
             try validateNFTokenAcceptOffer(tx: tx.toJson())
         } catch {
@@ -37,9 +37,9 @@ final class TestUNFTokenAcceptOffer: XCTestCase {
     }
 
     func testB() {
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = nil
-        TestUNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
-        let tx = try! NFTokenAcceptOffer(json: TestUNFTokenAcceptOffer.baseTx)
+        TestNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = nil
+        TestNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
+        let tx = try! NFTokenAcceptOffer(json: TestNFTokenAcceptOffer.baseTx)
         do {
             try validateNFTokenAcceptOffer(tx: tx.toJson())
         } catch {
@@ -48,27 +48,27 @@ final class TestUNFTokenAcceptOffer: XCTestCase {
     }
 
     func testInvalidBuyAndSellNil() {
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = nil
-        TestUNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = nil
-        XCTAssertThrowsError(try NFTokenAcceptOffer(json: TestUNFTokenAcceptOffer.baseTx))
+        TestNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = nil
+        TestNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = nil
+        XCTAssertThrowsError(try NFTokenAcceptOffer(json: TestNFTokenAcceptOffer.baseTx))
     }
 
     func testInvalidSellAndBrokerNil() {
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = nil
-        TestUNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = nil
-        XCTAssertThrowsError(try NFTokenAcceptOffer(json: TestUNFTokenAcceptOffer.baseTx))
+        TestNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = nil
+        TestNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = nil
+        XCTAssertThrowsError(try NFTokenAcceptOffer(json: TestNFTokenAcceptOffer.baseTx))
     }
 
     func testInvalidBuyAndBrokerNil() {
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = nil
-        TestUNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = nil
-        XCTAssertThrowsError(try NFTokenAcceptOffer(json: TestUNFTokenAcceptOffer.baseTx))
+        TestNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = nil
+        TestNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = nil
+        XCTAssertThrowsError(try NFTokenAcceptOffer(json: TestNFTokenAcceptOffer.baseTx))
     }
 
     func testValidBuyAndSellOfferNoBroker() {
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AF" as AnyObject
-        TestUNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
-        let tx = try! NFTokenAcceptOffer(json: TestUNFTokenAcceptOffer.baseTx)
+        TestNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AF" as AnyObject
+        TestNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
+        let tx = try! NFTokenAcceptOffer(json: TestNFTokenAcceptOffer.baseTx)
         do {
             try validateNFTokenAcceptOffer(tx: tx.toJson())
         } catch {
@@ -77,10 +77,10 @@ final class TestUNFTokenAcceptOffer: XCTestCase {
     }
 
     func testValidBuyAndSellOffer() {
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AF" as AnyObject
-        TestUNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBrokerFee"] = "1" as AnyObject
-        let tx = try! NFTokenAcceptOffer(json: TestUNFTokenAcceptOffer.baseTx)
+        TestNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AF" as AnyObject
+        TestNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
+        TestNFTokenAcceptOffer.baseTx["NFTokenBrokerFee"] = "1" as AnyObject
+        let tx = try! NFTokenAcceptOffer(json: TestNFTokenAcceptOffer.baseTx)
         do {
             try validateNFTokenAcceptOffer(tx: tx.toJson())
         } catch {
@@ -89,23 +89,23 @@ final class TestUNFTokenAcceptOffer: XCTestCase {
     }
 
     func testInvalidBrokerZero() {
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AF" as AnyObject
-        TestUNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBrokerFee"] = "0" as AnyObject
-        XCTAssertThrowsError(try NFTokenAcceptOffer(json: TestUNFTokenAcceptOffer.baseTx))
+        TestNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AF" as AnyObject
+        TestNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
+        TestNFTokenAcceptOffer.baseTx["NFTokenBrokerFee"] = "0" as AnyObject
+        XCTAssertThrowsError(try NFTokenAcceptOffer(json: TestNFTokenAcceptOffer.baseTx))
     }
 
     func testInvalidBrokerLessZero() {
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AF" as AnyObject
-        TestUNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBrokerFee"] = "-1" as AnyObject
-        XCTAssertThrowsError(try NFTokenAcceptOffer(json: TestUNFTokenAcceptOffer.baseTx))
+        TestNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AF" as AnyObject
+        TestNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
+        TestNFTokenAcceptOffer.baseTx["NFTokenBrokerFee"] = "-1" as AnyObject
+        XCTAssertThrowsError(try NFTokenAcceptOffer(json: TestNFTokenAcceptOffer.baseTx))
     }
 
     func testInvalidBrokerType() {
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AF" as AnyObject
-        TestUNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
-        TestUNFTokenAcceptOffer.baseTx["NFTokenBrokerFee"] = 1 as AnyObject
-        XCTAssertThrowsError(try NFTokenAcceptOffer(json: TestUNFTokenAcceptOffer.baseTx))
+        TestNFTokenAcceptOffer.baseTx["NFTokenBuyOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AF" as AnyObject
+        TestNFTokenAcceptOffer.baseTx["NFTokenSellOffer"] = "AED08CC1F50DD5F23A1948AF86153A3F3B7593E5EC77D65A02BB1B29E05AB6AE" as AnyObject
+        TestNFTokenAcceptOffer.baseTx["NFTokenBrokerFee"] = 1 as AnyObject
+        XCTAssertThrowsError(try NFTokenAcceptOffer(json: TestNFTokenAcceptOffer.baseTx))
     }
 }

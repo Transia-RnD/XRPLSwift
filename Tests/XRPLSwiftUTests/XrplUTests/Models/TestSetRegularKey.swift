@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUSetRegularKey: XCTestCase {
+final class TestSetRegularKey: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
@@ -27,8 +27,8 @@ final class TestUSetRegularKey: XCTestCase {
     }
 
     func testA() {
-        TestUSetRegularKey.setUp()
-        let tx = try! SetRegularKey(json: TestUSetRegularKey.baseTx)
+        TestSetRegularKey.setUp()
+        let tx = try! SetRegularKey(json: TestSetRegularKey.baseTx)
         do {
             try validateSetRegularKey(tx: tx.toJson())
         } catch {
@@ -37,9 +37,9 @@ final class TestUSetRegularKey: XCTestCase {
     }
 
     func testB() {
-        TestUSetRegularKey.setUp()
-        TestUSetRegularKey.baseTx["RegularKey"] = nil
-        let tx = try! SetRegularKey(json: TestUSetRegularKey.baseTx)
+        TestSetRegularKey.setUp()
+        TestSetRegularKey.baseTx["RegularKey"] = nil
+        let tx = try! SetRegularKey(json: TestSetRegularKey.baseTx)
         do {
             try validateSetRegularKey(tx: tx.toJson())
         } catch {
@@ -48,8 +48,8 @@ final class TestUSetRegularKey: XCTestCase {
     }
 
     func testInvalidRegularKeyType() {
-        TestUSetRegularKey.setUp()
-        TestUSetRegularKey.baseTx["RegularKey"] = 12369846963 as AnyObject
-        XCTAssertThrowsError(try SetRegularKey(json: TestUSetRegularKey.baseTx))
+        TestSetRegularKey.setUp()
+        TestSetRegularKey.baseTx["RegularKey"] = 12369846963 as AnyObject
+        XCTAssertThrowsError(try SetRegularKey(json: TestSetRegularKey.baseTx))
     }
 }

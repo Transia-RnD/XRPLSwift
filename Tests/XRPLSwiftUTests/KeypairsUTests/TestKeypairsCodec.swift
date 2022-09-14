@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUKeypairsCodec: XCTestCase {
+final class TestKeypairsCodec: XCTestCase {
 
     func testAccountID() {
         let eactual = try! XrplCodec.encodeClassicAddress(bytes: Data(hex: "BA8E78626EE42C41B46D46C3048DF3A1C3C87072").bytes)

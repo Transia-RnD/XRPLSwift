@@ -8,7 +8,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUBinarySerializer: XCTestCase {
+final class TestBinarySerializer: XCTestCase {
 
     func testWriteLengthEncoded() {
 //        [100, 1000, 10000].forEach { _case in

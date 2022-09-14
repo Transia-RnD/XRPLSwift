@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUPaymentChannelFund: XCTestCase {
+final class TestPaymentChannelFund: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
@@ -27,8 +27,8 @@ final class TestUPaymentChannelFund: XCTestCase {
     }
 
     func testA() {
-        TestUPaymentChannelFund.setUp()
-        let tx = try! PaymentChannelFund(json: TestUPaymentChannelFund.baseTx)
+        TestPaymentChannelFund.setUp()
+        let tx = try! PaymentChannelFund(json: TestPaymentChannelFund.baseTx)
         do {
             try validatePaymentChannelFund(tx: tx.toJson())
         } catch {
@@ -37,9 +37,9 @@ final class TestUPaymentChannelFund: XCTestCase {
     }
 
     func testB() {
-        TestUPaymentChannelFund.setUp()
-        TestUPaymentChannelFund.baseTx["Expiration"] = nil
-        let tx = try! PaymentChannelFund(json: TestUPaymentChannelFund.baseTx)
+        TestPaymentChannelFund.setUp()
+        TestPaymentChannelFund.baseTx["Expiration"] = nil
+        let tx = try! PaymentChannelFund(json: TestPaymentChannelFund.baseTx)
         do {
             try validatePaymentChannelFund(tx: tx.toJson())
         } catch {
@@ -48,38 +48,38 @@ final class TestUPaymentChannelFund: XCTestCase {
     }
 
     func testInvalidAmountNil() {
-        TestUPaymentChannelFund.setUp()
-        TestUPaymentChannelFund.baseTx["Amount"] = nil
-        XCTAssertThrowsError(try PaymentChannelFund(json: TestUPaymentChannelFund.baseTx))
+        TestPaymentChannelFund.setUp()
+        TestPaymentChannelFund.baseTx["Amount"] = nil
+        XCTAssertThrowsError(try PaymentChannelFund(json: TestPaymentChannelFund.baseTx))
     }
 
     func testInvalidAmountType() {
-        TestUPaymentChannelFund.setUp()
-        TestUPaymentChannelFund.baseTx["Amount"] = 100 as AnyObject
-        XCTAssertThrowsError(try PaymentChannelFund(json: TestUPaymentChannelFund.baseTx))
+        TestPaymentChannelFund.setUp()
+        TestPaymentChannelFund.baseTx["Amount"] = 100 as AnyObject
+        XCTAssertThrowsError(try PaymentChannelFund(json: TestPaymentChannelFund.baseTx))
     }
 
     func testInvalidChannelNil() {
-        TestUPaymentChannelFund.setUp()
-        TestUPaymentChannelFund.baseTx["Channel"] = nil
-        XCTAssertThrowsError(try PaymentChannelFund(json: TestUPaymentChannelFund.baseTx))
+        TestPaymentChannelFund.setUp()
+        TestPaymentChannelFund.baseTx["Channel"] = nil
+        XCTAssertThrowsError(try PaymentChannelFund(json: TestPaymentChannelFund.baseTx))
     }
 
     func testInvalidChannelType() {
-        TestUPaymentChannelFund.setUp()
-        TestUPaymentChannelFund.baseTx["Channel"] = 100 as AnyObject
-        XCTAssertThrowsError(try PaymentChannelFund(json: TestUPaymentChannelFund.baseTx))
+        TestPaymentChannelFund.setUp()
+        TestPaymentChannelFund.baseTx["Channel"] = 100 as AnyObject
+        XCTAssertThrowsError(try PaymentChannelFund(json: TestPaymentChannelFund.baseTx))
     }
 
     func testInvalidExpirationNil() {
-        TestUPaymentChannelFund.setUp()
-        TestUPaymentChannelFund.baseTx["Expiration"] = nil
-        XCTAssertThrowsError(try PaymentChannelFund(json: TestUPaymentChannelFund.baseTx))
+        TestPaymentChannelFund.setUp()
+        TestPaymentChannelFund.baseTx["Expiration"] = nil
+        XCTAssertThrowsError(try PaymentChannelFund(json: TestPaymentChannelFund.baseTx))
     }
 
     func testInvalidExpirationType() {
-        TestUPaymentChannelFund.setUp()
-        TestUPaymentChannelFund.baseTx["Expiration"] = 100 as AnyObject
-        XCTAssertThrowsError(try PaymentChannelFund(json: TestUPaymentChannelFund.baseTx))
+        TestPaymentChannelFund.setUp()
+        TestPaymentChannelFund.baseTx["Expiration"] = 100 as AnyObject
+        XCTAssertThrowsError(try PaymentChannelFund(json: TestPaymentChannelFund.baseTx))
     }
 }

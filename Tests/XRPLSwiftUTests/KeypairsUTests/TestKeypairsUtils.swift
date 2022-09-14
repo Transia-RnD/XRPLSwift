@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUKeypairsUtils: XCTestCase {
+final class TestKeypairsUtils: XCTestCase {
 
     func testEmptyHexToBytes() {
         XCTAssertEqual("".toBytes(), [])

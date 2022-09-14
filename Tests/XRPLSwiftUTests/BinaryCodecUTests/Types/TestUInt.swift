@@ -1,5 +1,5 @@
 //
-//  TestUInt.swift
+//  TestInt.swift
 //  
 //
 //  Created by Denis Angell on 7/11/22.
@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUUInt: XCTestCase {
+final class TestUInt: XCTestCase {
 
     func test_from_value() {
         let value1 = xUInt8.from(value: 124)

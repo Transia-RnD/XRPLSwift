@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestURequest: XCTestCase {
+final class TestRequest: XCTestCase {
 
     private var client: XrplClient!
 

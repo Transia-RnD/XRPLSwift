@@ -1,5 +1,5 @@
 //
-//  TestUEscrowCreate.swift
+//  TestEscrowCreate.swift
 //  
 //
 //  Created by Denis Angell on 8/7/22.
@@ -10,12 +10,12 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUEscrowCreate: XCTestCase {
+final class TestEscrowCreate: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
     override func setUp() async throws {
-        TestUEscrowCreate.baseTx = [
+        TestEscrowCreate.baseTx = [
             "Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
             "TransactionType": "EscrowCreate",
             "Amount": "10000",
@@ -30,8 +30,8 @@ final class TestUEscrowCreate: XCTestCase {
     }
 
     func testA() {
-        print(TestUEscrowCreate.baseTx)
-        let tx = try! EscrowCreate(json: TestUEscrowCreate.baseTx)
+        print(TestEscrowCreate.baseTx)
+        let tx = try! EscrowCreate(json: TestEscrowCreate.baseTx)
         do {
             try validateEscrowCreate(tx: tx.toJson())
         } catch {
@@ -40,56 +40,56 @@ final class TestUEscrowCreate: XCTestCase {
     }
 
     func testInvalidAmountNil() {
-        TestUEscrowCreate.baseTx["Amount"] = nil
-        XCTAssertThrowsError(try EscrowCreate(json: TestUEscrowCreate.baseTx))
+        TestEscrowCreate.baseTx["Amount"] = nil
+        XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidDestinationNil() {
-        TestUEscrowCreate.baseTx["Destination"] = nil
-        XCTAssertThrowsError(try EscrowCreate(json: TestUEscrowCreate.baseTx))
+        TestEscrowCreate.baseTx["Destination"] = nil
+        XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidDestinationType() {
-        TestUEscrowCreate.baseTx["Destination"] = 10 as AnyObject
-        XCTAssertThrowsError(try EscrowCreate(json: TestUEscrowCreate.baseTx))
+        TestEscrowCreate.baseTx["Destination"] = 10 as AnyObject
+        XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidAmountType() {
-        TestUEscrowCreate.baseTx["Amount"] = 1000 as AnyObject
-        XCTAssertThrowsError(try EscrowCreate(json: TestUEscrowCreate.baseTx))
+        TestEscrowCreate.baseTx["Amount"] = 1000 as AnyObject
+        XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidCancelAfterType() {
-        TestUEscrowCreate.baseTx["CancelAfter"] = "1000" as AnyObject
-        XCTAssertThrowsError(try EscrowCreate(json: TestUEscrowCreate.baseTx))
+        TestEscrowCreate.baseTx["CancelAfter"] = "1000" as AnyObject
+        XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidFinishAfterType() {
-        TestUEscrowCreate.baseTx["FinishAfter"] = "1000" as AnyObject
-        XCTAssertThrowsError(try EscrowCreate(json: TestUEscrowCreate.baseTx))
+        TestEscrowCreate.baseTx["FinishAfter"] = "1000" as AnyObject
+        XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidConditionType() {
-        TestUEscrowCreate.baseTx["Condition"] = 0x141243 as AnyObject
-        XCTAssertThrowsError(try EscrowCreate(json: TestUEscrowCreate.baseTx))
+        TestEscrowCreate.baseTx["Condition"] = 0x141243 as AnyObject
+        XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidDestinationTagType() {
-        TestUEscrowCreate.baseTx["DestinationTag"] = "100" as AnyObject
-        XCTAssertThrowsError(try EscrowCreate(json: TestUEscrowCreate.baseTx))
+        TestEscrowCreate.baseTx["DestinationTag"] = "100" as AnyObject
+        XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidCancelAndFinish() {
-        TestUEscrowCreate.baseTx["CancelAfter"] = nil
-        TestUEscrowCreate.baseTx["FinishAfter"] = nil
-        let tx = try! EscrowCreate(json: TestUEscrowCreate.baseTx)
+        TestEscrowCreate.baseTx["CancelAfter"] = nil
+        TestEscrowCreate.baseTx["FinishAfter"] = nil
+        let tx = try! EscrowCreate(json: TestEscrowCreate.baseTx)
         XCTAssertThrowsError(try validateEscrowCreate(tx: tx.toJson()))
     }
 
     func testInvalidConditionAndFinish() {
-        TestUEscrowCreate.baseTx["Condition"] = nil
-        TestUEscrowCreate.baseTx["FinishAfter"] = nil
-        let tx = try! EscrowCreate(json: TestUEscrowCreate.baseTx)
+        TestEscrowCreate.baseTx["Condition"] = nil
+        TestEscrowCreate.baseTx["FinishAfter"] = nil
+        let tx = try! EscrowCreate(json: TestEscrowCreate.baseTx)
         XCTAssertThrowsError(try validateEscrowCreate(tx: tx.toJson()))
     }
 }

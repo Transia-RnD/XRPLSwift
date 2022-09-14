@@ -8,7 +8,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUAddressCodec: XCTestCase {
+final class TestAddressCodec: XCTestCase {
 
     public static let testCases = [
         [
@@ -146,7 +146,7 @@ final class TestUAddressCodec: XCTestCase {
     ]
 
     func testClassicAddressToXaddress() {
-        for testCase in TestUAddressCodec.testCases {
+        for testCase in TestAddressCodec.testCases {
             let classicAddress: String = testCase[0] as! String
             let tag: Int? = testCase[1] as? Int ?? nil
             let expectedMainXaddress: String = testCase[2] as! String
@@ -176,7 +176,7 @@ final class TestUAddressCodec: XCTestCase {
     }
 
     func testXAddressToClassicAddress() {
-        for testCase in TestUAddressCodec.testCases {
+        for testCase in TestAddressCodec.testCases {
             let classicAddress: String = testCase[0] as! String
 //            let tag: UInt32? = testCase[1] as? UInt32 ?? nil
             let expectedMainXaddress: String = testCase[2] as! String

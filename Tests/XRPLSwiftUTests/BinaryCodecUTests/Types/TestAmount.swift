@@ -60,7 +60,7 @@ let XRP_CASES: [String: String] = [
     "100000000000000000": "416345785D8A0000"
 ]
 
-final class TestUAmount: XCTestCase {
+final class TestAmount: XCTestCase {
 
     static let HEX_ENCODING: String = "5E7B112523F68D2F5E879DB4EAC51C6698A69304"
     static let BASE58_ENCODING: String = "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59"
@@ -145,7 +145,7 @@ final class TestUAmount: XCTestCase {
     
     func testFixtures() {
         for fixture in dataDrivenFixturesForType(typeString: "Amount") {
-            TestUSerializedType.fixtureTest(fixture: fixture)
+            TestSerializedType.fixtureTest(fixture: fixture)
         }
     }
 }

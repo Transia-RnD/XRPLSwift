@@ -8,7 +8,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUBinaryParser: XCTestCase {
+final class TestBinaryParser: XCTestCase {
 
     func testPeekSkipReadMethods() {
         let testHex: String = "00112233445566"

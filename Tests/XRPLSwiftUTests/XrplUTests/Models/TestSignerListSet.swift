@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUSignerListSet: XCTestCase {
+final class TestSignerListSet: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
@@ -45,8 +45,8 @@ final class TestUSignerListSet: XCTestCase {
     }
 
     func testA() {
-        TestUSignerListSet.setUp()
-        let tx = try! SignerListSet(json: TestUSignerListSet.baseTx)
+        TestSignerListSet.setUp()
+        let tx = try! SignerListSet(json: TestSignerListSet.baseTx)
         do {
             try validateSetRegularKey(tx: tx.toJson())
         } catch {
@@ -55,20 +55,20 @@ final class TestUSignerListSet: XCTestCase {
     }
 
     func testInvalidSignerEntriesNil() {
-        TestUSignerListSet.setUp()
-        TestUSignerListSet.baseTx["SignerEntries"] = nil
-        XCTAssertThrowsError(try SignerListSet(json: TestUSignerListSet.baseTx))
+        TestSignerListSet.setUp()
+        TestSignerListSet.baseTx["SignerEntries"] = nil
+        XCTAssertThrowsError(try SignerListSet(json: TestSignerListSet.baseTx))
     }
 
     func testInvalidSignerEntriesEmpty() {
-        TestUSignerListSet.setUp()
-        TestUSignerListSet.baseTx["SignerEntries"] = [] as AnyObject
-        XCTAssertThrowsError(try SignerListSet(json: TestUSignerListSet.baseTx))
+        TestSignerListSet.setUp()
+        TestSignerListSet.baseTx["SignerEntries"] = [] as AnyObject
+        XCTAssertThrowsError(try SignerListSet(json: TestSignerListSet.baseTx))
     }
 
     func testInvalidSignerEntriesType() {
-        TestUSignerListSet.setUp()
-        TestUSignerListSet.baseTx["SignerEntries"] = "khgfgyhujk" as AnyObject
-        XCTAssertThrowsError(try SignerListSet(json: TestUSignerListSet.baseTx))
+        TestSignerListSet.setUp()
+        TestSignerListSet.baseTx["SignerEntries"] = "khgfgyhujk" as AnyObject
+        XCTAssertThrowsError(try SignerListSet(json: TestSignerListSet.baseTx))
     }
 }

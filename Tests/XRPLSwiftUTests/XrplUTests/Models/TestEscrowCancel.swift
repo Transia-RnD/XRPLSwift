@@ -1,5 +1,5 @@
 //
-//  TestUEscrowCancel.swift
+//  TestEscrowCancel.swift
 //  
 //
 //  Created by Denis Angell on 8/7/22.
@@ -10,12 +10,12 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUEscrowCancel: XCTestCase {
+final class TestEscrowCancel: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
     override func setUp() async throws {
-        TestUEscrowCancel.baseTx = [
+        TestEscrowCancel.baseTx = [
             "TransactionType": "EscrowCancel",
             "Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
             "Owner": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
@@ -24,8 +24,8 @@ final class TestUEscrowCancel: XCTestCase {
     }
 
     func testA() {
-        print(TestUEscrowCancel.baseTx)
-        let tx = try! EscrowCancel(json: TestUEscrowCancel.baseTx)
+        print(TestEscrowCancel.baseTx)
+        let tx = try! EscrowCancel(json: TestEscrowCancel.baseTx)
         do {
             try validateEscrowCancel(tx: tx.toJson())
         } catch {
@@ -34,17 +34,17 @@ final class TestUEscrowCancel: XCTestCase {
     }
 
     func testInvalidOwnerNil() {
-        TestUEscrowCancel.baseTx["Owner"] = nil
-        XCTAssertThrowsError(try CheckCancel(json: TestUEscrowCancel.baseTx))
+        TestEscrowCancel.baseTx["Owner"] = nil
+        XCTAssertThrowsError(try CheckCancel(json: TestEscrowCancel.baseTx))
     }
 
     func testInvalidOwnerType() {
-        TestUEscrowCancel.baseTx["Owner"] = 10 as AnyObject
-        XCTAssertThrowsError(try CheckCancel(json: TestUEscrowCancel.baseTx))
+        TestEscrowCancel.baseTx["Owner"] = 10 as AnyObject
+        XCTAssertThrowsError(try CheckCancel(json: TestEscrowCancel.baseTx))
     }
 
     func testInvalidOfferSequenceType() {
-        TestUEscrowCancel.baseTx["OfferSequence"] = "10" as AnyObject
-        XCTAssertThrowsError(try CheckCancel(json: TestUEscrowCancel.baseTx))
+        TestEscrowCancel.baseTx["OfferSequence"] = "10" as AnyObject
+        XCTAssertThrowsError(try CheckCancel(json: TestEscrowCancel.baseTx))
     }
 }

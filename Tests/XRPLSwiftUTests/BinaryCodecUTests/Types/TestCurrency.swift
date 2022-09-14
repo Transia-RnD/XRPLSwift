@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUCurrency: XCTestCase {
+final class TestCurrency: XCTestCase {
 
     public let XRP_HEX_CODE: String = "0000000000000000000000000000000000000000"
     public let ILLEGAL_XRP_HEX_CODE: String = "0000000000000000000000005852500000000000"

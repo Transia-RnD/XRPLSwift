@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUConstructor: XCTestCase {
+final class TestConstructor: XCTestCase {
 
     func testClientConstructor() {
         _ = try! XrplClient(server: "wss://s1.ripple.com")

@@ -12,7 +12,13 @@
     "testTimeoutsEnabled" : true
   },
   "testTargets" : [
-
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "XRPLSwiftUTests",
+        "name" : "XRPLSwiftUTests"
+      }
+    }
   ],
   "version" : 1
 }

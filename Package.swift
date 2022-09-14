@@ -54,7 +54,11 @@ let package = Package(
             plugins: ["SwiftLintPlugin"]
         ),
         .testTarget(
-            name: "XRPLSwiftTests",
+            name: "XRPLSwiftUTests",
+            dependencies: ["XRPLSwift"]
+        ),
+        .testTarget(
+            name: "XRPLSwiftITests",
             dependencies: ["XRPLSwift"]
         )
     ]

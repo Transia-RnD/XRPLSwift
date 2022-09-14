@@ -1,5 +1,5 @@
 //
-//  TestUtils.swift
+//  Testtils.swift
 //
 //
 //  Created by Denis Angell on 7/28/22.
@@ -8,7 +8,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUtils: XCTestCase {
+final class Testtils: XCTestCase {
 
     public static let ADDRESSES: [String: String] = [
         "ACCOUNT": "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",

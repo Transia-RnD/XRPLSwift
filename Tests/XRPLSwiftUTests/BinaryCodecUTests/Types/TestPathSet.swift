@@ -75,7 +75,7 @@ let expectedJson: [[[String: AnyObject]]] = [
     ]
 ] as [[[String: AnyObject]]]
 
-final class TestUPathSet: XCTestCase {
+final class TestPathSet: XCTestCase {
     func testFromValue() {
         let pathset = try! xPathSet.from(value: expectedJson)
         XCTAssertEqual(buffer.bytes, pathset.bytes)

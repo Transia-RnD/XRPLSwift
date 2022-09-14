@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUNFTokenBurn: XCTestCase {
+final class TestNFTokenBurn: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
@@ -28,7 +28,7 @@ final class TestUNFTokenBurn: XCTestCase {
     }
 
     func testA() {
-        let tx = try! NFTokenBurn(json: TestUNFTokenBurn.baseTx)
+        let tx = try! NFTokenBurn(json: TestNFTokenBurn.baseTx)
         do {
             try validateNFTokenBurn(tx: tx.toJson())
         } catch {
@@ -37,7 +37,7 @@ final class TestUNFTokenBurn: XCTestCase {
     }
 
     func testInvalidLimitAmountNil() {
-        TestUNFTokenBurn.baseTx["NFTokenID"] = nil
-        XCTAssertThrowsError(try TrustSet(json: TestUNFTokenBurn.baseTx))
+        TestNFTokenBurn.baseTx["NFTokenID"] = nil
+        XCTAssertThrowsError(try TrustSet(json: TestNFTokenBurn.baseTx))
     }
 }

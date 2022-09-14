@@ -8,7 +8,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUDefinitions: XCTestCase {
+final class TestDefinitions: XCTestCase {
 
     static let testFieldName: String = "Sequence"
 
@@ -35,30 +35,30 @@ final class TestUDefinitions: XCTestCase {
 
     func testGetFieldTypeName() {
         let expectedFieldTypeName: String = "UInt32"
-        let fieldTypeName: String = Definitions().getFieldTypeName(fieldName: TestUDefinitions.testFieldName)
+        let fieldTypeName: String = Definitions().getFieldTypeName(fieldName: TestDefinitions.testFieldName)
         XCTAssertEqual(expectedFieldTypeName, fieldTypeName)
     }
 
     func testGetFieldTypeCode() {
         let expectedFieldTypeCode: Int = 2
-        let fieldTypeCode: Int = try! Definitions().getFieldTypeCode(fieldName: TestUDefinitions.testFieldName)
+        let fieldTypeCode: Int = try! Definitions().getFieldTypeCode(fieldName: TestDefinitions.testFieldName)
         XCTAssertEqual(expectedFieldTypeCode, fieldTypeCode)
     }
 
     func testGetFieldCode() {
         let expectedFieldCode: Int = 4
-        let fieldCode: Int = Definitions().getFieldCode(fieldName: TestUDefinitions.testFieldName)
+        let fieldCode: Int = Definitions().getFieldCode(fieldName: TestDefinitions.testFieldName)
         XCTAssertEqual(expectedFieldCode, fieldCode)
     }
 
     func testGetFieldHeaderFromName() {
         let expectedFieldHeader: FieldHeader = FieldHeader(typeCode: 2, fieldCode: 4)
-        let fieldHeader: FieldHeader = Definitions().getFieldHeaderFromName(fieldName: TestUDefinitions.testFieldName)
+        let fieldHeader: FieldHeader = Definitions().getFieldHeaderFromName(fieldName: TestDefinitions.testFieldName)
         XCTAssertEqual(expectedFieldHeader, fieldHeader)
     }
 
     func testGetFieldNameFromHeader() {
-        let expectedFieldName: String = TestUDefinitions.testFieldName
+        let expectedFieldName: String = TestDefinitions.testFieldName
         let fieldHeader: FieldHeader = FieldHeader(typeCode: 2, fieldCode: 4)
         let fieldName = Definitions().getFieldNameFromHeader(fieldHeader: fieldHeader)
         XCTAssertEqual(expectedFieldName, fieldName)

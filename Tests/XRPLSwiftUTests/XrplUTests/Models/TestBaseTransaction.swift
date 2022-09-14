@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUBaseTransaction: XCTestCase {
+final class TestBaseTransaction: XCTestCase {
 
     func testA() {
         do {

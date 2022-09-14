@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUPaymentChannelClaim: XCTestCase {
+final class TestPaymentChannelClaim: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
@@ -29,8 +29,8 @@ final class TestUPaymentChannelClaim: XCTestCase {
     }
 
     func testA() {
-        TestUPaymentChannelClaim.setUp()
-        let tx = try! PaymentChannelClaim(json: TestUPaymentChannelClaim.baseTx)
+        TestPaymentChannelClaim.setUp()
+        let tx = try! PaymentChannelClaim(json: TestPaymentChannelClaim.baseTx)
         do {
             try validatePaymentChannelClaim(tx: tx.toJson())
         } catch {
@@ -39,12 +39,12 @@ final class TestUPaymentChannelClaim: XCTestCase {
     }
 
     func testB() {
-        TestUPaymentChannelClaim.setUp()
-        TestUPaymentChannelClaim.baseTx["Balance"] = nil
-        TestUPaymentChannelClaim.baseTx["Amount"] = nil
-        TestUPaymentChannelClaim.baseTx["Signature"] = nil
-        TestUPaymentChannelClaim.baseTx["PublicKey"] = nil
-        let tx = try! PaymentChannelClaim(json: TestUPaymentChannelClaim.baseTx)
+        TestPaymentChannelClaim.setUp()
+        TestPaymentChannelClaim.baseTx["Balance"] = nil
+        TestPaymentChannelClaim.baseTx["Amount"] = nil
+        TestPaymentChannelClaim.baseTx["Signature"] = nil
+        TestPaymentChannelClaim.baseTx["PublicKey"] = nil
+        let tx = try! PaymentChannelClaim(json: TestPaymentChannelClaim.baseTx)
         do {
             try validatePaymentChannelClaim(tx: tx.toJson())
         } catch {
@@ -53,38 +53,38 @@ final class TestUPaymentChannelClaim: XCTestCase {
     }
 
     func testInvalidChannelNil() {
-        TestUPaymentChannelClaim.setUp()
-        TestUPaymentChannelClaim.baseTx["Channel"] = nil
-        XCTAssertThrowsError(try PaymentChannelClaim(json: TestUPaymentChannelClaim.baseTx))
+        TestPaymentChannelClaim.setUp()
+        TestPaymentChannelClaim.baseTx["Channel"] = nil
+        XCTAssertThrowsError(try PaymentChannelClaim(json: TestPaymentChannelClaim.baseTx))
     }
 
     func testInvalidChannelType() {
-        TestUPaymentChannelClaim.setUp()
-        TestUPaymentChannelClaim.baseTx["Channel"] = 100 as AnyObject
-        XCTAssertThrowsError(try PaymentChannelClaim(json: TestUPaymentChannelClaim.baseTx))
+        TestPaymentChannelClaim.setUp()
+        TestPaymentChannelClaim.baseTx["Channel"] = 100 as AnyObject
+        XCTAssertThrowsError(try PaymentChannelClaim(json: TestPaymentChannelClaim.baseTx))
     }
 
     func testInvalidBalanceType() {
-        TestUPaymentChannelClaim.setUp()
-        TestUPaymentChannelClaim.baseTx["Balance"] = 100 as AnyObject
-        XCTAssertThrowsError(try PaymentChannelClaim(json: TestUPaymentChannelClaim.baseTx))
+        TestPaymentChannelClaim.setUp()
+        TestPaymentChannelClaim.baseTx["Balance"] = 100 as AnyObject
+        XCTAssertThrowsError(try PaymentChannelClaim(json: TestPaymentChannelClaim.baseTx))
     }
 
     func testInvalidAmountType() {
-        TestUPaymentChannelClaim.setUp()
-        TestUPaymentChannelClaim.baseTx["Amount"] = 1000 as AnyObject
-        XCTAssertThrowsError(try PaymentChannelClaim(json: TestUPaymentChannelClaim.baseTx))
+        TestPaymentChannelClaim.setUp()
+        TestPaymentChannelClaim.baseTx["Amount"] = 1000 as AnyObject
+        XCTAssertThrowsError(try PaymentChannelClaim(json: TestPaymentChannelClaim.baseTx))
     }
 
     func testInvalidSignatureType() {
-        TestUPaymentChannelClaim.setUp()
-        TestUPaymentChannelClaim.baseTx["Signature"] = 1000 as AnyObject
-        XCTAssertThrowsError(try PaymentChannelClaim(json: TestUPaymentChannelClaim.baseTx))
+        TestPaymentChannelClaim.setUp()
+        TestPaymentChannelClaim.baseTx["Signature"] = 1000 as AnyObject
+        XCTAssertThrowsError(try PaymentChannelClaim(json: TestPaymentChannelClaim.baseTx))
     }
 
     func testInvalidPublicKeyType() {
-        TestUPaymentChannelClaim.setUp()
-        TestUPaymentChannelClaim.baseTx["PublicKey"] = ["100"] as AnyObject
-        XCTAssertThrowsError(try PaymentChannelClaim(json: TestUPaymentChannelClaim.baseTx))
+        TestPaymentChannelClaim.setUp()
+        TestPaymentChannelClaim.baseTx["PublicKey"] = ["100"] as AnyObject
+        XCTAssertThrowsError(try PaymentChannelClaim(json: TestPaymentChannelClaim.baseTx))
     }
 }

@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUPayment: XCTestCase {
+final class TestPayment: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
@@ -41,7 +41,7 @@ final class TestUPayment: XCTestCase {
     }
 
     func testA() {
-        let tx = try! Payment(json: TestUPayment.baseTx)
+        let tx = try! Payment(json: TestPayment.baseTx)
         do {
             try validatePayment(tx: tx.toJson())
         } catch {
@@ -56,76 +56,76 @@ final class TestUPayment: XCTestCase {
 //    }
 
     func testMissingAmount() {
-        TestUPayment.setUp()
-        TestUPayment.baseTx["Amount"] = nil
-//        let tx = try! Payment(json: TestUPayment.baseTx)
-        XCTAssertThrowsError(try Payment(json: TestUPayment.baseTx))
+        TestPayment.setUp()
+        TestPayment.baseTx["Amount"] = nil
+//        let tx = try! Payment(json: TestPayment.baseTx)
+        XCTAssertThrowsError(try Payment(json: TestPayment.baseTx))
 //        XCTAssertThrowsError(try validatePayment(tx: tx.toJson()))
     }
 
     func testInvalidAmount() {
-        TestUPayment.setUp()
-        TestUPayment.baseTx["Amount"] = 1234 as AnyObject
-//        let tx = try! Payment(json: TestUPayment.baseTx)
-        XCTAssertThrowsError(try Payment(json: TestUPayment.baseTx))
+        TestPayment.setUp()
+        TestPayment.baseTx["Amount"] = 1234 as AnyObject
+//        let tx = try! Payment(json: TestPayment.baseTx)
+        XCTAssertThrowsError(try Payment(json: TestPayment.baseTx))
 //        XCTAssertThrowsError(try validatePayment(tx: tx.toJson()))
     }
 
     func testMissingDestination() {
-        TestUPayment.setUp()
-        TestUPayment.baseTx["Destination"] = nil
-//        let tx = try! Payment(json: TestUPayment.baseTx)
-        XCTAssertThrowsError(try Payment(json: TestUPayment.baseTx))
+        TestPayment.setUp()
+        TestPayment.baseTx["Destination"] = nil
+//        let tx = try! Payment(json: TestPayment.baseTx)
+        XCTAssertThrowsError(try Payment(json: TestPayment.baseTx))
 //        XCTAssertThrowsError(try validatePayment(tx: tx.toJson()))
     }
 
     func testInvalidDestination() {
-        TestUPayment.setUp()
-        TestUPayment.baseTx["Destination"] = 7896214 as AnyObject
-//        let tx = try! Payment(json: TestUPayment.baseTx)
-        XCTAssertThrowsError(try Payment(json: TestUPayment.baseTx))
+        TestPayment.setUp()
+        TestPayment.baseTx["Destination"] = 7896214 as AnyObject
+//        let tx = try! Payment(json: TestPayment.baseTx)
+        XCTAssertThrowsError(try Payment(json: TestPayment.baseTx))
 //        XCTAssertThrowsError(try validatePayment(tx: tx.toJson()))
     }
 
     func testInvalidDestinationTag() {
-        TestUPayment.setUp()
-        TestUPayment.baseTx["DestinationTag"] = "1" as AnyObject
-//        let tx = try! Payment(json: TestUPayment.baseTx)
-        XCTAssertThrowsError(try Payment(json: TestUPayment.baseTx))
+        TestPayment.setUp()
+        TestPayment.baseTx["DestinationTag"] = "1" as AnyObject
+//        let tx = try! Payment(json: TestPayment.baseTx)
+        XCTAssertThrowsError(try Payment(json: TestPayment.baseTx))
 //        XCTAssertThrowsError(try validatePayment(tx: tx.toJson()))
     }
 
     func testInvalidInvoiceID() {
-        TestUPayment.setUp()
-        TestUPayment.baseTx["InvoiceID"] = 19832 as AnyObject
-//        let tx = try! Payment(json: TestUPayment.baseTx)
-        XCTAssertThrowsError(try Payment(json: TestUPayment.baseTx))
+        TestPayment.setUp()
+        TestPayment.baseTx["InvoiceID"] = 19832 as AnyObject
+//        let tx = try! Payment(json: TestPayment.baseTx)
+        XCTAssertThrowsError(try Payment(json: TestPayment.baseTx))
 //        XCTAssertThrowsError(try validatePayment(tx: tx.toJson()))
     }
 
     func testInvalidPaths() {
-        TestUPayment.setUp()
-        TestUPayment.baseTx["Paths"] = [[[ "account": 123 ]]] as AnyObject
-//        let tx = try! Payment(json: TestUPayment.baseTx)
-        XCTAssertThrowsError(try Payment(json: TestUPayment.baseTx))
+        TestPayment.setUp()
+        TestPayment.baseTx["Paths"] = [[[ "account": 123 ]]] as AnyObject
+//        let tx = try! Payment(json: TestPayment.baseTx)
+        XCTAssertThrowsError(try Payment(json: TestPayment.baseTx))
 //        XCTAssertThrowsError(try validatePayment(tx: tx.toJson()))
     }
 
     func testInvalidSendMax() {
-        TestUPayment.setUp()
-        print(TestUPayment.baseTx["SendMax"])
-        TestUPayment.baseTx["SendMax"] = 100000001 as AnyObject
-        print(TestUPayment.baseTx["SendMax"])
-//        let tx = try! Payment(json: TestUPayment.baseTx)
-        XCTAssertThrowsError(try Payment(json: TestUPayment.baseTx))
+        TestPayment.setUp()
+        print(TestPayment.baseTx["SendMax"])
+        TestPayment.baseTx["SendMax"] = 100000001 as AnyObject
+        print(TestPayment.baseTx["SendMax"])
+//        let tx = try! Payment(json: TestPayment.baseTx)
+        XCTAssertThrowsError(try Payment(json: TestPayment.baseTx))
 //        XCTAssertThrowsError(try validatePayment(tx: tx.toJson()))
     }
 
     func testValidDeliverMinFlagInt() {
-        TestUPayment.setUp()
-        TestUPayment.baseTx["DeliverMin"] = "100000000" as AnyObject
-        TestUPayment.baseTx["Flags"] = PaymentFlags.tfPartialPayment.rawValue as AnyObject
-        let tx = try! Payment(json: TestUPayment.baseTx)
+        TestPayment.setUp()
+        TestPayment.baseTx["DeliverMin"] = "100000000" as AnyObject
+        TestPayment.baseTx["Flags"] = PaymentFlags.tfPartialPayment.rawValue as AnyObject
+        let tx = try! Payment(json: TestPayment.baseTx)
         do {
             try validatePayment(tx: tx.toJson())
         } catch {
@@ -135,9 +135,9 @@ final class TestUPayment: XCTestCase {
 
     // MARK: Cannot set flags to bool as of now
 //    func testValidDeliverMinFlagBool() {
-//        TestUPayment.baseTx["DeliverMin"] = 100000000 as AnyObject
-//        TestUPayment.baseTx["Flags"] = PaymentFlags.tfPartialPayment.rawValue as AnyObject
-//        let tx = try! Payment(json: TestUPayment.baseTx)
+//        TestPayment.baseTx["DeliverMin"] = 100000000 as AnyObject
+//        TestPayment.baseTx["Flags"] = PaymentFlags.tfPartialPayment.rawValue as AnyObject
+//        let tx = try! Payment(json: TestPayment.baseTx)
 //        do {
 //            try validatePayment(tx: tx.toJson())
 //        } catch {
@@ -145,10 +145,10 @@ final class TestUPayment: XCTestCase {
 //        }
 //    }
     func testInvalidDeliverMinNoFlag() {
-        TestUPayment.setUp()
-        TestUPayment.baseTx["DeliverMin"] = "10000" as AnyObject
-        print(TestUPayment.baseTx)
-        let tx = try! Payment(json: TestUPayment.baseTx)
+        TestPayment.setUp()
+        TestPayment.baseTx["DeliverMin"] = "10000" as AnyObject
+        print(TestPayment.baseTx)
+        let tx = try! Payment(json: TestPayment.baseTx)
         XCTAssertThrowsError(try validatePayment(tx: tx.toJson()))
     }
 }

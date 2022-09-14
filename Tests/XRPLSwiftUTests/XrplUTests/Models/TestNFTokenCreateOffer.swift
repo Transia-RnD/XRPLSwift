@@ -1,5 +1,5 @@
 //
-//  TestUNFTokenCreateOffer.swift
+//  TestNFTokenCreateOffer.swift
 //
 //
 //  Created by Denis Angell on 8/13/22.
@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUNFTokenCreateOffer: XCTestCase {
+final class TestNFTokenCreateOffer: XCTestCase {
 
     func testA() {
         let baseTx = [

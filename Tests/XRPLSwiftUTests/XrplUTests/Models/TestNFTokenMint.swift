@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUNFTokenMint: XCTestCase {
+final class TestNFTokenMint: XCTestCase {
 
     func testA() {
         let baseTx = [

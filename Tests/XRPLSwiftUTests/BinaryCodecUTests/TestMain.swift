@@ -123,7 +123,7 @@ let signingJson: [String: AnyObject] = [
     )
 ] as [String: AnyObject]
 
-final class TestUBinarySimple: XCTestCase {
+final class TestBinarySimple: XCTestCase {
 
     func testSimple() {
         let encoded = try! BinaryCodec.encode(json: TX_JSON)
@@ -168,7 +168,7 @@ final class TestUBinarySimple: XCTestCase {
     }
 }
 
-final class TestUBinaryCodec: XCTestCase {
+final class TestBinaryCodec: XCTestCase {
 
     func testXaddressEncode() {
         XCTAssertEqual(try BinaryCodec.encode(json: jsonX1), try BinaryCodec.encode(json: jsonR1))
@@ -322,7 +322,7 @@ final class TestMainFixtures: XCTestCase {
     }
 }
 
-final class TestUMainSigning: XCTestCase {
+final class TestMainSigning: XCTestCase {
     internal let maxDiff: Int = 1000
 
     func testSingleSigning() {

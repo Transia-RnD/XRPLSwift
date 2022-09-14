@@ -10,12 +10,12 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUOfferCancel: XCTestCase {
+final class TestOfferCancel: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
     override func setUp() async throws {
-        TestUOfferCancel.baseTx = [
+        TestOfferCancel.baseTx = [
             "Account": "rnKiczmiQkZFiDES8THYyLA2pQohC5C6EF",
             "Fee": "10",
             "LastLedgerSequence": 65477334,
@@ -31,7 +31,7 @@ final class TestUOfferCancel: XCTestCase {
     }
 
     func testA() {
-        let tx = try! OfferCancel(json: TestUOfferCancel.baseTx)
+        let tx = try! OfferCancel(json: TestOfferCancel.baseTx)
         do {
             try validateOfferCancel(tx: tx.toJson())
         } catch {
@@ -40,8 +40,8 @@ final class TestUOfferCancel: XCTestCase {
     }
 
     func testValidOfferCancelFlags() {
-        TestUOfferCancel.baseTx["Flags"] = 2147483648 as AnyObject
-        let tx = try! OfferCancel(json: TestUOfferCancel.baseTx)
+        TestOfferCancel.baseTx["Flags"] = 2147483648 as AnyObject
+        let tx = try! OfferCancel(json: TestOfferCancel.baseTx)
         do {
             try validateOfferCancel(tx: tx.toJson())
         } catch {
@@ -50,12 +50,12 @@ final class TestUOfferCancel: XCTestCase {
     }
 
     func testInvalidOfferSequenceType() {
-        TestUOfferCancel.baseTx["OfferSequence"] = "10" as AnyObject
-        XCTAssertThrowsError(try OfferCancel(json: TestUOfferCancel.baseTx))
+        TestOfferCancel.baseTx["OfferSequence"] = "10" as AnyObject
+        XCTAssertThrowsError(try OfferCancel(json: TestOfferCancel.baseTx))
     }
 
     func testInvalidOfferSequenceNil() {
-        TestUOfferCancel.baseTx["OfferSequence"] = nil
-        XCTAssertThrowsError(try OfferCancel(json: TestUOfferCancel.baseTx))
+        TestOfferCancel.baseTx["OfferSequence"] = nil
+        XCTAssertThrowsError(try OfferCancel(json: TestOfferCancel.baseTx))
     }
 }

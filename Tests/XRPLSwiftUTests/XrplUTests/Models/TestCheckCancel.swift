@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUCheckCancel: XCTestCase {
+final class TestCheckCancel: XCTestCase {
 
     func testA() {
         let baseTx = [

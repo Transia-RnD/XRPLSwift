@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUIsConnected: XCTestCase {
+final class TestIsConnected: XCTestCase {
 
     func testExponentialBackoffDuration() {
         XCTAssert(ExponentialBackoff().duration() == 100)

@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUConnection: RippledMockTester {
+final class TestConnection: RippledMockTester {
 
     override func setUp() async throws {
         try await super.setUp()
@@ -172,7 +172,7 @@ final class TestTrace: XCTestCase {
         XCTAssert(connection.config.authorization == nil)
     }
 
-    func testAsFalse() async {
+    func _testAsFalse() async {
         let messages: [[String: AnyObject]] = []
         //        console.log = function (id: number, message: string): void {
         //            messages.push([id, message])
@@ -187,7 +187,7 @@ final class TestTrace: XCTestCase {
         //        XCTAssertEqual(messages, [])
     }
 
-    func testAsTrue() {
+    func _testAsTrue() {
         let messages: [[String: AnyObject]] = []
         //        console.log = function (id: number, message: string): void {
         //            messages.push([id, message])
@@ -202,7 +202,7 @@ final class TestTrace: XCTestCase {
         //        XCTAssertEqual(messages, [])
     }
 
-    func testAsFunction() {
+    func _testAsFunction() {
         let messages: [[String: AnyObject]] = []
         //        console.log = function (id: number, message: string): void {
         //            messages.push([id, message])

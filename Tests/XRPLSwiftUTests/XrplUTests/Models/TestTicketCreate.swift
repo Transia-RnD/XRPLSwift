@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestUTicketCreate: XCTestCase {
+final class TestTicketCreate: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
@@ -25,8 +25,8 @@ final class TestUTicketCreate: XCTestCase {
     }
 
     func testA() {
-        TestUTicketCreate.setUp()
-        let tx = try! TicketCreate(json: TestUTicketCreate.baseTx)
+        TestTicketCreate.setUp()
+        let tx = try! TicketCreate(json: TestTicketCreate.baseTx)
         do {
             try validateTicketCreate(tx: tx.toJson())
         } catch {
@@ -35,32 +35,32 @@ final class TestUTicketCreate: XCTestCase {
     }
 
     func testInvalidTicketCountNil() {
-        TestUTicketCreate.setUp()
-        TestUTicketCreate.baseTx["TicketCount"] = nil
-        XCTAssertThrowsError(try TicketCreate(json: TestUTicketCreate.baseTx))
+        TestTicketCreate.setUp()
+        TestTicketCreate.baseTx["TicketCount"] = nil
+        XCTAssertThrowsError(try TicketCreate(json: TestTicketCreate.baseTx))
     }
 
     func testInvalidTicketCountTypeInt() {
-        TestUTicketCreate.setUp()
-        TestUTicketCreate.baseTx["TicketCount"] = "100" as AnyObject
-        XCTAssertThrowsError(try TicketCreate(json: TestUTicketCreate.baseTx))
+        TestTicketCreate.setUp()
+        TestTicketCreate.baseTx["TicketCount"] = "100" as AnyObject
+        XCTAssertThrowsError(try TicketCreate(json: TestTicketCreate.baseTx))
     }
 
     func testInvalidTicketCountTypeDouble() {
-        TestUTicketCreate.setUp()
-        TestUTicketCreate.baseTx["TicketCount"] = "12.5" as AnyObject
-        XCTAssertThrowsError(try TicketCreate(json: TestUTicketCreate.baseTx))
+        TestTicketCreate.setUp()
+        TestTicketCreate.baseTx["TicketCount"] = "12.5" as AnyObject
+        XCTAssertThrowsError(try TicketCreate(json: TestTicketCreate.baseTx))
     }
 
     func testInvalidTicketCountLess() {
-        TestUTicketCreate.setUp()
-        TestUTicketCreate.baseTx["TicketCount"] = 0 as AnyObject
-        XCTAssertThrowsError(try TicketCreate(json: TestUTicketCreate.baseTx))
+        TestTicketCreate.setUp()
+        TestTicketCreate.baseTx["TicketCount"] = 0 as AnyObject
+        XCTAssertThrowsError(try TicketCreate(json: TestTicketCreate.baseTx))
     }
 
     func testInvalidTicketCountGreater() {
-        TestUTicketCreate.setUp()
-        TestUTicketCreate.baseTx["TicketCount"] = 251 as AnyObject
-        XCTAssertThrowsError(try TicketCreate(json: TestUTicketCreate.baseTx))
+        TestTicketCreate.setUp()
+        TestTicketCreate.baseTx["TicketCount"] = 251 as AnyObject
+        XCTAssertThrowsError(try TicketCreate(json: TestTicketCreate.baseTx))
     }
 }

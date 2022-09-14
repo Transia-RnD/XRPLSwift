@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUSigner: XCTestCase {
+final class TestSigner: XCTestCase {
 
     let address: String = "rhvh5SrgBL5V8oeV9EpDuVszeJSSCEkbPc"
     let publicKey: String = "030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D"

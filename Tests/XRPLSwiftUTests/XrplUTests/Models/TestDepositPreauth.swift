@@ -10,20 +10,20 @@
 import XCTest
 @testable import XRPLSwift
 
-final class TestUDepositPreauth: XCTestCase {
+final class TestDepositPreauth: XCTestCase {
 
     public static var baseTx: [String: AnyObject] = [:]
 
     override func setUp() async throws {
-        TestUDepositPreauth.baseTx = [
+        TestDepositPreauth.baseTx = [
             "TransactionType": "DepositPreauth",
             "Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn"
         ] as! [String: AnyObject]
     }
 
     func testA() {
-        TestUDepositPreauth.baseTx["Authorize"] = "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW" as AnyObject
-        let tx = try! DepositPreauth(json: TestUDepositPreauth.baseTx)
+        TestDepositPreauth.baseTx["Authorize"] = "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW" as AnyObject
+        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         do {
             try validateDepositPreauth(tx: tx.toJson())
         } catch {
@@ -32,8 +32,8 @@ final class TestUDepositPreauth: XCTestCase {
     }
 
     func testB() {
-        TestUDepositPreauth.baseTx["Unauthorize"] = "raKEEVSGnKSD9Zyvxu4z6Pqpm4ABH8FS6n" as AnyObject
-        let tx = try! DepositPreauth(json: TestUDepositPreauth.baseTx)
+        TestDepositPreauth.baseTx["Unauthorize"] = "raKEEVSGnKSD9Zyvxu4z6Pqpm4ABH8FS6n" as AnyObject
+        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         do {
             try validateDepositPreauth(tx: tx.toJson())
         } catch {
@@ -42,40 +42,40 @@ final class TestUDepositPreauth: XCTestCase {
     }
 
     func testInvalidBoth() {
-        TestUDepositPreauth.baseTx["Authorize"] = "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW" as AnyObject
-        TestUDepositPreauth.baseTx["Unauthorize"] = "raKEEVSGnKSD9Zyvxu4z6Pqpm4ABH8FS6n" as AnyObject
-        let tx = try! DepositPreauth(json: TestUDepositPreauth.baseTx)
+        TestDepositPreauth.baseTx["Authorize"] = "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW" as AnyObject
+        TestDepositPreauth.baseTx["Unauthorize"] = "raKEEVSGnKSD9Zyvxu4z6Pqpm4ABH8FS6n" as AnyObject
+        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidNeither() {
-        let tx = try! DepositPreauth(json: TestUDepositPreauth.baseTx)
+        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidAuthorize() {
-        TestUDepositPreauth.baseTx["Authorize"] = 1234 as AnyObject
+        TestDepositPreauth.baseTx["Authorize"] = 1234 as AnyObject
 //        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
-        XCTAssertThrowsError(try DepositPreauth(json: TestUDepositPreauth.baseTx))
+        XCTAssertThrowsError(try DepositPreauth(json: TestDepositPreauth.baseTx))
 //        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidAuthorizeOwn() {
-        TestUDepositPreauth.baseTx["Authorize"] = "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn" as AnyObject
-        let tx = try! DepositPreauth(json: TestUDepositPreauth.baseTx)
+        TestDepositPreauth.baseTx["Authorize"] = "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn" as AnyObject
+        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidUnauthorize() {
-        TestUDepositPreauth.baseTx["Unauthorize"] = 1234 as AnyObject
+        TestDepositPreauth.baseTx["Unauthorize"] = 1234 as AnyObject
 //        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
-        XCTAssertThrowsError(try DepositPreauth(json: TestUDepositPreauth.baseTx))
+        XCTAssertThrowsError(try DepositPreauth(json: TestDepositPreauth.baseTx))
 //        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidUnauthorizeOwn() {
-        TestUDepositPreauth.baseTx["Unauthorize"] = "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn" as AnyObject
-        let tx = try! DepositPreauth(json: TestUDepositPreauth.baseTx)
+        TestDepositPreauth.baseTx["Unauthorize"] = "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn" as AnyObject
+        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 }
