@@ -70,7 +70,6 @@ struct AssociatedValue {
     //    }
 
     func from() throws -> SerializedType? {
-        print(field.associatedType.self)
         if field.associatedType.self is AccountID.Type {
             return try AccountID.from(value: xaddressDecoded[field.name]! as! String)
         }
@@ -147,17 +146,17 @@ struct AssociatedValue {
         if field.associatedType.self is xCurrency.Type {
             return try! xCurrency().fromParser(parser: self.parser)
         }
-        if field.associatedType.self is Hash.Type {
-            return try! Hash().fromParser(parser: self.parser)
-        }
-        if field.associatedType.self is Hash128.Type {
-            return try! Hash128().fromParser(parser: self.parser)
+        if field.associatedType.self is Hash256.Type {
+            return try! Hash256().fromParser(parser: self.parser)
         }
         if field.associatedType.self is Hash160.Type {
             return try! Hash160().fromParser(parser: self.parser)
         }
-        if field.associatedType.self is Hash256.Type {
-            return try! Hash256().fromParser(parser: self.parser)
+        if field.associatedType.self is Hash128.Type {
+            return try! Hash128().fromParser(parser: self.parser)
+        }
+        if field.associatedType.self is Hash.Type {
+            return try! Hash().fromParser(parser: self.parser)
         }
         if field.associatedType.self is xPathSet.Type {
             return try! xPathSet.fromParser(parser: self.parser)
@@ -184,8 +183,8 @@ struct AssociatedValue {
         //            print("xUInt")
         //            return try! xUInt.from(value: xaddressDecoded[field.name]! as! Int)
         //        }
-        if let av = field.associatedType.self as? Vector256.Type {
-            return try! Vector256().fromParser(parser: self.parser)
+        if field.associatedType.self is Vector256.Type {
+            return Vector256().fromParser(parser: self.parser)
         }
         return nil
     }
@@ -261,7 +260,6 @@ class STObject: SerializedType {
             if field.type == ST_OBJECT {
                 serializer.put(bytes: Data(OBJECT_END_MARKER_BYTE))
             }
-//            print(serializer.sink.toBytes().toHex)
         }
 
         return STObject(serializer.sink.toBytes())
@@ -317,7 +315,7 @@ class STObject: SerializedType {
         var isUnlModify: Bool = false
 
         for field in sortedKeys {
-//            print("FIELD NAME: \(field.name)")
+            print("FIELD NAME: \(field.name)")
             var associatedValue: SerializedType?
             do {
                 let dynamicValue: AssociatedValue = AssociatedValue(field: field, xaddressDecoded: xaddressDecoded)
@@ -326,7 +324,6 @@ class STObject: SerializedType {
                 // mildly hacky way to get more context in the error
                 // provides the field name and not just the type it's expecting
                 // keeps the original stack trace
-                //                e.args = (f"Error processing {field.name}: {e.args[0]}",) + e.args[1:]
                 throw BinaryError.unknownError(error: "Error processing \(field.name): \(error.localizedDescription)")
             }
 //            print("AV VALUE: \(associatedValue)")

@@ -173,22 +173,20 @@ public class BinarySerializer {
      The byte arrary encoded length
      */
     func encodeVariableLength(length: Int) -> Data {
-        var lenBytes = Data([UInt8].init(repeating: 0x0, count: 3))
         var len = length
-        if length <= 192 {
-            lenBytes[0] = UInt8(length)
-            return lenBytes[0..<1]
-        } else if length <= 12480 {
-            len -= 193
-            lenBytes[0] = UInt8(193 + (len >> 8))
-            lenBytes[1] = UInt8(len & 0xff)
-            return lenBytes[0...2]
-        } else if length <= 918744 {
-            len -= 12481
-            lenBytes[0] = UInt8(241 + (len >> 16))
-            lenBytes[1] = UInt8((len >> 8) & 0xff)
-            lenBytes[2] = UInt8(len & 0xff)
-            return lenBytes[0...3]
+        if length <= _MAX_SINGLE_BYTE_LENGTH {
+            return Data(from: UInt8(length))
+        } else if length < _MAX_DOUBLE_BYTE_LENGTH {
+            len -= _MAX_SINGLE_BYTE_LENGTH + 1
+            let byte1 = UInt8((len >> 8) + (_MAX_SINGLE_BYTE_LENGTH + 1))
+            let byte2 = UInt8(len & 0xff)
+            return Data(fromArray: [byte1, byte2])
+        } else if length <= _MAX_LENGTH_VALUE {
+            len -= _MAX_DOUBLE_BYTE_LENGTH
+            let byte1 = UInt8((len >> 16) + (_MAX_SECOND_BYTE_VALUE + 1))
+            let byte2 = UInt8((len >> 8) & 0xff)
+            let byte3 = UInt8(len & 0xff)
+            return Data(fromArray: [byte1, byte2, byte3])
         }
         fatalError("VariableLength field must be <= 918744 bytes long")
     }

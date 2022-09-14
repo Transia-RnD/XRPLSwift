@@ -19,7 +19,6 @@ import Foundation
  the NFTokenOffer has already expired.
  */
 public class NFTokenCancelOffer: BaseTransaction {
-
     /**
      An array of identifiers of NFTokenOffer objects that should be cancelled
      by this transaction.
@@ -42,15 +41,15 @@ public class NFTokenCancelOffer: BaseTransaction {
         super.init(account: "", transactionType: "NFTokenCancelOffer")
     }
 
-    public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(NFTokenCancelOffer.self, from: data)
         self.nftokenOffers = decoded.nftokenOffers
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         nftokenOffers = try values.decode([String].self, forKey: .nftokenOffers)
         try super.init(from: decoder)

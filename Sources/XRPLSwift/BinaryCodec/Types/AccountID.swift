@@ -58,7 +58,7 @@ class AccountID: Hash160 {
         return AccountID(try! parser.read(n: hint ?? LENGTH20))
     }
 
-    override func toJson() -> String {
+    override func toJson() -> Any {
         return try! XrplCodec.encodeClassicAddress(bytes: self.bytes)
     }
 }

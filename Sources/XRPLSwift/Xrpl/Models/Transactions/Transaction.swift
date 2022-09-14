@@ -56,7 +56,7 @@ extension Transaction {
     // swiftlint:disable:next cyclomatic_complexity
     public init?(_ json: [String: AnyObject]) throws {
         guard let transactionType: String = json["TransactionType"] as? String else {
-            throw TransactionCodingError.decoding("Invalid Transaction Type")
+            throw TransactionCodingError.decoding("Missing Transaction Type")
         }
         if transactionType == "AccountDelete", let value = try? AccountDelete(json: json) {
             self = .accountDelete(value)

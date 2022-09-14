@@ -26,10 +26,7 @@ let PATH_SEPARATOR_BYTE: Int = 0xFF
 
 internal func isPathStep(value: [String: AnyObject]) -> Bool {
     // Helper function to determine if a dictionary represents a valid path step.
-    guard value["issuer"] != nil, value["currency"] != nil else {
-        return false
-    }
-    return true
+    return value["issuer"] != nil || value["account"] != nil || value["currency"] != nil
 }
 
 internal func isPathSet(value: [[[String: AnyObject]]]) -> Bool {
@@ -86,7 +83,7 @@ class xPathStep: SerializedType {
          XRPLBinaryCodecException: If the number of bytes in the buffer
          is not a multiple of the hash length.
          */
-        print(self.toHex())
+//        print(self.toHex())
         let parser = BinaryParser(hex: self.toHex())
         let dataType = Int(parser.readUInt8())
         var json: [String: AnyObject] = [:]

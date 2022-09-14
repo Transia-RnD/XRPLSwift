@@ -38,6 +38,7 @@ class Hash: SerializedType {
         parser: BinaryParser,
         hint: Int? = nil
     ) -> Hash {
+        print(self.width)
         return Hash(try! parser.read(n: hint ?? self.width))
     }
 

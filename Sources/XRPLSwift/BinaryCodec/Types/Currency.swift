@@ -105,12 +105,17 @@ class xCurrency: Hash160 {
         return xCurrency(try! parser.read(n: hint ?? LENGTH20))
     }
 
-    override func toJson() -> String {
+    override func toJson() -> Any {
         if self.iso != nil {
             print("ISO NIL")
             return self.iso!
         }
         print("ISO HEX")
-        return self.bytes.toHexString().uppercased()
+        return self.bytes.toHex
     }
+    
+    override func toJson() -> String {
+        return (self.toJson() as Any) as! String
+    }
+    
 }

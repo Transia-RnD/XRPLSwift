@@ -100,7 +100,7 @@ public class NFTokenCreateOffer: BaseTransaction {
     }
 
     public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(NFTokenCreateOffer.self, from: data)
         self.nftokenId = decoded.nftokenId

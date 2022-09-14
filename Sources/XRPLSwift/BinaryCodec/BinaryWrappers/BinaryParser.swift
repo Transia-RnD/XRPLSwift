@@ -64,9 +64,6 @@ public class BinaryParser {
      */
     // swiftlint:disable:next identifier_name
     public func read(n: Int) throws -> [UInt8] {
-        guard n <= bytes.count else {
-            throw BinaryError.unknownError(error: "Invalid Bytes Length")
-        }
         let slice = bytes[0..<n]
         try! skip(n: n)
         return [UInt8](slice)
@@ -153,16 +150,16 @@ public class BinaryParser {
      The variable length prefix
      */
     func readLengthPrefix() throws -> Int {
-        let b1: Int = Int(self.readUInt8())
-        if b1 <= 192 {
-            return b1
-        } else if b1 <= 240 {
-            let b2: Int = Int(self.readUInt8())
-            return 193 + (b1 - 193) * 256 + b2
-        } else if b1 <= 254 {
-            let b2: Int = Int(self.readUInt8())
-            let b3: Int = Int(self.readUInt8())
-            return 12481 + (b1 - 241) * 65536 + b2 * 256 + b3
+        let byte1 = Int(self.readUInt8())
+        if byte1 <= 192 {
+            return byte1
+        } else if byte1 <= 240 {
+            let byte2 = Int(self.readUInt8())
+            return 193 + (byte1 - 193) * 256 + byte2
+        } else if byte1 <= 254 {
+            let byte2 = Int(self.readUInt8())
+            let byte3 = Int(self.readUInt8())
+            return 12481 + (byte1 - 241) * 65536 + byte2 * 256 + byte3
         }
         fatalError("Invalid variable length indicator")
     }

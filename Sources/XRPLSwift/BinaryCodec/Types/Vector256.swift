@@ -39,17 +39,16 @@ class Vector256: SerializedType {
         parser: BinaryParser,
         hint: Int? = nil
     ) -> SerializedType {
-        return SerializedType(bytes: [])
-//        let byteList: [UInt8] = []
-//        let numBytes = hint != nil ? hint : parser.bytes.count
-//        let numHashes = numBytes // HASH_LENGTH_BYTES
-//        for i in 0...numHashes! {
-//            byteList.append(contentsOf: try Hash256().fromParser(parser).bytes)
-//        }
-//        return Vector256(bytes: byteList)
+        var byteList: [UInt8] = []
+        let numBytes = hint != nil ? hint : parser.bytes.count
+        let numHashes = Int(numBytes! / HASH_LENGTH_BYTES)
+        for i in 0..<numHashes {
+            byteList.append(contentsOf: try Hash256().fromParser(parser: parser).bytes)
+        }
+        return Vector256(bytes: byteList)
     }
 
-    func toJson() throws -> [String] {
+    override func toJson() -> [String] {
         /* Return a list of hashes encoded as hex strings.
         Returns:
             The JSON representation of this Vector256.
@@ -58,13 +57,14 @@ class Vector256: SerializedType {
                                         is not a multiple of the hash length.
         */
         if self.bytes.count % HASH_LENGTH_BYTES != 0 {
-            throw BinaryError.unknownError(error: "Invalid bytes for Vector256.")
+            fatalError("Invalid bytes for Vector256.")
+//            throw BinaryError.unknownError(error: "Invalid bytes for Vector256.")
         }
 
         var hashList: [String] = []
         // swiftlint:disable:next identifier_name
         for i in stride(from: 0, to: self.bytes.count, by: HASH_LENGTH_BYTES) {
-            hashList.append([UInt8](self.bytes[i...i + HASH_LENGTH_BYTES-1]).toHexString().uppercased())
+            hashList.append([UInt8](self.bytes[i...i + HASH_LENGTH_BYTES-1]).toHex)
         }
         return hashList
     }

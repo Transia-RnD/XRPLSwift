@@ -168,7 +168,11 @@ public class RequestManager {
         if baseResponse.status == "error" {
             let errorData = try JSONSerialization.data(withJSONObject: response!, options: .prettyPrinted)
             let returnedDecodable = try decoder.decode(ErrorResponse.self, from: errorData)
-            try self.reject(id: baseResponse.id, error: XrplError.unknown(returnedDecodable.errorMessage!))
+            if let errorMessage = returnedDecodable.errorMessage {
+                try self.reject(id: baseResponse.id, error: XrplError.unknown(errorMessage))
+                return
+            }
+            try self.reject(id: baseResponse.id, error: XrplError.unknown(returnedDecodable.errorException!))
             return
         }
         if baseResponse.status != "success" {
@@ -337,22 +341,22 @@ public class RequestManager {
 //            try self.resolve(responseObj.id, responseObj, nil)
 //            return
 //        }
-//        if map.requestType.self is NFTBuyOffersRequest.Type {
-//            let responseObj = BaseResponse(
-//                response: baseResponse,
-//                result: CodableHelper.decode(NFTBuyOffersResponse.self, from: jsonData).decodableObj
-//            )
-//            try self.resolve(responseObj.id, responseObj, nil)
-//            return
-//        }
-//        if map.requestType.self is NFTSellOffersRequest.Type {
-//            let responseObj = BaseResponse(
-//                response: baseResponse,
-//                result: CodableHelper.decode(NFTSellOffersResponse.self, from: jsonData).decodableObj
-//            )
-//            try self.resolve(responseObj.id, responseObj, nil)
-//            return
-//        }
+        if map.requestType.self is NFTBuyOffersRequest.Type {
+            let responseObj = BaseResponse(
+                response: baseResponse,
+                result: CodableHelper.decode(NFTBuyOffersResponse.self, from: jsonData).decodableObj
+            )
+            try self.resolve(responseObj.id, responseObj, nil)
+            return
+        }
+        if map.requestType.self is NFTSellOffersRequest.Type {
+            let responseObj = BaseResponse(
+                response: baseResponse,
+                result: CodableHelper.decode(NFTSellOffersResponse.self, from: jsonData).decodableObj
+            )
+            try self.resolve(responseObj.id, responseObj, nil)
+            return
+        }
         if map.requestType.self is NoRippleCheckRequest.Type {
             let responseObj = BaseResponse(
                 response: baseResponse,

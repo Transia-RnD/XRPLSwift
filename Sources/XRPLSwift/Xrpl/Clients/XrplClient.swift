@@ -280,13 +280,13 @@ public class XrplClient: ConnectionDelegate {
 //        return await request(r: r)
 //    }
 //    // swiftlint:disable:next identifier_name
-//    func request(_ r: NFTBuyOffersRequest) async -> EventLoopFuture<Any> {
-//        return await request(r: r)
-//    }
-//    // swiftlint:disable:next identifier_name
-//    func request(_ r: NFTSellOffersRequest) async -> EventLoopFuture<Any> {
-//        return await request(r: r)
-//    }
+    func request(_ r: NFTBuyOffersRequest) async -> EventLoopFuture<Any> {
+        return await request(r: r)
+    }
+    // swiftlint:disable:next identifier_name
+    func request(_ r: NFTSellOffersRequest) async -> EventLoopFuture<Any> {
+        return await request(r: r)
+    }
 //    // swiftlint:disable:next identifier_name
 //    func request(_ r: NoRippleCheckRequest) async -> EventLoopFuture<Any> {
 //        return await request(r: r)
@@ -355,7 +355,7 @@ public class XrplClient: ConnectionDelegate {
     }
 
     public func request<R: BaseRequest>(_ rdict: R) async throws -> EventLoopFuture<Any> {
-        print(rdict)
+        print(try rdict.jsonString())
         let data = try JSONSerialization.data(withJSONObject: rdict, options: .prettyPrinted)
         let decoder = JSONDecoder()
         let base = try decoder.decode(R.self, from: data)

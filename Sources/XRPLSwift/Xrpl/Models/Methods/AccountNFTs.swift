@@ -98,9 +98,9 @@ public struct AccountNFToken: Codable {
     public let nftSerial: Int
 
     enum CodingKeys: String, CodingKey {
-        case flags = "flags"
-        case issuer = "issuer"
-        case nfTokenID = "nfTokenID"
+        case flags = "Flags"
+        case issuer = "Issuer"
+        case nfTokenID = "NFTokenID"
         case nfTokenTaxon = "NFTokenTaxon"
         case uri = "URI"
         case nftSerial = "nft_serial"
@@ -152,8 +152,8 @@ public class AccountNFTsResponse: Codable {
         accountNfts = try values.decode([AccountNFToken].self, forKey: .accountNfts)
         ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
         validated = try values.decode(Bool.self, forKey: .validated)
-        limit = try values.decode(Int.self, forKey: .limit)
-        marker = try values.decode(AnyCodable.self, forKey: .marker)
+        limit = try values.decodeIfPresent(Int.self, forKey: .limit)
+        marker = try values.decodeIfPresent(AnyCodable.self, forKey: .marker)
 //        try super.init(from: decoder)
     }
 

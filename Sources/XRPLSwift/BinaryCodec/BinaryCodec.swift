@@ -14,11 +14,11 @@ func numToBytes(num: Int) -> Data {
 }
 
 // swiftlint:disable:next identifier_name
-let TRANSACTION_SIGNATURE_PREFIX: Data = Data(numToBytes(num: 0x53545800).bytes.reversed())
+let TRANSACTION_SIGNATURE_PREFIX = Data(numToBytes(num: 0x53545800).bytes.reversed())
 // swiftlint:disable:next identifier_name
-let PAYMENT_CHANNEL_CLAIM_PREFIX: Data = Data(numToBytes(num: 0x434C4D00).bytes.reversed())
+let PAYMENT_CHANNEL_CLAIM_PREFIX = Data(numToBytes(num: 0x434C4D00).bytes.reversed())
 // swiftlint:disable:next identifier_name
-let TRANSACTION_MULTISIG_PREFIX: Data = Data(numToBytes(num: 0x534D5400).bytes.reversed())
+let TRANSACTION_MULTISIG_PREFIX = Data(numToBytes(num: 0x534D5400).bytes.reversed())
 
 class BinaryCodec {
     /**

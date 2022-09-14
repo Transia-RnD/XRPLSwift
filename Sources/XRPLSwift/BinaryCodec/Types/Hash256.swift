@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 7/4/22.
 //
 
-// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/types/hash_256.py
+// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/types/hash256.py
 
 import Foundation
 

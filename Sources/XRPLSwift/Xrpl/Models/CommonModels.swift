@@ -18,7 +18,7 @@ public enum AccountObjectType: String, Codable {
     case signerList
     case ticket
     case state
-
+    
     enum CodingKeys: String, CodingKey {
         case check = "check"
         case depositPreauth = "deposit_preauth"
@@ -37,11 +37,11 @@ public enum LedgerIndex: Codable {
 }
 
 extension LedgerIndex {
-
+    
     enum LedgerIndexCodingError: Error {
         case decoding(String)
     }
-
+    
     public init(from decoder: Decoder) throws {
         if let value = try? String.init(from: decoder) {
             self = .string(value)
@@ -53,7 +53,7 @@ extension LedgerIndex {
         }
         throw LedgerIndexCodingError.decoding("LedgerIndex not mapped")
     }
-
+    
     public func encode(to encoder: Encoder) throws {
         switch self {
         case .string(let string):
@@ -82,13 +82,13 @@ public struct IssuedCurrencyAmount: IssuedCurrency, Codable {
     public var currency: String
     public var issuer: String
     public var value: String
-
+    
     enum CodingKeys: String, CodingKey {
         case currency = "currency"
         case issuer = "issuer"
         case value = "value"
     }
-
+    
     public init(_ json: [String: AnyObject]) throws {
         let decoder: JSONDecoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
@@ -110,11 +110,11 @@ public enum Amount: Codable {
 }
 
 extension Amount {
-
+    
     enum AmountCodingError: Error {
         case decoding(String)
     }
-
+    
     public var value: Any {
         switch self {
         case .string(let string):
@@ -123,7 +123,7 @@ extension Amount {
             return ic
         }
     }
-
+    
     public init(from decoder: Decoder) throws {
         print(decoder.self)
         if let value = try? String.init(from: decoder) {
@@ -136,7 +136,7 @@ extension Amount {
         }
         throw AmountCodingError.decoding("Invalid Amount: Amount should be string or dict")
     }
-
+    
     public func encode(to encoder: Encoder) throws {
         switch self {
         case .string(let string):
@@ -151,13 +151,13 @@ public class BaseSigner: Codable {
     public let account: String
     public let txnSignature: String
     public let signingPubKey: String
-
+    
     enum CodingKeys: String, CodingKey {
         case account = "Account"
         case txnSignature = "TxnSignature"
         case signingPubKey = "SigningPubKey"
     }
-
+    
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
@@ -170,9 +170,9 @@ public class Signer: Codable {
     enum CodingKeys: String, CodingKey {
         case signer = "Signer"
     }
-
+    
     public let signer: BaseSigner
-
+    
     public init(json: [String: AnyObject]) throws {
         let decoder: JSONDecoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
@@ -185,13 +185,13 @@ public class BaseMemo: Codable {
     public let memoData: String
     public let memoType: String
     public let memoFormat: String
-
+    
     enum CodingKeys: String, CodingKey {
         case memoData = "MemoData"
         case memoType = "MemoType"
         case memoFormat = "MemoFormat"
     }
-
+    
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         memoData = try values.decode(String.self, forKey: .memoData)
@@ -252,20 +252,39 @@ public typealias Path = [PathStep]
 //  ledger_index?: number
 // }
 //
-/// **
-// * One offer that might be returned from either an {@link NFTBuyOffersRequest}
-// * or an {@link NFTSellOffersRequest}.
-// *
-// * @category Responses
-// */
-// export interface NFTOffer {
-//  amount: Amount
-//  flags: number
-//  nft_offer_index: string
-//  owner: string
-//  destination?: string
-//  expiration?: number
-// }
+/**
+ * One offer that might be returned from either an {@link NFTBuyOffersRequest}
+ * or an {@link NFTSellOffersRequest}.
+ *
+ * @category Responses
+ */
+public struct NFTOffer: Codable {
+    public let amount: Amount
+    public let flags: Int
+    public let nftOfferIndex: String
+    public let owner: String
+    public let destination: String?
+    public let expiration: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case amount = "amount"
+        case flags = "flags"
+        case nftOfferIndex = "nft_offer_index"
+        case owner = "owner"
+        case destination = "destination"
+        case expiration = "expiration"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        amount = try values.decode(Amount.self, forKey: .amount)
+        flags = try values.decode(Int.self, forKey: .flags)
+        nftOfferIndex = try values.decode(String.self, forKey: .nftOfferIndex)
+        owner = try values.decode(String.self, forKey: .owner)
+        destination = try values.decodeIfPresent(String.self, forKey: .destination)
+        expiration = try values.decodeIfPresent(Int.self, forKey: .expiration)
+    }
+}
 
 import AnyCodable
 
@@ -277,14 +296,14 @@ public struct XRPLWebSocketResponse: Codable {
     public var result: [String: AnyObject] {
         return rresult.value as! [String: AnyObject]
     }
-
+    
     enum CodingKeys: String, CodingKey {
         case id
         case status
         case type
         case rresult = "result"
     }
-
+    
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         id = try values.decode(String.self, forKey: .id)

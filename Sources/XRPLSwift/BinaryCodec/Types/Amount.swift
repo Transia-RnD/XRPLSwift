@@ -83,11 +83,17 @@ func verifyIouValue(issuedCurrencyValue: String) throws {
     Raises:
         XRPLBinaryCodecException: If issued_currency_value is invalid.
     */
-    let decimalValue: Decimal = Decimal(string: issuedCurrencyValue)!
+    let decimalValue = Decimal(string: issuedCurrencyValue)!
+    print("decimal: \(decimalValue)")
     if decimalValue.isZero {
         return
     }
     let exponent = decimalValue.exponent
+    print("exponent: \(exponent)")
+    print(MAX_IOU_PRECISION)
+    print(calculatePrecision(value: issuedCurrencyValue))
+    print((exponent > MAX_IOU_EXPONENT))
+    print((exponent < MIN_IOU_EXPONENT))
     if
         (calculatePrecision(value: issuedCurrencyValue) > MAX_IOU_PRECISION)
         || (exponent > MAX_IOU_EXPONENT)
@@ -99,7 +105,7 @@ func verifyIouValue(issuedCurrencyValue: String) throws {
 
 func calculatePrecision(value: String) -> Int {
     // Calculate the precision of given value as a string.
-    let decimalValue: Decimal = Decimal(string: value)!
+    let decimalValue = Decimal(string: value)!
     if decimalValue.exponent == decimalValue.asInt {
         return decimalValue.digits().count
     }
@@ -132,7 +138,7 @@ func serializeIssuedCurrencyValue(value: String) throws -> [UInt8] {
     :return: A bytes object encoding the serialized value.
     */
     try verifyIouValue(issuedCurrencyValue: value)
-    let decimalValue: Decimal = Decimal(string: value)!
+    let decimalValue = Decimal(string: value)!
     if decimalValue.isZero {
         return try ZERO_CURRENCY_AMOUNT_HEX.data.toArray(type: UInt8.self).reversed()
     }
@@ -141,7 +147,7 @@ func serializeIssuedCurrencyValue(value: String) throws -> [UInt8] {
     let sign: Int = decimalValue.isSignMinus ? 1 : 0
     let digits: [String] = decimalValue.digits()
     var exp: Int = decimalValue.exponent
-    var mantissa: Int = Int(digits.map({ String($0) }).joined(separator: ""))!
+    var mantissa = Int(digits.map({ String($0) }).joined(separator: ""))!
 
     // Canonicalize to expected range ---------------------------------------
     while mantissa < MIN_IOU_MANTISSA && exp > MIN_IOU_EXPONENT {
@@ -156,7 +162,7 @@ func serializeIssuedCurrencyValue(value: String) throws -> [UInt8] {
         mantissa /= 10
         exp += 1
     }
-
+    
     if exp < MIN_IOU_EXPONENT || mantissa < MIN_IOU_MANTISSA {
         // Round to zero
         return try ZERO_CURRENCY_AMOUNT_HEX.data.toArray(type: UInt8.self).reversed()
@@ -175,8 +181,6 @@ func serializeIssuedCurrencyValue(value: String) throws -> [UInt8] {
     serial |= UInt64((exp + 97) << 54)  // next 8 bits are exponents
     serial |= UInt64(mantissa)  // last 54 bits are mantissa
 
-    print(serial)
-//    print(try serial.data.toArray(type: UInt8.self).reversed())
     return try serial.data.toArray(type: UInt8.self).reversed()
 }
 
@@ -207,15 +211,9 @@ func serializeIssuedCurrencyAmount(value: [String: String]) throws -> [UInt8] {
          The bytes representing the serialized issued currency amount.
     */
     let amountString: String = value["value"]!
-//    print("AMOUNT STRING: \(amountString)")
     let amountBytes: [UInt8] = try serializeIssuedCurrencyValue(value: amountString)
-//    print("AMOUNT BYTES: \(amountBytes.toHexString())")
-//    print(amountBytes.toHexString())
-//    print(value["currency"])
     let currencyBytes: [UInt8] = try xCurrency.from(value: value["currency"]!).toBytes()
-//    print("CUR BYTES: \(currencyBytes)")
     let issuerBytes: [UInt8] = try AccountID.from(value: value["issuer"]!).toBytes()
-//    print("ISSUER BYTES: \(issuerBytes)")
     return amountBytes + currencyBytes + issuerBytes
 }
 
@@ -265,48 +263,32 @@ class xAmount: SerializedType {
             return "\(sign)\(maskedBytes)"
         }
 
-        let parser: BinaryParser = BinaryParser(hex: self.toHex())
+        let parser = BinaryParser(hex: self.toHex())
         let valueBytes: [UInt8] = try! parser.read(n: 8)
-        let currency: xCurrency = xCurrency().fromParser(parser: parser)
-        let issuer: AccountID = AccountID().fromParser(parser: parser)
-        print(issuer.toJson())
-        let b1: UInt8 = valueBytes[0]
-//        print("B1: \(b1)")
-        let b2: UInt8 = valueBytes[1]
-//        print("B2: \(b2)")
-        let isPositive: UInt8 = b1 & 0x40
-//        print("POSITIVE: \(isPositive)")
+        let currency = xCurrency().fromParser(parser: parser)
+        let issuer = AccountID().fromParser(parser: parser)
+        let byte1: UInt8 = valueBytes[0]
+//        print("B1: \(byte1)")
+        let byte2: UInt8 = valueBytes[1]
+//        print("B2: \(byte2)")
+        let isPositive: UInt8 = byte1 & 0x40
         let sign: String = (isPositive != 0) ? "" : "-"
-//        print("SIGN: \(sign)")
-        let exponent: Int = Int(((b1 & 0x3F) << 2) + ((b2 & 0xFF) >> 6)) - 97
-//        print("EXPONENT: \(exponent)")
-        let mantissa: [UInt8] = [UInt8](arrayLiteral: b2 & 0x3F) + [UInt8](valueBytes[2...])
-//        print([UInt8](arrayLiteral: b2 & 0x3F))
-//        print([UInt8](valueBytes[2...]).toHexString())
-//        print("MANTISSA: \(mantissa)")
-        let hexMantissa: String = ([UInt8](arrayLiteral: b2 & 0x3F) + valueBytes[2...]).toHexString()
-//        print("HEX MANTISSA: \(hexMantissa)")
-        let intMantissa: Int = Int(hexMantissa, radix: 16)!
-//        print("INT MANTISSA: \(intMantissa)")
-//        print(Decimal(string: "1e\(exponent)")!)
-//        print(Decimal(string: "\(sign)\(intMantissa)")!)
-        let value: Decimal = Decimal(string: "\(sign)\(intMantissa)")! * Decimal(string: "1e\(exponent)")!
-//        print(value)
-//
+        let exponent = Int(((byte1 & 0x3F) << 2) + ((byte2 & 0xFF) >> 6)) - 97
+        let hexMantissa: String = ([UInt8](arrayLiteral: byte2 & 0x3F) + valueBytes[2...]).toHex
+        let intMantissa = Int(hexMantissa, radix: 16)!
+        let value = Decimal(string: "\(sign)\(intMantissa)")! * Decimal(string: "1e\(exponent)")!
         var valueStr: String = ""
         if value.isZero {
             valueStr = "0"
         } else {
             valueStr = value.description
-//            valueStr.rstrip(where: { $0 == "0" })
-//            valueStr.rstrip(where: { $0 == "." })
         }
         try! verifyIouValue(issuedCurrencyValue: valueStr)
 
         return [
             "value": valueStr,
-            "currency": currency.toJson(),
-            "issuer": issuer.toJson()
+            "currency": currency.toJson() as Any,
+            "issuer": issuer.toJson() as Any
         ]
     }
 
@@ -343,20 +325,15 @@ extension Decimal {
     }
 
     var exponentXrp: Int {
-        let string: String = "\(self)"
-//        guard self.exponent == 0, let index = string.firstIndex(of: "."), Int(String(string[index...])) == 0 else {
-//            return -1
-//        }
         return self.exponent
     }
 
     func digits() -> [String] {
-        var string: String = "\(self)"
-        if let index = string.firstIndex(of: ".") { string.remove(at: index) }
+        var string: String = "\(self.significand)"
         if let index = string.firstIndex(of: "-") { string.remove(at: index) }
-        string.removeAll(where: { $0 == "0" })
-        return Array(string).compactMap { String($0) }
+        return string.compactMap{ String($0.wholeNumberValue!) }
     }
+    
     // TODO: This exists but couldn't find func name
     func compare(_ value: Decimal) -> Int {
         if self > value { return 1 }
@@ -374,18 +351,3 @@ extension Int {
         return XRPLSwift.byteArray(from: self)
     }
 }
-
-// extension StringProtocol {
-//    func rstrip() -> String {
-//        let trimSet: NSCharacterSet = NSCharacterSet.whitespacesAndNewlines as NSCharacterSet
-//        let wanted = trimSet.inverted
-//        print(wanted)
-//        if let r = self.rangeOfCharacter(from: CharacterSet(charactersIn: "."), options: .backwards) {
-//            let test = self.prefix(upTo: r.upperBound)
-//            print(test)
-////            return self.prefix(upTo: r.upperBound) as! String
-//            return ""
-//        }
-//        return ""
-//    }
-// }
