@@ -19,7 +19,7 @@ jobs:
       uses: swift-actions/setup-swift@v1
       with:
         swift-version: "5.6.0"
-    - run: swift build -v
+    - run: swift build
     - run: swiftlint lint
 
   unit:
@@ -31,9 +31,9 @@ jobs:
       uses: swift-actions/setup-swift@v1
       with:
         swift-version: "5.6.0"
-    - run: swift build -v
+    - run: swift build
     - run: swiftlint lint
-    - run: swift test -v --filter TestU
+    - run: swift test --filter XRPLSwiftUTests
 
   integration:
     runs-on: macos-latest
@@ -47,15 +47,15 @@ jobs:
           --health-cmd="wget localhost:6006 || exit 1" --health-interval=5s --health-retries=10 --health-timeout=2s
 
     steps:
-    - uses: docker-practice/actions-setup-docker@master
     - uses: actions/checkout@v3
+    - run: brew install --cask docker
     - name: Use Swift "5.6.0"
       uses: swift-actions/setup-swift@v1
       with:
         swift-version: "5.6.0"
-    - run: swift build -v
+    - run: swift build
     - run: swiftlint lint
-    - run: swift test -v --filter TestI
+    - run: swift test --filter XRPLSwiftITests
       env:
         HOST: localhost
         PORT: ${{ job.services.rippled.ports['6006'] }}
