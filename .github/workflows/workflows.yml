@@ -38,23 +38,10 @@ jobs:
   integration:
     runs-on: macos-latest
 
-    services:
-      rippled:
-        image: natenichols/rippled-standalone:latest
-        ports:
-        - 6006:6006
-        options:
-          --health-cmd="wget localhost:6006 || exit 1" --health-interval=5s --health-retries=10 --health-timeout=2s
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Install docker # Taken from https://github.com/actions/virtual-environments/issues/1143#issuecomment-652264388
-      run: |
-        mkdir -p ~/.docker/machine/cache
-        curl -Lo ~/.docker/machine/cache/boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v19.03.12/boot2docker.iso
-        brew install docker docker-machine
-        docker-machine create --driver virtualbox default
-        docker-machine env default
+    - uses: actions/checkout@v3
+    - run: brew install --cask docker
+    - run: docker run -d -p 6006:6006 -it natenichols/rippled-standalone:latest
     - name: Use Swift "5.6.0"
       uses: swift-actions/setup-swift@v1
       with:
