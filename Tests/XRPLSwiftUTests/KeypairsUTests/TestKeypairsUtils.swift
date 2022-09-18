@@ -15,15 +15,15 @@ import XCTest
 final class TestKeypairsUtils: XCTestCase {
 
     func testEmptyHexToBytes() {
-        XCTAssertEqual("".toBytes(), [])
+        XCTAssertEqual("".hexToBytes, [])
     }
 
     func testZeroHexToBytes() {
-        XCTAssertEqual("000000".toBytes(), [0, 0, 0])
+        XCTAssertEqual("000000".hexToBytes, [0, 0, 0])
     }
 
     func testMiscHexToBytes() {
-        XCTAssertEqual("DEADBEEF".toBytes(), [222, 173, 190, 239])
+        XCTAssertEqual("DEADBEEF".hexToBytes, [222, 173, 190, 239])
     }
 
     func testMiscBytesToHex() {

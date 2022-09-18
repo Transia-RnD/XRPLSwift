@@ -105,8 +105,8 @@ final class TestCheckCreate: XCTestCase {
             "Fee": "12"
         ] as! [String: AnyObject]
         // MARK: Required Fields are validated on init Optional validated on validated
-//        let tx = try! CheckCreate(json: baseTx)
-        XCTAssertThrowsError(try CheckCreate(json: baseTx))
-//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+        let tx = try! CheckCreate(json: baseTx)
+//        XCTAssertThrowsError(try CheckCreate(json: baseTx))
+        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 }

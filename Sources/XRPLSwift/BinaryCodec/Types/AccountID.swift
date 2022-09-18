@@ -34,7 +34,7 @@ class AccountID: Hash160 {
         return (value.range(
             of: HEX_REGEX,
             options: .regularExpression
-        ) != nil) ? AccountID(try value.asHexArray()) : try AccountID.fromBase58(value: value)
+        ) != nil) ? AccountID(value.hexToBytes) : try AccountID.fromBase58(value: value)
     }
 
     static func fromBase58(value: String) throws -> AccountID {

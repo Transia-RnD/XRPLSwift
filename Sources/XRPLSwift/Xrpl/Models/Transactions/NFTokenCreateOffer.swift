@@ -25,7 +25,6 @@ public enum NFTokenCreateOfferFlags: Int {
  the submitting account does own.
  */
 public class NFTokenCreateOffer: BaseTransaction {
-
     public var nftokenId: String
     /*
      Identifies the TokenID of the NFToken object that the
@@ -134,43 +133,44 @@ public class NFTokenCreateOffer: BaseTransaction {
 
 func validateNFTokenSellOfferCases(tx: [String: AnyObject]) throws {
     if tx["Owner"] != nil {
-        throw ValidationError.decoding("NFTokenCreateOffer: Owner must not be present for sell offers")
+        throw ValidationError("NFTokenCreateOffer: Owner must not be present for sell offers")
     }
 }
 
 func validateNFTokenBuyOfferCases(tx: [String: AnyObject]) throws {
     if tx["Owner"] == nil {
-        throw ValidationError.decoding("NFTokenCreateOffer: Owner must be present for buy offers")
+        throw ValidationError("NFTokenCreateOffer: Owner must be present for buy offers")
     }
 
     if parseAmountValue(amount: tx["Amount"] as Any)! <= 0 {
-        throw ValidationError.decoding("NFTokenCreateOffer: Amount must be greater than 0 for buy offers")
+        throw ValidationError("NFTokenCreateOffer: Amount must be greater than 0 for buy offers")
     }
 }
 
 /**
- * Verify the form and type of an NFTokenCreateOffer at runtime.
- *
- * @param tx - An NFTokenCreateOffer Transaction.
- * @throws When the NFTokenCreateOffer is Malformed.
+ Verify the form and type of an NFTokenCreateOffer at runtime.
+ - parameters:
+    - tx: An NFTokenCreateOffer Transaction.
+ - throws:
+ When the NFTokenCreateOffer is Malformed.
  */
 public func validateNFTokenCreateOffer(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["Account"] as? String == tx["Owner"] as? String {
-        throw ValidationError.decoding("NFTokenCreateOffer: Owner and Account must not be equal")
+        throw ValidationError("NFTokenCreateOffer: Owner and Account must not be equal")
     }
 
     if tx["Account"] === tx["Destination"] {
-        throw ValidationError.decoding("NFTokenCreateOffer: Destination and Account must not be equal")
+        throw ValidationError("NFTokenCreateOffer: Destination and Account must not be equal")
     }
 
     if tx["NFTokenID"] == nil {
-        throw ValidationError.decoding("NFTokenCreateOffer: missing field NFTokenID")
+        throw ValidationError("NFTokenCreateOffer: missing field NFTokenID")
     }
 
     if !isAmount(amount: tx["Amount"] as Any) {
-        throw ValidationError.decoding("NFTokenCreateOffer: invalid Amount")
+        throw ValidationError("NFTokenCreateOffer: invalid Amount")
     }
 
     if tx["Flags"] is Int && isFlagEnabled(

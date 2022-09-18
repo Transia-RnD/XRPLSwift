@@ -33,49 +33,47 @@ public class SignerEntry: Codable {
 }
 
 /**
- * The SignerList object type represents a list of parties that, as a group,
- * are authorized to sign a transaction in place of an individual account. You
- * can create, replace, or remove a signer list using a SignerListSet
- * transaction.
- *
- * @category Ledger Entries
+ The SignerList object type represents a list of parties that, as a group,
+ are authorized to sign a transaction in place of an individual account. You
+ can create, replace, or remove a signer list using a SignerListSet
+ transaction.
  */
 open class SignerList: BaseLedgerEntry {
     let ledgerEntryType: String = "SignerList"
     /**
-     * A bit-map of Boolean flags enabled for this signer list. For more
-     * information, see SignerList Flags.
+     A bit-map of Boolean flags enabled for this signer list. For more
+     information, see SignerList Flags.
      */
     let flags: Int
     /**
-     * The identifying hash of the transaction that most recently modified this
-     * object.
+     The identifying hash of the transaction that most recently modified this
+     object.
      */
     let previousTxnId: String
     /**
-     * The index of the ledger that contains the transaction that most recently
-     * modified this object.
+     The index of the ledger that contains the transaction that most recently
+     modified this object.
      */
     let previousTxnLgrSeq: Int
     /**
-     * A hint indicating which page of the owner directory links to this object,
-     * in case the directory consists of multiple pages.
+     A hint indicating which page of the owner directory links to this object,
+     in case the directory consists of multiple pages.
      */
     let ownerNode: String
     /**
-     * An array of Signer Entry objects representing the parties who are part of
-     * this signer list.
+     An array of Signer Entry objects representing the parties who are part of
+     this signer list.
      */
     let signerEntries: [SignerEntry]
     /**
-     * An ID for this signer list. Currently always set to 0. If a future
-     * amendment allows multiple signer lists for an account, this may change.
+     An ID for this signer list. Currently always set to 0. If a future
+     amendment allows multiple signer lists for an account, this may change.
      */
     let signerListId: Int
     /**
-     * A target number for signer weights. To produce a valid signature for the
-     * owner of this SignerList, the signers must provide valid signatures whose
-     * weights sum to this value or more.
+     A target number for signer weights. To produce a valid signature for the
+     owner of this SignerList, the signers must provide valid signatures whose
+     weights sum to this value or more.
      */
     let signerQuorum: Int
 

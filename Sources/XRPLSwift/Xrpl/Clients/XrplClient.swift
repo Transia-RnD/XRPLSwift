@@ -183,7 +183,7 @@ public class XrplClient: ConnectionDelegate {
     // eslint-disable-next-line max-lines-per-function -- okay because we have to set up all the connection handlers
     public init(server: String, options: ClientOptions? = nil) throws {
         if server.isValidWss {
-            throw XrplError.validation("server URI must start with `wss://`, `ws://`, `wss+unix://`, or `ws+unix://`.")
+            throw ValidationError("server URI must start with `wss://`, `ws://`, `wss+unix://`, or `ws+unix://`.")
         }
         self.feeCushion = options?.feeCushion ?? Int(DEFAULT_FEE_CUSHION)
         self.maxFeeXRP = options?.maxFeeXRP ?? DEFAULT_MAX_FEE_XRP

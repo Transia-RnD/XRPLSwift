@@ -82,15 +82,15 @@ public struct IssuedCurrencyAmount: IssuedCurrency, Codable {
     public var currency: String
     public var issuer: String
     public var value: String
-    
+
     enum CodingKeys: String, CodingKey {
-        case currency = "currency"
-        case issuer = "issuer"
-        case value = "value"
+        case currency
+        case issuer
+        case value
     }
-    
+
     public init(_ json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(IssuedCurrencyAmount.self, from: data)
         self.currency = decoded.currency
@@ -110,11 +110,11 @@ public enum Amount: Codable {
 }
 
 extension Amount {
-    
+
     enum AmountCodingError: Error {
         case decoding(String)
     }
-    
+
     public var value: Any {
         switch self {
         case .string(let string):
@@ -123,7 +123,7 @@ extension Amount {
             return ic
         }
     }
-    
+
     public init(from decoder: Decoder) throws {
         print(decoder.self)
         if let value = try? String.init(from: decoder) {
@@ -136,7 +136,7 @@ extension Amount {
         }
         throw AmountCodingError.decoding("Invalid Amount: Amount should be string or dict")
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         switch self {
         case .string(let string):
@@ -151,13 +151,13 @@ public class BaseSigner: Codable {
     public let account: String
     public let txnSignature: String
     public let signingPubKey: String
-    
+
     enum CodingKeys: String, CodingKey {
         case account = "Account"
         case txnSignature = "TxnSignature"
         case signingPubKey = "SigningPubKey"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
@@ -170,11 +170,11 @@ public class Signer: Codable {
     enum CodingKeys: String, CodingKey {
         case signer = "Signer"
     }
-    
+
     public let signer: BaseSigner
-    
+
     public init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(Signer.self, from: data)
         self.signer = decoded.signer
@@ -185,13 +185,13 @@ public class BaseMemo: Codable {
     public let memoData: String
     public let memoType: String
     public let memoFormat: String
-    
+
     enum CodingKeys: String, CodingKey {
         case memoData = "MemoData"
         case memoType = "MemoType"
         case memoFormat = "MemoFormat"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         memoData = try values.decode(String.self, forKey: .memoData)
@@ -253,10 +253,8 @@ public typealias Path = [PathStep]
 // }
 //
 /**
- * One offer that might be returned from either an {@link NFTBuyOffersRequest}
- * or an {@link NFTSellOffersRequest}.
- *
- * @category Responses
+ One offer that might be returned from either an {@link NFTBuyOffersRequest}
+ or an {@link NFTSellOffersRequest}.
  */
 public struct NFTOffer: Codable {
     public let amount: Amount
@@ -296,14 +294,14 @@ public struct XRPLWebSocketResponse: Codable {
     public var result: [String: AnyObject] {
         return rresult.value as! [String: AnyObject]
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case status
         case type
         case rresult = "result"
     }
-    
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         id = try values.decode(String.self, forKey: .id)

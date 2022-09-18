@@ -92,7 +92,7 @@ public class FieldIdCodec {
      A FieldHeader object representing the type code and field code of
      */
     class func decodeFieldId(fieldId: String) throws -> FieldHeader {
-        let byteArray = try! fieldId.asHexArray()
+        let byteArray = fieldId.hexToBytes
         if byteArray.count == 1 {
             let highBits = byteArray[0] >> 4
             let lowBits = byteArray[0] & 0x0F

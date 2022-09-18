@@ -11,7 +11,6 @@
 import Foundation
 
 public class EscrowFinish: BaseTransaction {
-
   /** Address of the source account that funded the held payment. */
     public let owner: String
   /**
@@ -51,7 +50,7 @@ public class EscrowFinish: BaseTransaction {
     }
 
     public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(EscrowFinish.self, from: data)
         self.owner = decoded.owner
@@ -81,35 +80,36 @@ public class EscrowFinish: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an EscrowFinish at runtime.
- *
- * @param tx - An EscrowFinish Transaction.
- * @throws When the EscrowFinish is Malformed.
+ Verify the form and type of an EscrowFinish at runtime.
+ - parameters:
+    - tx: An EscrowFinish Transaction.
+ - throws:
+ When the EscrowFinish is Malformed.
  */
 public func validateEscrowFinish(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["Owner"] == nil {
-        throw ValidationError.decoding("EscrowFinish: missing field Owner")
+        throw ValidationError("EscrowFinish: missing field Owner")
     }
 
     if !(tx["Owner"] is String) {
-        throw ValidationError.decoding("EscrowFinish: Owner must be a String")
+        throw ValidationError("EscrowFinish: Owner must be a String")
     }
 
     if tx["OfferSequence"] == nil {
-        throw ValidationError.decoding("EscrowFinish: missing Destination")
+        throw ValidationError("EscrowFinish: missing Destination")
     }
 
     if !(tx["OfferSequence"] is Int) {
-        throw ValidationError.decoding("EscrowFinish: OfferSequence must be a Int")
+        throw ValidationError("EscrowFinish: OfferSequence must be a Int")
     }
 
     if tx["Condition"] != nil && !(tx["Condition"] is String) {
-        throw ValidationError.decoding("EscrowFinish: Condition must be a String")
+        throw ValidationError("EscrowFinish: Condition must be a String")
     }
 
     if tx["Fulfillment"] != nil && !(tx["Fulfillment"] is String) {
-        throw ValidationError.decoding("EscrowFinish: Fulfillment must be a String")
+        throw ValidationError("EscrowFinish: Fulfillment must be a String")
     }
 }

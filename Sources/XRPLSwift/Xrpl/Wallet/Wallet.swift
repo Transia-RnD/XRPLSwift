@@ -198,14 +198,14 @@ public class Wallet {
         }
         // Otherwise decode using bip39's mnemonic standard
         //        if !validateMnemonic(mnemonic) {
-        //            throw XrplError.validation("Unable to parse the given mnemonic using bip39 encoding")
+        //            throw ValidationError("Unable to parse the given mnemonic using bip39 encoding")
         //        }
 
         let seed = Bip39Mnemonic.createSeed(mnemonic: mnemonic)
         let node = PrivateKey(seed: seed, coin: .bitcoin)
 
         if node.publicKey.isEmpty {
-            throw XrplError.validation("Unable to derive privateKey from mnemonic input")
+            throw ValidationError("Unable to derive privateKey from mnemonic input")
         }
 
         // BIP44 key derivation
@@ -311,7 +311,7 @@ public class Wallet {
         let tx = try! transaction.toJson()
 
         if tx["TxnSignature"] != nil || tx["Signers"] != nil {
-            throw XrplError.validation("txJSON must not contain `TxnSignature` or `Signers` properties")
+            throw ValidationError("txJSON must not contain `TxnSignature` or `Signers` properties")
         }
 
         //        removeTrailingZeros(tx: transaction)
@@ -397,7 +397,7 @@ public class Wallet {
          * - It must have a TxnSignature or Signers (multisign).
          */
         if decoded["TxnSignature"] == nil && decoded["Signers"] == nil {
-            throw XrplError.validation("Serialized transaction must have a TxnSignature or Signers property")
+            throw ValidationError("Serialized transaction must have a TxnSignature or Signers property")
         }
         // - We know that the original tx did not have TxnSignature, so we should delete it:
         decoded["TxnSignature"] = nil
@@ -433,7 +433,7 @@ public class Wallet {
         }
         if txCopy["TransactionType"] as! String == "NFTokenMint" && txCopy["URI"] != nil {
             if !isHex(str: txCopy["URI"] as! String) {
-                throw XrplError.validation("URI must be a hex value")
+                throw ValidationError("URI must be a hex value")
             }
             txCopy["URI"] = (txCopy["URI"] as! String).uppercased() as AnyObject
         }
@@ -447,7 +447,7 @@ public class Wallet {
                 let txCurrency = try IssuedCurrencyAmount(txCopy[key] as! [String: AnyObject]).currency
 
                 if txCurrency.count == standardCurrencyCodeLen && txCurrency.uppercased() == "XRP" {
-                    throw XrplError.validation("Trying to sign an issued currency with a similar standard code to XRP (received \(txCurrency)'). XRP is not an issued currency.")
+                    throw ValidationError("Trying to sign an issued currency with a similar standard code to XRP (received \(txCurrency)'). XRP is not an issued currency.")
                 }
 
                 // Standardize the format of currency codes to the 40 byte hex string for comparison

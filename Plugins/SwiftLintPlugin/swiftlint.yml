@@ -32,7 +32,7 @@ opt_in_rules:
     - fallthrough
     - fatal_error_message
     - file_header
-    - file_name
+#    - file_name
     - first_where
     - flatmap_over_map_reduce
     - identical_operands
@@ -100,6 +100,8 @@ identifier_name:
     - k
     - v
     - i
+    - bl # byte list
+    - tt # transaction type
 
 # Metrics rules
 cyclomatic_complexity:

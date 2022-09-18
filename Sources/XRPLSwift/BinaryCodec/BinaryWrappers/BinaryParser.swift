@@ -27,7 +27,7 @@ public class BinaryParser {
         - hex: A hex string
      */
     public init(hex: String) {
-        bytes = try! hex.asHexArray()
+        bytes = hex.hexToBytes
     }
 
     /**

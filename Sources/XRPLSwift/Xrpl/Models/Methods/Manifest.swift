@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Manifest.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -10,25 +10,22 @@
 import Foundation
 
 /**
- * The `manifest` method reports the current "manifest" information for a given
- * validator public key. The "manifest" is the public portion of that
- * validator's configured token. Expects a response in the form of a {@link
- * ManifestResponse}.
+ The `manifest` method reports the current "manifest" information for a given
+ validator public key. The "manifest" is the public portion of that
+ validator's configured token. Expects a response in the form of a {@link
+ ManifestResponse}.
  *
- * @example
- * ```swift
- * let manifest: ManifestRequest(
- *  publicKey: "nHUFE9prPXPrHcG3SkwP1UzAQbSphqyQkQK9ATXLZsfkezhhda3p"
- * )
- * ```
- *
- * @category Requests
+ @example
+ ```swift
+ let manifest: ManifestRequest(
+  publicKey: "nHUFE9prPXPrHcG3SkwP1UzAQbSphqyQkQK9ATXLZsfkezhhda3p"
+ )
+ ```
  */
 public class ManifestRequest: BaseRequest {
-    //    let command: String = "manifest"
     /**
-     * The base58-encoded public key of the validator to look up. This can be the
-     * master public key or ephemeral public key.
+     The base58-encoded public key of the validator to look up. This can be the
+     master public key or ephemeral public key.
      */
     public let publicKey: String
 
@@ -79,22 +76,20 @@ public class ManifestDetails: Codable {
 }
 
 /**
- * Response expected from a {@link ManifestRequest}.
- *
- * @category Responses
+ Response expected from a {@link ManifestRequest}.
  */
 public class ManifestResponse: Codable {
-    /** The public_key from the request. */
+    /// The public_key from the request.
     public let requested: String
     /**
-     * The data contained in this manifest. Omitted if the server does not have
-     *  A manifest for the public_key from the request.
+     The data contained in this manifest. Omitted if the server does not have
+      A manifest for the public_key from the request.
      */
     public let details: ManifestDetails?
     /**
-     * The full manifest data in base64 format. This data is serialized to
-     * binary before being base64-encoded. Omitted if the server does not have a
-     * manifest for the public_key from the request.
+     The full manifest data in base64 format. This data is serialized to
+     binary before being base64-encoded. Omitted if the server does not have a
+     manifest for the public_key from the request.
      */
     public let manifest: String?
 

@@ -15,7 +15,6 @@ import Foundation
  transaction, which locks up XRP until a specific time or condition is met.
  */
 public class EscrowCreate: BaseTransaction {
-
     /**
      Amount of XRP, in drops, to deduct from the sender's balance and set
      aside in escrow. This field is required.
@@ -86,7 +85,7 @@ public class EscrowCreate: BaseTransaction {
     }
 
     public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(EscrowCreate.self, from: data)
         self.amount = decoded.amount
@@ -122,51 +121,52 @@ public class EscrowCreate: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an EscrowCreate at runtime.
- *
- * @param tx - An EscrowCreate Transaction.
- * @throws When the EscrowCreate is Malformed.
+ Verify the form and type of an EscrowCreate at runtime.
+ - parameters:
+    - tx: An EscrowCreate Transaction.
+ - throws:
+ When the EscrowCreate is Malformed.
  */
 public func validateEscrowCreate(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["Amount"] == nil {
-        throw ValidationError.decoding("EscrowCreate: missing Amount")
+        throw ValidationError("EscrowCreate: missing Amount")
     }
 
     if !(tx["Amount"] is String) {
-        throw ValidationError.decoding("EscrowCreate: Amount must be a String")
+        throw ValidationError("EscrowCreate: Amount must be a String")
     }
 
     if tx["Destination"] == nil {
-        throw ValidationError.decoding("EscrowCreate: missing Destination")
+        throw ValidationError("EscrowCreate: missing Destination")
     }
 
     if !(tx["Destination"] is String) {
-        throw ValidationError.decoding("EscrowCreate: Destination must be a String")
+        throw ValidationError("EscrowCreate: Destination must be a String")
     }
 
     if tx["CancelAfter"] == nil && tx["FinishAfter"] == nil {
-        throw ValidationError.decoding("EscrowCreate: Either CancelAfter or FinishAfter must be specified")
+        throw ValidationError("EscrowCreate: Either CancelAfter or FinishAfter must be specified")
     }
 
     if tx["FinishAfter"] == nil && tx["Condition"] == nil {
-        throw ValidationError.decoding("EscrowCreate: Either Condition or FinishAfter must be specified")
+        throw ValidationError("EscrowCreate: Either Condition or FinishAfter must be specified")
     }
 
     if tx["CancelAfter"] != nil && !(tx["CancelAfter"] is Int) {
-        throw ValidationError.decoding("EscrowCreate: CancelAfter must be a Int")
+        throw ValidationError("EscrowCreate: CancelAfter must be a Int")
     }
 
     if tx["FinishAfter"] != nil && !(tx["FinishAfter"] is Int) {
-        throw ValidationError.decoding("EscrowCreate: FinishAfter must be a Int")
+        throw ValidationError("EscrowCreate: FinishAfter must be a Int")
     }
 
     if tx["Condition"] != nil && !(tx["Condition"] is String) {
-        throw ValidationError.decoding("EscrowCreate: Condition must be a String")
+        throw ValidationError("EscrowCreate: Condition must be a String")
     }
 
     if tx["DestinationTag"] != nil && !(tx["DestinationTag"] is Int) {
-        throw ValidationError.decoding("EscrowCreate: DestinationTag must be a Int")
+        throw ValidationError("EscrowCreate: DestinationTag must be a Int")
     }
 }

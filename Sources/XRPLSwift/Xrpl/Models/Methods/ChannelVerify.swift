@@ -8,27 +8,24 @@
 import Foundation
 
 /**
- * The `channel_verify` method checks the validity of a signature that can be
- * used to redeem a specific amount of XRP from a payment channel. Expects a
- * response in the form of a {@link ChannelVerifyResponse}.
- *
- * @category Requests
+ The `channel_verify` method checks the validity of a signature that can be
+ used to redeem a specific amount of XRP from a payment channel. Expects a
+ response in the form of a {@link ChannelVerifyResponse}.
  */
 public class ChannelVerifyRequest: BaseRequest {
-    //  public let command: String = "channel_verify"
-    /** The amount of XRP, in drops, the provided signature authorizes. */
+    /// The amount of XRP, in drops, the provided signature authorizes.
     public let amount: String
     /**
-     * The Channel ID of the channel that provides the XRP. This is a
-     * 64-character hexadecimal string.
+     The Channel ID of the channel that provides the XRP. This is a
+     64-character hexadecimal string.
      */
     public let channelId: String
     /**
-     * The public key of the channel and the key pair that was used to create the
-     * signature, in hexadecimal or the XRP Ledger's base58 format.
+     The public key of the channel and the key pair that was used to create the
+     signature, in hexadecimal or the XRP Ledger's base58 format.
      */
     public let publicKey: String
-    /** The signature to verify, in hexadecimal. */
+    /// The signature to verify, in hexadecimal.
     public let signature: String
 
     enum CodingKeys: String, CodingKey {
@@ -88,14 +85,14 @@ public class ChannelVerifyRequest: BaseRequest {
 }
 
 /**
- * Response expected from an {@link ChannelVerifyRequest}.
+ Response expected from an {@link ChannelVerifyRequest}.
  *
- * @category Responses
+ @category Responses
  */
 public class ChannelVerifyResponse: Codable {
     /**
-     * If true, the signature is valid for the stated amount, channel, and
-     * public key.
+     If true, the signature is valid for the stated amount, channel, and
+     public key.
      */
     public let signatureVerified: Bool
 
@@ -103,7 +100,7 @@ public class ChannelVerifyResponse: Codable {
         case signatureVerified = "signature_verified"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         signatureVerified = try values.decode(Bool.self, forKey: .signatureVerified)
         //        try super.init(from: decoder)

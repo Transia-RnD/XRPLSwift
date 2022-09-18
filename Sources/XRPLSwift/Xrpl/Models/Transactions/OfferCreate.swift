@@ -79,7 +79,6 @@ cannot be completely fulfilled, it creates an Offer object for the remainder.
 Offers can be partially fulfilled.
  */
 public class OfferCreate: BaseTransaction {
-
     public let takerGets: Amount
      /*
     The amount and type of currency being provided by the sender of this
@@ -119,7 +118,6 @@ public class OfferCreate: BaseTransaction {
         expiration: Int? = nil,
         offerSequence: Int? = nil
     ) {
-
         self.takerGets = takerGets
         self.takerPays = takerPays
         self.expiration = expiration
@@ -127,8 +125,8 @@ public class OfferCreate: BaseTransaction {
         super.init(account: "", transactionType: "OfferCreate")
     }
 
-    public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(OfferCreate.self, from: data)
         self.takerGets = decoded.takerGets
@@ -138,7 +136,7 @@ public class OfferCreate: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         takerGets = try values.decode(Amount.self, forKey: .takerGets)
         takerPays = try values.decode(Amount.self, forKey: .takerPays)
@@ -158,35 +156,36 @@ public class OfferCreate: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an OfferCreate at runtime.
- *
- * @param tx - An OfferCreate Transaction.
- * @throws When the OfferCreate is Malformed.
+ Verify the form and type of an OfferCreate at runtime.
+ - parameters:
+    - tx: An OfferCreate Transaction.
+ - throws:
+ When the OfferCreate is Malformed.
  */
 public func validateOfferCreate(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["TakerGets"] == nil {
-        throw ValidationError.decoding("OfferCreate: missing field TakerGets")
+        throw ValidationError("OfferCreate: missing field TakerGets")
     }
 
     if tx["TakerPays"] == nil {
-        throw ValidationError.decoding("OfferCreate: missing field TakerPays")
+        throw ValidationError("OfferCreate: missing field TakerPays")
     }
 
     if !(tx["TakerGets"] is String) && !isAmount(amount: tx["TakerGets"] as Any) {
-        throw ValidationError.decoding("OfferCreate: invalid TakerGets")
+        throw ValidationError("OfferCreate: invalid TakerGets")
     }
 
     if !(tx["TakerPays"] is String) && !isAmount(amount: tx["TakerPays"] as Any) {
-        throw ValidationError.decoding("OfferCreate: invalid TakerPays")
+        throw ValidationError("OfferCreate: invalid TakerPays")
     }
 
     if tx["Expiration"] != nil && !(tx["Expiration"] is Int) {
-        throw ValidationError.decoding("OfferCreate: Expiration must be a Int")
+        throw ValidationError("OfferCreate: Expiration must be a Int")
     }
 
     if tx["OfferSequence"] != nil && !(tx["OfferSequence"] is Int) {
-        throw ValidationError.decoding("OfferCreate: OfferSequence must be a Int")
+        throw ValidationError("OfferCreate: OfferSequence must be a Int")
     }
 }

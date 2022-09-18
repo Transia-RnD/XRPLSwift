@@ -61,7 +61,8 @@ final class TestNFTokenMint: XCTestCase {
             "TransferFee": 1,
             "URI": "http://xrpl.org".bytes.toHex
         ] as! [String: AnyObject]
-        XCTAssertThrowsError(try NFTokenMint(json: baseTx))
+        let tx = try! NFTokenMint(json: baseTx)
+        XCTAssertThrowsError(try validateNFTokenMint(tx: tx.toJson()))
     }
 
     func testInvalidURIType() {
@@ -76,6 +77,7 @@ final class TestNFTokenMint: XCTestCase {
             "TransferFee": 1,
             "URI": "http://xrpl.org"
         ] as! [String: AnyObject]
-        XCTAssertThrowsError(try NFTokenMint(json: baseTx))
+        let tx = try! NFTokenMint(json: baseTx)
+        XCTAssertThrowsError(try validateNFTokenMint(tx: tx.toJson()))
     }
 }

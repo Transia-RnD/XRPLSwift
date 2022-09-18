@@ -10,68 +10,66 @@
 import Foundation
 
 /**
- * A Check object describes a check, similar to a paper personal check, which
- * can be cashed by its destination to get money from its sender.
- *
- * @category Ledger Entries
+ A Check object describes a check, similar to a paper personal check, which
+ can be cashed by its destination to get money from its sender.
  */
 open class Check: BaseLedgerEntry {
     public var ledgerEntryType: String = "Check"
-    /** The sender of the Check. Cashing the Check debits this address's balance. */
+    /// The sender of the Check. Cashing the Check debits this address's balance.
     public let account: String
     /**
-     * The intended recipient of the Check. Only this address can cash the Check,
-     * using a CheckCash transaction.
+     The intended recipient of the Check. Only this address can cash the Check,
+     using a CheckCash transaction.
      */
     public let destination: String
     /**
-     * A bit-map of boolean flags. No flags are defined for Checks, so this value
-     * is always 0.
+     A bit-map of boolean flags. No flags are defined for Checks, so this value
+     is always 0.
      */
     public var flags: Int = 0
     /**
-     * A hint indicating which page of the sender's owner directory links to this
-     * object, in case the directory consists of multiple pages.
+     A hint indicating which page of the sender's owner directory links to this
+     object, in case the directory consists of multiple pages.
      */
     public let ownerNode: String
     /**
-     * The identifying hash of the transaction that most recently modified this
-     * object.
+     The identifying hash of the transaction that most recently modified this
+     object.
      */
     public let previousTxnId: String
     /**
-     * The index of the ledger that contains the transaction that most recently
-     * modified this object.
+     The index of the ledger that contains the transaction that most recently
+     modified this object.
      */
     public let previousTxnLgrSeq: Int
     /**
-     * The maximum amount of currency this Check can debit the sender. If the
-     * Check is successfully cashed, the destination is credited in the same
-     * currency for up to this amount.
+     The maximum amount of currency this Check can debit the sender. If the
+     Check is successfully cashed, the destination is credited in the same
+     currency for up to this amount.
      */
     public let sendMax: Amount
-    /** The sequence number of the CheckCreate transaction that created this check. */
+    /*The sequence number of the CheckCreate transaction that created this check. */
     public let sequence: Int
     /**
-     * A hint indicating which page of the destination's owner directory links to
-     * this object, in case the directory consists of multiple pages.
+     A hint indicating which page of the destination's owner directory links to
+     this object, in case the directory consists of multiple pages.
      */
     public let destinationNode: String?
     /**
-     * An arbitrary tag to further specify the destination for this Check, such
-     * as a hosted recipient at the destination address.
+     An arbitrary tag to further specify the destination for this Check, such
+     as a hosted recipient at the destination address.
      */
     public let destinationTag: Int?
-    /** Indicates the time after which this Check is considered expired. */
+    /*Indicates the time after which this Check is considered expired. */
     public let expiration: Int?
     /**
-     * Arbitrary 256-bit hash provided by the sender as a specific reason or
-     * identifier for this Check.
+     Arbitrary 256-bit hash provided by the sender as a specific reason or
+     identifier for this Check.
      */
     public let invoiceId: String?
     /**
-     * An arbitrary tag to further specify the source for this Check, such as a
-     * hosted recipient at the sender's address.
+     An arbitrary tag to further specify the source for this Check, such as a
+     hosted recipient at the sender's address.
      */
     public let sourceTag: Int?
 

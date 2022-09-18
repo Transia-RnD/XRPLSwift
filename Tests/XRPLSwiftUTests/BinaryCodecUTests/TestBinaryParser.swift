@@ -12,7 +12,7 @@ final class TestBinaryParser: XCTestCase {
 
     func testPeekSkipReadMethods() {
         let testHex: String = "00112233445566"
-        let testBytes: [UInt8] = try! testHex.asHexArray()
+        let testBytes: [UInt8] = testHex.hexToBytes
         let binaryParser = BinaryParser(hex: testHex)
         do {
             let firstByte = try binaryParser.peek()

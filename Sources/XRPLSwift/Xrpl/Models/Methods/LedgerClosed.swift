@@ -10,19 +10,17 @@
 import Foundation
 
 /**
- * The ledger_closed method returns the unique identifiers of the most recently
- * closed ledger. Expects a response in the form of a {@link
- * LedgerClosedResponse}.
+ The ledger_closed method returns the unique identifiers of the most recently
+ closed ledger. Expects a response in the form of a {@link
+ LedgerClosedResponse}.
  *
- * @example
- *  *
- * ```ts
- * const ledgerClosed: LedgerClosedRequest = {
- *   "command": "ledger_closed"
- * }
- * ```
- *
- * @category Requests
+ @example
+  *
+ ```ts
+ const ledgerClosed: LedgerClosedRequest = {
+   "command": "ledger_closed"
+ }
+ ```
  */
 public class LedgerClosedRequest: BaseRequest {
 //    let command: String = "ledger_closed"
@@ -48,9 +46,7 @@ public class LedgerClosedRequest: BaseRequest {
 }
 
 /**
- * The response expected from a {@link LedgerClosedRequest}.
- *
- * @category Responses
+ The response expected from a {@link LedgerClosedRequest}.
  */
 public class LedgerClosedResponse: Codable {
     public let ledgerHash: String
@@ -61,7 +57,7 @@ public class LedgerClosedResponse: Codable {
         case ledgerIndex = "ledger_index"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
         ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)

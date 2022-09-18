@@ -57,15 +57,16 @@ public class CheckCancel: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an CheckCancel at runtime.
- *
- * @param tx - An CheckCancel Transaction.
- * @throws When the CheckCancel is Malformed.
+ Verify the form and type of an CheckCancel at runtime.
+ - parameters:
+    - tx: An CheckCancel Transaction.
+ - throws:
+ When the CheckCancel is Malformed.
  */
 public func validateCheckCancel(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     guard let checkId = tx["CheckID"] as? String, !checkId.isEmpty else {
-        throw XrplError.validation("CheckCancel: invalid CheckID")
+        throw ValidationError("CheckCancel: invalid CheckID")
     }
 }

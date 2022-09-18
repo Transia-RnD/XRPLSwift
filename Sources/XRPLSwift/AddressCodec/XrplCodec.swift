@@ -9,29 +9,20 @@ import Foundation
 
 // https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/addresscodec/codec.py
 
-// Account address (20 bytes)
-// swiftlint:disable:next identifier_name
-let _CLASSIC_ADDRESS_PREFIX: [UInt8] = [0x0]
-// value is 35; Account public key (33 bytes)
-// swiftlint:disable:next identifier_name
-let _ACCOUNT_PUBLIC_KEY_PREFIX: [UInt8] = [0x23]
-// [1, 225, 75]
-// swiftlint:disable:next identifier_name
-let _ED25519_SEED_PREFIX: [UInt8] = [0x01, 0xE1, 0x4B]
-// value is 33; Seed value (for secret keys) (16 bytes)
-// swiftlint:disable:next identifier_name
-let _FAMILY_SEED_PREFIX: [UInt8] = [0x21]
-// # value is 28; Validation public key (33 bytes)
-// swiftlint:disable:next identifier_name
-let _NODE_PUBLIC_KEY_PREFIX: [UInt8] = [0x1C]
-// swiftlint:disable:next identifier_name
-let SEED_LENGTH: Int = 16
-// swiftlint:disable:next identifier_name
-let _CLASSIC_ADDRESS_LENGTH: Int = 20
-// swiftlint:disable:next identifier_name
-let _NODE_PUBLIC_KEY_LENGTH: Int = 33
-// swiftlint:disable:next identifier_name
-let _ACCOUNT_PUBLIC_KEY_LENGTH: Int = 33
+/// Account address (20 bytes)
+let _CLASSIC_ADDRESS_PREFIX: [UInt8] = [0x0] // swiftlint:disable:this identifier_name
+/// value is 35; Account public key (33 bytes)
+let _ACCOUNT_PUBLIC_KEY_PREFIX: [UInt8] = [0x23] // swiftlint:disable:this identifier_name
+/// [1, 225, 75]
+let _ED25519_SEED_PREFIX: [UInt8] = [0x01, 0xE1, 0x4B] // swiftlint:disable:this identifier_name
+/// value is 33; Seed value (for secret keys) (16 bytes)
+let _FAMILY_SEED_PREFIX: [UInt8] = [0x21] // swiftlint:disable:this identifier_name
+/// # value is 28; Validation public key (33 bytes)
+let _NODE_PUBLIC_KEY_PREFIX: [UInt8] = [0x1C] // swiftlint:disable:this identifier_name
+let SEED_LENGTH: Int = 16 // swiftlint:disable:this identifier_name
+let _CLASSIC_ADDRESS_LENGTH: Int = 20 // swiftlint:disable:this identifier_name
+let _NODE_PUBLIC_KEY_LENGTH: Int = 33 // swiftlint:disable:this identifier_name
+let _ACCOUNT_PUBLIC_KEY_LENGTH: Int = 33 // swiftlint:disable:this identifier_name
 
 public class XrplCodec {
     public init() {}
@@ -72,8 +63,10 @@ public class XrplCodec {
      */
     public static func decode(b58String: String, prefix: [UInt8]) throws -> [UInt8] {
         let prefixLength: Int = prefix.count
-        let decoded = [UInt8](Data(base58Decoding: b58String)!)
-        let versionEntropy = decoded.prefix(decoded.count - 4)
+        guard let decodedData = Data(base58Decoding: b58String) else {
+            throw AddressCodecError.invalidPrefix()
+        }
+        let versionEntropy = decodedData.bytes.prefix(decodedData.bytes.count - 4)
         if [UInt8](versionEntropy[0...(prefixLength - 1)]) != prefix {
             throw AddressCodecError.invalidPrefix()
         }

@@ -40,7 +40,7 @@
 //        } catch {
 //            print("CLEAR INTERVAL")
 //            print("REJECT")
-//            promise.reject(with: XrplError.validation("Error"))
+//            promise.reject(with: ValidationError("Error"))
 //            return promise
 //            //                clearInterval(interval)
 //            //                if (err instanceof Error) {

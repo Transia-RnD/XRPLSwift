@@ -9,24 +9,20 @@
 
 import Foundation
 
-
 /**
- * The `nft_buy_offers` method retrieves all of buy offers for the specified
- * NFToken.
- *
- * @category Requests
+ The `nft_buy_offers` method retrieves all of buy offers for the specified
+ NFToken.
  */
 public class NFTBuyOffersRequest: BaseRequest {
-    //    let command: String = "nft_buy_offers"
     /**
-     * The unique identifier of an NFToken. The request returns buy offers for this NFToken.
+     The unique identifier of an NFToken. The request returns buy offers for this NFToken.
      */
     public let nftId: String
-    
+
     enum CodingKeys: String, CodingKey {
         case nftId = "nft_id"
     }
-    
+
     public init(
         // Required
         nftId: String,
@@ -39,7 +35,7 @@ public class NFTBuyOffersRequest: BaseRequest {
         // Optional
         super.init(id: id, command: "nft_buy_offers", apiVersion: apiVersion)
     }
-    
+
     override public init(_ json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
@@ -47,13 +43,13 @@ public class NFTBuyOffersRequest: BaseRequest {
         self.nftId = decoded.nftId
         try super.init(json)
     }
-    
+
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         nftId = try values.decode(String.self, forKey: .nftId)
         try super.init(from: decoder)
     }
-    
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -62,25 +58,23 @@ public class NFTBuyOffersRequest: BaseRequest {
 }
 
 /**
- * Response expected from an {@link NFTBuyOffersRequest}.
- *
- * @category Responses
+ Response expected from an {@link NFTBuyOffersRequest}.
  */
 public class NFTBuyOffersResponse: Codable {
     /**
-     * A list of buy offers for the specified NFToken.
+     A list of buy offers for the specified NFToken.
      */
     public let offers: [NFTOffer]
     /**
-     * The token ID of the NFToken to which these offers pertain.
+     The token ID of the NFToken to which these offers pertain.
      */
     public let nftId: String
-    
+
     enum CodingKeys: String, CodingKey {
         case offers = "offers"
         case nftId = "nft_id"
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         offers = try values.decode([NFTOffer].self, forKey: .offers)

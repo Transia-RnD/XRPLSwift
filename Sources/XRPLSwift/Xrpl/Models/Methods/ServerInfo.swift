@@ -10,14 +10,11 @@
 import Foundation
 
 /**
- * The `server_info` command asks the server for a human-readable version of
- * various information about the rippled server being queried. Expects a
- * response in the form of a {@link ServerInfoResponse}.
- *
- * @category Requests
+ The `server_info` command asks the server for a human-readable version of
+ various information about the rippled server being queried. Expects a
+ response in the form of a {@link ServerInfoResponse}.
  */
 public class ServerInfoRequest: BaseRequest {
-
     public init(
         // Base Request
         id: Int? = nil,
@@ -77,26 +74,26 @@ public class JobType: Codable {
 }
 
 public class ValidatedLedger: Codable {
-    /** The time since the ledger was closed, in seconds. */
+    /// The time since the ledger was closed, in seconds.
     public let age: Int
     /**
-     * Base fee, in XRP. This may be represented in scientific notation.
-     * Such as 1e-05 for 0.00005.
+     Base fee, in XRP. This may be represented in scientific notation.
+     Such as 1e-05 for 0.00005.
      */
     public let baseFeeXrp: Int
-    /** Unique hash for the ledger, as hexadecimal. */
+    /// Unique hash for the ledger, as hexadecimal.
     public let hash: String
     /**
-     * Minimum amount of XRP (not drops) necessary for every account to.
-     * Keep in reserve .
+     Minimum amount of XRP (not drops) necessary for every account to.
+     Keep in reserve .
      */
     public let reserveBaseXrp: Int
     /**
-     * Amount of XRP (not drops) added to the account reserve for each
-     * object an account owns in the ledger.
+     Amount of XRP (not drops) added to the account reserve for each
+     object an account owns in the ledger.
      */
     public let reserveIncXrp: Int
-    /** The ledger index of the latest validated ledger. */
+    /// The ledger index of the latest validated ledger.
     public let seq: Int
 
     enum CodingKeys: String, CodingKey {
@@ -111,11 +108,11 @@ public class ValidatedLedger: Codable {
 
 public class Load: Codable {
     /**
-     * (Admin only) Information about the rate of different types of jobs
-     * the server is doing and how much time it spends on each.
+     (Admin only) Information about the rate of different types of jobs
+     the server is doing and how much time it spends on each.
      */
     public let jobTypes: [JobType]
-    /** (Admin only) The number of threads in the server's main job pool. */
+    /// (Admin only) The number of threads in the server's main job pool.
     public let threads: Int
 
     enum CodingKeys: String, CodingKey {
@@ -144,14 +141,14 @@ public class ClosedLedger: Codable {
 
 public class LastClosed: Codable {
     /**
-     * The amount of time it took to reach a consensus on the most recently
-     * validated ledger version, in seconds.
+     The amount of time it took to reach a consensus on the most recently
+     validated ledger version, in seconds.
      */
     public let convergeTimeS: Int
     /**
-     * How many trusted validators the server considered (including itself,
-     * if configured as a validator) in the consensus process for the most
-     * recently validated ledger version.
+     How many trusted validators the server considered (including itself,
+     if configured as a validator) in the consensus process for the most
+     recently validated ledger version.
      */
     public let proposers: Int
 
@@ -159,145 +156,144 @@ public class LastClosed: Codable {
         case convergeTimeS = "converge_time_s"
         case proposers = "proposers"
     }
-
 }
 
 public class ServerInfoWrapper: Codable {
     /**
-     * If true, this server is amendment blocked. If the server is not
-     * amendment blocked, the response omits this field.
+     If true, this server is amendment blocked. If the server is not
+     amendment blocked, the response omits this field.
      */
     public let amendmentBlocked: Bool?
-    /** The version number of the running rippled version. */
+    /*The version number of the running rippled version. */
     public let buildVersion: String
     /**
-     * Information on the most recently closed ledger that has not been
-     * validated by consensus. If the most recently validated ledger is
-     * available, the response omits this field and includes
-     * `validated_ledger` instead. The member fields are the same as the.
-     * `validated_ledger` field.
+     Information on the most recently closed ledger that has not been
+     validated by consensus. If the most recently validated ledger is
+     available, the response omits this field and includes
+     `validated_ledger` instead. The member fields are the same as the.
+     `validated_ledger` field.
      */
     public let closedLedger: ClosedLedger?
     /**
-     * Range expression indicating the sequence numbers of the ledger
-     * versions the local rippled has in its database.
+     Range expression indicating the sequence numbers of the ledger
+     versions the local rippled has in its database.
      */
     public let completeLedgers: String
     /**
-     * On an admin request, returns the hostname of the server running the
-     * rippled instance; otherwise, returns a single RFC-1751  word based on
-     * the node public key.
+     On an admin request, returns the hostname of the server running the
+     rippled instance; otherwise, returns a single RFC-1751  word based on
+     the node public key.
      */
     public let hostid: String
     /**
-     * Amount of time spent waiting for I/O operations, in milliseconds. If
-     * this number is not very, very low, then the rippled server is probably
-     * having serious load issues.
+     Amount of time spent waiting for I/O operations, in milliseconds. If
+     this number is not very, very low, then the rippled server is probably
+     having serious load issues.
      */
     public let ioLatencyMs: Int
     /**
-     * The number of times (since starting up) that this server has had over
-     * 250 transactions waiting to be processed at once. A large number here
-     * may mean that your server is unable to handle the transaction load of
-     * the XRP Ledger network.
+     The number of times (since starting up) that this server has had over
+     250 transactions waiting to be processed at once. A large number here
+     may mean that your server is unable to handle the transaction load of
+     the XRP Ledger network.
      */
     public let jqTransOverflow: String
     /**
-     * Information about the last time the server closed a ledger, including
-     * the amount of time it took to reach a consensus and the number of
-     * trusted validators participating.
+     Information about the last time the server closed a ledger, including
+     the amount of time it took to reach a consensus and the number of
+     trusted validators participating.
      */
     public let lastClose: LastClosed
     /**
-     * (Admin only) Detailed information about the current load state of the
-     * server.
+     (Admin only) Detailed information about the current load state of the
+     server.
      */
     public let load: Load?
     /**
-     * The load-scaled open ledger transaction cost the server is currently
-     * enforcing, as a multiplier on the base transaction cost. For example,
-     * at 1000 load factor and a reference transaction cost of 10 drops of
-     * XRP, the load-scaled transaction cost is 10,000 drops (0.01 XRP). The
-     * load factor is determined by the highest of the individual server's
-     * load factor, the cluster's load factor, the open ledger cost and the
-     * overall network's load factor.
+     The load-scaled open ledger transaction cost the server is currently
+     enforcing, as a multiplier on the base transaction cost. For example,
+     at 1000 load factor and a reference transaction cost of 10 drops of
+     XRP, the load-scaled transaction cost is 10,000 drops (0.01 XRP). The
+     load factor is determined by the highest of the individual server's
+     load factor, the cluster's load factor, the open ledger cost and the
+     overall network's load factor.
      */
     public var loadFactor: Int?
     /**
-     * Current multiplier to the transaction cost based on
-     * load to this server.
+     Current multiplier to the transaction cost based on
+     load to this server.
      */
     public let loadFactorLocal: Int?
     /**
-     * Current multiplier to the transaction cost being used by the rest of
-     * the network.
+     Current multiplier to the transaction cost being used by the rest of
+     the network.
      */
     public let loadFactorNet: Int?
     /**
-     * Current multiplier to the transaction cost based on load to servers
-     * in this cluster.
+     Current multiplier to the transaction cost based on load to servers
+     in this cluster.
      */
     public let loadFactorCluster: Int?
     /**
-     * The current multiplier to the transaction cost that a transaction must
-     * pay to get into the open ledger.
+     The current multiplier to the transaction cost that a transaction must
+     pay to get into the open ledger.
      */
     public let loadFactorFeeEscalation: Int?
     /**
-     * The current multiplier to the transaction cost that a transaction must
-     * pay to get into the queue, if the queue is full.
+     The current multiplier to the transaction cost that a transaction must
+     pay to get into the queue, if the queue is full.
      */
     public var loadFactorFeeQueue: Int?
     /**
-     * The load factor the server is enforcing, not including the open ledger
-     * cost.
+     The load factor the server is enforcing, not including the open ledger
+     cost.
      */
     public let loadFactorServer: Int?
     public var networkLedger: String = "waiting"
-    /** How many other rippled servers this one is currently connected to. */
+    /*How many other rippled servers this one is currently connected to. */
     public let peers: Int
     /**
-     * Public key used to verify this server for peer-to-peer communications.
-     * This node key pair is automatically generated by the server the first
-     * time it starts up. (If deleted, the server can create a new pair of
-     * Keys.).
+     Public key used to verify this server for peer-to-peer communications.
+     This node key pair is automatically generated by the server the first
+     time it starts up. (If deleted, the server can create a new pair of
+     Keys.).
      */
     public let pubkeyNode: String
-    /** Public key used by this node to sign ledger validations. */
+    /*Public key used by this node to sign ledger validations. */
     public let pubkeyValidator: String?
     /**
-     * A string indicating to what extent the server is participating in the
-     * network.
+     A string indicating to what extent the server is participating in the
+     network.
      */
     public let serverState: ServerState
     /**
-     * The number of consecutive microseconds the server has been in the
-     * current state.
+     The number of consecutive microseconds the server has been in the
+     current state.
      */
     public let serverStateDurationUs: Int
     /**
-     * A map of various server states with information about the time the
-     * server spends in each. This can be useful for tracking the long-term
-     * health of your server's connectivity to the network.
+     A map of various server states with information about the time the
+     server spends in each. This can be useful for tracking the long-term
+     health of your server's connectivity to the network.
      */
     public let stateAccounting: [ServerState: StateAccounting]
-    /** The current time in UTC, according to the server's clock. */
+    /*The current time in UTC, according to the server's clock. */
     public let time: String
-    /** Number of consecutive seconds that the server has been operational. */
+    /*Number of consecutive seconds that the server has been operational. */
     public let uptime: Int
-    /** Information about the most recent fully-validated ledger. */
+    /*Information about the most recent fully-validated ledger. */
     public let validatedLedger: ValidatedLedger?
     /**
-     * Minimum number of trusted validations required to validate a ledger
-     * version. Some circumstances may cause the server to require more
-     * validations.
+     Minimum number of trusted validations required to validate a ledger
+     version. Some circumstances may cause the server to require more
+     validations.
      */
     public let validationQuorum: Int
     /**
-     * Either the human readable time, in UTC, when the current validator
-     * list will expire, the string unknown if the server has yet to load a
-     * published validator list or the string never if the server uses a
-     * static validator list.
+     Either the human readable time, in UTC, when the current validator
+     list will expire, the string unknown if the server has yet to load a
+     published validator list or the string never if the server uses a
+     static validator list.
      */
     public let validatorListExpires: String?
 
@@ -372,11 +368,10 @@ public class ServerInfoWrapper: Codable {
 }
 
 /**
- * Response expected from a {@link ServerInfoRequest}.
+ Response expected from a {@link ServerInfoRequest}.
  *
- * @category Responses
+ @category Responses
  */
  public class ServerInfoResponse: Codable {
      public let info: ServerInfoWrapper
-
  }

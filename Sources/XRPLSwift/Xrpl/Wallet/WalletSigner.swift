@@ -27,7 +27,7 @@ public class WalletSigner: Wallet {
     //    public func multisign(transactions: [Transaction] | [String]) -> String {
     public static func multisign(transactions: [Transaction]) throws -> String {
         if transactions.isEmpty {
-            throw XrplError.validation("There were 0 transactions to multisign")
+            throw ValidationError("There were 0 transactions to multisign")
         }
 
         for txOrBlob in transactions {
@@ -40,11 +40,11 @@ public class WalletSigner: Wallet {
             try validate(transaction: jsonTx)
             if jsonTx["Signers"] == nil || (jsonTx["Signers"] as! [String: AnyObject]).isEmpty {
                 // swiftlint:disable:next line_length
-                throw XrplError.validation("For multisigning all transactions must include a Signers field containing an array of signatures. You may have forgotten to pass the 'forMultisign' parameter when signing.")
+                throw ValidationError("For multisigning all transactions must include a Signers field containing an array of signatures. You may have forgotten to pass the 'forMultisign' parameter when signing.")
             }
 
             if jsonTx["SigningPubKey"] as! String != "" {
-                throw XrplError.validation("SigningPubKey must be an empty string for all transactions when multisigning.")
+                throw ValidationError("SigningPubKey must be an empty string for all transactions when multisigning.")
             }
         }
 
@@ -124,7 +124,7 @@ public class WalletSigner: Wallet {
             //            return (exampleTx === cloneTx)
             return true
         }) else {
-            throw XrplError.validation("txJSON is not the same for all signedTransactions")
+            throw ValidationError("txJSON is not the same for all signedTransactions")
         }
     }
 

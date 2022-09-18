@@ -20,7 +20,7 @@ final class TestHash128: XCTestCase {
         self.hex_128_bits = "10000000002000000000300000000012"
         self.parser = BinaryParser(hex: hex_128_bits)
 
-        let fromConstructor: Hash128 = Hash128(try! self.hex_128_bits.asHexArray())
+        let fromConstructor: Hash128 = Hash128(self.hex_128_bits.hexToBytes)
         let fromValue: SerializedType = try! Hash128.from(value: self.hex_128_bits)
         let fromParser: Hash = Hash128().fromParser(parser: self.parser!)
         XCTAssertEqual(fromConstructor.toHex(), self.hex_128_bits)
@@ -51,7 +51,7 @@ final class TestHash160: XCTestCase {
         self.hex_160_bits = "1000000000200000000030000000004000000000"
         self.parser = BinaryParser(hex: hex_160_bits)
 
-        let fromConstructor: Hash160 = Hash160(try! self.hex_160_bits.asHexArray())
+        let fromConstructor: Hash160 = Hash160(self.hex_160_bits.hexToBytes)
         let fromValue: SerializedType = try! Hash160.from(value: self.hex_160_bits)
         let fromParser: Hash = Hash160().fromParser(parser: self.parser!)
         XCTAssertEqual(fromConstructor.toHex(), self.hex_160_bits)
@@ -82,7 +82,7 @@ final class TestHash256: XCTestCase {
         self.hex_256_bits = "1000000000200000000030000000004000000000500000000060000000001234"
         self.parser = BinaryParser(hex: hex_256_bits)
 
-        let fromConstructor: Hash256 = Hash256(try! self.hex_256_bits.asHexArray())
+        let fromConstructor: Hash256 = Hash256(self.hex_256_bits.hexToBytes)
         let fromValue: SerializedType = try! Hash256.from(value: self.hex_256_bits)
         let fromParser: Hash = Hash256().fromParser(parser: self.parser!)
         XCTAssertEqual(fromConstructor.toHex(), self.hex_256_bits)

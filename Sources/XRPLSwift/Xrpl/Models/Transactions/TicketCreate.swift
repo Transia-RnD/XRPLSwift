@@ -36,7 +36,7 @@ public class TicketCreate: BaseTransaction {
     }
 
     public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(TicketCreate.self, from: data)
         self.ticketCount = decoded.ticketCount
@@ -56,31 +56,31 @@ public class TicketCreate: BaseTransaction {
     }
 }
 
-// swiftlint:disable:next identifier_name
-let MAX_TICKETS: Int = 250
+let MAX_TICKETS: Int = 250 // swiftlint:disable:this identifier_name
 
 /**
- * Verify the form and type of a TicketCreate at runtime.
- *
- * @param tx - A TicketCreate Transaction.
- * @throws When the TicketCreate is malformed.
+ Verify the form and type of an TicketCreate at runtime.
+ - parameters:
+    - tx: An TicketCreate Transaction.
+ - throws:
+ When the TicketCreate is Malformed.
  */
 public func validateTicketCreate(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     let ticketCount: Int? = tx["TicketCount"] as? Int
     if tx["TicketCount"] == nil {
-        throw ValidationError.decoding("TicketCreate: missing field TicketCount")
+        throw ValidationError("TicketCreate: missing field TicketCount")
     }
 
     if !(tx["TicketCount"] is Int) {
-        throw ValidationError.decoding("TicketCreate: TicketCount must be a number")
+        throw ValidationError("TicketCreate: TicketCount must be a number")
     }
 
     if
         ticketCount == nil ||
         ticketCount! < 1 ||
         ticketCount! > MAX_TICKETS {
-        throw ValidationError.decoding("TicketCreate: TicketCount must be an integer from 1 to 250")
+        throw ValidationError("TicketCreate: TicketCount must be an integer from 1 to 250")
     }
 }

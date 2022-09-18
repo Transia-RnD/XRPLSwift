@@ -11,7 +11,6 @@
 import Foundation
 
 public class EscrowCancel: BaseTransaction {
-
     /**
      Represents an `EscrowCancel <https://xrpl.org/escrowcancel.html>`_
      transaction, which returns escrowed XRP to the sender after the Escrow has
@@ -38,7 +37,7 @@ public class EscrowCancel: BaseTransaction {
     }
 
     public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(EscrowCancel.self, from: data)
         self.owner = decoded.owner
@@ -62,27 +61,28 @@ public class EscrowCancel: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an EscrowCancel at runtime.
- *
- * @param tx - An EscrowCancel Transaction.
- * @throws When the EscrowCancel is Malformed.
+ Verify the form and type of an EscrowCancel at runtime.
+ - parameters:
+    - tx: An EscrowCancel Transaction.
+ - throws:
+ When the EscrowCancel is Malformed.
  */
 public func validateEscrowCancel(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["Owner"] == nil {
-        throw ValidationError.decoding("EscrowCancel: missing Owner")
+        throw ValidationError("EscrowCancel: missing Owner")
     }
 
     if !(tx["Owner"] is String) {
-        throw ValidationError.decoding("EscrowCancel: Owner must be a string")
+        throw ValidationError("EscrowCancel: Owner must be a string")
     }
 
     if tx["OfferSequence"] == nil {
-        throw ValidationError.decoding("EscrowCancel: missing OfferSequence")
+        throw ValidationError("EscrowCancel: missing OfferSequence")
     }
 
     if !(tx["OfferSequence"] is Int) {
-        throw ValidationError.decoding("EscrowCancel: OfferSequence must be a string")
+        throw ValidationError("EscrowCancel: OfferSequence must be a string")
     }
 }

@@ -41,42 +41,41 @@ public struct Channel: Codable {
 }
 
 /**
- * The account_channels method returns information about an account's Payment
- * Channels. This includes only channels where the specified account is the
- * channel's source, not the destination. (A channel's "source" and "owner" are
- * the same.) All information retrieved is relative to a particular version of
- * the ledger. Returns an {@link AccountChannelsResponse}.
- *
+ The account_channels method returns information about an account's Payment
+ Channels. This includes only channels where the specified account is the
+ channel's source, not the destination. (A channel's "source" and "owner" are
+ the same.) All information retrieved is relative to a particular version of
+ the ledger. Returns an {@link AccountChannelsResponse}.
  */
 public class AccountChannelsRequest: BaseRequest {
 //    var command: String = "account_channels"
     /**
-     * The unique identifier of an account, typically the account's address. The
-     * request returns channels where this account is the channel's owner/source.
+     The unique identifier of an account, typically the account's address. The
+     request returns channels where this account is the channel's owner/source.
      *
      */
     public var account: String
     /**
-     * The unique identifier of an account, typically the account's address. If
-     * provided, filter results to payment channels whose destination is this
-     * account.
+     The unique identifier of an account, typically the account's address. If
+     provided, filter results to payment channels whose destination is this
+     account.
      */
     public var destinationAccount: String?
-    /** 20-byte hex string for the ledger version to use. */
+    /// 20-byte hex string for the ledger version to use.
     public var ledgerHash: String?
     /**
-     * The ledger index of the ledger to use, or a shortcut string to choose a
-     * ledger automatically.
+     The ledger index of the ledger to use, or a shortcut string to choose a
+     ledger automatically.
      */
     public var ledgerIndex: LedgerIndex?
     /**
-     * Limit the number of transactions to retrieve. Cannot be less than 10 or
-     * more than 400. The default is 200.
+     Limit the number of transactions to retrieve. Cannot be less than 10 or
+     more than 400. The default is 200.
      */
     public var limit: Int?
     /**
-     * Value from a previous paginated response. Resume retrieving data where
-     * that response left off.
+     Value from a previous paginated response. Resume retrieving data where
+     that response left off.
      */
     public var marker: AnyCodable?
 
@@ -148,38 +147,37 @@ public class AccountChannelsRequest: BaseRequest {
 }
 
 /**
- * The expected response from an {@link AccountChannelsRequest}.
- *
+ The expected response from an {@link AccountChannelsRequest}.
  */
 open class AccountChannelsResponse: Codable {
     /**
-     * The address of the source/owner of the payment channels. This
-     * corresponds to the account field of the request.
+     The address of the source/owner of the payment channels. This
+     corresponds to the account field of the request.
      */
     public var account: String
-    /** Payment channels owned by this account. */
+    /// Payment channels owned by this account.
     public var channels: [Channel]
     /**
-     * The identifying hash of the ledger version used to generate this
-     * response.
+     The identifying hash of the ledger version used to generate this
+     response.
      */
     public var ledgerHash: String
-    /** The ledger index of the ledger version used to generate this response. */
+    /// The ledger index of the ledger version used to generate this response.
     public var ledgerIndex: Int
     /**
-     * If true, the information in this response comes from a validated ledger
-     * version. Otherwise, the information is subject to change.
+     If true, the information in this response comes from a validated ledger
+     version. Otherwise, the information is subject to change.
      */
     public var validated: Bool?
     /**
-     * The limit to how many channel objects were actually returned by this
-     * request.
+     The limit to how many channel objects were actually returned by this
+     request.
      */
     public var limit: Int?
     /**
-     * Server-defined value for pagination. Pass this to the next call to
-     * resume getting results where this call left off. Omitted when there are
-     * no additional pages after this one.
+     Server-defined value for pagination. Pass this to the next call to
+     resume getting results where this call left off. Omitted when there are
+     no additional pages after this one.
      */
     public var marker: AnyCodable?
 

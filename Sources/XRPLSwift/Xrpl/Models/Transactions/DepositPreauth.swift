@@ -16,7 +16,6 @@ import Foundation
  transaction is the sender of the Check.
  */
 public class DepositPreauth: BaseTransaction {
-
     /**
      The address of the `account
      <https://xrpl.org/accounts.html>`_ that can cash the Check. This field is
@@ -42,14 +41,13 @@ public class DepositPreauth: BaseTransaction {
         authorize: String? = nil,
         unauthorize: String? = nil
     ) {
-
         self.authorize = authorize
         self.unauthorize = unauthorize
         super.init(account: "", transactionType: "DepositPreauth")
     }
 
     public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(DepositPreauth.self, from: data)
         self.authorize = decoded.authorize
@@ -73,37 +71,38 @@ public class DepositPreauth: BaseTransaction {
 }
 
 /**
- * Verify the form and type of a DepositPreauth at runtime.
- *
- * @param tx - A DepositPreauth Transaction.
- * @throws When the DepositPreauth is malformed.
+ Verify the form and type of an DepositPreauth at runtime.
+ - parameters:
+    - tx: An DepositPreauth Transaction.
+ - throws:
+ When the DepositPreauth is Malformed.
  */
 public func validateDepositPreauth(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["Authorize"] != nil && tx["Unauthorize"] != nil {
-        throw ValidationError.decoding("DepositPreauth: can't provide both Authorize and Unauthorize fields")
+        throw ValidationError("DepositPreauth: can't provide both Authorize and Unauthorize fields")
     }
 
     if tx["Authorize"] == nil && tx["Unauthorize"] == nil {
-        throw ValidationError.decoding("DepositPreauth: must provide either Authorize or Unauthorize field")
+        throw ValidationError("DepositPreauth: must provide either Authorize or Unauthorize field")
     }
 
     if tx["Authorize"] != nil {
         if !(tx["Authorize"] is String) {
-            throw ValidationError.decoding("DepositPreauth: Authorize must be a string")
+            throw ValidationError("DepositPreauth: Authorize must be a string")
         }
         if (tx["Account"] as! String) == (tx["Authorize"] as! String) {
-            throw ValidationError.decoding("DepositPreauth: Account can't preauthorize its own address")
+            throw ValidationError("DepositPreauth: Account can't preauthorize its own address")
         }
     }
 
     if tx["Unauthorize"] != nil {
         if !(tx["Unauthorize"] is String) {
-            throw ValidationError.decoding("DepositPreauth: Unauthorize must be a string")
+            throw ValidationError("DepositPreauth: Unauthorize must be a string")
         }
         if (tx["Account"] as! String) == (tx["Unauthorize"] as! String) {
-            throw ValidationError.decoding("DepositPreauth: Account can't unauthorize its own address")
+            throw ValidationError("DepositPreauth: Account can't unauthorize its own address")
         }
     }
 }

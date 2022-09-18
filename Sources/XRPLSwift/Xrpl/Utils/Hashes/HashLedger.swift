@@ -55,7 +55,7 @@ import Foundation
 //      ]) + hex
 //    )
 //  }
-//    throw new XrplError.unknown("Variable integer overflow.")
+//    throw new XrplError("Variable integer overflow.")
 // }
 
 /**
@@ -72,7 +72,7 @@ public func hashSignedTx(tx: String) throws -> String {
     let txObject: [String: AnyObject] = BinaryCodec.decode(buffer: tx)
 
     if txObject["TxnSignature"] == nil && txObject["Signers"] == nil {
-        throw XrplError.validation("The transaction must be signed to hash it.")
+        throw ValidationError("The transaction must be signed to hash it.")
     }
 
     let prefix: String = String(HashPrefix.TRANSACTION_ID.rawValue, radix: 16).uppercased()
@@ -84,7 +84,7 @@ public func hashSignedTx(tx: Transaction) throws -> String {
     let txObject: [String: AnyObject] = try tx.toJson()
 
     if txObject["TxnSignature"] == nil && txObject["Signers"] == nil {
-        throw XrplError.validation("The transaction must be signed to hash it.")
+        throw ValidationError("The transaction must be signed to hash it.")
     }
 
     let prefix = HashPrefix.TRANSACTION_ID.rawValue
@@ -167,7 +167,7 @@ public func hashSignedTx(tx: Transaction) throws -> String {
 //  }
 //
 //  if (ledger.transactions == null) {
-//      throw XrplError.validation("transactions is missing from the ledger")
+//      throw ValidationError("transactions is missing from the ledger")
 //  }
 //
 //  const transactionHash = hashTxTree(ledger.transactions)
@@ -203,7 +203,7 @@ public func hashSignedTx(tx: Transaction) throws -> String {
 //  const stateHash = hashStateTree(ledger.accountState)
 //
 //  if (account_hash !== stateHash) {
-//      throw  XrplError.validation(
+//      throw  ValidationError(
 //      "stateHash in header does not match computed hash of state",
 //    )
 //  }

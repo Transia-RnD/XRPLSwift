@@ -10,35 +10,35 @@
 import Foundation
 
 /**
- * A DepositPreauth object tracks a preauthorization from one account to
- * another. DepositPreauth transactions create these objects.
+ A DepositPreauth object tracks a preauthorization from one account to
+ another. DepositPreauth transactions create these objects.
  *
- * @category Ledger Entries
+ @category Ledger Entries
  */
 open class LODepositPreauth: BaseLedgerEntry {
     public var ledgerEntryType: String = "DepositPreauth"
-    /** The account that granted the preauthorization. */
+    /// The account that granted the preauthorization.
     public let account: String
-    /** The account that received the preauthorization. */
+    /// The account that received the preauthorization. */
     public let authorize: String
     /**
-     * A bit-map of boolean flags. No flags are defined for DepositPreauth
-     * objects, so this value is always 0.
+     A bit-map of boolean flags. No flags are defined for DepositPreauth
+     objects, so this value is always 0.
      */
     public var flags: Int = 0
     /**
-     * A hint indicating which page of the sender's owner directory links to this
-     * object, in case the directory consists of multiple pages.
+     A hint indicating which page of the sender's owner directory links to this
+     object, in case the directory consists of multiple pages.
      */
     public let ownerNode: String
     /**
-     * The identifying hash of the transaction that most recently modified this
-     * object.
+     The identifying hash of the transaction that most recently modified this
+     object.
      */
     public let previousTxnId: String
     /**
-     * The index of the ledger that contains the transaction that most recently
-     * modified this object.
+     The index of the ledger that contains the transaction that most recently
+     modified this object.
      */
     public let previousTxnLgrSeq: Int
 

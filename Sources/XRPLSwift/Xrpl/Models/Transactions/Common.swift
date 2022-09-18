@@ -106,9 +106,6 @@ public func isAmount(amount: Any) -> Bool {
     return isIssuedCurrency(input: amount)
 }
 
-//// eslint-disable-next-line @typescript-eslint/no-empty-interface -- no global flags right now, so this is fine
-// export interface GlobalFlags {}
-
 /**
  * Every transaction has the same set of common fields.
  */
@@ -234,7 +231,7 @@ public class BaseTransaction: Codable {
     }
 
     public init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try! JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(BaseTransaction.self, from: data)
         // Required
@@ -290,7 +287,6 @@ public class BaseTransaction: Codable {
 }
 
 extension BaseTransaction {
-
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
@@ -299,82 +295,81 @@ extension BaseTransaction {
 }
 
 /**
- * Verify the common fields of a transaction. The validate functionality will be
- * optional, and will check transaction form at runtime. This should be called
- * any time a transaction will be verified.
- *
- * @param common - An interface w/ common transaction fields.
- * @throws When the common param is malformed.
+ Verify the common fields of a transaction. The validate functionality will be
+ optional, and will check transaction form at runtime. This should be called
+ any time a transaction will be verified.
+ - parameters:
+    - common: An interface w/ common transaction fields.
+ - throws:
+ When the common param is malformed.
  */
 public func validateBaseTransaction(common: [String: AnyObject]) throws {
     print("VALIDATE BASE TX")
     if common["Account"] == nil {
-        throw ValidationError.decoding("BaseTransaction: missing field Account")
+        throw ValidationError("BaseTransaction: missing field Account")
     }
 
     if !(common["Account"] is String) {
-        throw ValidationError.decoding("BaseTransaction: Account not string")
+        throw ValidationError("BaseTransaction: Account not string")
     }
 
     if common["TransactionType"] == nil {
-        throw ValidationError.decoding("BaseTransaction: missing field TransactionType")
+        throw ValidationError("BaseTransaction: missing field TransactionType")
     }
 
     if !(common["TransactionType"] is String) {
-        throw ValidationError.decoding("BaseTransaction: TransactionType not string")
+        throw ValidationError("BaseTransaction: TransactionType not string")
     }
 
     if !Transaction.all().contains(common["TransactionType"] as! String) {
-        throw ValidationError.decoding("BaseTransaction: Unknown TransactionType")
+        throw ValidationError("BaseTransaction: Unknown TransactionType")
     }
 
     if common["Fee"] != nil && !(common["Fee"] is String) {
-        throw ValidationError.decoding("BaseTransaction: invalid Fee")
+        throw ValidationError("BaseTransaction: invalid Fee")
     }
 
     if common["Sequence"] != nil && !(common["Sequence"] is Int) {
-        throw ValidationError.decoding("BaseTransaction: invalid Sequence")
+        throw ValidationError("BaseTransaction: invalid Sequence")
     }
 
     if common["AccountTxnID"] != nil && !(common["AccountTxnID"] is String) {
-        throw ValidationError.decoding("BaseTransaction: invalid AccountTxnID")
+        throw ValidationError("BaseTransaction: invalid AccountTxnID")
     }
 
     if common["LastLedgerSequence"] != nil && !(common["LastLedgerSequence"] is Int) {
-        throw ValidationError.decoding("BaseTransaction: invalid LastLedgerSequence")
+        throw ValidationError("BaseTransaction: invalid LastLedgerSequence")
     }
 
-//    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS
     let memos = common["Memos"] as? [[String: AnyObject]]
     if memos != nil && !(memos?.allSatisfy({ result in
         isMemo(obj: result)
     }))! {
-        throw ValidationError.decoding("BaseTransaction: invalid Memos")
+        throw ValidationError("BaseTransaction: invalid Memos")
     }
 
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Only used by JS
     let signers = common["Signers"] as? [[String: AnyObject]]
 
     if signers != nil && (signers!.isEmpty || !(signers?.allSatisfy({ result in
         isSigner(obj: result)
     }))!) {
-        throw ValidationError.decoding("BaseTransaction: invalid Signers")
+        throw ValidationError("BaseTransaction: invalid Signers")
     }
 
     if common["SourceTag"] != nil && !(common["SourceTag"] is Int) {
-        throw ValidationError.decoding("BaseTransaction: invalid SourceTag")
+        throw ValidationError("BaseTransaction: invalid SourceTag")
     }
 
     if common["SigningPubKey"] != nil && !(common["SigningPubKey"] is String) {
-        throw ValidationError.decoding("BaseTransaction: invalid SigningPubKey")
+        throw ValidationError("BaseTransaction: invalid SigningPubKey")
     }
 
     if common["TicketSequence"] != nil && !(common["TicketSequence"] is Int) {
-        throw ValidationError.decoding("BaseTransaction: invalid TicketSequence")
+        throw ValidationError("BaseTransaction: invalid TicketSequence")
     }
 
     if common["TxnSignature"] != nil && !(common["TxnSignature"] is String) {
-        throw ValidationError.decoding("BaseTransaction: invalid TxnSignature")
+        throw ValidationError("BaseTransaction: invalid TxnSignature")
     }
 }
 

@@ -223,7 +223,7 @@ public class AccountSet: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         clearFlag = try values.decodeIfPresent(AccountSetAsfFlags.self, forKey: .clearFlag)
         setFlag = try values.decodeIfPresent(AccountSetAsfFlags.self, forKey: .setFlag)
@@ -249,10 +249,11 @@ public class AccountSet: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an AccountDelete at runtime.
- *
- * @param tx - An AccountDelete Transaction.
- * @throws When the AccountDelete is Malformed.
+ Verify the form and type of an AccountSet at runtime.
+ - parameters:
+    - tx: An AccountSet Transaction.
+ - throws:
+ When the AccountSet is Malformed.
  */
 public func validateAccountSet(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
@@ -260,38 +261,38 @@ public func validateAccountSet(tx: [String: AnyObject]) throws {
     if tx["ClearFlag"] != nil {
         print("NOT NIL")
         guard let _ = tx["ClearFlag"] as? Int else {
-            throw XrplError.validation("AccountSet: invalid ClearFlag")
+            throw ValidationError("AccountSet: invalid ClearFlag")
         }
         // TODO: review this
     }
 
     if tx["SetFlag"] != nil {
         guard let _ = tx["SetFlag"] as? Int else {
-            throw XrplError.validation("AccountSet: invalid SetFlag")
+            throw ValidationError("AccountSet: invalid SetFlag")
         }
         // TODO: review this
     }
 
     if tx["Domain"] != nil, !(tx["Domain"] is String) {
-        throw XrplError.validation("AccountSet: invalid Domain")
+        throw ValidationError("AccountSet: invalid Domain")
     }
 
     if tx["EmailHash"] != nil, !(tx["EmailHash"] is String) {
-        throw XrplError.validation("AccountSet: invalid EmailHash")
+        throw ValidationError("AccountSet: invalid EmailHash")
     }
 
     if tx["MessageKey"] != nil, !(tx["MessageKey"] is String) {
-        throw XrplError.validation("AccountSet: invalid MessageKey")
+        throw ValidationError("AccountSet: invalid MessageKey")
     }
 
     if tx["TransferRate"] != nil, !(tx["TransferRate"] is Int) {
-        throw XrplError.validation("AccountSet: invalid TransferRate")
+        throw ValidationError("AccountSet: invalid TransferRate")
     }
 
     if tx["TickSize"] != nil {
         guard let tickSize = tx["TickSize"] as? Int, tickSize != 0, tickSize < _MIN_TICK_SIZE || tickSize > _MAX_TICK_SIZE else {
-            throw XrplError.validation("AccountSet: invalid TickSize")
+            throw ValidationError("AccountSet: invalid TickSize")
         }
-        throw XrplError.validation("AccountSet: invalid Tick_MAX_TICK_SIZESize")
+        throw ValidationError("AccountSet: invalid Tick_MAX_TICK_SIZESize")
     }
 }

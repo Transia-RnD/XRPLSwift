@@ -28,7 +28,7 @@ public func ensureClassicAddress(account: String) throws -> String {
          * `tag` should be `false`.
          */
         if tag != nil {
-            throw XrplError.unknown("This command does not support the use of a tag. Use an address without a tag.")
+            throw XrplError("This command does not support the use of a tag. Use an address without a tag.")
         }
 
         // For rippled requests that use an account, always use a classic address.

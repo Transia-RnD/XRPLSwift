@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Tx.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -10,32 +10,29 @@
 import Foundation
 
 /**
- * The tx method retrieves information on a single transaction, by its
- * identifying hash. Expects a response in the form of a {@link TxResponse}.
- *
- * @category Requests
+ The tx method retrieves information on a single transaction, by its
+ identifying hash. Expects a response in the form of a {@link TxResponse}.
  */
 public class TxRequest: BaseRequest {
-    //  command: String = "tx"
     public var transaction: String
     /**
-     * If true, return transaction data and metadata as binary serialized to
-     * hexadecimal strings. If false, return transaction data and metadata as.
-     * JSON. The default is false.
+     If true, return transaction data and metadata as binary serialized to
+     hexadecimal strings. If false, return transaction data and metadata as.
+     JSON. The default is false.
      */
     public var binary: Bool?
     /**
-     * Use this with max_ledger to specify a range of up to 1000 ledger indexes,
-     * starting with this ledger (inclusive). If the server cannot find the
-     * transaction, it confirms whether it was able to search all the ledgers in
-     * this range.
+     Use this with max_ledger to specify a range of up to 1000 ledger indexes,
+     starting with this ledger (inclusive). If the server cannot find the
+     transaction, it confirms whether it was able to search all the ledgers in
+     this range.
      */
     public var minLedger: Int?
     /**
-     * Use this with min_ledger to specify a range of up to 1000 ledger indexes,
-     * ending with this ledger (inclusive). If the server cannot find the
-     * transaction, it confirms whether it was able to search all the ledgers in
-     * the requested range.
+     Use this with min_ledger to specify a range of up to 1000 ledger indexes,
+     ending with this ledger (inclusive). If the server cannot find the
+     transaction, it confirms whether it was able to search all the ledgers in
+     the requested range.
      */
     public var maxLedger: Int?
 
@@ -99,32 +96,32 @@ public class TxRequest: BaseRequest {
 }
 
 /**
- * Response expected from a {@link TxRequest}.
+ Response expected from a {@link TxRequest}.
  *
- * @category Responses
+ @category Responses
  */
 open class TxResponse: Codable {
-    /** The SHA-512 hash of the transaction. */
+    /// The SHA-512 hash of the transaction.
     public let hash: String
-    /** The ledger index of the ledger that includes this transaction. */
+    /// The ledger index of the ledger that includes this transaction.
     public let ledgerIndex: Int?
-    /** Transaction metadata, which describes the results of the transaction. */
+    /// Transaction metadata, which describes the results of the transaction.
     //    public let meta?: TransactionMetadata | String
     public let meta: TransactionMetadata?
     /**
-     * If true, this data comes from a validated ledger version; if omitted or.
-     * Set to false, this data is not final.
+     If true, this data comes from a validated ledger version; if omitted or.
+     Set to false, this data is not final.
      */
     public let validated: Bool?
     /**
-     * This number measures the number of seconds since the "Ripple Epoch" of January 1, 2000 (00:00 UTC)
+     This number measures the number of seconds since the "Ripple Epoch" of January 1, 2000 (00:00 UTC)
      */
     public let date: Int?
     /**
-     * If true, the server was able to search all of the specified ledger
-     * versions, and the transaction was in none of them. If false, the server did
-     * not have all of the specified ledger versions available, so it is not sure.
-     * If one of them might contain the transaction.
+     If true, the server was able to search all of the specified ledger
+     versions, and the transaction was in none of them. If false, the server did
+     not have all of the specified ledger versions available, so it is not sure.
+     If one of them might contain the transaction.
      */
     public let searchedAll: Bool?
 

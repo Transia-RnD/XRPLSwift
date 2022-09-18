@@ -31,8 +31,8 @@ public struct ChannelSignature: Codable {
     ) {
         self.pubKey = pubKey
         self.sigHex = sigHex
-        self.sigBytes = try! sigHex.asHexArray()
+        self.sigBytes = sigHex.hexToBytes
         self.dataHex = dataHex
-        self.dataBytes = try! dataHex.asHexArray()
+        self.dataBytes = dataHex.hexToBytes
     }
 }

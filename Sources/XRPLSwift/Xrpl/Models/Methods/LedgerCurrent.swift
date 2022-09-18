@@ -10,18 +10,16 @@
 import Foundation
 
 /**
- * The ledger_current method returns the unique identifiers of the current
- * in-progress ledger. Expects a response in the form of a {@link
- * LedgerCurrentResponse}.
+ The ledger_current method returns the unique identifiers of the current
+ in-progress ledger. Expects a response in the form of a {@link
+ LedgerCurrentResponse}.
  *
- * @example
- * ```ts
- * const ledgerCurrent: LedgerCurrentRequest = {
- *   "command": "ledger_current"
- * }
- * ```
- *
- * @category Requests
+ @example
+ ```ts
+ const ledgerCurrent: LedgerCurrentRequest = {
+   "command": "ledger_current"
+ }
+ ```
  */
 public class LedgerCurrentRequest: BaseRequest {
     public init(
@@ -46,9 +44,7 @@ public class LedgerCurrentRequest: BaseRequest {
 }
 
 /**
- * Response expected from a {@link LedgerCurrentRequest}.
- *
- * @category Responses
+ Response expected from a {@link LedgerCurrentRequest}.
  */
 public class LedgerCurrentResponse: Codable {
     public let ledgerCurrentIndex: Int
@@ -57,7 +53,7 @@ public class LedgerCurrentResponse: Codable {
         case ledgerCurrentIndex = "ledger_current_index"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
         //        try super.init(from: decoder)

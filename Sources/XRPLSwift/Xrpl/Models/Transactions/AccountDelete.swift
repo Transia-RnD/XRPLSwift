@@ -76,19 +76,20 @@ public class AccountDelete: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an AccountDelete at runtime.
- *
- * @param tx - An AccountDelete Transaction.
- * @throws When the AccountDelete is Malformed.
+ Verify the form and type of an AccountDelete at runtime.
+ - parameters:
+    - tx: An AccountDelete Transaction.
+ - throws:
+ When the AccountDelete is Malformed.
  */
 public func validateAccountDelete(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     guard let destination = tx["Destination"] as? String, !destination.isEmpty else {
-        throw XrplError.validation("AccountDelete: invalid Destination")
+        throw ValidationError("AccountDelete: invalid Destination")
     }
 
     guard tx["DestinationTag"] is Int else {
-        throw XrplError.validation("AccountDelete: invalid Destination")
+        throw ValidationError("AccountDelete: invalid Destination")
     }
 }

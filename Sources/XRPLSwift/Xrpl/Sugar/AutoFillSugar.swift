@@ -220,7 +220,7 @@ public class AutoFillSugar {
         ] as [String: AnyObject])
         let response = try await client.request(request).wait() as? BaseResponse<AccountObjectsResponse>
         if let result = response?.result, result.accountObjects.count > 0 {
-            throw XrplError.unknown(
+            throw XrplError(
                 "Account \(tx.account) cannot be deleted; there are Escrows, PayChannels, RippleStates, or Checks associated with the account."
             )
         }

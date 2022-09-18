@@ -10,21 +10,21 @@
 // import Foundation
 //
 /// **
-// * The `federator_info` command asks the federator for information
-// * about the door account and other bridge-related information. This
-// * method only exists on sidechain federators. Expects a response in
-// * the form of a {@link FederatorInfoResponse}.
+// The `federator_info` command asks the federator for information
+// about the door account and other bridge-related information. This
+// method only exists on sidechain federators. Expects a response in
+// the form of a {@link FederatorInfoResponse}.
 // *
-// * @category Requests
+// @category Requests
 // */
 // open class FederatorInfoRequest: BaseRequest {
 //  command: String = "federator_info"
 // }
 //
 /// **
-// * Response expected from a {@link FederatorInfoRequest}.
+// Response expected from a {@link FederatorInfoRequest}.
 // *
-// * @category Responses
+// @category Responses
 // */
 // open class FederatorInfoResponse: BaseResponse {
 //  result: {

@@ -40,7 +40,6 @@ public enum Transaction: Codable {
 }
 
 extension Transaction {
-
     enum CodingKeys: String, CodingKey {
         case tt = "TransactionType"
     }
@@ -406,24 +405,20 @@ public class TransactionAndMetadata: Codable {
 }
 
 /**
- * Verifies various Transaction Types.
- * Encode/decode and individual type validation.
- *
- * @param transaction - A Transaction.
- * @throws ValidationError When the Transaction is malformed.
- * @category Utilities
+ Verifies various Transaction Types.
+ Encode/decode and individual type validation.
+ - parameters:
+    - transaction: A Transaction.
+ - throws:
+ ValidationError When the Transaction is malformed.
  */
 public func validate(transaction: [String: AnyObject]) throws {
     var tx: [String: AnyObject] = transaction
-    if transaction["TransactionType"] == nil {
-        throw XrplError.validation("Object does not have a `TransactionType`")
+    guard let tt = transaction["TransactionType"] as? String else {
+        throw ValidationError("Object's `TransactionType` is not a string")
     }
-    if !(transaction["TransactionType"] is String) {
-        throw XrplError.validation("Object's `TransactionType` is not a string")
-    }
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- okay here
     try setTransactionFlagsToNumber(tx: &tx)
-    switch tx["TransactionType"] as! String {
+    switch tt {
     case "AccountDelete":
         try validateAccountDelete(tx: tx)
     case "AccountSet":
@@ -473,7 +468,7 @@ public func validate(transaction: [String: AnyObject]) throws {
     case "TrustSet":
         try validateTrustSet(tx: tx)
     default:
-        throw XrplError.validation("Invalid field TransactionType: \(tx["TransactionType"] as! String)")
+        throw ValidationError("Invalid field TransactionType: \(tt)")
     }
 //    if (
 //        !_.isEqual(

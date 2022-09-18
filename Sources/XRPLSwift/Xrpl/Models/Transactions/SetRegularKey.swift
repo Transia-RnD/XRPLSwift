@@ -33,7 +33,7 @@ public class SetRegularKey: BaseTransaction {
     }
 
     public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(SetRegularKey.self, from: data)
         self.regularKey = decoded.regularKey
@@ -54,15 +54,16 @@ public class SetRegularKey: BaseTransaction {
 }
 
 /**
- * Verify the form and type of a SetRegularKey at runtime.
- *
- * @param tx - A SetRegularKey Transaction.
- * @throws When the SetRegularKey is malformed.
+ Verify the form and type of an SetRegularKey at runtime.
+ - parameters:
+    - tx: An SetRegularKey Transaction.
+ - throws:
+ When the SetRegularKey is Malformed.
  */
 public func validateSetRegularKey(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["RegularKey"] != nil && !(tx["RegularKey"] is String) {
-        throw ValidationError.decoding("SetRegularKey: RegularKey must be a string")
+        throw ValidationError("SetRegularKey: RegularKey must be a string")
     }
 }

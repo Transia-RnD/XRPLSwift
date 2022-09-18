@@ -14,7 +14,7 @@ final class TestBlob: XCTestCase {
 
     func testFromValue() {
         let value: String = "00AA"
-        let valueBytes: [UInt8] = try! value.asHexArray()
+        let valueBytes: [UInt8] = value.hexToBytes
 
         let blob1: Blob = try! Blob.from(value: value)
         let blob2: Blob = Blob(valueBytes)

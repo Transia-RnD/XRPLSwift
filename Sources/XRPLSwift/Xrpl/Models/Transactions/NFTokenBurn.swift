@@ -19,7 +19,6 @@ consolidation, thus removing an NFTokenPage, the owner’s reserve requirement
 is reduced by one.
 */
 public class NFTokenBurn: BaseTransaction {
-
 //    public var account: String
     /**
     Identifies the AccountID that submitted this transaction. The account must
@@ -86,15 +85,16 @@ public class NFTokenBurn: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an NFTokenBurn at runtime.
- *
- * @param tx - An NFTokenBurn Transaction.
- * @throws When the NFTokenBurn is Malformed.
+ Verify the form and type of an NFTokenBurn at runtime.
+ - parameters:
+    - tx: An NFTokenBurn Transaction.
+ - throws:
+ When the NFTokenBurn is Malformed.
  */
 public func validateNFTokenBurn(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
   if tx["NFTokenID"] == nil {
-      throw ValidationError.decoding("NFTokenBurn: missing field NFTokenID")
+      throw ValidationError("NFTokenBurn: missing field NFTokenID")
   }
 }

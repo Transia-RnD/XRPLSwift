@@ -10,22 +10,19 @@
 import Foundation
 
 /**
- * The `transaction_entry` method retrieves information on a single transaction
- * from a specific ledger version. Expects a response in the form of a
- * {@link TransactionEntryResponse}.
- *
- * @category Requests
+ The `transaction_entry` method retrieves information on a single transaction
+ from a specific ledger version. Expects a response in the form of a
+ {@link TransactionEntryResponse}.
  */
 public class TransactionEntryRequest: BaseRequest {
-    //    let command: String = "transaction_entry"
-    /** A 20-byte hex string for the ledger version to use. */
+    /// A 20-byte hex string for the ledger version to use.
     public let ledgerHash: String?
     /**
-     * The ledger index of the ledger to use, or a shortcut string to choose a
-     * ledger automatically.
+     The ledger index of the ledger to use, or a shortcut string to choose a
+     ledger automatically.
      */
     public let ledgerIndex: LedgerIndex?
-    /** Unique hash of the transaction you are looking up. */
+    /// Unique hash of the transaction you are looking up.
     public let txHash: String
 
     enum CodingKeys: String, CodingKey {
@@ -82,27 +79,25 @@ public class TransactionEntryRequest: BaseRequest {
 }
 
 /**
- * Response expected from a {@link TransactionEntryRequest}.
- *
- * @category Responses
+ Response expected from a {@link TransactionEntryRequest}.
  */
 public class TransactionEntryResponse: Codable {
     /**
-     * The ledger index of the ledger version the transaction was found in;
-     * this is the same as the one from the request.
+     The ledger index of the ledger version the transaction was found in;
+     this is the same as the one from the request.
      */
     public let ledgerIndex: Int
     /**
-     * The identifying hash of the ledger version the transaction was found in;
-     * this is the same as the one from the request.
+     The identifying hash of the ledger version the transaction was found in;
+     this is the same as the one from the request.
      */
     public let ledgerHash: String
     /**
-     * The transaction metadata, which shows the exact results of the
-     * transaction in detail.
+     The transaction metadata, which shows the exact results of the
+     transaction in detail.
      */
     public let metadata: TransactionMetadata
-    /** JSON representation of the Transaction object. */
+    /// JSON representation of the Transaction object.
 //    public let txJson: Transaction + ResponseOnlyTxInfo
     public let txJson: Transaction
 

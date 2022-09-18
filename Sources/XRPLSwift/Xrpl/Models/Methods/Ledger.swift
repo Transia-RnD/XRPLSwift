@@ -7,54 +7,54 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/ledger.ts
 
-import Foundation
 import AnyCodable
+import Foundation
 
 public class LedgerRequest: BaseRequest {
-    /** A 20-byte hex string for the ledger version to use. */
+    /// A 20-byte hex string for the ledger version to use.
     public let ledgerHash: String?
     /**
-     * The ledger index of the ledger to use, or a shortcut string to choose a
-     * ledger automatically.
+     The ledger index of the ledger to use, or a shortcut string to choose a
+     ledger automatically.
      */
     public let ledgerIndex: LedgerIndex?
     /**
-     * Admin required If true, return full information on the entire ledger.
-     * Ignored if you did not specify a ledger version. Defaults to false.
+     Admin required If true, return full information on the entire ledger.
+     Ignored if you did not specify a ledger version. Defaults to false.
      */
     public let full: Bool?
     /**
-     * Admin required. If true, return information on accounts in the ledger.
-     * Ignored if you did not specify a ledger version. Defaults to false.
+     Admin required. If true, return information on accounts in the ledger.
+     Ignored if you did not specify a ledger version. Defaults to false.
      */
     public let accounts: Bool?
     /**
-     * If true, return information on transactions in the specified ledger
-     * version. Defaults to false. Ignored if you did not specify a ledger
-     * version.
+     If true, return information on transactions in the specified ledger
+     version. Defaults to false. Ignored if you did not specify a ledger
+     version.
      */
     public let transactions: Bool?
     /**
-     * Provide full JSON-formatted information for transaction/account
-     * information instead of only hashes. Defaults to false. Ignored unless you
-     * request transactions, accounts, or both.
+     Provide full JSON-formatted information for transaction/account
+     information instead of only hashes. Defaults to false. Ignored unless you
+     request transactions, accounts, or both.
      */
     public let expand: Bool?
     /**
-     * If true, include owner_funds field in the metadata of OfferCreate
-     * transactions in the response. Defaults to false. Ignored unless
-     * transactions are included and expand is true.
+     If true, include owner_funds field in the metadata of OfferCreate
+     transactions in the response. Defaults to false. Ignored unless
+     transactions are included and expand is true.
      */
     public let ownerFunds: Bool?
     /**
-     * If true, and transactions and expand are both also true, return
-     * transaction information in binary format (hexadecimal string) instead of
-     * JSON format.
+     If true, and transactions and expand are both also true, return
+     transaction information in binary format (hexadecimal string) instead of
+     JSON format.
      */
     public let binary: Bool?
     /**
-     * If true, and the command is requesting the current ledger, includes an
-     * array of queued transactions in the results.
+     If true, and the command is requesting the current ledger, includes an
+     array of queued transactions in the results.
      */
     public let queue: Bool?
 
@@ -69,8 +69,6 @@ public class LedgerRequest: BaseRequest {
         case binary = "binary"
         case queue = "queue"
     }
-
-//    init( id: Int? = nil, apiVersion: Int? = nil ) { super.init(id: id, command: "ledger", apiVersion: apiVersion) }
 
     init(
         id: Int? = nil,
@@ -220,45 +218,42 @@ enum LOQueueData: Codable {
 
 public struct Result {
     var ledgerHash: String
-    /** The Ledger Index of this ledger. */
+    /// The Ledger Index of this ledger.
     var ledgerIndex: Int
     /**
-     * If true, this is a validated ledger version. If omitted or set to false,
-     * this ledger's data is not final.
+     If true, this is a validated ledger version. If omitted or set to false,
+     this ledger's data is not final.
      */
     //    var queueData: Array<LedgerQueueData | string>?
     var queueData: [LedgerQueueData]?
     /**
-     * Array of objects describing queued transactions, in the same order as
-     * the queue. If the request specified expand as true, members contain full
-     * representations of the transactions, in either JSON or binary depending
-     * on whether the request specified binary as true.
+     Array of objects describing queued transactions, in the same order as
+     the queue. If the request specified expand as true, members contain full
+     representations of the transactions, in either JSON or binary depending
+     on whether the request specified binary as true.
      */
     var validated: Bool?
 }
 
 /**
- * Response expected from a {@link LedgerRequest}.
- *
- * @category Responses
+ Response expected from a {@link LedgerRequest}.
  */
 public class LedgerResponse: Codable {
     var ledger: BaseLedger
-
     var ledgerHash: String
-    /** The Ledger Index of this ledger. */
+    /// The Ledger Index of this ledger.
     var ledgerIndex: Int
     /**
-     * If true, this is a validated ledger version. If omitted or set to false,
-     * this ledger's data is not final.
+     If true, this is a validated ledger version. If omitted or set to false,
+     this ledger's data is not final.
      */
     //    var queueData: Array<LedgerQueueData | string>?
 //    var queueData: [rQueueData]?
     /**
-     * Array of objects describing queued transactions, in the same order as
-     * the queue. If the request specified expand as true, members contain full
-     * representations of the transactions, in either JSON or binary depending
-     * on whether the request specified binary as true.
+     Array of objects describing queued transactions, in the same order as
+     the queue. If the request specified expand as true, members contain full
+     representations of the transactions, in either JSON or binary depending
+     on whether the request specified binary as true.
      */
     var validated: Bool?
 

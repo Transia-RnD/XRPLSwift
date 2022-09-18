@@ -10,7 +10,6 @@
 import Foundation
 
 public class CheckCash: BaseTransaction {
-
     /**
      Represents a `CheckCash transaction <https://xrpl.org/checkcash.html>`_,
      which redeems a Check object to receive up to the amount authorized by the
@@ -81,31 +80,32 @@ public class CheckCash: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an CheckCash at runtime.
- *
- * @param tx - An CheckCash Transaction.
- * @throws When the CheckCash is Malformed.
+ Verify the form and type of an CheckCash at runtime.
+ - parameters:
+    - tx: An CheckCash Transaction.
+ - throws:
+ When the CheckCash is Malformed.
  */
 public func validateCheckCash(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["Amount"] == nil && tx["DeliverMin"] == nil {
-        throw ValidationError.decoding("CheckCash: must have either Amount or DeliverMin")
+        throw ValidationError("CheckCash: must have either Amount or DeliverMin")
     }
 
     if tx["Amount"] != nil && tx["DeliverMin"] != nil {
-        throw ValidationError.decoding("CheckCash: cannot have both Amount and DeliverMin")
+        throw ValidationError("CheckCash: cannot have both Amount and DeliverMin")
     }
 
     if tx["Amount"] != nil && !isAmount(amount: tx["Amount"] as! String) {
-        throw ValidationError.decoding("CheckCash: invalid Amount")
+        throw ValidationError("CheckCash: invalid Amount")
     }
 
     if tx["DeliverMin"] != nil && !isAmount(amount: tx["DeliverMin"] as! String) {
-        throw ValidationError.decoding("CheckCash: invalid DeliverMin")
+        throw ValidationError("CheckCash: invalid DeliverMin")
     }
 
     if tx["CheckID"] != nil && !(tx["CheckID"] is String) {
-        throw ValidationError.decoding("CheckCash: invalid CheckID")
+        throw ValidationError("CheckCash: invalid CheckID")
     }
 }

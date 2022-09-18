@@ -19,6 +19,6 @@ public func getLedgerIndex(client: XrplClient) async throws -> Int {
         "ledger_index": "validated"
     ] as [String: AnyObject]
     let ledgerResponse = try await client.request(LedgerRequest(dict)).wait() as? BaseResponse<LedgerResponse>
-    guard let result = ledgerResponse?.result else { throw ValidationError.unknown("getLedgerIndex") }
+    guard let result = ledgerResponse?.result else { throw ValidationError("getLedgerIndex") }
     return result.ledgerIndex
 }

@@ -7,10 +7,8 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/metadata.ts
 
-import Foundation
 import AnyCodable
-
-// import { Amount } from '../common'
+import Foundation
 
 public struct AccountRootNodeField: Codable {
     public var account: String?

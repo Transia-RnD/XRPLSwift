@@ -44,7 +44,7 @@ public class SignerListSet: BaseTransaction {
     }
 
     public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(SignerListSet.self, from: data)
         self.signerQuorum = decoded.signerQuorum
@@ -71,35 +71,36 @@ public class SignerListSet: BaseTransaction {
 let MAX_SIGNERS: Int = 8
 
 /**
- * Verify the form and type of an SignerListSet at runtime.
- *
- * @param tx - An SignerListSet Transaction.
- * @throws When the SignerListSet is Malformed.
+ Verify the form and type of an SignerListSet at runtime.
+ - parameters:
+    - tx: An SignerListSet Transaction.
+ - throws:
+ When the SignerListSet is Malformed.
  */
 func validateSignerListSet(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["SignerQuorum"] == nil {
-        throw ValidationError.decoding("SignerListSet: missing field SignerQuorum")
+        throw ValidationError("SignerListSet: missing field SignerQuorum")
     }
 
     if !(tx["SignerQuorum"] is Int) {
-        throw ValidationError.decoding("SignerListSet: invalid SignerQuorum")
+        throw ValidationError("SignerListSet: invalid SignerQuorum")
     }
 
     if tx["SignerEntries"] == nil {
-        throw ValidationError.decoding("SignerListSet: missing field SignerEntries")
+        throw ValidationError("SignerListSet: missing field SignerEntries")
     }
 
     guard let signerEntries = tx["SignerEntries"] as? [[String: AnyObject]] else {
-        throw ValidationError.decoding("SignerListSet: invalid SignerEntries")
+        throw ValidationError("SignerListSet: invalid SignerEntries")
     }
 
     if signerEntries.isEmpty {
-        throw ValidationError.decoding("SignerListSet: need atleast 1 member in SignerEntries")
+        throw ValidationError("SignerListSet: need atleast 1 member in SignerEntries")
     }
 
     if signerEntries.count > MAX_SIGNERS {
-        throw ValidationError.decoding("SignerListSet: maximum of 8 members allowed in SignerEntries")
+        throw ValidationError("SignerListSet: maximum of 8 members allowed in SignerEntries")
     }
 }

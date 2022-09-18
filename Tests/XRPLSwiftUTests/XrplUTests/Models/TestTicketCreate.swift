@@ -55,12 +55,14 @@ final class TestTicketCreate: XCTestCase {
     func testInvalidTicketCountLess() {
         TestTicketCreate.setUp()
         TestTicketCreate.baseTx["TicketCount"] = 0 as AnyObject
-        XCTAssertThrowsError(try TicketCreate(json: TestTicketCreate.baseTx))
+        let tx = try! TicketCreate(json: TestTicketCreate.baseTx)
+        XCTAssertThrowsError(try validateTicketCreate(tx: tx.toJson()))
     }
 
     func testInvalidTicketCountGreater() {
         TestTicketCreate.setUp()
         TestTicketCreate.baseTx["TicketCount"] = 251 as AnyObject
-        XCTAssertThrowsError(try TicketCreate(json: TestTicketCreate.baseTx))
+        let tx = try! TicketCreate(json: TestTicketCreate.baseTx)
+        XCTAssertThrowsError(try validateTicketCreate(tx: tx.toJson()))
     }
 }

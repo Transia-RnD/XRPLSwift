@@ -37,11 +37,9 @@ class ConsoleLog {
 
 private let connEventGroup = MultiThreadedEventLoopGroup(numberOfThreads: 4)
 
-// swiftlint:disable:next identifier_name
-private let SECONDS_PER_MINUTE: Int = 60
-private let TIMEOUT: Int = 20
-// swiftlint:disable:next identifier_name
-private let CONNECTION_TIMEOUT: Int = 5
+private let SECONDS_PER_MINUTE: Int = 60 // swiftlint:disable:this identifier_name
+private let TIMEOUT: Int = 20 // swiftlint:disable:this identifier_name
+private let CONNECTION_TIMEOUT: Int = 5 // swiftlint:disable:this identifier_name
 
 public enum WebsocketState: String {
     case closed
@@ -50,7 +48,7 @@ public enum WebsocketState: String {
 }
 
 /**
- * ConnectionOptions is the configuration for the Connection class.
+ ConnectionOptions is the configuration for the Connection class.
  */
 public class ConnectionOptions {
     //  trace: Bool? | ((id: string, message: string) => void)
@@ -62,26 +60,24 @@ public class ConnectionOptions {
     public var key: String?
     public var passphrase: String?
     public var certificate: String?
-    public var timeout: Timer = Timer()
+    public var timeout = Timer()
     public var connectionTimeout: Int = 3600
     public var headers: [String: [String: String]]?
 }
 
 /**
- * ConnectionUserOptions is the user-provided configuration object. All configuration
- * is optional, so any ConnectionOptions configuration that has a default value is
- * still optional at the point that the user provides it.
+ ConnectionUserOptions is the user-provided configuration object. All configuration
+ is optional, so any ConnectionOptions configuration that has a default value is
+ still optional at the point that the user provides it.
  */
 public class ConnectionUserOptions: ConnectionOptions {}
 
 /**
- * Represents an intentionally triggered web-socket disconnect code.
- * WebSocket spec allows 4xxx codes for app/library specific codes.
- * See: https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
+ Represents an intentionally triggered web-socket disconnect code.
+ WebSocket spec allows 4xxx codes for app/library specific codes.
+ See: https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
  */
-
-// swiftlint:disable:next identifier_name
-public let INTENTIONAL_DISCONNECT_CODE = 4000
+public let INTENTIONAL_DISCONNECT_CODE = 4000 // swiftlint:disable:this identifier_name
 
 // typealias WebsocketState: Int = 0 | 1 | 2 | 3
 
@@ -131,12 +127,12 @@ public let INTENTIONAL_DISCONNECT_CODE = 4000
 // }
 
 /**
- * Create a new websocket given your URL and optional proxy/certificate
- * configuration.
- *
- * @param url - The URL to connect to.
- * @param config - THe configuration options for the WebSocket.
- * @returns A Websocket that fits the given configuration parameters.
+ Create a new websocket given your URL and optional proxy/certificate configuration.
+ - parameters:
+    - url: The URL to connect to.
+    - config: The configuration options for the WebSocket.
+ - returns:
+ A Websocket that fits the given configuration parameters.
  */
 public func createWebSocket(
     url: String,
@@ -173,11 +169,12 @@ public func createWebSocket(
 }
 
 /**
- * Ws.send(), but promisified.
- *
- * @param ws - Websocket to send with.
- * @param message - Message to send.
- * @returns When the message has been sent.
+ Ws.send(), but promisified.
+ - parameters:
+    - ws: Websocket to send with.
+    - message: Message to send.
+ - returns:
+ When the message has been sent.
  */
 public func websocketSendAsync(
     ws: WebSocket,
@@ -185,9 +182,6 @@ public func websocketSendAsync(
 ) async -> EventLoopFuture<Void> {
     let promise = connEventGroup.next().makePromise(of: Void.self)
     ws.send(message, promise: promise)
-    //    ws.onClose {
-    //        promise.fail(DisconnectedError.unknown(""))
-    //    }
     return promise.futureResult
 }
 
@@ -205,15 +199,15 @@ public protocol ConnectionDelegate: AnyObject {
 }
 
 /**
- * The main Connection class. Responsible for connecting to & managing
- * an active WebSocket connection to a XRPL node.
+ The main Connection class. Responsible for connecting to & managing
+ an active WebSocket connection to a XRPL node.
  */
 public class Connection {
-
+    
     var delegate: ConnectionDelegate?
-
+    
     internal var trace: ConsoleLog?
-
+    
     internal let url: String?
     internal var ws: WebSocket?
     private var reconnectTimeoutID: Timer?
@@ -221,16 +215,16 @@ public class Connection {
     private let retryConnectionBackoff = ExponentialBackoff(
         opts: ExponentialBackoffOptions(min: 100, max: SECONDS_PER_MINUTE * 1000)
     )
-
+    
     internal let config: ConnectionOptions
     private let requestManager = RequestManager()
     private let connectionManager = ConnectionManager()
-
+    
     /**
-     * Creates a new Connection object.
-     *
-     * @param url - URL to connect to.
-     * @param options - Options for the Connection object.
+     Creates a new Connection object.
+     - parameters:
+        - ws: URL to connect to.
+        - options: Options for the Connection object.
      */
     public init(url: String?, options: ConnectionUserOptions? = nil) {
         //    super()
@@ -251,19 +245,20 @@ public class Connection {
     }
 
     /**
-     * Returns whether the websocket is connected.
-     *
-     * @returns Whether the websocket connection is open.
+     Returns whether the websocket is connected.
+     - returns:
+     Whether the websocket connection is open.
      */
     public func isConnected() -> Bool {
         return self.ws?.isClosed == false
     }
 
     /**
-     * Connects the websocket to the provided URL.
-     *
-     * @returns When the websocket is connected.
-     * @throws ConnectionError if there is a connection error, RippleError if there is already a WebSocket in existence.
+     Connects the websocket to the provided URL.
+     - returns:
+     When the websocket is connected.
+     - throws:
+     ConnectionError if there is a connection error, RippleError if there is already a WebSocket in existence.
      */
     public func connect() async throws -> EventLoopFuture<Any> {
         //        let promise = connEventGroup.next().makePromise(of: Any.self)
@@ -286,14 +281,14 @@ public class Connection {
         let connectionTimeoutID: Timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.config.connectionTimeout), repeats: false) { (_) in
             Task {
                 // swiftlint:disable:next line_length
-                self.onConnectionFailed(errorOrCode: ConnectionError.connection("Error: connect() timed out after \(self.config.connectionTimeout)ms. If your internet connection is working, the rippled server may be blocked or inaccessible. You can also try setting the `connectionTimeout` option in the Client constructor.")
+                self.onConnectionFailed(errorOrCode: ConnectionError("Error: connect() timed out after \(self.config.connectionTimeout)ms. If your internet connection is working, the rippled server may be blocked or inaccessible. You can also try setting the `connectionTimeout` option in the Client constructor.")
                 )
             }
         }
         // Create the connection timeout, in case the connection hangs longer than expected.
         // Connection listeners: these stay attached only until a connection is done/open.
         guard let url = url, let uri = URL(string: url), let isport = uri.port, let isscheme = uri.scheme, let ishost = uri.host else {
-            throw XrplError.connection("Connection: unvalid url")
+            throw ConnectionError("Connection: unvalid url")
         }
         let client: WebSocketClient = createWebSocket(url: url, config: self.config)!
         try client.connect(scheme: isscheme, host: ishost, port: isport, onUpgrade: { (ws) -> Void in
@@ -303,7 +298,7 @@ public class Connection {
                 // TODO: This goes after client.connect in js, but swift doesnt(verify) return the ws. we would .wait
                 // But if we .wait(), then the await connection func is hit after the onceOpen func
                 if self.ws == nil {
-                    throw XrplError.connection("Connect: created null websocket")
+                    throw ConnectionError("Connect: created null websocket")
                 }
                 try await self.onceOpen(connectionTimeoutID: connectionTimeoutID)
             }
@@ -311,7 +306,7 @@ public class Connection {
 
         //        this.ws.on('error', (error) => this.onConnectionFailed(error))
         //        this.ws.on('error', () => clearTimeout(connectionTimeoutID))
-
+        
         self.ws?.onClose.whenFailure({ error in
             self.onConnectionFailed(errorOrCode: error)
         })
@@ -322,13 +317,13 @@ public class Connection {
     }
 
     /**
-     * Disconnect the websocket connection.
-     * We never expect this method to reject. Even on "bad" disconnects, the websocket
-     * should still successfully close with the relevant error code returned.
-     * See https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent for the full list.
-     * If no open websocket connection exists, resolve with no code (`undefined`).
-     *
-     * @returns A promise containing either `undefined` or a disconnected code, that resolves when the connection is destroyed.
+     Disconnect the websocket connection.
+     We never expect this method to reject. Even on "bad" disconnects, the websocket
+     should still successfully close with the relevant error code returned.
+     See https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent for the full list.
+     If no open websocket connection exists, resolve with no code (`undefined`).
+     - returns:
+     A promise containing either `undefined` or a disconnected code, that resolves when the connection is destroyed.
      */
     public func disconnect() async -> EventLoopFuture<Any?> {
         let promise = connEventGroup.next().makePromise(of: Any?.self)
@@ -365,7 +360,7 @@ public class Connection {
     }
 
     /**
-     * Disconnect the websocket, then connect again.
+     Disconnect the websocket, then connect again.
      */
     public func reconnect() async throws {
         /*
@@ -379,19 +374,21 @@ public class Connection {
     }
 
     /**
-     * Sends a request to the rippled server.
-     *
-     * @param request - The request to send to the server.
-     * @param timeout - How long the Connection instance should wait before assuming that there will not be a response.
-     * @returns The response from the rippled server.
-     * @throws NotConnectedError if the Connection isn"t connected to a server.
+     Sends a request to the rippled server.
+     - parameters:
+        - request: The request to send to the server.
+        - timeout: How long the Connection instance should wait before assuming that there will not be a response.
+     - returns:
+     The response from the rippled server.
+     - throws:
+     NotConnectedError if the Connection isn"t connected to a server.
      */
     public func request<R: BaseRequest>(
         request: R,
         timeout: Int? = nil
     ) async throws -> EventLoopFuture<Any> {
         guard self.shouldBeConnected, let ws = self.ws else {
-            throw NotConnectedError.connection("Not Connected")
+            throw NotConnectedError("Not Connected")
         }
         let (id, message, responsePromise) = try! self.requestManager.createRequest(
             request: request,
@@ -409,20 +406,18 @@ public class Connection {
     }
 
     /**
-     * Get the Websocket connection URL.
-     *
-     * @returns The Websocket connection URL.
+     Get the Websocket connection URL.
+     - returns:
+     The Websocket connection URL.
      */
     public func getUrl() -> String {
         return self.url ?? ""
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function -- Does nothing on default
-    //    public let trace: (id: String, message: String) => void = () => {}
     /**
-     * Handler for when messages are received from the server.
-     *
-     * @param message - The message received from the server.
+     Handler for when messages are received from the server.
+     - parameters:
+        - message: The message received from the server.
      */
     private func onMessage(data: Data) {
         //        self.trace("receive", message)
@@ -462,10 +457,11 @@ public class Connection {
             }
         }
     }
+
     /**
-     * Handler for when messages are received from the server.
-     *
-     * @param message - The message received from the server.
+     Handler for when messages are received from the server.
+     - parameters:
+        - message: The message received from the server.
      */
     private func onMessage(message: String) {
         let data: Data = message.data(using: .utf8)!
@@ -473,35 +469,35 @@ public class Connection {
     }
 
     /**
-     * Gets the state of the websocket.
-     *
-     * @returns The Websocket"s ready state.
+     Gets the state of the websocket.
+     - returns:
+     The Websocket"s ready state.
      */
     private var state: WebsocketState {
         return self.ws != nil ? WebsocketState.open : WebsocketState.closed
     }
 
     /**
-     * Returns whether the server should be connected.
-     *
-     * @returns Whether the server should be connected.
+     Returns whether the server should be connected.
+     - returns:
+     Whether the server should be connected.
      */
     private var shouldBeConnected: Bool {
         return self.ws != nil
     }
 
     /**
-     * Handler for what to do once the connection to the server is open.
-     *
-     * @param connectionTimeoutID - Timeout in case the connection hangs longer than expected.
-     * @returns A promise that resolves to void when the connection is fully established.
-     * @throws Error if the websocket initialized is somehow null.
-     */
-    // eslint-disable-next-line max-lines-per-function -- Many error code conditionals to check.
-    //    private func onceOpen(connectionTimeoutID: Timer) async -> EventLoopFuture<Void> {
+     Handler for what to do once the connection to the server is open.
+     - parameters:
+        - connectionTimeoutID: Timeout in case the connection hangs longer than expected.
+     - returns:
+     A promise that resolves to void when the connection is fully established.
+     - throws:
+     Error if the websocket initialized is somehow null.
+    */
     private func onceOpen(connectionTimeoutID: Timer) async throws {
         if self.ws == nil {
-            throw XrplError.connection("onceOpen: ws is nil")
+            throw ConnectionError("onceOpen: ws is nil")
         }
 
         // Once the connection completes successfully, remove all old listeners
@@ -531,7 +527,7 @@ public class Connection {
                 return
             }
             self.clearHeartbeatInterval()
-            try? self.requestManager.rejectAll(error: DisconnectedError.connection("websocket was closed, \(reason)"))
+            try? self.requestManager.rejectAll(error: DisconnectedError("websocket was closed, \(reason)"))
             //            self.ws.removeAllListeners()
             self.ws = nil
 
@@ -578,6 +574,15 @@ public class Connection {
         }
     }
 
+    /**
+     Handler for what to do once the connection to the server is open.
+     - parameters:
+        - connectionTimeoutID: Timeout in case the connection hangs longer than expected.
+     - returns:
+     A promise that resolves to void when the connection is fully established.
+     - throws:
+     Error if the websocket initialized is somehow null.
+    */
     private func intentionalDisconnect() {
         let retryTimeout: Int = self.retryConnectionBackoff.duration()
         //            self.trace("reconnect", "Retrying connection in \(retryTimeout)ms.")
@@ -595,8 +600,8 @@ public class Connection {
     }
 
     /**
-     * Clears the heartbeat connection interval.
-     */
+     Clears the heartbeat connection interval.
+    */
     private func clearHeartbeatInterval() {
         if self.heartbeatIntervalID != nil {
             self.heartbeatIntervalID?.invalidate()
@@ -604,8 +609,8 @@ public class Connection {
     }
 
     /**
-     * Starts a heartbeat to check the connection with the server.
-     */
+    Starts a heartbeat to check the connection with the server.
+    */
     private func startHeartbeatInterval() {
         self.clearHeartbeatInterval()
         self.heartbeatIntervalID = Timer.scheduledTimer(withTimeInterval: self.config.timeout.timeInterval, repeats: false) { (_) in
@@ -616,13 +621,13 @@ public class Connection {
     }
 
     /**
-     * A heartbeat is just a "ping" command, sent on an interval.
-     * If this succeeds, we"re good. If it fails, disconnect so that the consumer can reconnect, if desired.
-     *
-     * @returns A Promise that resolves to void when the heartbeat returns successfully.
-     */
+     A heartbeat is just a "ping" command, sent on an interval.
+     If this succeeds, we"re good. If it fails, disconnect so that the consumer can reconnect, if desired.
+     - returns:
+     A Promise that resolves to void when the heartbeat returns successfully.
+    */
     private func heartbeat() async -> EventLoopPromise<Void> {
-
+        
         let promise = connEventGroup.next().makePromise(of: Void.self)
         let response = try! await self.request(request: BaseRequest(command: "ping"))
         response.whenFailure { error in
@@ -639,10 +644,10 @@ public class Connection {
     }
 
     /**
-     * Process a failed connection.
-     *
-     * @param errorOrCode - (Optional) Error or code for connection failure.
-     */
+     Process a failed connection.
+     - parameters:
+        - errorOrCode: (Optional) Error or code for connection failure.
+    */
     private func onConnectionFailed(errorOrCode: Error) {
         if self.ws != nil {
             //            self.ws.removeAllListeners()
@@ -651,17 +656,17 @@ public class Connection {
         }
         if !errorOrCode.localizedDescription.isEmpty {
             //            self.connectionManager.rejectAllAwaiting(error: NotConnectedError.connection(errorOrCode.localizedDescription, errorOrCode))
-            self.connectionManager.rejectAllAwaiting(error: NotConnectedError.connection(errorOrCode.localizedDescription))
+            self.connectionManager.rejectAllAwaiting(error: NotConnectedError(errorOrCode.localizedDescription))
         } else {
-            self.connectionManager.rejectAllAwaiting(error: NotConnectedError.connection("Connection failed."))
+            self.connectionManager.rejectAllAwaiting(error: NotConnectedError("Connection failed."))
         }
     }
 
     /**
-     * Process a failed connection.
-     *
-     * @param errorOrCode - (Optional) Error or code for connection failure.
-     */
+     Process a failed connection.
+     - parameters:
+        - errorOrCode: (Optional) Error or code for connection failure.
+    */
     private func onConnectionFailed(errorOrCode: Int) {
         if self.ws != nil {
             //            self.ws.removeAllListeners()
@@ -670,7 +675,8 @@ public class Connection {
         }
         self.connectionManager.rejectAllAwaiting(
             //            error: NotConnectedError("Connection failed with code \(errorOrCode).", code: errorOrCode),
-            error: NotConnectedError.connection("Connection failed with code \(errorOrCode).")
+            error: NotConnectedError("Connection failed with code \(errorOrCode).")
         )
     }
 }
+

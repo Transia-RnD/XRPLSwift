@@ -93,7 +93,7 @@ class xCurrency: Hash160 {
         }
         if isHex(value: value) {
             print("HEX")
-            return xCurrency(try value.asHexArray())
+            return xCurrency(value.hexToBytes)
         }
         throw BinaryError.unknownError(error: "Unsupported Currency representation: \(value)")
     }

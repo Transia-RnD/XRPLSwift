@@ -107,23 +107,24 @@ public class NFTokenAcceptOffer: BaseTransaction {
 func validateNFTokenBrokerFee(tx: [String: AnyObject]) throws {
     let value = parseAmountValue(amount: tx["NFTokenBrokerFee"] as Any)
     if value!.isNaN {
-        throw ValidationError.decoding("NFTokenAcceptOffer: invalid NFTokenBrokerFee")
+        throw ValidationError("NFTokenAcceptOffer: invalid NFTokenBrokerFee")
     }
 
     if value! <= 0 {
-        throw ValidationError.decoding("NFTokenAcceptOffer: NFTokenBrokerFee must be greater than 0; omit if there is no fee")
+        throw ValidationError("NFTokenAcceptOffer: NFTokenBrokerFee must be greater than 0; omit if there is no fee")
     }
 
     if tx["NFTokenSellOffer"] == nil || tx["NFTokenBuyOffer"] == nil {
-        throw ValidationError.decoding("NFTokenAcceptOffer: both NFTokenSellOffer and NFTokenBuyOffer must be set if using brokered mode")
+        throw ValidationError("NFTokenAcceptOffer: both NFTokenSellOffer and NFTokenBuyOffer must be set if using brokered mode")
     }
 }
 
 /**
- * Verify the form and type of an NFTokenAcceptOffer at runtime.
- *
- * @param tx - An NFTokenAcceptOffer Transaction.
- * @throws When the NFTokenAcceptOffer is Malformed.
+ Verify the form and type of an NFTokenAcceptOffer at runtime.
+ - parameters:
+    - tx: An NFTokenAcceptOffer Transaction.
+ - throws:
+ When the NFTokenAcceptOffer is Malformed.
  */
 public func validateNFTokenAcceptOffer(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
@@ -133,6 +134,6 @@ public func validateNFTokenAcceptOffer(tx: [String: AnyObject]) throws {
     }
 
     if tx["NFTokenSellOffer"] == nil && tx["NFTokenBuyOffer"] == nil {
-        throw ValidationError.decoding("NFTokenAcceptOffer: must set either NFTokenSellOffer or NFTokenBuyOffer")
+        throw ValidationError("NFTokenAcceptOffer: must set either NFTokenSellOffer or NFTokenBuyOffer")
     }
 }

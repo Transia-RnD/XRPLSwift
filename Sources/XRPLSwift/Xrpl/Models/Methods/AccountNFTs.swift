@@ -7,36 +7,33 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/accountNFTs.ts
 
-import Foundation
 import AnyCodable
+import Foundation
 
 /**
- * The `account_nfts` method retrieves all of the NFTs currently owned by the
- * specified account.
- *
- * @category Requests
+ The `account_nfts` method retrieves all of the NFTs currently owned by the
+ specified account.
  */
 public class AccountNFTsRequest: BaseRequest {
-    //    public let command: String = "account_nfts"
     /**
-     * The unique identifier of an account, typically the account's address. The
-     * request returns NFTs owned by this account.
+     The unique identifier of an account, typically the account's address. The
+     request returns NFTs owned by this account.
      */
     public let account: String
     /**
-     * Limit the number of NFTokens to retrieve.
+     Limit the number of NFTokens to retrieve.
      */
     public let limit: Int?
     /**
-     * Value from a previous paginated response. Resume retrieving data where
-     * that response left off.
+     Value from a previous paginated response. Resume retrieving data where
+     that response left off.
      */
     public let marker: AnyCodable?
 
     enum CodingKeys: String, CodingKey {
-        case account = "account"
-        case limit = "limit"
-        case marker = "marker"
+        case account
+        case limit
+        case marker
     }
 
     public init(
@@ -85,9 +82,7 @@ public class AccountNFTsRequest: BaseRequest {
 }
 
 /**
- * One NFToken that might be returned from an {@link AccountNFTsRequest}.
- *
- * @category Responses
+ One NFToken that might be returned from an {@link AccountNFTsRequest}.
  */
 public struct AccountNFToken: Codable {
     public let flags: Int
@@ -108,32 +103,32 @@ public struct AccountNFToken: Codable {
 }
 
 /**
- * Response expected from an {@link AccountNFTsRequest}.
+ Response expected from an {@link AccountNFTsRequest}.
  *
- * @category Responses
+ @category Responses
  */
 public class AccountNFTsResponse: Codable {
     /**
-     * The account requested.
+     The account requested.
      */
     public let account: String
     /**
-     * A list of NFTs owned by the specified account.
+     A list of NFTs owned by the specified account.
      */
     public let accountNfts: [AccountNFToken]
     /**
-     * The ledger index of the current open ledger, which was used when
-     * retrieving this information.
+     The ledger index of the current open ledger, which was used when
+     retrieving this information.
      */
     public let ledgerCurrentIndex: Int
-    /** If true, this data comes from a validated ledger. */
+    /// If true, this data comes from a validated ledger.
     public let validated: Bool
-    /** The limit that was used to fulfill this request. */
+    /// The limit that was used to fulfill this request.
     public let limit: Int?
     /**
-     * Server-defined value indicating the response is paginated. Pass this to
-     * the next call to resume where this call left off. Omitted when there are
-     * No additional pages after this one.
+     Server-defined value indicating the response is paginated. Pass this to
+     the next call to resume where this call left off. Omitted when there are
+     No additional pages after this one.
      */
     public let marker: AnyCodable?
 

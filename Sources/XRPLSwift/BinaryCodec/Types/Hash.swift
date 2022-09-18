@@ -19,7 +19,7 @@ class Hash: SerializedType {
     }
 
     class func from(value: String) throws -> Hash {
-        let bytes: [UInt8] = try value.asHexArray()
+        let bytes: [UInt8] = value.hexToBytes
         // TODO: Discuss workaround (Cannot access self in init aka self.getLength() doesnt work)
         // WORKAROUND: If Hash ignore getLength Check.
         if self != Hash.self && bytes.count != self.getLength() {

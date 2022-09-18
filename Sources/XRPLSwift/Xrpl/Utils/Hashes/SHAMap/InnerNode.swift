@@ -58,7 +58,7 @@
 //        } else if (existingNode instanceof LeafNode) {
 //            if (existingNode.tag == tag) {
 //                // Collision
-//                throw XrplError.unknown("Tried to add a node to a SHAMap that was already in there.")
+//                throw XrplError("Tried to add a node to a SHAMap that was already in there.")
 //            } else {
 //                let newInnerNode = InnerNode(self.depth + 1)
 //                
@@ -81,7 +81,7 @@
 //     */
 //    public setNode(slot: number, node: Node) -> Void {
 //        if slot < 0 || slot > SLOT_MAX {
-//            throw XrplError.unknown("Invalid slot: slot must be between 0-15.")
+//            throw XrplError("Invalid slot: slot must be between 0-15.")
 //        }
 //        self.leaves[slot] = node
 //        self.empty = false
@@ -96,7 +96,7 @@
 //     */
 //    public func getNode(slot: Int) throws -> Node? {
 //        if slot < 0 || slot > SLOT_MAX {
-//            throw XrplError.unknown("Invalid slot: slot must be between 0-15.")
+//            throw XrplError("Invalid slot: slot must be between 0-15.")
 //        }
 //        return self.leaves[slot]
 //    }

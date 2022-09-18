@@ -20,8 +20,7 @@ public func parseAccountRootFlags(
     flags: Int
 ) -> [AccountRootFlags: Bool] {
     var flagsInterface: [AccountRootFlags: Bool] = [:]
-    
-    for flag in AccountRootFlags.allCases {
+    AccountRootFlags.allCases.forEach { flag in
         if isFlagEnabled(flags: flags, checkFlag: flag.rawValue) {
             flagsInterface[flag] = true
         }
@@ -37,25 +36,32 @@ public func parseAccountRootFlags(
 public func setTransactionFlagsToNumber(tx: inout [String: AnyObject]) throws {
     if tx["Flags"] == nil {
         tx["Flags"] = 0 as AnyObject
+        return
     }
     if tx["Flags"] is Int {
-        tx["Flags"] as AnyObject
+        return
     }
-    
+
+    // swiftlint:disable:next force_cast
     switch tx["TransactionType"] as! String {
     case "AccountSet":
+        // swiftlint:disable:next force_cast
         tx["Flags"] = try convertAccountSetFlagsToNumber(flags: tx["Flags"] as! [AccountSetTfFlags]) as AnyObject
         return
     case "OfferCreate":
+        // swiftlint:disable:next force_cast
         tx["Flags"] = try convertOfferCreateFlagsToNumber(flags: tx["Flags"] as! [OfferCreateFlags]) as AnyObject
         return
     case "PaymentChannelClaim":
+        // swiftlint:disable:next force_cast
         tx["Flags"] = try convertPaymentChannelClaimFlagsToNumber(flags: tx["Flags"] as! [PaymentChannelClaimFlag]) as AnyObject
         return
     case "Payment":
+        // swiftlint:disable:next force_cast
         tx["Flags"] = try convertPaymentTransactionFlagsToNumber(flags: tx["Flags"] as! [PaymentFlags]) as AnyObject
         return
     case "TrustSet":
+        // swiftlint:disable:next force_cast
         tx["Flags"] = try convertTrustSetFlagsToNumber(flags: tx["Flags"] as! [TrustSetFlag]) as AnyObject
         return
     default:
@@ -69,8 +75,9 @@ func convertAccountSetFlagsToNumber(
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
         if AccountSetTfFlags(rawValue: flag.rawValue) == nil {
-            throw ValidationError.unknown("flag \(flag) does not exist in flagEnum: \(AccountSetTfFlags.self)")
+            throw ValidationError("flag \(flag) does not exist in flagEnum: \(AccountSetTfFlags.self)")
         }
+        // swiftlint:disable:next force_unwrapping
         return interface[flag]! == true
         ? resultFlags | flag.rawValue : resultFlags
     }
@@ -82,8 +89,9 @@ func convertOfferCreateFlagsToNumber(
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
         if OfferCreateFlags(rawValue: flag.rawValue) == nil {
-            throw ValidationError.unknown("flag \(flag) does not exist in flagEnum: \(OfferCreateFlags.self)")
+            throw ValidationError("flag \(flag) does not exist in flagEnum: \(OfferCreateFlags.self)")
         }
+        // swiftlint:disable:next force_unwrapping
         return interface[flag]! == true
         ? resultFlags | flag.rawValue : resultFlags
     }
@@ -95,8 +103,9 @@ func convertPaymentChannelClaimFlagsToNumber(
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
         if PaymentChannelClaimFlag(rawValue: flag.rawValue) == nil {
-            throw ValidationError.unknown("flag \(flag) does not exist in flagEnum: \(PaymentChannelClaimFlag.self)")
+            throw ValidationError("flag \(flag) does not exist in flagEnum: \(PaymentChannelClaimFlag.self)")
         }
+        // swiftlint:disable:next force_unwrapping
         return interface[flag]! == true
         ? resultFlags | flag.rawValue : resultFlags
     }
@@ -108,8 +117,9 @@ func convertPaymentTransactionFlagsToNumber(
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
         if PaymentFlags(rawValue: flag.rawValue) == nil {
-            throw ValidationError.unknown("flag \(flag) does not exist in flagEnum: \(PaymentFlags.self)")
+            throw ValidationError("flag \(flag) does not exist in flagEnum: \(PaymentFlags.self)")
         }
+        // swiftlint:disable:next force_unwrapping
         return interface[flag]! == true
         ? resultFlags | flag.rawValue : resultFlags
     }
@@ -121,8 +131,9 @@ func convertTrustSetFlagsToNumber(
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
         if TrustSetFlag(rawValue: flag.rawValue) == nil {
-            throw ValidationError.unknown("flag \(flag) does not exist in flagEnum: \(TrustSetFlag.self)")
+            throw ValidationError("flag \(flag) does not exist in flagEnum: \(TrustSetFlag.self)")
         }
+        // swiftlint:disable:next force_unwrapping
         return interface[flag]! == true
         ? resultFlags | flag.rawValue : resultFlags
     }

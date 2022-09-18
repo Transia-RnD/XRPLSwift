@@ -63,19 +63,20 @@ public class NFTokenCancelOffer: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an NFTokenCancelOffer at runtime.
- *
- * @param tx - An NFTokenCancelOffer Transaction.
- * @throws When the NFTokenCancelOffer is Malformed.
+ Verify the form and type of an NFTokenCancelOffer at runtime.
+ - parameters:
+    - tx: An NFTokenCancelOffer Transaction.
+ - throws:
+ When the NFTokenCancelOffer is Malformed.
  */
 public func validateNFTokenCancelOffer(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     guard let offers = tx["NFTokenOffers"] as? [String] else {
-        throw ValidationError.decoding("NFTokenCancelOffer: missing field NFTokenOffers")
+        throw ValidationError("NFTokenCancelOffer: missing field NFTokenOffers")
     }
 
     if offers.count < 1 {
-        throw ValidationError.decoding("NFTokenCancelOffer: empty field NFTokenOffers")
+        throw ValidationError("NFTokenCancelOffer: empty field NFTokenOffers")
     }
 }

@@ -220,7 +220,7 @@ func serializeIssuedCurrencyAmount(value: [String: String]) throws -> [UInt8] {
 // swiftlint:disable:next type_name
 class xAmount: SerializedType {
 
-    static var defaultAmount: xAmount = try! xAmount(bytes: "4000000000000000".asHexArray())
+    static var defaultAmount: xAmount = xAmount(bytes: "4000000000000000".hexToBytes)
 
     override init(bytes: [UInt8]? = nil) {
         super.init(bytes: bytes ?? xAmount.defaultAmount.bytes)

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  SubmitMultisigned.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -10,23 +10,20 @@
 import Foundation
 
 /**
- * The `submit_multisigned` command applies a multi-signed transaction and sends
- * it to the network to be included in future ledgers. Expects a response in the
- * form of a {@link SubmitMultisignedRequest}.
- *
- * @category Requests
+ The `submit_multisigned` command applies a multi-signed transaction and sends
+ it to the network to be included in future ledgers. Expects a response in the
+ form of a {@link SubmitMultisignedRequest}.
  */
 public class SubmitMultisignedRequest: BaseRequest {
-//    let command: String = "submit_multisigned"
     /**
-     * Transaction in JSON format with an array of Signers. To be successful, the
-     * weights of the signatures must be equal or higher than the quorum of the.
-     * {@link SignerList}.
+     Transaction in JSON format with an array of Signers. To be successful, the
+     weights of the signatures must be equal or higher than the quorum of the.
+     {@link SignerList}.
      */
     public let txJson: Transaction
     /**
-     * If true, and the transaction fails locally, do not retry or relay the
-     * transaction to other servers.
+     If true, and the transaction fails locally, do not retry or relay the
+     transaction to other servers.
      */
     public let failHard: Bool?
 
@@ -78,26 +75,24 @@ public class SubmitMultisignedRequest: BaseRequest {
 }
 
 /**
- * Response expected from a {@link SubmitMultisignedRequest}.
- *
- * @category Responses
+ Response expected from a {@link SubmitMultisignedRequest}.
  */
 public class SubmitMultisignedResponse: Codable {
     /**
-     * Code indicating the preliminary result of the transaction, for example.
-     * `tesSUCCESS` .
+     Code indicating the preliminary result of the transaction, for example.
+     `tesSUCCESS` .
      */
     public let engineResult: String
     /**
-     * Numeric code indicating the preliminary result of the transaction,
-     * directly correlated to `engine_result`.
+     Numeric code indicating the preliminary result of the transaction,
+     directly correlated to `engine_result`.
      */
     public let engineResultCode: Int
-    /** Human-readable explanation of the preliminary transaction result. */
+    /// Human-readable explanation of the preliminary transaction result.
     public let engineResultMessage: String
-    /** The complete transaction in hex string format. */
+    /// The complete transaction in hex string format.
     public let txBlob: String
-    /** The complete transaction in JSON format. */
+    /// The complete transaction in JSON format.
 //    public let tx_json: Transaction & { hash: String? }
     public let txJson: Transaction
 

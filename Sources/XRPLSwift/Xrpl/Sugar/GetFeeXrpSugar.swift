@@ -34,7 +34,7 @@ public func getFeeXrp(
     let baseFee = serverInfo?.validatedLedger?.baseFeeXrp
 
     if baseFee == nil {
-        throw XrplError.unknown("getFeeXrp: Could not get base_fee_xrp from server_info")
+        throw XrplError("Xrp: Could not get base_fee_xrp from server_info")
     }
 
 //    let baseFeeXrp = BigNumber(baseFee)

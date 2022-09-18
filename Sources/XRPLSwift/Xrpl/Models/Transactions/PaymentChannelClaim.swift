@@ -54,7 +54,6 @@ extension [PaymentChannelClaimFlag] {
 }
 
 public class PaymentChannelClaim: BaseTransaction {
-
     /*
      Represents a `PaymentChannelClaim <https://xrpl.org/paymentchannelclaim.html>`_
      transaction, which claims XRP from a `payment channel
@@ -120,8 +119,8 @@ public class PaymentChannelClaim: BaseTransaction {
         super.init(account: "", transactionType: "PaymentChannelClaim")
     }
 
-    public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(PaymentChannelClaim.self, from: data)
         self.channel = decoded.channel
@@ -132,7 +131,7 @@ public class PaymentChannelClaim: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         channel = try values.decode(String.self, forKey: .channel)
         balance = try values.decodeIfPresent(Amount.self, forKey: .balance)
@@ -154,35 +153,36 @@ public class PaymentChannelClaim: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an PaymentChannelClaim at runtime.
- *
- * @param tx - An PaymentChannelClaim Transaction.
- * @throws When the PaymentChannelClaim is Malformed.
+ Verify the form and type of an PaymentChannelClaim at runtime.
+ - parameters:
+    - tx: An PaymentChannelClaim Transaction.
+ - throws:
+ When the PaymentChannelClaim is Malformed.
  */
 public func validatePaymentChannelClaim(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["Channel"] == nil {
-        throw ValidationError.decoding("PaymentChannelClaim: missing Channel")
+        throw ValidationError("PaymentChannelClaim: missing Channel")
     }
 
     if !(tx["Channel"] is String) {
-        throw ValidationError.decoding("PaymentChannelClaim: Channel must be a string")
+        throw ValidationError("PaymentChannelClaim: Channel must be a string")
     }
 
     if tx["Balance"] != nil && !(tx["Balance"] is String) {
-        throw ValidationError.decoding("PaymentChannelClaim: Balance must be a string")
+        throw ValidationError("PaymentChannelClaim: Balance must be a string")
     }
 
     if tx["Amount"] != nil && !(tx["Amount"] is String) {
-        throw ValidationError.decoding("PaymentChannelClaim: Amount must be a string")
+        throw ValidationError("PaymentChannelClaim: Amount must be a string")
     }
 
     if tx["Signature"] != nil && !(tx["Signature"] is String) {
-        throw ValidationError.decoding("PaymentChannelClaim: Signature must be a string")
+        throw ValidationError("PaymentChannelClaim: Signature must be a string")
     }
 
     if tx["PublicKey"] != nil && !(tx["PublicKey"] is String) {
-        throw ValidationError.decoding("PaymentChannelClaim: PublicKey must be a string")
+        throw ValidationError("PaymentChannelClaim: PublicKey must be a string")
     }
 }

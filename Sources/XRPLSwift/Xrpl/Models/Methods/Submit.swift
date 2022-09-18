@@ -10,19 +10,16 @@
 import Foundation
 
 /**
- * The submit method applies a transaction and sends it to the network to be
- * confirmed and included in future ledgers. Expects a response in the form of a
- * {@link SubmitResponse}.
- *
- * @category Requests
+ The submit method applies a transaction and sends it to the network to be
+ confirmed and included in future ledgers. Expects a response in the form of a
+ {@link SubmitResponse}.
  */
 public class SubmitRequest: BaseRequest {
-//    public let command: String = "submit"
-    /** The complete transaction in hex string format. */
+    /// The complete transaction in hex string format.
     public let txBlob: String
     /**
-     * If true, and the transaction fails locally, do not retry or relay the
-     * transaction to other servers. The default is false.
+     If true, and the transaction fails locally, do not retry or relay the
+     transaction to other servers. The default is false.
      */
     public let failHard: Bool?
 
@@ -69,72 +66,70 @@ public class SubmitRequest: BaseRequest {
 }
 
 /**
- * Response expected from a {@link SubmitRequest}.
- *
- * @category Responses
+ Response expected from a {@link SubmitRequest}.
  */
 open class SubmitResponse: Codable {
     /**
-     * Text result code indicating the preliminary result of the transaction,
-     * for example `tesSUCCESS`.
+     Text result code indicating the preliminary result of the transaction,
+     for example `tesSUCCESS`.
      */
     public let engineResult: String
-    /** Numeric version of the result code. */
+    /// Numeric version of the result code.
     public let engineResultCode: Int
-    /** Human-readable explanation of the transaction's preliminary result. */
+    /// Human-readable explanation of the transaction's preliminary result.
     public let engineResultMessage: String
-    /** The complete transaction in hex string format. */
+    /// The complete transaction in hex string format.
     public let txBlob: String
-    /** The complete transaction in JSON format. */
+    /// The complete transaction in JSON format.
     public let txJson: Transaction
     /**
-     * The value true indicates that the transaction was applied, queued,
-     * broadcast, or kept for later. The value `false` indicates that none of
-     * those happened, so the transaction cannot possibly succeed as long as you
-     * do not submit it again and have not already submitted it another time.
+     The value true indicates that the transaction was applied, queued,
+     broadcast, or kept for later. The value `false` indicates that none of
+     those happened, so the transaction cannot possibly succeed as long as you
+     do not submit it again and have not already submitted it another time.
      */
     public let accepted: Bool
     /**
-     * The next Sequence Number available for the sending account after all
-     * pending and queued transactions.
+     The next Sequence Number available for the sending account after all
+     pending and queued transactions.
      */
     public let accountSequenceAvailable: Int
     /**
-     * The next Sequence number for the sending account after all transactions
-     * that have been provisionally applied, but not transactions in the queue.
+     The next Sequence number for the sending account after all transactions
+     that have been provisionally applied, but not transactions in the queue.
      */
     public let accountSequenceNext: Int
     /**
-     * The value true indicates that this transaction was applied to the open
-     * ledger. In this case, the transaction is likely, but not guaranteed, to
-     * be validated in the next ledger version.
+     The value true indicates that this transaction was applied to the open
+     ledger. In this case, the transaction is likely, but not guaranteed, to
+     be validated in the next ledger version.
      */
     public let applied: Bool
     /**
-     * The value true indicates this transaction was broadcast to peer servers
-     * in the peer-to-peer XRP Ledger network.
+     The value true indicates this transaction was broadcast to peer servers
+     in the peer-to-peer XRP Ledger network.
      */
     public let broadcast: Bool
     /**
-     * The value true indicates that the transaction was kept to be retried
-     * later.
+     The value true indicates that the transaction was kept to be retried
+     later.
      */
     public let kept: Bool
     /**
-     * The value true indicates the transaction was put in the Transaction
-     * Queue, which means it is likely to be included in a future ledger
-     * version.
+     The value true indicates the transaction was put in the Transaction
+     Queue, which means it is likely to be included in a future ledger
+     version.
      */
     public let queued: Bool
     /**
-     * The current open ledger cost before processing this transaction
-     * transactions with a lower cost are likely to be queued.
+     The current open ledger cost before processing this transaction
+     transactions with a lower cost are likely to be queued.
      */
     public let openLedgerCost: String
     /**
-     * The ledger index of the newest validated ledger at the time of
-     * submission. This provides a lower bound on the ledger versions that the
-     * transaction can appear in as a result of this request.
+     The ledger index of the newest validated ledger at the time of
+     submission. This provides a lower bound on the ledger versions that the
+     transaction can appear in as a result of this request.
      */
     public let validatedLedgerIndex: Int
 

@@ -10,7 +10,6 @@ import Foundation
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/offerCancel.ts
 
 public class OfferCancel: BaseTransaction {
-
     /*
     Represents an `OfferCancel <https://xrpl.org/offercancel.html>`_ transaction,
     which removes an Offer object from the `decentralized exchange
@@ -56,19 +55,20 @@ public class OfferCancel: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an OfferCancel at runtime.
- *
- * @param tx - An OfferCancel Transaction.
- * @throws When the OfferCancel is Malformed.
+ Verify the form and type of an OfferCancel at runtime.
+ - parameters:
+    - tx: An OfferCancel Transaction.
+ - throws:
+ When the OfferCancel is Malformed.
  */
 public func validateOfferCancel(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["OfferSequence"] == nil {
-        throw ValidationError.decoding("OfferCancel: missing field OfferSequence")
+        throw ValidationError("OfferCancel: missing field OfferSequence")
     }
 
     if !(tx["OfferSequence"] is Int) {
-        throw ValidationError.decoding("OfferCancel: OfferSequence must be a Int")
+        throw ValidationError("OfferCancel: OfferSequence must be a Int")
     }
 }

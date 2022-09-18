@@ -20,7 +20,7 @@ public extension Data {
                 let pointer = bodyAddress.assumingMemoryBound(to: T.self)
                 return [T](UnsafeBufferPointer(start: pointer, count: self.count/MemoryLayout<T>.stride))
             } else {
-                throw XrplError.unknown("DADA ERROR")
+                throw XrplError("DADA ERROR")
             }
         }
     }

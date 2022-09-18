@@ -11,7 +11,6 @@ import Foundation
 
 // Transaction Flags for an NFTokenMint Transaction.
 public enum NFTokenMintFlags: Int {
-
     case tfBurnable = 0x00000001
     /**
      If set, indicates that the minted token may be burned by the issuer even
@@ -45,7 +44,6 @@ public enum NFTokenMintFlags: Int {
  specified by the transaction.
  */
 public class NFTokenMint: BaseTransaction {
-
     public let nftokenTaxon: Int
     /**
      Indicates the taxon associated with this token. The taxon is generally a
@@ -136,23 +134,24 @@ public class NFTokenMint: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an NFTokenMint at runtime.
- *
- * @param tx - An NFTokenMint Transaction.
- * @throws When the NFTokenMint is Malformed.
+ Verify the form and type of an NFTokenMint at runtime.
+ - parameters:
+    - tx: An NFTokenMint Transaction.
+ - throws:
+ When the NFTokenMint is Malformed.
  */
 public func validateNFTokenMint(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["Account"] as? String == tx["Issuer"] as? String {
-        throw ValidationError.decoding("NFTokenMint: Issuer must not be equal to Account")
+        throw ValidationError("NFTokenMint: Issuer must not be equal to Account")
     }
 
     if tx["URI"] is String && !isHex(str: tx["URI"] as! String) {
-        throw ValidationError.decoding("NFTokenMint: URI must be in hex format")
+        throw ValidationError("NFTokenMint: URI must be in hex format")
     }
 
     if tx["NFTokenTaxon"] == nil {
-        throw ValidationError.decoding("NFTokenMint: missing field NFTokenTaxon")
+        throw ValidationError("NFTokenMint: missing field NFTokenTaxon")
     }
 }

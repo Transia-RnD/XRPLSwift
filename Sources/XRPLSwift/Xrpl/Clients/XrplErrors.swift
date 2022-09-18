@@ -9,7 +9,26 @@
 
 import Foundation
 
-public enum XrplError: Error {
+struct XrplError: Error {
+
+//    var name: String?
+    var message: String?
+    var data: Data?
+//    var timeout: Timer?
+
+    init(_ message: String?, _ data: Data? = nil) {
+//        self.name = self.name ?? "Error"
+        if let message = message {
+            self.message = message
+        }
+        self.data = data
+//        if Error.captureStackTrace != nil {
+//            Error.captureStackTrace(self, self.constructor)
+//        }
+    }
+}
+
+public enum XrplError1: Error {
     case validation(_ desc: String)
     case connection(_ desc: String)
     case noPromise(_ desc: String = "")
@@ -41,19 +60,19 @@ public enum XrplError: Error {
     }
 }
 
-/// **
-// * Error thrown when rippled responds with an error.
-// *
-// * @category Errors
-// */
-// class RippledError: rXrplError {}
-//
-/// **
-// * Error thrown when xrpl.js cannot specify error type.
-// *
-// * @category Errors
-// */
-// class UnexpectedError: rXrplError {}
+/**
+ * Error thrown when rippled responds with an error.
+ *
+ * @category Errors
+ */
+typealias RippledError = XrplError
+
+/**
+ * Error thrown when xrpl.js cannot specify error type.
+ *
+ * @category Errors
+ */
+typealias UnexpectedError = XrplError
 
 /**
  * Error thrown when xrpl.js has an error with connection to rippled.
@@ -113,19 +132,19 @@ typealias ValidationError = XrplError
  */
 typealias XRPLFaucetError = XrplError
 
-/**
- * Error thrown when xrpl.js cannot retrieve a transaction, ledger, account, etc.
- * From rippled.
- *
- * @category Errors
- */
-// class NotFoundError: rXrplError {
+///**
+// * Error thrown when xrpl.js cannot retrieve a transaction, ledger, account, etc.
+// * From rippled.
+// *
+// * @category Errors
+// */
+//typealias NotFoundError = XrplError {
 //    /**
 //     * Construct an XrplError.
 //     *
 //     * @param message - The error message. Defaults to "Not found".
 //     */
-//    public init(message: String = "Not found") {
+//    public init(_ message: String = "Not found") {
 //        self.message = message
 //    }
 // }

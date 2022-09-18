@@ -121,7 +121,7 @@ func submitAndWait(
 
     let lastLedger: Int? = getLastLedgerSequence(transaction: signedTx)
     if lastLedger == nil {
-        throw XrplError.validation("Transaction must contain a LastLedgerSequence value for reliable submission.")
+        throw ValidationError("Transaction must contain a LastLedgerSequence value for reliable submission.")
     }
 
     let response = try await submitRequest(client: this, signedTransaction: signedTx, failHard: opts?.failHard)
@@ -146,7 +146,7 @@ func submitRequest(
 // ) async throws -> EventLoopFuture<SubmitResponse> {
 ) async throws -> EventLoopFuture<Any> {
     if !isSigned(transaction: try signedTransaction.toJson()) {
-        throw ValidationError.validation("Transaction must be signed")
+        throw ValidationError("Transaction must be signed")
     }
     let signedTxEncoded: String = try BinaryCodec.encode(json: signedTransaction.toJson())
     let request = SubmitRequest(
@@ -164,7 +164,7 @@ func submitRequest(
 // ) async throws -> EventLoopFuture<SubmitResponse> {
 ) async throws -> EventLoopFuture<Any> {
     if !isSigned(transaction: signedTransaction) {
-        throw ValidationError.validation("Transaction must be signed")
+        throw ValidationError("Transaction must be signed")
     }
 
     let signedTxEncoded: String = signedTransaction
@@ -258,7 +258,7 @@ func getSignedTx(
     }
 
     guard let wallet = wallet else {
-        throw XrplError.validation("Wallet must be provided when submitting an unsigned transaction")
+        throw ValidationError("Wallet must be provided when submitting an unsigned transaction")
     }
 
     //    let tx = transaction is String ? (decode(transaction) as? Transaction) : transaction
@@ -283,7 +283,7 @@ func getSignedTx(
 //        return transaction
 //    }
     guard let wallet = wallet else {
-        throw XrplError.validation("Wallet must be provided when submitting an unsigned transaction")
+        throw ValidationError("Wallet must be provided when submitting an unsigned transaction")
     }
     var tx = try transaction.toAny() as! BaseTransaction
     if autofill {

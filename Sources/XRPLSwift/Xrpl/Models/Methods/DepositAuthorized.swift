@@ -10,23 +10,22 @@
 import Foundation
 
 /**
- * The deposit_authorized command indicates whether one account is authorized to
- * send payments directly to another. Expects a response in the form of a {@link
- * DepositAuthorizedResponse}.
+ The deposit_authorized command indicates whether one account is authorized to
+ send payments directly to another. Expects a response in the form of a {@link
+ DepositAuthorizedResponse}.
  *
- * @category Requests
+ @category Requests
  */
 public class DepositAuthorizedRequest: BaseRequest {
-    //    public let command: String = "deposit_authorized"
-    /** The sender of a possible payment. */
+    /// The sender of a possible payment.
     public let sourceAccount: String
-    /** The recipient of a possible payment. */
+    /// The recipient of a possible payment.
     public let destinationAccount: String
-    /** A 20-byte hex string for the ledger version to use. */
+    /// A 20-byte hex string for the ledger version to use.
     public let ledgerHash: String?
     /**
-     * The ledger index of the ledger to use, or a shortcut string to choose a
-     * ledger automatically.
+     The ledger index of the ledger to use, or a shortcut string to choose a
+     ledger automatically.
      */
     public let ledgerIndex: LedgerIndex?
 
@@ -90,38 +89,36 @@ public class DepositAuthorizedRequest: BaseRequest {
 }
 
 /**
- * Expected response from a {@link DepositAuthorizedRequest}.
- *
- * @category Responses
+ Expected response from a {@link DepositAuthorizedRequest}.
  */
 public class DepositAuthorizedResponse: Codable {
     /**
-     * Whether the specified source account is authorized to send payments
-     * directly to the destination account. If true, either the destination
-     * account does not require Deposit Authorization or the source account is
-     * preauthorized.
+     Whether the specified source account is authorized to send payments
+     directly to the destination account. If true, either the destination
+     account does not require Deposit Authorization or the source account is
+     preauthorized.
      */
     public let depositAuthorized: Bool
-    /** The source account specified in the request. */
+    /// The source account specified in the request.
     public let sourceAccount: String
-    /** The destination account specified in the request. */
+    /// The destination account specified in the request.
     public let destinationAccount: String
     /**
-     * The identifying hash of the ledger that was used to generate this
-     * Response.
+     The identifying hash of the ledger that was used to generate this
+     Response.
      */
     public let ledgerHash: String?
     /**
-     * The ledger index of the ledger version that was used to generate this
-     * Response.
+     The ledger index of the ledger version that was used to generate this
+     Response.
      */
     public let ledgerIndex: Int?
     /**
-     * The ledger index of the current in-progress ledger version, which was
-     * used to generate this response.
+     The ledger index of the current in-progress ledger version, which was
+     used to generate this response.
      */
     public let ledgerCurrentIndex: Int?
-    /** If true, the information comes from a validated ledger version. */
+    /// If true, the information comes from a validated ledger version.
     public let validated: Bool?
 
     enum CodingKeys: String, CodingKey {

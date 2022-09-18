@@ -10,27 +10,26 @@
 import Foundation
 
 /**
- * The `account_currencies` command retrieves a list of currencies that an
- * account can send or receive, based on its trust lines. Expects an
- * {@link AccountCurrenciesResponse}.
+ The `account_currencies` command retrieves a list of currencies that an
+ account can send or receive, based on its trust lines. Expects an
+ {@link AccountCurrenciesResponse}.
  *
- * @category Requests
+ @category Requests
  */
 public class AccountCurrenciesRequest: BaseRequest {
-//    let command: String = "account_currencies"
-    /** A unique identifier for the account, most commonly the account's address. */
+    /// A unique identifier for the account, most commonly the account's address.
     public let account: String
-    /** A 20-byte hex string for the ledger version to use. */
+    /// A 20-byte hex string for the ledger version to use.
     public let ledgerHash: String?
     /**
-     * The ledger index of the ledger to use, or a shortcut string to choose a
-     * ledger automatically.
+     The ledger index of the ledger to use, or a shortcut string to choose a
+     ledger automatically.
      */
     public let ledgerIndex: LedgerIndex?
     /**
-     * If true, then the account field only accepts a public key or XRP Ledger
-     * address. Otherwise, account can be a secret or passphrase (not
-     * recommended). The default is false.
+     If true, then the account field only accepts a public key or XRP Ledger
+     address. Otherwise, account can be a secret or passphrase (not
+     recommended). The default is false.
      */
     public let strict: Bool?
 
@@ -94,23 +93,21 @@ public class AccountCurrenciesRequest: BaseRequest {
 }
 
 /**
- * The expected response from an {@link AccountCurrenciesRequest}.
- *
- * @category Responses
+ The expected response from an {@link AccountCurrenciesRequest}.
  */
 public class AccountCurrenciesResponse: Codable {
     /**
-     * The identifying hash of the ledger version used to retrieve this data,
-     * as hex.
+     The identifying hash of the ledger version used to retrieve this data,
+     as hex.
      */
     public let ledgerHash: String?
-    /** The ledger index of the ledger version used to retrieve this data. */
+    /// The ledger index of the ledger version used to retrieve this data.
     public let ledgerIndex: Int
-    /** Array of Currency Codes for currencies that this account can receive. */
+    /// Array of Currency Codes for currencies that this account can receive.
     public let receiveCurrencies: [String]
-    /** Array of Currency Codes for currencies that this account can send. */
+    /// Array of Currency Codes for currencies that this account can send.
     public let sendCurrencies: [String]
-    /** If true, this data comes from a validated ledger. */
+    /// If true, this data comes from a validated ledger.
     public let validated: Bool
 
     enum CodingKeys: String, CodingKey {

@@ -7,8 +7,8 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/baseMethod.ts
 
-import Foundation
 import AnyCodable
+import Foundation
 
 public class TestData: Codable {
     var closeServer: Bool?
@@ -184,7 +184,6 @@ open class ErrorResponse: Error, Codable {
 }
 
 public struct RippleRequestFactory<R> {
-
     public var requestType: Any?
 
     init(requestType: R?) {
@@ -221,7 +220,6 @@ public struct RippleRequestFactory<R> {
 }
 
 open class CodableHelper {
-
     open class func decode<T>(_ type: T.Type, from data: Data) -> (decodableObj: T?, error: Error?) where T: Decodable {
         var returnedDecodable: T?
         var returnedError: Error?

@@ -7,41 +7,38 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/accountOffers.ts
 
-import Foundation
 import AnyCodable
+import Foundation
 
 /**
- * The account_offers method retrieves a list of offers made by a given account
- * that are outstanding as of a particular ledger version. Expects a response in
- * the form of a {@link AccountOffersResponse}.
- *
- * @category Requests
+ The account_offers method retrieves a list of offers made by a given account
+ that are outstanding as of a particular ledger version. Expects a response in
+ the form of a {@link AccountOffersResponse}.
  */
 public class AccountOffersRequest: BaseRequest {
-    //  command: String = "account_offers"
-    /** A unique identifier for the account, most commonly the account's Address. */
+    /// A unique identifier for the account, most commonly the account's Address.
     public let account: String
-    /** A 20-byte hex string identifying the ledger version to use. */
+    /// A 20-byte hex string identifying the ledger version to use.
     public let ledgerHash: String?
     /**
-     * The ledger index of the ledger to use, or "current", "closed", or
-     * "validated" to select a ledger dynamically.
+     The ledger index of the ledger to use, or "current", "closed", or
+     "validated" to select a ledger dynamically.
      */
     public let ledgerIndex: LedgerIndex?
     /**
-     * Limit the number of transactions to retrieve. The server is not required
-     * to honor this value. Must be within the inclusive range 10 to 400.
+     Limit the number of transactions to retrieve. The server is not required
+     to honor this value. Must be within the inclusive range 10 to 400.
      */
     public let limit: Int?
     /**
-     * Value from a previous paginated response. Resume retrieving data where
-     * that response left off.
+     Value from a previous paginated response. Resume retrieving data where
+     that response left off.
      */
     public let marker: AnyCodable?
     /**
-     * If true, then the account field only accepts a public key or XRP Ledger
-     * address. Otherwise, account can be a secret or passphrase (not
-     * recommended). The default is false.
+     If true, then the account field only accepts a public key or XRP Ledger
+     address. Otherwise, account can be a secret or passphrase (not
+     recommended). The default is false.
      */
     public let strict: Bool?
 
@@ -117,28 +114,28 @@ public class AccountOffersRequest: BaseRequest {
 }
 
 public class AccountOffer: Codable {
-    /** Options set for this offer entry as bit-flags. */
+    /// Options set for this offer entry as bit-flags.
     public let flags: Int
-    /** Sequence number of the transaction that created this entry. */
+    /// Sequence number of the transaction that created this entry.
     public let seq: Int
     /**
-     * The amount the account placing this Offer receives.
+     The amount the account placing this Offer receives.
      */
     public let takerGets: Amount
     /**
-     * The amount the account placing this Offer pays.
+     The amount the account placing this Offer pays.
      */
     public let takerPays: Amount
     /**
-     * The exchange rate of the Offer, as the ratio of the original taker_pays
-     * divided by the original taker_gets. When executing offers, the offer with
-     * the most favorable (lowest) quality is consumed first; offers with the same
-     * quality are executed from oldest to newest.
+     The exchange rate of the Offer, as the ratio of the original taker_pays
+     divided by the original taker_gets. When executing offers, the offer with
+     the most favorable (lowest) quality is consumed first; offers with the same
+     quality are executed from oldest to newest.
      */
     public let quality: String
     /**
-     * A time after which this offer is considered unfunded, as the number of
-     * seconds since the Ripple Epoch. See also: Offer Expiration.
+     A time after which this offer is considered unfunded, as the number of
+     seconds since the Ripple Epoch. See also: Offer Expiration.
      */
     public let expiration: Int?
 
@@ -153,38 +150,36 @@ public class AccountOffer: Codable {
 }
 
 /**
- * Response expected from an {@link AccountOffersRequest}.
- *
- * @category Responses
+ Response expected from an {@link AccountOffersRequest}.
  */
 public class AccountOffersResponse: Codable {
-    /** Unique Address identifying the account that made the offers. */
+    /// Unique Address identifying the account that made the offers.
     public let account: String
     /**
-     * Array of objects, where each object represents an offer made by this
-     * account that is outstanding as of the requested ledger version. If the
-     * number of offers is large, only returns up to limit at a time.
+     Array of objects, where each object represents an offer made by this
+     account that is outstanding as of the requested ledger version. If the
+     number of offers is large, only returns up to limit at a time.
      */
     public let offers: [AccountOffer]?
     /**
-     * The ledger index of the current in-progress ledger version, which was
-     * used when retrieving this data.
+     The ledger index of the current in-progress ledger version, which was
+     used when retrieving this data.
      */
     public let ledgerCurrentIndex: Int?
     /**
-     * The identifying hash of the ledger version that was used when retrieving
-     * this data.
+     The identifying hash of the ledger version that was used when retrieving
+     this data.
      */
     public let ledgerHash: String?
     /**
-     * The ledger index of the ledger version that was used when retrieving
-     * this data, as requested.
+     The ledger index of the ledger version that was used when retrieving
+     this data, as requested.
      */
     public let ledgerIndex: Int?
     /**
-     * Server-defined value indicating the response is paginated. Pass this to
-     * the next call to resume where this call left off. Omitted when there are
-     * no pages of information after this one.
+     Server-defined value indicating the response is paginated. Pass this to
+     the next call to resume where this call left off. Omitted when there are
+     no pages of information after this one.
      */
     public let marker: AnyCodable?
 

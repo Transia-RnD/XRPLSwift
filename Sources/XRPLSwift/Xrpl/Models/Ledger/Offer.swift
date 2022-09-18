@@ -11,45 +11,45 @@ import Foundation
 
 open class Offer: BaseLedgerEntry {
     var ledgerEntryType: String = "Offer"
-    /** A bit-map of boolean flags enabled for this Offer. */
+    /// A bit-map of boolean flags enabled for this Offer.
     let flags: Int
-    /** The address of the account that placed this Offer. */
+    /// The address of the account that placed this Offer.
     let account: String
     /**
-     * The Sequence value of the OfferCreate transaction that created this Offer
-     * object. Used in combination with the Account to identify this Offer.
+     The Sequence value of the OfferCreate transaction that created this Offer
+     object. Used in combination with the Account to identify this Offer.
      */
     let sequence: Int
-    /** The remaining amount and type of currency requested by the Offer creator. */
+    /*The remaining amount and type of currency requested by the Offer creator. */
     let takerPays: Amount
     /**
-     * The remaining amount and type of currency being provided by the Offer
-     * creator.
+     The remaining amount and type of currency being provided by the Offer
+     creator.
      */
     let takerGets: Amount
-    /** The ID of the Offer Directory that links to this Offer. */
+    /*The ID of the Offer Directory that links to this Offer. */
     let bookDirectory: String
     /**
-     * A hint indicating which page of the Offer Directory links to this object,
-     * in case the directory consists of multiple pages.
+     A hint indicating which page of the Offer Directory links to this object,
+     in case the directory consists of multiple pages.
      */
     let bookNode: String
     /**
-     * A hint indicating which page of the Owner Directory links to this object,
-     * in case the directory consists of multiple pages.
+     A hint indicating which page of the Owner Directory links to this object,
+     in case the directory consists of multiple pages.
      */
     let ownerNode: String
     /**
-     * The identifying hash of the transaction that most recently modified this
-     * object.
+     The identifying hash of the transaction that most recently modified this
+     object.
      */
     let previousTxnId: String
     /**
-     * The index of the ledger that contains the transaction that most recently
-     * modified this object.
+     The index of the ledger that contains the transaction that most recently
+     modified this object.
      */
     let previousTxnLgrSeq: Int
-    /** The time this Offer expires, in seconds since the Ripple Epoch. */
+    /// The time this Offer expires, in seconds since the Ripple Epoch.
     let expiration: Int?
 
     enum CodingKeys: String, CodingKey {

@@ -15,39 +15,36 @@ public struct SourceCurrencyAmount: Codable {
 }
 
 /**
- * The `ripple_path_find` method is a simplified version of the path_find method
- * that provides a single response with a payment path you can use right away.
- * Expects a response in the form of a {@link RipplePathFindResponse}.
- *
- * @category Requests
+ The `ripple_path_find` method is a simplified version of the path_find method
+ that provides a single response with a payment path you can use right away.
+ Expects a response in the form of a {@link RipplePathFindResponse}.
  */
 public class RipplePathFindRequest: BaseRequest {
-    //    let command: String = "ripple_path_find"
-    /** Unique address of the account that would send funds in a transaction. */
+    /// Unique address of the account that would send funds in a transaction.
     public let sourceAccount: String
-    /** Unique address of the account that would receive funds in a transaction. */
+    /// Unique address of the account that would receive funds in a transaction.
     public let destinationAccount: String
     /**
-     * Currency Amount that the destination account would receive in a
-     * transaction.
+     Currency Amount that the destination account would receive in a
+     transaction.
      */
     public let destinationAmount: Amount
     /**
-     * Currency Amount that would be spent in the transaction. Cannot be used
-     * with `source_currencies`.
+     Currency Amount that would be spent in the transaction. Cannot be used
+     with `source_currencies`.
      */
     public let sendMax: Amount?
     /**
-     * Array of currencies that the source account might want to spend. Each
-     * entry in the array should be a JSON object with a mandatory currency field
-     * and optional issuer field, like how currency amounts are specified.
+     Array of currencies that the source account might want to spend. Each
+     entry in the array should be a JSON object with a mandatory currency field
+     and optional issuer field, like how currency amounts are specified.
      */
     public let sourceCurrencies: SourceCurrencyAmount?
-    /** A 20-byte hex string for the ledger version to use. */
+    /// A 20-byte hex string for the ledger version to use.
     public let ledgerHash: String?
     /**
-     * The ledger index of the ledger to use, or a shortcut string to choose a
-     * ledger automatically.
+     The ledger index of the ledger to use, or a shortcut string to choose a
+     ledger automatically.
      */
     public let ledgerIndex: LedgerIndex?
 
@@ -87,50 +84,37 @@ public class RipplePathFindRequest: BaseRequest {
         super.init(id: id, command: "submit_multisigned", apiVersion: apiVersion)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-
-//    required public init(from decoder: Decoder) throws {
-//        let values = try decoder.container(keyedBy: CodingKeys.self)
-//        sourceAccount = try values.decode(String.self, forKey: .sourceAccount)
-//        destinationAmount = try values.decode(rAmount.self, forKey: .destinationAmount)
-//        sendMax = try values.decode(rAmount.self, forKey: .sendMax)
-//        sourceCurrencies = try values.decode(SourceCurrencyAmount.self, forKey: .sourceCurrencies)
-//        ledgerIndex = try values.decode(LedgerIndex.self, forKey: .ledgerIndex)
-//        ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
-////        try super.init(from: decoder)
-//    }
 }
 
 public struct PathOption: Codable {
-    /** Array of arrays of objects defining payment paths. */
+    /// Array of arrays of objects defining payment paths.
     public let pathsComputed: [Path]
     /**
-     * Currency amount that the source would have to send along this path for the
-     * destination to receive the desired amount.
+     Currency amount that the source would have to send along this path for the
+     destination to receive the desired amount.
      */
     public let sourceAmount: Amount
 }
 
 /**
- * Response expected from a {@link RipplePathFindRequest}.
- *
- * @category Responses
+ Response expected from a {@link RipplePathFindRequest}.
  */
 public class RipplePathFindResponse: Codable {
     /**
-     * Array of objects with possible paths to take, as described below. If
-     * empty, then there are no paths connecting the source and destination
-     * accounts.
+     Array of objects with possible paths to take, as described below. If
+     empty, then there are no paths connecting the source and destination
+     accounts.
      */
     public let alternatives: [PathOption]
-    /** Unique address of the account that would receive a payment transaction. */
+    /// Unique address of the account that would receive a payment transaction.
     public let destinationAccount: String
     /**
-     * Array of strings representing the currencies that the destination
-     * accepts, as 3-letter codes like "USD" or as 40-character hex like
-     * "015841551A748AD2C1F76FF6ECB0CCCD00000000".
+     Array of strings representing the currencies that the destination
+     accepts, as 3-letter codes like "USD" or as 40-character hex like
+     "015841551A748AD2C1F76FF6ECB0CCCD00000000".
      */
     public let destinationCurrencies: [String]
     public let destinationAmount: Amount
@@ -153,7 +137,7 @@ public class RipplePathFindResponse: Codable {
         case validated = "validated"
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         alternatives = try values.decode([PathOption].self, forKey: .alternatives)
         destinationAccount = try values.decode(String.self, forKey: .destinationAccount)

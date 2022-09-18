@@ -10,37 +10,35 @@
 import Foundation
 
 /**
- * The Ticket object type represents a Ticket, which tracks an account sequence
- * number that has been set aside for future use. You can create new tickets
- * with a TicketCreate transaction.
- *
- * @category Ledger Entries
+ The Ticket object type represents a Ticket, which tracks an account sequence
+ number that has been set aside for future use. You can create new tickets
+ with a TicketCreate transaction.
  */
 open class Ticket: BaseLedgerEntry {
     var ledgerEntryType: String = "Ticket"
-    /** The account that owns this Ticket. */
+    /// The account that owns this Ticket.
     let account: String
     /**
-     * A bit-map of Boolean flags enabled for this Ticket. Currently, there are
-     * no flags defined for Tickets.
+     A bit-map of Boolean flags enabled for this Ticket. Currently, there are
+     no flags defined for Tickets.
      */
     var flags: Int = 0
     /**
-     * A hint indicating which page of the owner directory links to this object,
-     * in case the directory consists of multiple pages.
+     A hint indicating which page of the owner directory links to this object,
+     in case the directory consists of multiple pages.
      */
     let ownerNode: String
     /**
-     * The identifying hash of the transaction that most recently modified this
-     * object.
+     The identifying hash of the transaction that most recently modified this
+     object.
      */
     let previousTxnId: String
     /**
-     * The index of the ledger that contains the transaction that most recently
-     * modified this object.
+     The index of the ledger that contains the transaction that most recently
+     modified this object.
      */
     let previousTxnLgrSeq: Int
-    /** The Sequence Number this Ticket sets aside. */
+    /*The Sequence Number this Ticket sets aside. */
     let ticketSequence: Int
 
     enum CodingKeys: String, CodingKey {

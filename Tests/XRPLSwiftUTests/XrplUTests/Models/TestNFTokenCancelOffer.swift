@@ -45,6 +45,7 @@ final class TestNFTokenCancelOffer: XCTestCase {
     func testInvalidLimitAmountEmpty() {
         TestNFTokenCancelOffer.setUp()
         TestNFTokenCancelOffer.baseTx["NFTokenOffers"] = [] as AnyObject
-        XCTAssertThrowsError(try NFTokenCancelOffer(json: TestNFTokenCancelOffer.baseTx))
+        let tx = try! NFTokenCancelOffer(json: TestNFTokenCancelOffer.baseTx)
+        XCTAssertThrowsError(try validateNFTokenCancelOffer(tx: tx.toJson()))
     }
 }

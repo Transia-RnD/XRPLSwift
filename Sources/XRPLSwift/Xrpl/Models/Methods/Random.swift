@@ -10,11 +10,9 @@
 import Foundation
 
 /**
- * The random command provides a random number to be used as a source of
- * entropy for random number generation by clients. Expects a response in the
- * form of a {@link RandomResponse}.
- *
- * @category Requests
+ The random command provides a random number to be used as a source of
+ entropy for random number generation by clients. Expects a response in the
+ form of a {@link RandomResponse}.
  */
 public class RandomRequest: BaseRequest {
 //    let command: String = "random"
@@ -40,18 +38,16 @@ public class RandomRequest: BaseRequest {
 }
 
 /**
- * Response expected from a {@link RandomRequest}.
- *
- * @category Responses
+ Response expected from a {@link RandomRequest}.
  */
 public class RandomResponse: Codable {
     public let random: String
 
     enum CodingKeys: String, CodingKey {
-        case random = "random"
+        case random
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         random = try values.decode(String.self, forKey: .random)
 //        try super.init(from: decoder)

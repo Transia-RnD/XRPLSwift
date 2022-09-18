@@ -41,7 +41,7 @@ class LeafNode: HashesNode {
      * @throws When called, because LeafNodes cannot addItem.
      */
     public func addItem(tag: String, node: HashesNode) throws {
-        throw XrplError.unknown("Cannot call addItem on a LeafNode")
+        throw XrplError("Cannot call addItem on a LeafNode")
         // try self.addItem(_tag: _tag, _node: _node)
     }
 
@@ -63,7 +63,7 @@ class LeafNode: HashesNode {
             let txNodePrefix: String = HashPrefix.TRANSACTION_NODE.rawValue.asBigByteArray.toHexString()
             return sha512Half(hex: txNodePrefix + self.data + self.tag)
         default:
-            throw XrplError.unknown("Tried to hash a SHAMap node of unknown type.")
+            throw XrplError("Tried to hash a SHAMap node of unknown type.")
         }
     }
 }

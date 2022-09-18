@@ -85,7 +85,8 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Fee": "5000000",
             "Sequence": 2470665
         ] as! [String: AnyObject]
-        XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
+        let tx = try! NFTokenCreateOffer(json: baseTx)
+        XCTAssertThrowsError(try validateNFTokenCreateOffer(tx: tx.toJson()))
     }
 
     func testInvalidAccountEqualDest() {
@@ -99,7 +100,8 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Fee": "5000000",
             "Sequence": 2470665
         ] as! [String: AnyObject]
-        XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
+        let tx = try! NFTokenCreateOffer(json: baseTx)
+        XCTAssertThrowsError(try validateNFTokenCreateOffer(tx: tx.toJson()))
     }
 
     func testInvalidNFTokenIDNil() {
@@ -156,7 +158,8 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Fee": "5000000",
             "Sequence": 2470665
         ] as! [String: AnyObject]
-        XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
+        let tx = try! NFTokenCreateOffer(json: baseTx)
+        XCTAssertThrowsError(try validateNFTokenCreateOffer(tx: tx.toJson()))
     }
 
     func testInvalidNoOwnerWithBuy() {
@@ -169,7 +172,8 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Fee": "5000000",
             "Sequence": 2470665
         ] as! [String: AnyObject]
-        XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
+        let tx = try! NFTokenCreateOffer(json: baseTx)
+        XCTAssertThrowsError(try validateNFTokenCreateOffer(tx: tx.toJson()))
     }
 
     func testInvalidBuyZeroAmount() {
@@ -183,6 +187,7 @@ final class TestNFTokenCreateOffer: XCTestCase {
             "Fee": "5000000",
             "Sequence": 2470665
         ] as! [String: AnyObject]
-        XCTAssertThrowsError(try NFTokenCreateOffer(json: baseTx))
+        let tx = try! NFTokenCreateOffer(json: baseTx)
+        XCTAssertThrowsError(try validateNFTokenCreateOffer(tx: tx.toJson()))
     }
 }

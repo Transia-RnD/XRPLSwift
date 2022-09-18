@@ -35,12 +35,12 @@ public func dropsToXrp(_ dropsToConvert: Any) throws -> String {
 
     // check that the value is valid and actually a number
     if dropsToConvert is String && !drops.isNumber {
-        throw ValidationError.validation("dropsToXrp: invalid value '\(dropsToConvert)', should be a BigNumber or string-encoded number.")
+        throw ValidationError("dropsToXrp: invalid value '\(dropsToConvert)', should be a BigNumber or string-encoded number.")
     }
 
     // drops are only whole units
     if drops.contains(where: { $0 == "." }) {
-        throw ValidationError.validation("dropsToXrp: value '\(drops)' has too many decimal places.")
+        throw ValidationError("dropsToXrp: value '\(drops)' has too many decimal places.")
     }
 
     /*
@@ -73,7 +73,7 @@ public func xrpToDrops(_ xrpToConvert: Any) throws -> String {
 
     // check that the value is valid and actually a number
     if xrpToConvert is String && !xrp.isNumber {
-        throw ValidationError.validation(
+        throw ValidationError(
             "xrpToDrops: invalid value '${xrpToConvert}', should be a BigNumber or string-encoded number."
         )
     }
@@ -91,12 +91,12 @@ public func xrpToDrops(_ xrpToConvert: Any) throws -> String {
 
     let components = xrp.split(separator: ".")
     if components.count > 2 {
-        throw ValidationError.validation("xrpToDrops: failed sanity check - value '${xrp}' has too many decimal points.")
+        throw ValidationError("xrpToDrops: failed sanity check - value '${xrp}' has too many decimal points.")
     }
 
     let fraction = components[1] != nil ? String(components[1]) : "0"
     if fraction.count > MAX_FRACTION_LENGTH {
-        throw ValidationError.validation("xrpToDrops: value '${xrp}' has too many decimal places.")
+        throw ValidationError("xrpToDrops: value '${xrp}' has too many decimal places.")
     }
 
     return String(BigInt(xrp)! * BigInt(DROPS_PER_XRP), radix: BASE_TEN)

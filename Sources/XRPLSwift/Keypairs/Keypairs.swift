@@ -99,29 +99,29 @@ public class Keypairs {
         switch seedType {
         case .ed25519:
             let keyPair = try! ED25519.deriveKeyPair(seed: entropy.bytes, isValidator: isValidator)
-            //            let messageToVerify = hash("This test message should verify.")
-            //            let signature = method.sign(messageToVerify, keypair.privateKey)
-            //            /* istanbul ignore if */
-            //            if algorithm.verify(
-            //                signature: signature,
-            //                message: messageToVerify,
-            //                publicKey: keypair.publicKey
-            //            ) != true {
-            //                throw KeyPairError.invalidPrivateKey("derived keypair did not generate verifiable signature")
-            //            }
+//            let messageToVerify = hash("This test message should verify.")
+//            let signature = method.sign(messageToVerify, keypair.privateKey)
+//            /* istanbul ignore if */
+//            if algorithm.verify(
+//                signature: signature,
+//                message: messageToVerify,
+//                publicKey: keypair.publicKey
+//            ) != true {
+//                throw KeyPairError.invalidPrivateKey("derived keypair did not generate verifiable signature")
+//            }
             return keyPair
         case .secp256k1:
             let keyPair = try! SECP256K1.deriveKeyPair(seed: entropy.bytes, isValidator: isValidator)
-            //            let messageToVerify = hash("This test message should verify.")
-            //            let signature = method.sign(messageToVerify, keypair.privateKey)
-            /* istanbul ignore if */
-            //            if algorithm.verify(
-            //                signature: signature,
-            //                message: messageToVerify,
-            //                publicKey: keypair.publicKey
-            //            ) != true {
-            //                throw KeyPairError.invalidPrivateKey("derived keypair did not generate verifiable signature")
-            //            }
+//            let messageToVerify = hash("This test message should verify.")
+//            let signature = method.sign(messageToVerify, keypair.privateKey)
+// istanbul ignore if
+//            if algorithm.verify(
+//                signature: signature,
+//                message: messageToVerify,
+//                publicKey: keypair.publicKey
+//            ) != true {
+//                throw KeyPairError.invalidPrivateKey("derived keypair did not generate verifiable signature")
+//            }
             return keyPair
         }
     }
@@ -157,7 +157,7 @@ public class Keypairs {
     }
 
     public static func deriveAddressFromBytes(publicKeyBytes: Data) throws -> String {
-        return try XrplCodec.encodeClassicAddress(bytes: publicKeyBytes.computePKHash().bytes)
+        return try XrplCodec.encodeClassicAddress(bytes: publicKeyBytes.computePublicKeyHash().bytes)
     }
 
     public static func deriveAddress(publicKey: String) throws -> String {

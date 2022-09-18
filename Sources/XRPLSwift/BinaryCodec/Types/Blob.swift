@@ -43,6 +43,6 @@ class Blob: SerializedType {
      - throws: RPLBinaryCodecException: If a Blob cannot be constructed.
      */
     static func from(value: String) throws -> Blob {
-        return Blob(try value.asHexArray())
+        return Blob(value.hexToBytes)
     }
 }

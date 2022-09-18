@@ -20,25 +20,23 @@ class DisabledValidator: Codable {
 }
 
 /**
- * The NegativeUNL object type contains the current status of the Negative UNL,
- * a list of trusted validators currently believed to be offline.
- *
- * @category Ledger Entries
+ The NegativeUNL object type contains the current status of the Negative UNL,
+ a list of trusted validators currently believed to be offline.
  */
 open class NegativeUNL: BaseLedgerEntry {
     var ledgerEntryType: String = "NegativeUNL"
     /**
-     * A list of trusted validators that are currently disabled.
+     A list of trusted validators that are currently disabled.
      */
     let disabledValidators: [DisabledValidator]?
     /**
-     * The public key of a trusted validator that is scheduled to be disabled in
-     * the next flag ledger.
+     The public key of a trusted validator that is scheduled to be disabled in
+     the next flag ledger.
      */
     let validatorToDisable: String?
     /**
-     * The public key of a trusted validator in the Negative UNL that is
-     * scheduled to be re-enabled in the next flag ledger.
+     The public key of a trusted validator in the Negative UNL that is
+     scheduled to be re-enabled in the next flag ledger.
      */
     let validatorToReEnable: String?
 

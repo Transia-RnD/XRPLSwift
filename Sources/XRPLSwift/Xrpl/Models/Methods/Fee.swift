@@ -10,21 +10,18 @@
 import Foundation
 
 /**
- * The `fee` command reports the current state of the open-ledger requirements
- * for the transaction cost. This requires the FeeEscalation amendment to be
- * enabled. Expects a response in the form of a {@link FeeResponse}.
+ The `fee` command reports the current state of the open-ledger requirements
+ for the transaction cost. This requires the FeeEscalation amendment to be
+ enabled. Expects a response in the form of a {@link FeeResponse}.
  *
- * @example
- * ```ts
- * const feeRequest: FeeRequest = {
- *  command: 'fee'
- * }
- * ```
- *
- * @category Requests
+ @example
+ ```ts
+ const feeRequest: FeeRequest = {
+  command: 'fee'
+ }
+ ```
  */
 public class FeeRequest: BaseRequest {
-//    public let command: String = "fee"
     public init(
         // Base
         id: Int? = nil,
@@ -47,26 +44,25 @@ public class FeeRequest: BaseRequest {
 }
 
 public struct Drops: Codable {
-
     /**
-     * The transaction cost required for a reference transaction to be
-     * included in a ledger under minimum load, represented in drops of XRP.
+     The transaction cost required for a reference transaction to be
+     included in a ledger under minimum load, represented in drops of XRP.
      */
     public let baseFee: String
     /**
-     * An approximation of the median transaction cost among transactions.
-     * Included in the previous validated ledger, represented in drops of XRP.
+     An approximation of the median transaction cost among transactions.
+     Included in the previous validated ledger, represented in drops of XRP.
      */
     public let medianFee: String
     /**
-     * The minimum transaction cost for a reference transaction to be queued
-     * for a later ledger, represented in drops of XRP. If greater than
-     * base_fee, the transaction queue is full.
+     The minimum transaction cost for a reference transaction to be queued
+     for a later ledger, represented in drops of XRP. If greater than
+     base_fee, the transaction queue is full.
      */
     public let minimumFee: String
     /**
-     * The minimum transaction cost that a reference transaction must pay to
-     * be included in the current open ledger, represented in drops of XRP.
+     The minimum transaction cost that a reference transaction must pay to
+     be included in the current open ledger, represented in drops of XRP.
      */
     public let openLedgerFee: String
 
@@ -80,23 +76,23 @@ public struct Drops: Codable {
 
 public struct Levels: Codable {
     /**
-     * The median transaction cost among transactions in the previous
-     * validated ledger, represented in fee levels.
+     The median transaction cost among transactions in the previous
+     validated ledger, represented in fee levels.
      */
     public let medianLevel: String
     /**
-     * The minimum transaction cost required to be queued for a future
-     * ledger, represented in fee levels.
+     The minimum transaction cost required to be queued for a future
+     ledger, represented in fee levels.
      */
     public let minimumLevel: String
     /**
-     * The minimum transaction cost required to be included in the current
-     * open ledger, represented in fee levels.
+     The minimum transaction cost required to be included in the current
+     open ledger, represented in fee levels.
      */
     public let openLedgerLevel: String
     /**
-     * The equivalent of the minimum transaction cost, represented in fee
-     * levels.
+     The equivalent of the minimum transaction cost, represented in fee
+     levels.
      */
     public let referenceLevel: String
 
@@ -109,28 +105,26 @@ public struct Levels: Codable {
 }
 
 /**
- * Response expected from a {@link FeeRequest}.
- *
- * @category Responses
+ Response expected from a {@link FeeRequest}.
  */
 public class FeeResponse: Codable {
-    /** Number of transactions provisionally included in the in-progress ledger. */
+    /// Number of transactions provisionally included in the in-progress ledger.
     public let currentLedgerSize: String
-    /** Number of transactions currently queued for the next ledger. */
+    /// Number of transactions currently queued for the next ledger.
     public let currentQueueSize: String
     public let drops: Drops
     /**
-     * The approximate number of transactions expected to be included in the
-     * current ledger. This is based on the number of transactions in the
-     * previous ledger.
+     The approximate number of transactions expected to be included in the
+     current ledger. This is based on the number of transactions in the
+     previous ledger.
      */
     public let expectedLedgerSize: String
-    /** The Ledger Index of the current open ledger these stats describe. */
+    /// The Ledger Index of the current open ledger these stats describe.
     public let ledgerCurrentIndex: Int
     public let levels: Levels
     /**
-     * The maximum number of transactions that the transaction queue can
-     * currently hold.
+     The maximum number of transactions that the transaction queue can
+     currently hold.
      */
     public let maxQueueSize: String
 

@@ -63,7 +63,8 @@ final class TestSignerListSet: XCTestCase {
     func testInvalidSignerEntriesEmpty() {
         TestSignerListSet.setUp()
         TestSignerListSet.baseTx["SignerEntries"] = [] as AnyObject
-        XCTAssertThrowsError(try SignerListSet(json: TestSignerListSet.baseTx))
+        let tx = try! SignerListSet(json: TestSignerListSet.baseTx)
+        XCTAssertThrowsError(try validateSignerListSet(tx: tx.toJson()))
     }
 
     func testInvalidSignerEntriesType() {

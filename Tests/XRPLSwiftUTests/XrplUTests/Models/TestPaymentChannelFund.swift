@@ -71,15 +71,9 @@ final class TestPaymentChannelFund: XCTestCase {
         XCTAssertThrowsError(try PaymentChannelFund(json: TestPaymentChannelFund.baseTx))
     }
 
-    func testInvalidExpirationNil() {
-        TestPaymentChannelFund.setUp()
-        TestPaymentChannelFund.baseTx["Expiration"] = nil
-        XCTAssertThrowsError(try PaymentChannelFund(json: TestPaymentChannelFund.baseTx))
-    }
-
     func testInvalidExpirationType() {
         TestPaymentChannelFund.setUp()
-        TestPaymentChannelFund.baseTx["Expiration"] = 100 as AnyObject
+        TestPaymentChannelFund.baseTx["Expiration"] = "1000" as AnyObject
         XCTAssertThrowsError(try PaymentChannelFund(json: TestPaymentChannelFund.baseTx))
     }
 }

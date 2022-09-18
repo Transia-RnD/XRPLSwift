@@ -10,24 +10,22 @@
 import Foundation
 
 /**
- * The LedgerHashes objects exist to make it possible to look up a previous
- * ledger's hash with only the current ledger version and at most one lookup of
- * a previous ledger version.
- *
- * @category Ledger Entries
+ The LedgerHashes objects exist to make it possible to look up a previous
+ ledger's hash with only the current ledger version and at most one lookup of
+ a previous ledger version.
  */
 open class LedgerHashes: BaseLedgerEntry {
     let ledgerEntryType: String = "LedgerHashes"
-    /** The Ledger Index of the last entry in this object's Hashes array. */
+    /// The Ledger Index of the last entry in this object's Hashes array.
     let lastLedgerSequence: Int?
     /**
-     * An array of up to 256 ledger hashes. The contents depend on which sub-type
-     * of LedgerHashes object this is.
+     An array of up to 256 ledger hashes. The contents depend on which sub-type
+     of LedgerHashes object this is.
      */
     let hashes: [String]
     /**
-     * A bit-map of boolean flags for this object. No flags are defined for this
-     * type.
+     A bit-map of boolean flags for this object. No flags are defined for this
+     type.
      */
     var flags: Int
     public required init(from decoder: Decoder) throws {

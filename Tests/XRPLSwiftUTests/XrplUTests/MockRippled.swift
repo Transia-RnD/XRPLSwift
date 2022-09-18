@@ -17,7 +17,7 @@ func createResponse(
 ) throws -> String {
     var cloneResp: [String: AnyObject] = response
     if response["type"] == nil && response["error"] == nil {
-        throw XrplError.unknown("Bad response format. Must contain `type` or `error`. \(response)")
+        throw XrplError("Bad response format. Must contain `type` or `error`. \(response)")
     }
     cloneResp["id"] = (request["id"] as! Int) as AnyObject
     return jsonToString(cloneResp)
@@ -208,14 +208,14 @@ class MockRippledSocket {
      */
     func addResponses(command: String, response: [String: AnyObject]) throws {
         if response["type"] != nil && response["error"] != nil {
-            throw XrplError.unknown("Bad response format. Must contain `type` or `error`. \(jsonToString(response))")
+            throw XrplError("Bad response format. Must contain `type` or `error`. \(jsonToString(response))")
         }
         self.responses[command] = response as AnyObject
     }
 
     func getResponse(request: BaseRequest) throws -> [String: AnyObject] {
         if self.responses[request.command!] == nil {
-            throw XrplError.unknown("No handler for \(request.command ?? "")")
+            throw XrplError("No handler for \(request.command ?? "")")
         }
         let functionOrObject = self.responses[request.command!]
         //        if (typeof functionOrObject == "function") {

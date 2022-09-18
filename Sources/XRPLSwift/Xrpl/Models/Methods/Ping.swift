@@ -10,14 +10,11 @@
 import Foundation
 
 /**
- * The ping command returns an acknowledgement, so that clients can test the
- * connection status and latency. Expects a response in the form of a {@link
- * PingResponse}.
- *
- * @category Requests
+ The ping command returns an acknowledgement, so that clients can test the
+ connection status and latency. Expects a response in the form of a {@link
+ PingResponse}.
  */
 public class PingRequest: BaseRequest {
-//    let command: String = "ping"
     public init(
         // Base
         id: Int? = nil,
@@ -40,20 +37,18 @@ public class PingRequest: BaseRequest {
 }
 
 /**
- * Response expected from a {@link PingRequest}.
- *
- * @category Responses
+ Response expected from a {@link PingRequest}.
  */
 public class PingResponse: Codable {
     public let role: String?
     public let unlimited: Bool?
 
     enum CodingKeys: String, CodingKey {
-        case role = "role"
-        case unlimited = "unlimited"
+        case role
+        case unlimited
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         role = try values.decode(String.self, forKey: .role)
         unlimited = try values.decode(Bool.self, forKey: .unlimited)
@@ -65,5 +60,4 @@ public class PingResponse: Codable {
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
         return jsonResult as! [String: AnyObject]
     }
-
 }

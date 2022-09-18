@@ -23,44 +23,8 @@ let _MAX_SECOND_BYTE_VALUE: Int = 240
 // swiftlint:disable:next identifier_name
 let _MAX_LENGTH_VALUE: Int = 918744
 
-// func _encodeVariableLengthPrefix(length: Int) -> [UInt8] {
-//    /*
-//     Helper function for length-prefixed fields including Blob types
-//     and some AccountID types. Calculates the prefix of variable length bytes.
-//     The length of the prefix is 1-3 bytes depending on the length of the contents:
-//     Content length <= 192 bytes: prefix is 1 byte
-//     192 bytes < Content length <= 12480 bytes: prefix is 2 bytes
-//     12480 bytes < Content length <= 918744 bytes: prefix is 3 bytes
-//     `See Length Prefixing <https://xrpl.org/serialization.html#length-prefixing>`_
-//     */
-//    if length <= _MAX_SINGLE_BYTE_LENGTH {
-//        return length.to_bytes(1, byteorder="big", signed=False)
-//    }
-//    if length < _MAX_DOUBLE_BYTE_LENGTH {
-//        length -= _MAX_SINGLE_BYTE_LENGTH + 1
-//        let byte1 = ((length >> 8) + (_MAX_SINGLE_BYTE_LENGTH + 1)).toBytes(
-//            1, byteorder="big", signed=False
-//        )
-//        let byte2 = (length & 0xFF).to_bytes(1, byteorder="big", signed=False)
-//        return byte1 + byte2
-//    }
-//    if length <= _MAX_LENGTH_VALUE {
-//        length -= _MAX_DOUBLE_BYTE_LENGTH
-//        let byte1 = ((_MAX_SECOND_BYTE_VALUE + 1) + (length >> 16)).toBytes(
-//            1, byteorder="big", signed=False
-//        )
-//        let byte2 = ((length >> 8) & 0xFF).to_bytes(1, byteorder="big", signed=False)
-//        let byte3 = (length & 0xFF).toBytes(1, byteorder="big", signed=False)
-//        return byte1 + byte2 + byte3
-//    }
-//
-//    throw BinaryError.unknownError(error: "VariableLength field must be <= \(_MAX_LENGTH_VALUE) bytes long")
-//
-// }
-
 public class BytesList {
     private var bytesArray: [UInt8] = []
-    
     /**
      Get the total number of bytes in the BytesList
      - returns:
@@ -69,7 +33,6 @@ public class BytesList {
     public func getLength() -> Int {
         return self.bytesArray.count
     }
-    
     /**
      Put bytes in the BytesList
      - parameters:
@@ -82,8 +45,6 @@ public class BytesList {
         self.bytesArray.append(contentsOf: bytes)
         return self
     }
-    
-    
     /**
      Write this BytesList to the back of another bytes list
      - parameters:
@@ -92,7 +53,6 @@ public class BytesList {
     public func toBytesSink(list: BytesList) {
         list.put(bytesArg: toBytes())
     }
-    
     /**
      Put bytes in the BytesList
      - returns:
@@ -101,7 +61,6 @@ public class BytesList {
     public func toBytes() -> [UInt8] {
         return self.bytesArray
     }
-    
     /**
      Put bytes in the BytesList
      - returns:
@@ -114,20 +73,14 @@ public class BytesList {
 
 public class BinarySerializer {
     // Serializes JSON to XRPL binary format.
-    
-    public var sink: BytesList = BytesList()
-    
+    public var sink = BytesList()
     init() { self.sink = BytesList() }
-    
     private func UInt8Byte(_ int: Int) -> Data {
         return Data([UInt8(int)])
     }
-    
     private func UInt8Byte(_ int: UInt8) -> Data {
         return int.bigEndian.data
     }
-    
-    
     /**
      Write a value to this BinarySerializer
      - parameters:
@@ -136,7 +89,6 @@ public class BinarySerializer {
     func write(value: SerializedType) {
         value.toBytesSink(list: self.sink)
     }
-    
     /**
      Write bytes to this BinarySerializer
      - parameters:
@@ -145,7 +97,6 @@ public class BinarySerializer {
     func put(bytes: Data) {
         sink.put(bytesArg: [UInt8](bytes))
     }
-    
     /**
      Write a value of a given type to this BinarySerializer
      - parameters:
@@ -155,7 +106,6 @@ public class BinarySerializer {
     func writeType(type: SerializedType, value: SerializedType) {
         self.write(value: try! SerializedType.from(value: value))
     }
-    
     /**
      Write BytesList to this BinarySerializer
      - parameters:
@@ -164,9 +114,14 @@ public class BinarySerializer {
     func writeBytesList(bl: BytesList) {
         bl.toBytesSink(list: self.sink)
     }
-    
     /**
-     Encode the varibale length
+     Helper function for length-prefixed fields including Blob types
+     and some AccountID types. Calculates the prefix of variable length bytes.
+     The length of the prefix is 1-3 bytes depending on the length of the contents:
+     Content length <= 192 bytes: prefix is 1 byte
+     192 bytes < Content length <= 12480 bytes: prefix is 2 bytes
+     12480 bytes < Content length <= 918744 bytes: prefix is 3 bytes
+     `See Length Prefixing <https://xrpl.org/serialization.html#length-prefixing>`_
      - parameters:
      - length: The length of the encode variable
      - returns:
@@ -188,9 +143,9 @@ public class BinarySerializer {
             let byte3 = UInt8(len & 0xff)
             return Data(fromArray: [byte1, byte2, byte3])
         }
-        fatalError("VariableLength field must be <= 918744 bytes long")
+        fatalError("VariableLength field must be <= \(_MAX_LENGTH_VALUE) bytes long")
+//        throw BinaryError.unknownError(error: "VariableLength field must be <= \(_MAX_LENGTH_VALUE) bytes long")
     }
-    
     /**
      Write a variable length encoded value to the BinarySerializer.
      - parameters:
@@ -208,7 +163,6 @@ public class BinarySerializer {
         self.put(bytes: encodeVariableLength(length: byteObject.getLength()))
         self.writeBytesList(bl: byteObject)
     }
-    
     /**
      Write field and value to the buffer.
      - parameters:
@@ -230,5 +184,4 @@ public class BinarySerializer {
             self.put(bytes: Data(value.bytes))
         }
     }
-    
 }

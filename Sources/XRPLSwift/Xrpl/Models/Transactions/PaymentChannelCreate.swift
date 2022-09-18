@@ -9,7 +9,6 @@ import Foundation
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/paymentChannelCreate.ts
 
 public class PaymentChannelCreate: BaseTransaction {
-
     /*
      Represents a `PaymentChannelCreate
      <https://xrpl.org/paymentchannelcreate.html>`_ transaction, which creates a
@@ -90,7 +89,7 @@ public class PaymentChannelCreate: BaseTransaction {
     }
 
     public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(PaymentChannelCreate.self, from: data)
         self.amount = decoded.amount
@@ -126,52 +125,52 @@ public class PaymentChannelCreate: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an PaymentChannelCreate at runtime.
- *
- * @param tx - An PaymentChannelCreate Transaction.
- * @throws When the PaymentChannelCreate is Malformed.
+ Verify the form and type of an PaymentChannelCreate at runtime.
+ - parameters:
+    - tx: An PaymentChannelCreate Transaction.
+ - throws:
+ When the PaymentChannelCreate is Malformed.
  */
-// eslint-disable-next-line max-lines-per-function -- okay for this function, there's a lot of things to check
 public func validatePaymentChannelCreate(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["Amount"] == nil {
-        throw ValidationError.decoding("PaymentChannelCreate: missing Amount")
+        throw ValidationError("PaymentChannelCreate: missing Amount")
     }
 
     if !(tx["Amount"] is String) {
-        throw ValidationError.decoding("PaymentChannelCreate: Amount must be a string")
+        throw ValidationError("PaymentChannelCreate: Amount must be a string")
     }
 
     if tx["Destination"] == nil {
-        throw ValidationError.decoding("PaymentChannelCreate: missing Destination")
+        throw ValidationError("PaymentChannelCreate: missing Destination")
     }
 
     if !(tx["Destination"] is String) {
-        throw ValidationError.decoding("PaymentChannelCreate: Destination must be a string")
+        throw ValidationError("PaymentChannelCreate: Destination must be a string")
     }
 
     if tx["SettleDelay"] == nil {
-        throw ValidationError.decoding("PaymentChannelCreate: missing SettleDelay")
+        throw ValidationError("PaymentChannelCreate: missing SettleDelay")
     }
 
     if !(tx["SettleDelay"] is Int) {
-        throw ValidationError.decoding("PaymentChannelCreate: SettleDelay must be a number")
+        throw ValidationError("PaymentChannelCreate: SettleDelay must be a number")
     }
 
     if tx["PublicKey"] == nil {
-        throw ValidationError.decoding("PaymentChannelCreate: missing PublicKey")
+        throw ValidationError("PaymentChannelCreate: missing PublicKey")
     }
 
     if !(tx["PublicKey"] is String) {
-        throw ValidationError.decoding("PaymentChannelCreate: PublicKey must be a string")
+        throw ValidationError("PaymentChannelCreate: PublicKey must be a string")
     }
 
     if tx["CancelAfter"] !== nil && !(tx["CancelAfter"] is Int) {
-        throw ValidationError.decoding("PaymentChannelCreate: CancelAfter must be a number")
+        throw ValidationError("PaymentChannelCreate: CancelAfter must be a number")
     }
 
     if tx["DestinationTag"] !== nil && !(tx["DestinationTag"] is Int) {
-        throw ValidationError.decoding("PaymentChannelCreate: DestinationTag must be a number")
+        throw ValidationError("PaymentChannelCreate: DestinationTag must be a number")
     }
 }

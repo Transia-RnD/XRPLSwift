@@ -16,7 +16,6 @@ import Foundation
  transaction is the sender of the Check.
  */
 public class CheckCreate: BaseTransaction {
-
     /**
      The address of the `account
      <https://xrpl.org/accounts.html>`_ that can cash the Check. This field is
@@ -75,7 +74,7 @@ public class CheckCreate: BaseTransaction {
         super.init(account: "", transactionType: "CheckCreate")
     }
 
-    public override init(json: [String: AnyObject]) throws {
+    override public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(CheckCreate.self, from: data)
@@ -87,7 +86,7 @@ public class CheckCreate: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         destination = try values.decode(String.self, forKey: .destination)
         sendMax = try values.decode(Amount.self, forKey: .sendMax)
@@ -109,39 +108,40 @@ public class CheckCreate: BaseTransaction {
 }
 
 /**
- * Verify the form and type of an CheckCreate at runtime.
- *
- * @param tx - An CheckCreate Transaction.
- * @throws When the CheckCreate is Malformed.
+ Verify the form and type of an CheckCreate at runtime.
+ - parameters:
+    - tx: An CheckCreate Transaction.
+ - throws:
+ When the CheckCreate is Malformed.
  */
 public func validateCheckCreate(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["SendMax"] == nil {
-        throw ValidationError.decoding("CheckCreate: missing field SendMax")
+        throw ValidationError("CheckCreate: missing field SendMax")
     }
 
     if tx["Destination"] == nil {
-        throw ValidationError.decoding("CheckCreate: missing field Destination")
+        throw ValidationError("CheckCreate: missing field Destination")
     }
 
     if !(tx["SendMax"] is String) && !isIssuedCurrency(input: tx["SendMax"] as? [String: AnyObject]) {
-        throw ValidationError.decoding("CheckCreate: invalid SendMax")
+        throw ValidationError("CheckCreate: invalid SendMax")
     }
 
     if !(tx["Destination"] is String) {
-        throw ValidationError.decoding("CheckCreate: invalid Destination")
+        throw ValidationError("CheckCreate: invalid Destination")
     }
 
     if tx["DestinationTag"] != nil && !(tx["DestinationTag"] is Int) {
-        throw ValidationError.decoding("CheckCash: invalid DestinationTag")
+        throw ValidationError("CheckCash: invalid DestinationTag")
     }
 
     if tx["Expiration"] != nil && !(tx["Expiration"] is Int) {
-        throw ValidationError.decoding("CheckCash: invalid Expiration")
+        throw ValidationError("CheckCash: invalid Expiration")
     }
 
     if tx["InvoiceID"] != nil && !(tx["InvoiceID"] is String) {
-        throw ValidationError.decoding("CheckCash: invalid InvoiceID")
+        throw ValidationError("CheckCash: invalid InvoiceID")
     }
 }

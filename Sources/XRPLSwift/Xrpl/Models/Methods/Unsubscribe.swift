@@ -17,40 +17,40 @@
 // }
 //
 /// **
-// * The unsubscribe command tells the server to stop sending messages for a
-// * particular subscription or set of subscriptions. Expects a response in the
-// * form of an {@link UnsubscribeResponse}.
+// The unsubscribe command tells the server to stop sending messages for a
+// particular subscription or set of subscriptions. Expects a response in the
+// form of an {@link UnsubscribeResponse}.
 // *
-// * @category Requests
+// @category Requests
 // */
 // open class UnsubscribeRequest: BaseRequest {
 ////  command: String = "unsubscribe"
 //  /**
-//   * Array of string names of generic streams to unsubscribe from, including.
-//   * Ledger, server, transactions, and transactions_proposed.
+//   Array of string names of generic streams to unsubscribe from, including.
+//   Ledger, server, transactions, and transactions_proposed.
 //   */
 //  streams: [StreamType]?
 //  /**
-//   * Array of unique account addresses to stop receiving updates for, in the.
-//   * XRP Ledger's base58 format.
+//   Array of unique account addresses to stop receiving updates for, in the.
+//   XRP Ledger's base58 format.
 //   */
 //  accounts: [String]?
 //  /**
-//   * Like accounts, but for accounts_proposed subscriptions that included
-//   * not-yet-validated transactions.
+//   Like accounts, but for accounts_proposed subscriptions that included
+//   not-yet-validated transactions.
 //   */
 //  accounts_proposed: [String]?
 //  /**
-//   * Array of objects defining order books to unsubscribe from, as explained
-//   * below.
+//   Array of objects defining order books to unsubscribe from, as explained
+//   below.
 //   */
 //  books: Book[]?
 // }
 //
 /// **
-// * Response expected from a {@link UnsubscribeRequest}.
+// Response expected from a {@link UnsubscribeRequest}.
 // *
-// * @category Responses
+// @category Responses
 // */
 // open class UnsubscribeResponse: BaseResponse {
 //  result: Record<String, never>

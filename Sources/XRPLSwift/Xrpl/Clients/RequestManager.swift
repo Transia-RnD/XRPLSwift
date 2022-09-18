@@ -35,7 +35,7 @@ public class RequestManager {
      */
     public func resolve(_ id: Int, _ response: Any?, _ error: Error?) throws {
         guard let index = self.promisesAwaitingResponse.firstIndex(where: { $0.key == id }) else {
-            throw XrplError.noPromise("No existing promise with id \(id)")
+            throw XrplError("No existing promise with id \(id)")
         }
         let map = self.promisesAwaitingResponse[index].value
         map.timer.invalidate()
@@ -45,7 +45,7 @@ public class RequestManager {
 
     public func resolve(id: Int, error: Any) throws {
         guard let index = self.promisesAwaitingResponse.firstIndex(where: { $0.key == id }) else {
-            throw XrplError.noPromise("No existing promise with id \(id)")
+            throw XrplError("No existing promise with id \(id)")
         }
         let map = self.promisesAwaitingResponse[index].value
         map.timer.invalidate()
@@ -62,7 +62,7 @@ public class RequestManager {
      */
     public func reject(id: Int, error: Error) throws {
         guard let index = self.promisesAwaitingResponse.firstIndex(where: { $0.key == id }) else {
-            throw XrplError.noPromise("No existing promise with id \(id)")
+            throw XrplError("No existing promise with id \(id)")
         }
         let map = self.promisesAwaitingResponse[index].value
         map.timer.invalidate()
@@ -95,7 +95,7 @@ public class RequestManager {
      */
     @objc func resolveTimer(_ sender: Timer) {
         guard let id = sender.userInfo as? Int else { return }
-        try! resolve(id: id, error: XrplError.timeout())
+        try! resolve(id: id, error: XrplError1.timeout())
     }
     public func createRequest<R: BaseRequest>(
         request: R,
@@ -149,19 +149,19 @@ public class RequestManager {
      */
     // swiftlint:disable:next cyclomatic_complexity
     public func handleResponse(response: [String: AnyObject]?) throws {
-        NSLog("RESPONSE: \(response)")
+//        NSLog("RESPONSE: \(response)")
         let decoder = JSONDecoder()
         let baseData = try JSONSerialization.data(withJSONObject: response!, options: .prettyPrinted)
         let baseResponse = try RippleBaseResponse(data: baseData)
         if baseResponse.id == nil || !(baseResponse.id is String || baseResponse.id is Int) {
-            throw ValidationError.invalidFormat("valid id not found in response")
+            throw ValidationError("valid id not found in response")
         }
         guard let index = self.promisesAwaitingResponse.firstIndex(where: { $0.key == baseResponse.id }) else {
             return
             //            throw XrplError.noPromise("No existing promise with id \(response.id)")
         }
         if baseResponse.status == nil {
-            let error: XrplError = ValidationError.invalidFormat("valid id not found in response")
+            let error: XrplError = ValidationError("valid id not found in response")
             try self.reject(id: baseResponse.id, error: error)
             return
         }
@@ -169,14 +169,14 @@ public class RequestManager {
             let errorData = try JSONSerialization.data(withJSONObject: response!, options: .prettyPrinted)
             let returnedDecodable = try decoder.decode(ErrorResponse.self, from: errorData)
             if let errorMessage = returnedDecodable.errorMessage {
-                try self.reject(id: baseResponse.id, error: XrplError.unknown(errorMessage))
+                try self.reject(id: baseResponse.id, error: XrplError(errorMessage))
                 return
             }
-            try self.reject(id: baseResponse.id, error: XrplError.unknown(returnedDecodable.errorException!))
+            try self.reject(id: baseResponse.id, error: RippledError(returnedDecodable.errorException!))
             return
         }
         if baseResponse.status != "success" {
-            let error = ResponseFormatError.responseError("unrecognized response.status: \(baseResponse.status ?? "")")
+            let error = ResponseFormatError("unrecognized response.status: \(baseResponse.status ?? "")")
             try self.reject(id: baseResponse.id, error: error)
             return
         }
@@ -186,9 +186,6 @@ public class RequestManager {
             withJSONObject: response!["result"] as! [String: AnyObject],
             options: .prettyPrinted
         )
-        print(response!["result"])
-
-//        var responseObj: BaseResponse<Any>? = nil
         if map.requestType.self is AccountChannelsRequest.Type {
             let responseObj = BaseResponse(
                 response: baseResponse,
@@ -461,7 +458,7 @@ public class RequestManager {
             try self.resolve(responseObj.id, responseObj, nil)
             return
         }
-        let error = XrplError.noPromise("The request \(map.requestType) has not been mapped")
+        let error = ConnectionError("The request \(map.requestType) has not been mapped")
         try self.reject(id: baseResponse.id, error: error)
     }
 
