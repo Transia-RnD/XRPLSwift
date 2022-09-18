@@ -17,7 +17,7 @@ final class TestAccountID: XCTestCase {
 
     func testFromValueHex() throws {
         let accountId = try AccountID.from(value: TestAccountID.HEX_ENCODING)
-        XCTAssertEqual(accountId.toJson(), TestAccountID.BASE58_ENCODING)
+        XCTAssertEqual((accountId.toJson() as Any as! String), TestAccountID.BASE58_ENCODING)
     }
 
     func testFromValueBase58() throws {

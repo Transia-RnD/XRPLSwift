@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  CommonModels.swift
 //  
 //
 //  Created by Denis Angell on 7/26/22.
@@ -18,7 +18,7 @@ public enum AccountObjectType: String, Codable {
     case signerList
     case ticket
     case state
-    
+
     enum CodingKeys: String, CodingKey {
         case check = "check"
         case depositPreauth = "deposit_preauth"

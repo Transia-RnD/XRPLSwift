@@ -54,8 +54,8 @@ final class TestApi: XCTestCase {
     func testDeriveKeypairED25519() {
         let keypair = try! Keypairs.deriveKeypair(seed: TestApi.fixtures.ED25519_SEED)
         // Had an issue with the KeyPair Object
-        XCTAssertEqual("ED\(keypair.privateKey)", TestApi.fixtures.ED25519_KEYPAIR.privateKey)
-        XCTAssertEqual("ED\(keypair.publicKey)", TestApi.fixtures.ED25519_KEYPAIR.publicKey)
+        XCTAssertEqual(keypair.privateKey, TestApi.fixtures.ED25519_KEYPAIR.privateKey)
+        XCTAssertEqual(keypair.publicKey, TestApi.fixtures.ED25519_KEYPAIR.publicKey)
     }
 
     func testDeriveKeypairSECP256K1Validator() {

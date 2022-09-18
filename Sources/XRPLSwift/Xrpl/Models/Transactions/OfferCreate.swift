@@ -14,7 +14,7 @@ Transactions of the OfferCreate type support additional values in the Flags fiel
 This enum represents those options.
 `See OfferCreate Flags <https://xrpl.org/offercreate.html#offercreate-flags>`_
  */
-public enum OfferCreateFlag: UInt32 {
+public enum OfferCreateFlags: Int, Codable {
     case tfPassive = 0x00010000
     /**
     If enabled, the offer does not consume offers that exactly match it, and instead
@@ -48,6 +48,27 @@ public enum OfferCreateFlag: UInt32 {
     Exchange the entire `TakerGets` amount, even if it means obtaining more than the
     `TakerPays amount` in exchange.
     */
+}
+
+extension [OfferCreateFlags] {
+    var interface: [OfferCreateFlags: Bool] {
+        var flags: [OfferCreateFlags: Bool] = [:]
+        for flag in self {
+            if flag == .tfPassive {
+                flags[flag] = true
+            }
+            if flag == .tfImmediateOrCancel {
+                flags[flag] = true
+            }
+            if flag == .tfFillOrKill {
+                flags[flag] = true
+            }
+            if flag == .tfSell {
+                flags[flag] = true
+            }
+        }
+        return flags
+    }
 }
 
 /**
@@ -153,11 +174,11 @@ public func validateOfferCreate(tx: [String: AnyObject]) throws {
         throw ValidationError.decoding("OfferCreate: missing field TakerPays")
     }
 
-    if !(tx["TakerGets"] is String) && !isAmount(amount: tx["TakerGets"]) {
+    if !(tx["TakerGets"] is String) && !isAmount(amount: tx["TakerGets"] as Any) {
         throw ValidationError.decoding("OfferCreate: invalid TakerGets")
     }
 
-    if !(tx["TakerPays"] is String) && !isAmount(amount: tx["TakerPays"]) {
+    if !(tx["TakerPays"] is String) && !isAmount(amount: tx["TakerPays"] as Any) {
         throw ValidationError.decoding("OfferCreate: invalid TakerPays")
     }
 

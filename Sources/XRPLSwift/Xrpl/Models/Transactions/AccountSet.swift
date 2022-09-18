@@ -25,7 +25,7 @@ let _DISABLE_TICK_SIZE: Int = 0
 // swiftlint:disable:next identifier_name
 let _MAX_DOMAIN_LENGTH: Int = 256
 
-public enum AccountSetAsfFlags: Int, Codable {
+public enum AccountSetAsfFlags: Int, Codable, CaseIterable {
     /*
     There are several options which can be either enabled or disabled for an account.
     Account options are represented by different types of flags depending on the
@@ -79,11 +79,47 @@ public enum AccountSetAsfFlags: Int, Codable {
     /*Require a destination tag to send transactions to this account.*/
     case asfAuthorizedMinter = 10
     /*Allow another account to mint and burn tokens on behalf of this account.*/
+}
 
-    static func all() -> [Int] {
-        return [
-            AccountSetAsfFlags.asfAccountTxId.rawValue
-        ]
+enum AccountSetTfFlags: Int, Codable, CaseIterable {
+    /** The same as SetFlag: asfRequireDest. */
+    case tfRequireDestTag = 0x00010000
+    /** The same as ClearFlag: asfRequireDest. */
+    case tfOptionalDestTag = 0x00020000
+    /** The same as SetFlag: asfRequireAuth. */
+    case tfRequireAuth = 0x00040000
+    /** The same as ClearFlag: asfRequireAuth. */
+    case tfOptionalAuth = 0x00080000
+    /** The same as SetFlag: asfDisallowXRP. */
+    case tfDisallowXRP = 0x00100000
+    /** The same as ClearFlag: asfDisallowXRP. */
+    case tfAllowXRP = 0x00200000
+}
+
+extension [AccountSetTfFlags] {
+    var interface: [AccountSetTfFlags: Bool] {
+        var flags: [AccountSetTfFlags: Bool] = [:]
+        for flag in self {
+            if flag == .tfRequireDestTag {
+                flags[flag] = true
+            }
+            if flag == .tfOptionalDestTag {
+                flags[flag] = true
+            }
+            if flag == .tfRequireAuth {
+                flags[flag] = true
+            }
+            if flag == .tfOptionalAuth {
+                flags[flag] = true
+            }
+            if flag == .tfDisallowXRP {
+                flags[flag] = true
+            }
+            if flag == .tfAllowXRP {
+                flags[flag] = true
+            }
+        }
+        return flags
     }
 }
 

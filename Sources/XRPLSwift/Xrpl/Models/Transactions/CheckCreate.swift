@@ -76,7 +76,7 @@ public class CheckCreate: BaseTransaction {
     }
 
     public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(CheckCreate.self, from: data)
         self.destination = decoded.destination
@@ -141,7 +141,7 @@ public func validateCheckCreate(tx: [String: AnyObject]) throws {
         throw ValidationError.decoding("CheckCash: invalid Expiration")
     }
 
-    if tx["InvoiceID"] != nil && !(tx["InvoiceID"] is Int) {
+    if tx["InvoiceID"] != nil && !(tx["InvoiceID"] is String) {
         throw ValidationError.decoding("CheckCash: invalid InvoiceID")
     }
 }

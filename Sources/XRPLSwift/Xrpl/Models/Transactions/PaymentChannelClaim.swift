@@ -8,7 +8,7 @@ import Foundation
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/paymentChannelClaim.ts
 
-public enum PaymentChannelClaimFlag: UInt32 {
+public enum PaymentChannelClaimFlag: Int {
     /*
      Transactions of the PaymentChannelClaim type support additional values in the Flags
      field. This enum represents those options.
@@ -36,6 +36,21 @@ public enum PaymentChannelClaimFlag: UInt32 {
      uses this flag when the channel still holds XRP, any XRP that remains after
      processing the claim is returned to the source address.
      */
+}
+
+extension [PaymentChannelClaimFlag] {
+    var interface: [PaymentChannelClaimFlag: Bool] {
+        var flags: [PaymentChannelClaimFlag: Bool] = [:]
+        for flag in self {
+            if flag == .tfRenew {
+                flags[flag] = true
+            }
+            if flag == .tfClose {
+                flags[flag] = true
+            }
+        }
+        return flags
+    }
 }
 
 public class PaymentChannelClaim: BaseTransaction {

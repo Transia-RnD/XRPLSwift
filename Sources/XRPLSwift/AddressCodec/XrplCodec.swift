@@ -34,7 +34,6 @@ let _NODE_PUBLIC_KEY_LENGTH: Int = 33
 let _ACCOUNT_PUBLIC_KEY_LENGTH: Int = 33
 
 public class XrplCodec {
-
     public init() {}
 
     /**
@@ -74,8 +73,8 @@ public class XrplCodec {
     public static func decode(b58String: String, prefix: [UInt8]) throws -> [UInt8] {
         let prefixLength: Int = prefix.count
         let decoded = [UInt8](Data(base58Decoding: b58String)!)
-        let versionEntropy = decoded.prefix(decoded.count-4)
-        if [UInt8](versionEntropy[0...(prefixLength-1)]) != prefix {
+        let versionEntropy = decoded.prefix(decoded.count - 4)
+        if [UInt8](versionEntropy[0...(prefixLength - 1)]) != prefix {
             throw AddressCodecError.invalidPrefix()
         }
         return [UInt8](versionEntropy[prefixLength...])

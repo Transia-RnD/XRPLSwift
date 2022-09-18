@@ -9,6 +9,47 @@
 
 import Foundation
 
+public enum AccountRootFlags: Int, CaseIterable {
+    /**
+     * The account has used its free SetRegularKey transaction.
+     */
+    case lsfPasswordSpent = 0x00010000
+    /**
+     * Requires incoming payments to specify a Destination Tag.
+     */
+    case lsfRequireDestTag = 0x00020000
+    /**
+     * This account must individually approve other users for those users to hold this account's issued currencies.
+     */
+    case lsfRequireAuth = 0x00040000
+    /**
+     * Client applications should not send XRP to this account. Not enforced by rippled.
+     */
+    case lsfDisallowXRP = 0x00080000
+    /**
+     * Disallows use of the master key to sign transactions for this account.
+     */
+    case lsfDisableMaster = 0x00100000
+    /**
+     * This address cannot freeze trust lines connected to it. Once enabled, cannot be disabled.
+     */
+    case lsfNoFreeze = 0x00200000
+    /**
+     * All assets issued by this address are frozen.
+     */
+    case lsfGlobalFreeze = 0x00400000
+    /**
+     * Enable rippling on this addresses's trust lines by default. Required for issuing addresses; discouraged for others.
+     */
+    case lsfDefaultRipple = 0x00800000
+    /**
+     * This account can only receive funds from transactions it sends, and from preauthorized accounts.
+     * (It has DepositAuth enabled.)
+     */
+    case lsfDepositAuth = 0x01000000
+}
+
+
 /**
  Returns the X-Address representation of the data.
  - parameters:
@@ -87,7 +128,7 @@ public class AccountRoot: BaseLedgerEntry {
      * account to each other.
      */
     public let transferRate: Int?
-
+    
     enum CodingKeys: String, CodingKey {
         case ledgerEntryType = "LedgerEntryType"
         case account = "Account"
@@ -106,7 +147,7 @@ public class AccountRoot: BaseLedgerEntry {
         case tickSize = "TickSize"
         case transferRate = "TransferRate"
     }
-
+    
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
@@ -126,7 +167,7 @@ public class AccountRoot: BaseLedgerEntry {
         transferRate = try values.decodeIfPresent(Int.self, forKey: .transferRate)
         try super.init(from: decoder)
     }
-
+    
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -147,50 +188,10 @@ public class AccountRoot: BaseLedgerEntry {
         if let tickSize = tickSize { try values.encode(tickSize, forKey: .tickSize) }
         if let transferRate = transferRate { try values.encode(transferRate, forKey: .transferRate) }
     }
-
+    
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
         return jsonResult as! [String: AnyObject]
     }
-}
-
-enum AccountRootFlags: Int {
-    /**
-     * The account has used its free SetRegularKey transaction.
-     */
-    case lsfPasswordSpent = 0x00010000
-    /**
-     * Requires incoming payments to specify a Destination Tag.
-     */
-    case lsfRequireDestTag = 0x00020000
-    /**
-     * This account must individually approve other users for those users to hold this account's issued currencies.
-     */
-    case lsfRequireAuth = 0x00040000
-    /**
-     * Client applications should not send XRP to this account. Not enforced by rippled.
-     */
-    case lsfDisallowXRP = 0x00080000
-    /**
-     * Disallows use of the master key to sign transactions for this account.
-     */
-    case lsfDisableMaster = 0x00100000
-    /**
-     * This address cannot freeze trust lines connected to it. Once enabled, cannot be disabled.
-     */
-    case lsfNoFreeze = 0x00200000
-    /**
-     * All assets issued by this address are frozen.
-     */
-    case lsfGlobalFreeze = 0x00400000
-    /**
-     * Enable rippling on this addresses's trust lines by default. Required for issuing addresses; discouraged for others.
-     */
-    case lsfDefaultRipple = 0x00800000
-    /**
-     * This account can only receive funds from transactions it sends, and from preauthorized accounts.
-     * (It has DepositAuth enabled.)
-     */
-    case lsfDepositAuth = 0x01000000
 }

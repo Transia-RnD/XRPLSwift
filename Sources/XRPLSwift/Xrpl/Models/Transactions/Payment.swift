@@ -15,22 +15,22 @@ public enum PaymentFlags: Int {
      This enum represents those options.
      `See Payment Flags <https://xrpl.org/payment.html#payment-flags>`_
      */
-
+    
     case tfNoDirectRipple = 0x00010000
     /*
      Do not use the default path; only use paths included in the Paths field.
      This is intended to force the transaction to take arbitrage opportunities.
      Most clients do not need this.
      */
-
+    
     case tfPartialPayment = 0x00020000
     /*
      If the specified Amount cannot be sent without spending more than SendMax,
      reduce the received amount instead of failing outright.
      See `Partial Payments <https://xrpl.org/partial-payments.html>`_ for more details.
      */
-
-    case tfLimitQualtity = 0x00040000
+    
+    case tfLimitQuality = 0x00040000
     /*
      Only take paths where all the conversions have an input:output ratio
      that is equal or better than the ratio of Amount:SendMax.
@@ -38,8 +38,26 @@ public enum PaymentFlags: Int {
      */
 }
 
-public class Payment: BaseTransaction {
+extension [PaymentFlags] {
+    var interface: [PaymentFlags: Bool] {
+        var flags: [PaymentFlags: Bool] = [:]
+        for flag in self {
+            if flag == .tfNoDirectRipple {
+                flags[flag] = true
+            }
+            if flag == .tfPartialPayment {
+                flags[flag] = true
+            }
+            if flag == .tfLimitQuality {
+                flags[flag] = true
+            }
+        }
+        return flags
+    }
+}
 
+public class Payment: BaseTransaction {
+    
     /*
      Represents a Payment <https://xrpl.org/payment.html>`_ transaction, which
      sends value from one account to another. (Depending on the path taken, this
@@ -49,39 +67,39 @@ public class Payment: BaseTransaction {
      Payments are also the only way to `create accounts
      <http://xrpl.local/payment.html#creating-accounts>`_.
      */
-
+    
     public let amount: Amount
     /*
      The amount of currency to deliver. If the Partial Payment flag is set,
      deliver *up to* this amount instead. This field is required.
      :meta hide-value:
      */
-
+    
     public let destination: String
     /*
      The address of the account receiving the payment. This field is required.
      :meta hide-value:
      */
-
+    
     public let destinationTag: Int?
     /*
      An arbitrary `destination tag
      <https://xrpl.org/source-and-destination-tags.html>`_ that
      identifies the reason for the Payment, or a hosted recipient to pay.
      */
-
+    
     public let invoiceId: String?
     /*
      Arbitrary 256-bit hash representing a specific reason or identifier for
      this Check.
      */
-
+    
     public let paths: [Path]?
     /*
      Array of payment paths to be used (for a cross-currency payment). Must be
      omitted for XRP-to-XRP transactions.
      */
-
+    
     public let sendMax: Amount?
     /*
      Maximum amount of source currency this transaction is allowed to cost,
@@ -90,14 +108,14 @@ public class Payment: BaseTransaction {
      cost for submitting the transaction. Must be supplied for cross-currency
      or cross-issue payments. Must be omitted for XRP-to-XRP payments.
      */
-
+    
     public let deliverMin: Amount?
     /*
      Minimum amount of destination currency this transaction should deliver.
      Only valid if this is a partial payment. If omitted, any positive amount
      is considered a success.
      */
-
+    
     enum CodingKeys: String, CodingKey {
         case amount = "Amount"
         case destination = "Destination"
@@ -107,7 +125,7 @@ public class Payment: BaseTransaction {
         case sendMax = "SendMax"
         case deliverMin = "DeliverMin"
     }
-
+    
     public init(
         amount: Amount,
         destination: String,
@@ -117,7 +135,7 @@ public class Payment: BaseTransaction {
         sendMax: Amount? = nil,
         deliverMin: Amount? = nil
     ) {
-
+        
         self.amount = amount
         self.destination = destination
         self.destinationTag = destinationTag
@@ -127,7 +145,7 @@ public class Payment: BaseTransaction {
         self.deliverMin = deliverMin
         super.init(account: "", transactionType: "Payment")
     }
-
+    
     public override init(json: [String: AnyObject]) throws {
         let decoder: JSONDecoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
@@ -141,7 +159,7 @@ public class Payment: BaseTransaction {
         self.deliverMin = decoded.deliverMin
         try super.init(json: json)
     }
-
+    
     required public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         amount = try values.decode(Amount.self, forKey: .amount)
@@ -153,7 +171,7 @@ public class Payment: BaseTransaction {
         deliverMin = try values.decodeIfPresent(Amount.self, forKey: .deliverMin)
         try super.init(from: decoder)
     }
-
+    
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -175,35 +193,35 @@ public class Payment: BaseTransaction {
  */
 public func validatePayment(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
-
+    
     if tx["Amount"] == nil {
         throw ValidationError.decoding("Payment: missing field Amount")
     }
-
+    
     if !isAmount(amount: tx["Amount"] as Any) {
         throw ValidationError.decoding("Payment: invalid Amount")
     }
-
+    
     if tx["Destination"] == nil {
         throw ValidationError.decoding("Payment: missing field Destination")
     }
-
+    
     if !isAmount(amount: tx["Destination"] as Any) {
         throw ValidationError.decoding("Payment: invalid Destination")
     }
-
+    
     if tx["DestinationTag"] != nil && !(tx["DestinationTag"] is Int) {
         throw ValidationError.decoding("Payment: DestinationTag must be a number")
     }
-
+    
     if tx["InvoiceID"] != nil && !(tx["InvoiceID"] is String) {
         throw ValidationError.decoding("Payment: InvoiceID must be a string")
     }
-
+    
     if tx["Paths"] != nil && !isPaths(paths: tx["Paths"] as! [[[String: AnyObject]]]) {
         throw ValidationError.decoding("Payment: invalid Paths")
     }
-
+    
     if tx["SendMax"] != nil && !isAmount(amount: tx["SendMax"] as Any) {
         throw ValidationError.decoding("Payment: invalid SendMax")
     }
@@ -220,23 +238,23 @@ func checkPartialPayment(tx: [String: AnyObject]) throws {
             if !isTfPartialPayment {
                 throw ValidationError.decoding("Payment: tfPartialPayment flag required with DeliverMin")
             }
-
+            
             if !isAmount(amount: tx["DeliverMin"] as Any) {
                 throw ValidationError.decoding("Payment: invalid DeliverMin")
             }
         }
         // For Flags Interface
-//        if let flags = tx["Flags"] as? Int {
-//            let isTfPartialPayment = flags.rawValue == PaymentFlags.tfPartialPayment.rawValue
-//
-//            if !isTfPartialPayment {
-//                throw ValidationError.decoding("Payment: tfPartialPayment flag required with DeliverMin")
-//            }
-//
-//            if !isAmount(amount: tx["DeliverMin"] as Any) {
-//                throw ValidationError.decoding("Payment: invalid DeliverMin")
-//            }
-//        }
+        //        if let flags = tx["Flags"] as? Int {
+        //            let isTfPartialPayment = flags.rawValue == PaymentFlags.tfPartialPayment.rawValue
+        //
+        //            if !isTfPartialPayment {
+        //                throw ValidationError.decoding("Payment: tfPartialPayment flag required with DeliverMin")
+        //            }
+        //
+        //            if !isAmount(amount: tx["DeliverMin"] as Any) {
+        //                throw ValidationError.decoding("Payment: invalid DeliverMin")
+        //            }
+        //        }
     }
 }
 
@@ -269,21 +287,21 @@ func isPath(path: [[String: AnyObject]]) -> Bool {
 }
 
 func isPaths(paths: [[[String: AnyObject]]]) -> Bool {
-//    if !(paths is Array) || paths.count == 0 {
+    //    if !(paths is Array) || paths.count == 0 {
     if paths.isEmpty {
         return false
     }
-
+    
     for path in paths {
-//        if !(path is Array || path.count == 0 {
+        //        if !(path is Array || path.count == 0 {
         if path.isEmpty {
             return false
         }
-
+        
         if !isPath(path: path) {
             return false
         }
     }
-
+    
     return true
 }

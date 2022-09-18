@@ -40,46 +40,55 @@ final class TestEscrowCreate: XCTestCase {
     }
 
     func testInvalidAmountNil() {
+        TestEscrowCreate.setUp()
         TestEscrowCreate.baseTx["Amount"] = nil
         XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidDestinationNil() {
+        TestEscrowCreate.setUp()
         TestEscrowCreate.baseTx["Destination"] = nil
         XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidDestinationType() {
+        TestEscrowCreate.setUp()
         TestEscrowCreate.baseTx["Destination"] = 10 as AnyObject
         XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidAmountType() {
+        TestEscrowCreate.setUp()
         TestEscrowCreate.baseTx["Amount"] = 1000 as AnyObject
         XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidCancelAfterType() {
+        TestEscrowCreate.setUp()
         TestEscrowCreate.baseTx["CancelAfter"] = "1000" as AnyObject
         XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidFinishAfterType() {
+        TestEscrowCreate.setUp()
         TestEscrowCreate.baseTx["FinishAfter"] = "1000" as AnyObject
         XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidConditionType() {
+        TestEscrowCreate.setUp()
         TestEscrowCreate.baseTx["Condition"] = 0x141243 as AnyObject
         XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidDestinationTagType() {
+        TestEscrowCreate.setUp()
         TestEscrowCreate.baseTx["DestinationTag"] = "100" as AnyObject
         XCTAssertThrowsError(try EscrowCreate(json: TestEscrowCreate.baseTx))
     }
 
     func testInvalidCancelAndFinish() {
+        TestEscrowCreate.setUp()
         TestEscrowCreate.baseTx["CancelAfter"] = nil
         TestEscrowCreate.baseTx["FinishAfter"] = nil
         let tx = try! EscrowCreate(json: TestEscrowCreate.baseTx)
@@ -87,6 +96,7 @@ final class TestEscrowCreate: XCTestCase {
     }
 
     func testInvalidConditionAndFinish() {
+        TestEscrowCreate.setUp()
         TestEscrowCreate.baseTx["Condition"] = nil
         TestEscrowCreate.baseTx["FinishAfter"] = nil
         let tx = try! EscrowCreate(json: TestEscrowCreate.baseTx)

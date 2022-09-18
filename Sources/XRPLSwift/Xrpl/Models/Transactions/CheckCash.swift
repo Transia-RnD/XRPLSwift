@@ -97,17 +97,15 @@ public func validateCheckCash(tx: [String: AnyObject]) throws {
         throw ValidationError.decoding("CheckCash: cannot have both Amount and DeliverMin")
     }
 
-//    if !String(tx["Amount"]).isEmpty && tx["Amount"] != nil && !isAmount(tx["Amount"]) {
-    if tx["Amount"] != nil && !(tx["Amount"] as? String)!.isEmpty {
+    if tx["Amount"] != nil && !isAmount(amount: tx["Amount"] as! String) {
         throw ValidationError.decoding("CheckCash: invalid Amount")
     }
 
-//    if !String(tx["DeliverMin"]).isEmpty && tx["DeliverMin"] != nil && !isAmount(tx["DeliverMin"]) {
-    if tx["DeliverMin"] != nil && !(tx["DeliverMin"] as? String)!.isEmpty {
+    if tx["DeliverMin"] != nil && !isAmount(amount: tx["DeliverMin"] as! String) {
         throw ValidationError.decoding("CheckCash: invalid DeliverMin")
     }
 
-    if tx["CheckID"] != nil && !(tx["CheckID"] is Int) {
+    if tx["CheckID"] != nil && !(tx["CheckID"] is String) {
         throw ValidationError.decoding("CheckCash: invalid CheckID")
     }
 }

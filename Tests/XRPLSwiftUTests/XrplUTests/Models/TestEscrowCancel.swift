@@ -34,16 +34,19 @@ final class TestEscrowCancel: XCTestCase {
     }
 
     func testInvalidOwnerNil() {
+        TestEscrowCancel.setUp()
         TestEscrowCancel.baseTx["Owner"] = nil
         XCTAssertThrowsError(try CheckCancel(json: TestEscrowCancel.baseTx))
     }
 
     func testInvalidOwnerType() {
+        TestEscrowCancel.setUp()
         TestEscrowCancel.baseTx["Owner"] = 10 as AnyObject
         XCTAssertThrowsError(try CheckCancel(json: TestEscrowCancel.baseTx))
     }
 
     func testInvalidOfferSequenceType() {
+        TestEscrowCancel.setUp()
         TestEscrowCancel.baseTx["OfferSequence"] = "10" as AnyObject
         XCTAssertThrowsError(try CheckCancel(json: TestEscrowCancel.baseTx))
     }

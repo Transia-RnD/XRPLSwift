@@ -1,5 +1,5 @@
 //
-//  Errors.swift
+//  XrplError.swift
 //  
 //
 //  Created by Denis Angell on 11/21/20.

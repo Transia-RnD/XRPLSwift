@@ -413,116 +413,68 @@ public class TransactionAndMetadata: Codable {
  * @throws ValidationError When the Transaction is malformed.
  * @category Utilities
  */
-public func validate(transaction: [String: Any]) throws {
-    guard let tx = transaction as? BaseTransaction else {
+public func validate(transaction: [String: AnyObject]) throws {
+    var tx: [String: AnyObject] = transaction
+    if transaction["TransactionType"] == nil {
         throw XrplError.validation("Object does not have a `TransactionType`")
     }
-//    if tx. == nil {
-//        throw XrplError.validation("Object does not have a `TransactionType`")
-//    }
+    if !(transaction["TransactionType"] is String) {
+        throw XrplError.validation("Object's `TransactionType` is not a string")
+    }
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- okay here
-//    setTransactionFlagsToNumber(tx)
-//    switch (tx.TransactionType) {
-//    case "AccountDelete":
-//        validateAccountDelete(tx)
-//        break
-//
-//    case "AccountSet":
-//        validateAccountSet(tx)
-//        break
-//
-//    case "CheckCancel":
-//        validateCheckCancel(tx)
-//        break
-//
-//    case "CheckCash":
-//        validateCheckCash(tx)
-//        break
-//
-//    case "CheckCreate":
-//        validateCheckCreate(tx)
-//        break
-//
-//    case "DepositPreauth":
-//        validateDepositPreauth(tx)
-//        break
-//
-//    case "EscrowCancel":
-//        validateEscrowCancel(tx)
-//        break
-//
-//    case "EscrowCreate":
-//        validateEscrowCreate(tx)
-//        break
-//
-//    case "EscrowFinish":
-//        validateEscrowFinish(tx)
-//        break
-//
-//    case "NFTokenAcceptOffer":
-//        validateNFTokenAcceptOffer(tx)
-//        break
-//
-//    case "NFTokenBurn":
-//        validateNFTokenBurn(tx)
-//        break
-//
-//    case "NFTokenCancelOffer":
-//        validateNFTokenCancelOffer(tx)
-//        break
-//
-//    case "NFTokenCreateOffer":
-//        validateNFTokenCreateOffer(tx)
-//        break
-//
-//    case "NFTokenMint":
-//        validateNFTokenMint(tx)
-//        break
-//
-//    case "OfferCancel":
-//        validateOfferCancel(tx)
-//        break
-//
-//    case "OfferCreate":
-//        validateOfferCreate(tx)
-//        break
-//
-//    case "Payment":
-//        validatePayment(tx)
-//        break
-//
-//    case "PaymentChannelClaim":
-//        validatePaymentChannelClaim(tx)
-//        break
-//
-//    case "PaymentChannelCreate":
-//        validatePaymentChannelCreate(tx)
-//        break
-//
-//    case "PaymentChannelFund":
-//        validatePaymentChannelFund(tx)
-//        break
-//
-//    case "SetRegularKey":
-//        validateSetRegularKey(tx)
-//        break
-//
-//    case "SignerListSet":
-//        validateSignerListSet(tx)
-//        break
-//
-//    case "TicketCreate":
-//        validateTicketCreate(tx)
-//        break
-//
-//    case "TrustSet":
-//        validateTrustSet(tx)
-//        break
-
-//    default:
-//        throw XrplError.validation("Invalid field TransactionType: ${tx.TransactionType}")
-//    }
-//    throw XrplError.validation("Invalid Transaction: \(tx.TransactionType)")
+    try setTransactionFlagsToNumber(tx: &tx)
+    switch tx["TransactionType"] as! String {
+    case "AccountDelete":
+        try validateAccountDelete(tx: tx)
+    case "AccountSet":
+        try validateAccountSet(tx: tx)
+    case "CheckCancel":
+        try validateCheckCancel(tx: tx)
+    case "CheckCash":
+        try validateCheckCash(tx: tx)
+    case "CheckCreate":
+        try validateCheckCreate(tx: tx)
+    case "DepositPreauth":
+        try validateDepositPreauth(tx: tx)
+    case "EscrowCancel":
+        try validateEscrowCancel(tx: tx)
+    case "EscrowCreate":
+        try validateEscrowCreate(tx: tx)
+    case "EscrowFinish":
+        try validateEscrowFinish(tx: tx)
+    case "NFTokenAcceptOffer":
+        try validateNFTokenAcceptOffer(tx: tx)
+    case "NFTokenBurn":
+        try validateNFTokenBurn(tx: tx)
+    case "NFTokenCancelOffer":
+        try validateNFTokenCancelOffer(tx: tx)
+    case "NFTokenCreateOffer":
+        try validateNFTokenCreateOffer(tx: tx)
+    case "NFTokenMint":
+        try validateNFTokenMint(tx: tx)
+    case "OfferCancel":
+        try validateOfferCancel(tx: tx)
+    case "OfferCreate":
+        try validateOfferCreate(tx: tx)
+    case "Payment":
+        try validatePayment(tx: tx)
+    case "PaymentChannelClaim":
+        try validatePaymentChannelClaim(tx: tx)
+    case "PaymentChannelCreate":
+        try validatePaymentChannelCreate(tx: tx)
+    case "PaymentChannelFund":
+        try validatePaymentChannelFund(tx: tx)
+    case "SetRegularKey":
+        try validateSetRegularKey(tx: tx)
+    case "SignerListSet":
+        try validateSignerListSet(tx: tx)
+    case "TicketCreate":
+        try validateTicketCreate(tx: tx)
+    case "TrustSet":
+        try validateTrustSet(tx: tx)
+    default:
+        throw XrplError.validation("Invalid field TransactionType: \(tx["TransactionType"] as! String)")
+    }
 //    if (
 //        !_.isEqual(
 //            decode(encode(tx)),

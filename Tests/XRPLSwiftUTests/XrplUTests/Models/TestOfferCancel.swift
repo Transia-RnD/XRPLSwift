@@ -40,6 +40,7 @@ final class TestOfferCancel: XCTestCase {
     }
 
     func testValidOfferCancelFlags() {
+        setUp()
         TestOfferCancel.baseTx["Flags"] = 2147483648 as AnyObject
         let tx = try! OfferCancel(json: TestOfferCancel.baseTx)
         do {
@@ -50,11 +51,13 @@ final class TestOfferCancel: XCTestCase {
     }
 
     func testInvalidOfferSequenceType() {
+        setUp()
         TestOfferCancel.baseTx["OfferSequence"] = "10" as AnyObject
         XCTAssertThrowsError(try OfferCancel(json: TestOfferCancel.baseTx))
     }
 
     func testInvalidOfferSequenceNil() {
+        setUp()
         TestOfferCancel.baseTx["OfferSequence"] = nil
         XCTAssertThrowsError(try OfferCancel(json: TestOfferCancel.baseTx))
     }

@@ -77,17 +77,16 @@ class LinuxWebSocket: _WebSocket, XRPLWebSocket {
             self.ws = ws
         }).wait()
         self.delegate?.onConnected(connection: self)
-        self.ws.onText { (_, text) in
+        self.ws.onText { _, text in
             let data = text.data(using: .utf8)!
             self.handleResponse(connection: self, data: data)
         }
-        self.ws.onBinary { (_, _) in
-            fatalError()
+        self.ws.onBinary { _, _ in
+            fatalError("Invalid Binary")
         }
         _ = self.ws.onClose.map {
             self.delegate?.onDisconnected(connection: self, error: nil)
         }
-
     }
 
     func connect(host: String, path: String) {
@@ -100,23 +99,21 @@ class LinuxWebSocket: _WebSocket, XRPLWebSocket {
             }
         }).wait()
         self.delegate?.onConnected(connection: self)
-        self.ws.onText { (_, text) in
+        self.ws.onText { _, text in
             let data = text.data(using: .utf8)!
             self.handleResponse(connection: self, data: data)
         }
-        self.ws.onBinary { (_, _) in
-            fatalError()
+        self.ws.onBinary { _, _ in
+            fatalError("Invalid Binary")
         }
         _ = self.ws.onClose.map {
             self.delegate?.onDisconnected(connection: self, error: nil)
         }
-
     }
 
     func disconnect() {
         _ = ws.close()
     }
-
 }
 
 #elseif !os(Linux)
@@ -125,7 +122,6 @@ import Foundation
 
 @available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
 class AppleWebSocket: _WebSocket, XRPLWebSocket, URLSessionWebSocketDelegate {
-
     var webSocketTask: URLSessionWebSocketTask!
     var urlSession: URLSession!
     let delegateQueue = OperationQueue()
@@ -167,7 +163,7 @@ class AppleWebSocket: _WebSocket, XRPLWebSocket, URLSessionWebSocketDelegate {
                 case .data(let data):
                     self.handleResponse(connection: self, data: data)
                 @unknown default:
-                    fatalError()
+                    fatalError("Fix this error")
                 }
 
                 self.listen()

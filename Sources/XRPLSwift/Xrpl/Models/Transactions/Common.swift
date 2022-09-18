@@ -9,6 +9,8 @@
 
 import Foundation
 
+public typealias GlobalFlags = Any
+
 // swiftlint:disable:next identifier_name
 let MEMO_SIZE: Int = 3
 

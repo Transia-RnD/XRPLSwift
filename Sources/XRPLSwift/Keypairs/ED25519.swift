@@ -10,14 +10,11 @@ class ED25519: SigningAlgorithm {
     static var rawValue: String = "ed25519"
 
     static func deriveKeyPair(seed: [UInt8], isValidator: Bool = false) throws -> KeyPair {
-//        let prefix: String = "ED"
         if isValidator { throw KeypairsErrors.validation("Validator key pairs cannot use Ed25519") }
         let rawPrivateKey = [UInt8](Data(seed).sha512().prefix(32))
-//        let publicKey = try! prefix.asHexArray() + Ed25519.calcPublicKey(secretKey: rawPrivateKey)
-//        let privateKey = try! prefix.asHexArray() + rawPrivateKey
         return KeyPair(
-            privateKey: rawPrivateKey.toHex,
-            publicKey: Ed25519.calcPublicKey(secretKey: rawPrivateKey).toHex
+            privateKey: "ED\(rawPrivateKey.toHex)",
+            publicKey: "ED\(Ed25519.calcPublicKey(secretKey: rawPrivateKey).toHex)"
         )
     }
 

@@ -37,6 +37,7 @@ final class TestNFTokenBurn: XCTestCase {
     }
 
     func testInvalidLimitAmountNil() {
+        TestNFTokenBurn.setUp()
         TestNFTokenBurn.baseTx["NFTokenID"] = nil
         XCTAssertThrowsError(try TrustSet(json: TestNFTokenBurn.baseTx))
     }

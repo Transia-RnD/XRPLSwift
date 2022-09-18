@@ -203,8 +203,7 @@ final class TestAddressCodec: XCTestCase {
         }
     }
 
-    // MARK: NOT VALID SWIFT IMPLEMENTATION
-    // Notes: Tag is a UInt32. Swift will reject the UInt32 if "out of bounds"
+//     Notes: Tag is a UInt32. Swift will reject the UInt32 if "out of bounds"
 //    func testClassicAddressToXaddressInvalidTag() {
 //        let classicAddress = "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf"
 //        let tag = MAX_32_BIT_UNSIGNED_INT + 1
@@ -228,7 +227,6 @@ final class TestAddressCodec: XCTestCase {
 //        }
 //    }
 
-    // MARK: NOT VALID SWIFT IMPLEMENTATION
 //    func testClassicAddressToXaddressBadClassicAddress() {
 //        let classicAddress = "r"
 //        do {

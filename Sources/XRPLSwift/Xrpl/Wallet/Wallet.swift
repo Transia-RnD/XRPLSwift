@@ -537,7 +537,7 @@ func isoToHex(iso: String) -> String {
     //    return bytes.toHex
 }
 
-public func ==(lhs: [String: AnyObject], rhs: [String: AnyObject] ) -> Bool {
+public func == (lhs: [String: AnyObject], rhs: [String: AnyObject]) -> Bool {
     return NSDictionary(dictionary: lhs).isEqual(to: rhs)
 }
 

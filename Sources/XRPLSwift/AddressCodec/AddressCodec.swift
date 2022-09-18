@@ -31,8 +31,18 @@ public class AddressCodec {
         isTest: Bool = false
     ) throws -> String {
         let accountID = try! XrplCodec.decodeClassicAddress(classicAddress: classicAddress)
+        print(accountID)
+        if accountID.count != 20 {
+            throw AddressCodecError.invalidLength(error: "Account ID must be 20 bytes")
+        }
+        
         let flags: [UInt8] = tag == nil ? [0x00] : [0x01]
         let tag = tag == nil ? [UInt8](UInt64(0).data) : [UInt8](UInt64(tag!).data)
+        
+//        if tag != nil && tag > [UInt8](MAX_32_BIT_UNSIGNED_INT) {
+//            throw AddressCodecError.invalidLength(error: "Invalid tag")
+//        }
+        
         let prefix: [UInt8] = isTest ? [0x04, 0x93] : [0x05, 0x44]
         let concatenated = prefix + accountID + flags + tag
         let check = [UInt8](Data(concatenated).sha256().sha256().prefix(through: 3))

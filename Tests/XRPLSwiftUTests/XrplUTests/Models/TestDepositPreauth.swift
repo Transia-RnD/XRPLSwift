@@ -32,6 +32,7 @@ final class TestDepositPreauth: XCTestCase {
     }
 
     func testB() {
+        TestDepositPreauth.setUp()
         TestDepositPreauth.baseTx["Unauthorize"] = "raKEEVSGnKSD9Zyvxu4z6Pqpm4ABH8FS6n" as AnyObject
         let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         do {
@@ -42,6 +43,7 @@ final class TestDepositPreauth: XCTestCase {
     }
 
     func testInvalidBoth() {
+        TestDepositPreauth.setUp()
         TestDepositPreauth.baseTx["Authorize"] = "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW" as AnyObject
         TestDepositPreauth.baseTx["Unauthorize"] = "raKEEVSGnKSD9Zyvxu4z6Pqpm4ABH8FS6n" as AnyObject
         let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
@@ -49,11 +51,13 @@ final class TestDepositPreauth: XCTestCase {
     }
 
     func testInvalidNeither() {
+        TestDepositPreauth.setUp()
         let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidAuthorize() {
+        TestDepositPreauth.setUp()
         TestDepositPreauth.baseTx["Authorize"] = 1234 as AnyObject
 //        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         XCTAssertThrowsError(try DepositPreauth(json: TestDepositPreauth.baseTx))
@@ -61,12 +65,14 @@ final class TestDepositPreauth: XCTestCase {
     }
 
     func testInvalidAuthorizeOwn() {
+        TestDepositPreauth.setUp()
         TestDepositPreauth.baseTx["Authorize"] = "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn" as AnyObject
         let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidUnauthorize() {
+        TestDepositPreauth.setUp()
         TestDepositPreauth.baseTx["Unauthorize"] = 1234 as AnyObject
 //        let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         XCTAssertThrowsError(try DepositPreauth(json: TestDepositPreauth.baseTx))
@@ -74,6 +80,7 @@ final class TestDepositPreauth: XCTestCase {
     }
 
     func testInvalidUnauthorizeOwn() {
+        TestDepositPreauth.setUp()
         TestDepositPreauth.baseTx["Unauthorize"] = "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn" as AnyObject
         let tx = try! DepositPreauth(json: TestDepositPreauth.baseTx)
         XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
