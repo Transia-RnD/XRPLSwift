@@ -65,8 +65,6 @@ class MockRippledSocket {
                         receive()
                         return
                     }
-
-                    print(self.responses)
                     do {
                         print("Received a new message from client")
                         request = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as! [String: AnyObject]
@@ -84,9 +82,7 @@ class MockRippledSocket {
                         } else if request["command"] as! String == "test_command" {
                             try self.testCommand(conn: newConnection, request: request)
                         } else if self.responses[request["command"] as! String] != nil {
-                            print(self.responses[request["command"] as! String])
-                            print("HERE")
-                            //                        newConnection.send(createResponse(request, mock.getResponse(request)))
+                            try self.send(conn: newConnection, string: try createResponse(request: request, response: try self.getResponse(request: request)))
                         } else {
                             fatalError("No event handler registered in mock rippled for \(request["command"])")
                         }
@@ -119,7 +115,7 @@ class MockRippledSocket {
                 switch state {
                 case .ready:
                     print("Client ready")
-                    //                    try! self.sendMessageToClient(data: JSONEncoder().encode(["t": "connect.connected"]), client: newConnection)
+//                    try! self.sendMessageToClient(data: JSONEncoder().encode(["t": "connect.connected"]), client: newConnection)
                 case .failed(let error):
                     print("Client connection failed \(error.localizedDescription)")
                 case .waiting(let error):
@@ -133,7 +129,6 @@ class MockRippledSocket {
         }
 
         listener.stateUpdateHandler = { state in
-            print(state)
             switch state {
             case .ready:
                 print("Server Ready")
@@ -206,18 +201,19 @@ class MockRippledSocket {
      * If an object is passed in for `response`, then the response is static for the command
      * If a function is passed in for `response`, then the response can be determined by the exact request shape
      */
-    func addResponses(command: String, response: [String: AnyObject]) throws {
+    func addResponse(command: String, response: [String: AnyObject]) throws {
         if response["type"] != nil && response["error"] != nil {
             throw XrplError("Bad response format. Must contain `type` or `error`. \(jsonToString(response))")
         }
         self.responses[command] = response as AnyObject
     }
 
-    func getResponse(request: BaseRequest) throws -> [String: AnyObject] {
-        if self.responses[request.command!] == nil {
-            throw XrplError("No handler for \(request.command ?? "")")
+    func getResponse(request: [String: AnyObject]) throws -> [String: AnyObject] {
+        let command = request["command"] as! String
+        if self.responses[command] == nil {
+            throw XrplError("No handler for \(command)")
         }
-        let functionOrObject = self.responses[request.command!]
+        let functionOrObject = self.responses[command]
         //        if (typeof functionOrObject == "function") {
         //          return functionOrObject(request) as Record<string, unknown>
         //        }

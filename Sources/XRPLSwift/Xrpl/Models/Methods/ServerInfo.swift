@@ -73,7 +73,7 @@ public class JobType: Codable {
     }
 }
 
-public class ValidatedLedger: Codable {
+public class InfoLedger: Codable {
     /// The time since the ledger was closed, in seconds.
     public let age: Int
     /**
@@ -106,7 +106,7 @@ public class ValidatedLedger: Codable {
     }
 }
 
-public class Load: Codable {
+public class StateLoad: Codable {
     /**
      (Admin only) Information about the rate of different types of jobs
      the server is doing and how much time it spends on each.
@@ -118,24 +118,6 @@ public class Load: Codable {
     enum CodingKeys: String, CodingKey {
         case jobTypes = "job_types"
         case threads = "threads"
-    }
-}
-
-public class ClosedLedger: Codable {
-    public let age: Int
-    public let baseFeeXrp: Int
-    public let hash: String
-    public let reserveBaseXrp: Int
-    public let reserveIncXrp: Int
-    public let seq: Int
-
-    enum CodingKeys: String, CodingKey {
-        case age = "age"
-        case baseFeeXrp = "base_fee_xrp"
-        case hash = "hash"
-        case reserveBaseXrp = "reserve_base_xrp"
-        case reserveIncXrp = "reserve_inc_xrp"
-        case seq = "seq"
     }
 }
 
@@ -173,7 +155,7 @@ public class ServerInfoWrapper: Codable {
      `validated_ledger` instead. The member fields are the same as the.
      `validated_ledger` field.
      */
-    public let closedLedger: ClosedLedger?
+    public let closedLedger: InfoLedger?
     /**
      Range expression indicating the sequence numbers of the ledger
      versions the local rippled has in its database.
@@ -208,7 +190,7 @@ public class ServerInfoWrapper: Codable {
      (Admin only) Detailed information about the current load state of the
      server.
      */
-    public let load: Load?
+    public let load: StateLoad?
     /**
      The load-scaled open ledger transaction cost the server is currently
      enforcing, as a multiplier on the base transaction cost. For example,
@@ -282,7 +264,7 @@ public class ServerInfoWrapper: Codable {
     /*Number of consecutive seconds that the server has been operational. */
     public let uptime: Int
     /*Information about the most recent fully-validated ledger. */
-    public let validatedLedger: ValidatedLedger?
+    public let validatedLedger: InfoLedger?
     /**
      Minimum number of trusted validations required to validate a ledger
      version. Some circumstances may cause the server to require more
@@ -332,13 +314,13 @@ public class ServerInfoWrapper: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         amendmentBlocked = try values.decode(Bool.self, forKey: .amendmentBlocked)
         buildVersion = try values.decode(String.self, forKey: .buildVersion)
-        closedLedger = try values.decode(ClosedLedger.self, forKey: .closedLedger)
+        closedLedger = try values.decode(InfoLedger.self, forKey: .closedLedger)
         completeLedgers = try values.decode(String.self, forKey: .completeLedgers)
         hostid = try values.decode(String.self, forKey: .hostid)
         ioLatencyMs = try values.decode(Int.self, forKey: .ioLatencyMs)
         jqTransOverflow = try values.decode(String.self, forKey: .jqTransOverflow)
         lastClose = try values.decode(LastClosed.self, forKey: .lastClose)
-        load = try values.decode(Load.self, forKey: .load)
+        load = try values.decode(StateLoad.self, forKey: .load)
         loadFactor = try values.decode(Int.self, forKey: .loadFactor)
         loadFactorLocal = try values.decode(Int.self, forKey: .loadFactorLocal)
         loadFactorNet = try values.decode(Int.self, forKey: .loadFactorNet)
@@ -355,7 +337,7 @@ public class ServerInfoWrapper: Codable {
         stateAccounting = try values.decode([ServerState: StateAccounting].self, forKey: .stateAccounting)
         time = try values.decode(String.self, forKey: .time)
         uptime = try values.decode(Int.self, forKey: .uptime)
-        validatedLedger = try values.decode(ValidatedLedger.self, forKey: .validatedLedger)
+        validatedLedger = try values.decode(InfoLedger.self, forKey: .validatedLedger)
         validationQuorum = try values.decode(Int.self, forKey: .validationQuorum)
         validatorListExpires = try values.decode(String.self, forKey: .validatorListExpires)
     }

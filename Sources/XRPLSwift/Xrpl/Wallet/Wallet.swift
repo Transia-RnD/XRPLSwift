@@ -285,6 +285,7 @@ public class Wallet {
     }
 
     /**
+     *    multisign?: boolean | string,
      * Signs a transaction offline.
      *
      * @param this - Wallet instance.
@@ -294,9 +295,18 @@ public class Wallet {
      * @throws ValidationError if the transaction is already signed or does not encode/decode to same result.
      * @throws XrplError if the issued currency being signed is XRP ignoring case.
      */
-    //     eslint-disable-next-line max-lines-per-function -- introduced more checks to support both string and boolean inputs.
     public func sign(
         transaction: Transaction,
+        multisign: Bool = false,
+        signingFor: String? = nil
+    ) throws -> SignatureResult {
+        let tx = try! transaction.toJson()
+        return try self.sign(transaction: tx, multisign: multisign, signingFor: signingFor)
+    }
+    
+    public func sign(
+//        transaction: Transaction,
+        transaction: [String: AnyObject],
         //    multisign?: boolean | string,
         multisign: Bool = false,
         signingFor: String? = nil
@@ -308,46 +318,43 @@ public class Wallet {
             multisignAddress = self.classicAddress
         }
 
-        let tx = try! transaction.toJson()
+//        let tx = try! transaction.toJson()
+        var tx = transaction
 
         if tx["TxnSignature"] != nil || tx["Signers"] != nil {
             throw ValidationError("txJSON must not contain `TxnSignature` or `Signers` properties")
         }
 
-        //        removeTrailingZeros(tx: transaction)
+        removeTrailingZeros(tx: &tx)
 
-        let encoder = JSONEncoder()
-        //        print(transaction)
-        //        let txs = try encoder.encode(transaction)
-        //        var tx = try transaction.toAny() as! BaseTransaction
-        //        let signedTxEncoded: String = try BinaryCodec.encode(data: try encoder.encode(signedTransaction))
+//        let encoder = JSONEncoder()
+//        let txData = try encoder.encode(transaction)
+//        var txToSignAndEncode = try JSONSerialization.jsonObject(with: tx, options: .mutableLeaves) as? [String: AnyObject]
+        var txToSignAndEncode = tx
 
-        let txData = try encoder.encode(transaction)
-        var txToSignAndEncode = try JSONSerialization.jsonObject(with: txData, options: .mutableLeaves) as? [String: AnyObject]
-
-        txToSignAndEncode?["SigningPubKey"] = !multisignAddress.isEmpty ? "" as AnyObject : self.publicKey as AnyObject
+        txToSignAndEncode["SigningPubKey"] = !multisignAddress.isEmpty ? "" as AnyObject : self.publicKey as AnyObject
 
         if !multisignAddress.isEmpty {
             let signer = try Signer(json: [
                 "Account": multisignAddress,
                 "SigningPubKey": self.publicKey,
                 "TxnSignature": try computeSignature(
-                    tx: txToSignAndEncode!,
+                    tx: txToSignAndEncode,
                     privateKey: self.privateKey,
                     signAs: multisignAddress
                 )
             ] as! [String: AnyObject])
-            txToSignAndEncode?["Signers"] = [signer] as AnyObject
+            txToSignAndEncode["Signers"] = [signer] as AnyObject
         } else {
             let signature: String = try computeSignature(
-                tx: txToSignAndEncode!,
+                tx: txToSignAndEncode,
                 privateKey: self.privateKey
             )
-            txToSignAndEncode?["TxnSignature"] = signature as AnyObject
+            txToSignAndEncode["TxnSignature"] = signature as AnyObject
         }
 
-        print(txToSignAndEncode?["SigningPubKey"])
-        let serialized = try BinaryCodec.encode(json: txToSignAndEncode!)
+        print(txToSignAndEncode["SigningPubKey"])
+        let serialized = try BinaryCodec.encode(json: txToSignAndEncode)
         try self.checkTxSerialization(serialized: serialized, tx: transaction)
         return SignatureResult(txBlob: serialized, hash: try hashSignedTx(tx: serialized))
     }
@@ -372,9 +379,9 @@ public class Wallet {
      * @param isTestnet - A boolean to indicate if X-address should be in Testnet (true) or Mainnet (false) format.
      * @returns An X-address.
      */
-    //    public func getXAddress(tag: number | false = false, isTestnet = false): string {
-    //        return classicAddressToXAddress(this.classicAddress, tag, isTestnet)
-    //    }
+    public func getXAddress(tag: Int? = nil, isTest: Bool = false) -> String {
+        return try! AddressCodec.classicAddressToXAddress(classicAddress: self.classicAddress, tag: tag, isTest: isTest)
+    }
 
     /**
      *  Decode a serialized transaction, remove the fields that are added during the signing process,
@@ -387,10 +394,11 @@ public class Wallet {
      * the serialized Transaction desn't match the original transaction.
      * @throws XrplError if the transaction includes an issued currency which is equivalent to XRP ignoring case.
      */
-    private func checkTxSerialization(serialized: String, tx: Transaction) throws {
+    private func checkTxSerialization(serialized: String, tx: [String: AnyObject]) throws {
         // Decode the serialized transaction:
         var decoded: [String: AnyObject] = BinaryCodec.decode(buffer: serialized) as [String: AnyObject]
-        var txCopy = try tx.toJson()
+//        var txCopy = try tx.toJson()
+        var txCopy = tx
 
         /*
          * And ensure it is equal to the original tx, except:
@@ -515,12 +523,12 @@ func computeSignature(
  *
  * @param tx - The transaction prior to signing.
  */
-// func removeTrailingZeros(tx: Transaction) -> Void {
-//    if let tx = try? tx.toAny() as? Payment, let amountValue = tx.amount.value as? String, amountValue.contains(where: { $0 == "."}) {
-//        tx.amount = tx.amount
-//        tx.amount.value = BigInt(tx.amount.value)
-//    }
-// }
+func removeTrailingZeros(tx: inout [String: AnyObject]) {
+    if let tt = tx["TransactionType"] as? String, tt == "Payment", let amountValue = tx["amount"] as? String, amountValue.contains(where: { $0 == "."}) {
+//        tx["Amount"] = BigInt(tx["Amount"]) as AnyObject
+        tx["Amount"] = tx["Amount"]
+    }
+ }
 
 /**
  * Convert an ISO code to a hex string representation
@@ -529,12 +537,6 @@ func computeSignature(
  */
 func isoToHex(iso: String) -> String {
     return try! isoToBytes(iso: iso).toHex
-    //    let bytes: Data = Data(bytes: [], count: 20)
-    //    if iso != "XRP" {
-    //        let isoBytes = iso.split("").map((chr) => chr.charCodeAt(0))
-    //        bytes.set(isoBytes, 12)
-    //    }
-    //    return bytes.toHex
 }
 
 public func == (lhs: [String: AnyObject], rhs: [String: AnyObject]) -> Bool {

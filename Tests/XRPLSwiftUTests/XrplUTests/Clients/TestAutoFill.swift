@@ -12,41 +12,27 @@ import Foundation
 import XCTest
 @testable import XRPLSwift
 
-final class TestAutoFill: XCTestCase {
+final class TestAutoFill: RippledMockTester {
 
     private static let fee: String = "10"
     private static let sequence: Int = 1432
     private static let lastLedgerSequence: Int = 2908734
 
-    private var client: XrplClient!
-
     override func setUp() async throws {
         try await super.setUp()
     }
 
-    func _testNoOverright() async {
-        //        let tx: Transaction = {
-        //          TransactionType: "DepositPreauth",
-        //          Account: "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf",
-        //          Authorize: "rpZc4mVfWUif9CRoHRKKcmhu1nx2xktxBo",
-        //          Fee,
-        //          Sequence,
-        //          LastLedgerSequence,
-        //        }
+    func testNoOverright() async {
         let tx: DepositPreauth = DepositPreauth(authorize: "rpZc4mVfWUif9CRoHRKKcmhu1nx2xktxBo")
         tx.account = "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf"
         tx.fee = TestAutoFill.fee
         tx.sequence = TestAutoFill.sequence
         tx.lastLedgerSequence = TestAutoFill.lastLedgerSequence
-        let baseTx: Transaction = Transaction.depositPreauth(tx)
-        let txResult = try! await AutoFillSugar().autofill(client: self.client, transaction: tx, signersCount: 0)
-        print(baseTx)
+        let txResult = try! await AutoFillSugar().autofill(client: self.client, transaction: try tx.toJson(), signersCount: 0)
         let newTx = try! txResult.wait()
-        print(newTx)
-        print("FINISHED")
-        //        assert.strictEqual(txResult.Fee, Fee)
-        //        assert.strictEqual(txResult.Sequence, Sequence)
-        //        assert.strictEqual(txResult.LastLedgerSequence, LastLedgerSequence)
+        XCTAssertEqual(newTx["Fee"] as! String, TestAutoFill.fee)
+        XCTAssertEqual(newTx["Sequence"] as! Int, TestAutoFill.sequence)
+        XCTAssertEqual(newTx["LastLedgerSequence"] as! Int, TestAutoFill.lastLedgerSequence)
     }
 
     func testAutoFillConvertXAddress() async {
@@ -57,12 +43,12 @@ final class TestAutoFill: XCTestCase {
             "Destination": "X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqZ"
         ] as [String: AnyObject]
         let tx: Payment = try! Payment(json: json)
-//        self.mockRippled.addResponse("account_info", rippled.account_info.normal)
-//        self.mockRippled.addResponse("server_info", rippled.server_info.normal)
-//        self.mockRippled.addResponse("ledger", rippled.ledger.normal)
-//
-//        let txResult = await self.client.autofill(tx)
+        try! self.mockRippled.addResponse(command: "account_info", response: RippledFixtures.accountInfo())
+        try! self.mockRippled.addResponse(command: "server_info", response: RippledFixtures.serverInfo())
+        try! self.mockRippled.addResponse(command: "ledger", response: RippledFixtures.ledger())
 
+        let txResult = try! await self.client.autofill(transaction: Transaction(json)!)
+        print(txResult)
 //        assert.strictEqual(txResult.Account, "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf")
 //        assert.strictEqual(
 //          txResult.Destination,

@@ -67,9 +67,10 @@ final class TestConnection: RippledMockTester {
                 XCTFail()
             }
         } catch {
+            print(error.localizedDescription)
             XCTFail()
         }
-        await waitForExpectations(timeout: 1)
+        await waitForExpectations(timeout: 5)
     }
 
 //    func testDisconnectedOnOpen() async {

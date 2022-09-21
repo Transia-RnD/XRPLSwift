@@ -5,19 +5,17 @@
 //  Created by Denis Angell on 8/7/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/utils/flags.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/utils/index.ts
 
 import Foundation
 
-//
-// let HEX_REGEX: String = "/^[0-9A-Fa-f]+$/u"
-
 /**
- * Verify that all fields of an object are in fields.
- *
- * @param obj - Object to verify fields.
- * @param fields - Fields to verify.
- * @returns True if keys in object are all in fields.
+ Verify that all fields of an object are in fields.
+ - parameters:
+    - obj: Object to verify fields.
+    - fields: Fields to verify.
+ - returns:
+ True if keys in object are all in fields.
  */
 public func onlyHasFields(
     obj: [String: AnyObject],
@@ -29,26 +27,27 @@ public func onlyHasFields(
 }
 
 /**
- * Perform bitwise AND (&) to check if a flag is enabled within Flags (as a number).
- *
- * @param Flags - A number that represents flags enabled.
- * @param checkFlag - A specific flag to check if it's enabled within Flags.
- * @returns True if checkFlag is enabled within Flags.
+ Perform bitwise AND (&) to check if a flag is enabled within Flags (as a number).
+ - parameters:
+    - flags: A number that represents flags enabled.
+    - checkFlag: A specific flag to check if it's enabled within Flags.
+ - returns:
+ True if checkFlag is enabled within Flags.
  */
 public func isFlagEnabled(flags: Int, checkFlag: Int) -> Bool {
-    // eslint-disable-next-line no-bitwise -- flags needs bitwise
     return (checkFlag & flags) == checkFlag
 }
 
 /**
- * Check if string is in hex format.
- *
- * @param str - The string to check if it's in hex format.
- * @returns True if string is in hex format
+ Check if string is in hex format.
+ - parameters:
+    - str: The string to check if it's in hex format.
+ - returns:
+ True if string is in hex format
  */
 func isHex(str: String) -> Bool {
     // Tests if value is a valid 40-char hex string.
-    let regex = try! NSRegularExpression(pattern: "^[0-9A-Fa-f]+$")
+    guard let regex = try? NSRegularExpression(pattern: "^[0-9A-Fa-f]+$") else { return false }
     let nsrange = NSRange(str.startIndex..<str.endIndex, in: str)
     return regex.matches(in: str, range: nsrange).isEmpty ? false : true
 }

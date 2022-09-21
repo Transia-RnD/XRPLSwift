@@ -5,6 +5,8 @@
 //  Created by Denis Angell on 9/4/22.
 //
 
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/utils/xrpConversion.ts
+
 import BigInt
 import Foundation
 
@@ -31,11 +33,9 @@ public func dropsToXrp(_ dropsToConvert: Any) throws -> String {
      * decimal point followed by zeros, e.g. '1.00'.
      * Important: specify base BASE_10 to avoid exponential notation, e.g. '1e-7'.
      */
-    let drops = String(BigInt(dropsToConvert as! Double), radix: BASE_TEN)
-
     // check that the value is valid and actually a number
-    if dropsToConvert is String && !drops.isNumber {
-        throw ValidationError("dropsToXrp: invalid value '\(dropsToConvert)', should be a BigNumber or string-encoded number.")
+    guard dropsToConvert is String, let drops = Decimal(string: dropsToConvert as! String)?.description else {
+        throw ValidationError("dropsToXrp: invalid value '\(dropsToConvert)', should be a Decimal or string-encoded number.")
     }
 
     // drops are only whole units
@@ -56,7 +56,7 @@ public func dropsToXrp(_ dropsToConvert: Any) throws -> String {
     //    )
     //  }
 
-    return String(BigInt(drops)! / BigInt(DROPS_PER_XRP), radix: BASE_10)
+    return String(describing: Decimal(string: drops)! / Decimal(DROPS_PER_XRP))
 }
 
 /**
@@ -69,13 +69,9 @@ public func dropsToXrp(_ dropsToConvert: Any) throws -> String {
  */
 public func xrpToDrops(_ xrpToConvert: Any) throws -> String {
     // Important: specify base BASE_TEN to avoid exponential notation, e.g. '1e-7'.
-    let xrp = String(BigInt(xrpToConvert as! Double), radix: BASE_TEN)
-
     // check that the value is valid and actually a number
-    if xrpToConvert is String && !xrp.isNumber {
-        throw ValidationError(
-            "xrpToDrops: invalid value '${xrpToConvert}', should be a BigNumber or string-encoded number."
-        )
+    guard xrpToConvert is String, let xrp = Decimal(string: xrpToConvert as! String)?.description else {
+        throw ValidationError("xrpToConvert: invalid value '\(xrpToConvert)', should be a Decimal or string-encoded number.")
     }
 
     /*
@@ -94,10 +90,10 @@ public func xrpToDrops(_ xrpToConvert: Any) throws -> String {
         throw ValidationError("xrpToDrops: failed sanity check - value '${xrp}' has too many decimal points.")
     }
 
-    let fraction = components[1] != nil ? String(components[1]) : "0"
+    let fraction = components.count > 1 ? String(components[1]) : "0"
     if fraction.count > MAX_FRACTION_LENGTH {
-        throw ValidationError("xrpToDrops: value '${xrp}' has too many decimal places.")
+        throw ValidationError("xrpToDrops: value '\(xrp)' has too many decimal places.")
     }
 
-    return String(BigInt(xrp)! * BigInt(DROPS_PER_XRP), radix: BASE_TEN)
+    return String(describing: Decimal(string: xrp)! * Decimal(DROPS_PER_XRP))
 }

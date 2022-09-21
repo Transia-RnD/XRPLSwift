@@ -191,9 +191,9 @@ struct AssociatedValue {
 }
 
 func handleXAddress(field: String, xaddress: String) throws -> [String: AnyObject] {
-    let result: [String: AnyObject] = try AddressCodec.xAddressToClassicAddress(xAddress: xaddress)
-    let classicAddress = result["classicAddress"] as? String
-    let tag = result["tag"] as? Int
+    let result: FullClassicAddress = try AddressCodec.xAddressToClassicAddress(xAddress: xaddress)
+    let classicAddress = result.classicAddress
+    let tag = result.tag
     var tagName: String = ""
     if field == DESTINATION {
         tagName = DEST_TAG
@@ -204,7 +204,7 @@ func handleXAddress(field: String, xaddress: String) throws -> [String: AnyObjec
     }
 
     if tag != nil {
-        return [ "\(field)": classicAddress!, "\(tagName)": tag! ] as [String: AnyObject]
+        return [ "\(field)": classicAddress, "\(tagName)": tag! ] as [String: AnyObject]
     }
     return [ "\(field)": classicAddress ] as [String: AnyObject]
 }

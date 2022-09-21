@@ -285,11 +285,12 @@ func getSignedTx(
     guard let wallet = wallet else {
         throw ValidationError("Wallet must be provided when submitting an unsigned transaction")
     }
-    var tx = try transaction.toAny() as! BaseTransaction
+//    var tx = try transaction.toAny() as! BaseTransaction
+    var tx = try transaction.toJson() as! [String: AnyObject]
     if autofill {
         tx = try await AutoFillSugar().autofill(client: client, transaction: tx, signersCount: 0).wait()
     }
-    return try wallet.sign(transaction: transaction, multisign: false).txBlob
+    return try wallet.sign(transaction: tx, multisign: false).txBlob
 }
 
 // checks if there is a LastLedgerSequence as a part of the transaction

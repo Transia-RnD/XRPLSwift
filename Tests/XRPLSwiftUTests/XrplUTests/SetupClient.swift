@@ -22,9 +22,7 @@ public class RippledMockTester: XCTestCase {
         self.mockRippled.start()
         self._mockedServerPort = 9999
         self.client = try! XrplClient(server: "ws://localhost:\(9999)")
-        try! await self.client.connect().whenSuccess { result in
-            print(result)
-        }
+        _ = try await self.client.connect().wait()
     }
 }
 

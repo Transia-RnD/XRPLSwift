@@ -9,6 +9,12 @@
 
 import Foundation
 
+public struct FullClassicAddress {
+    public var classicAddress: String = ""
+    public var tag: UInt32?
+    public var isTest = false
+}
+
 public class AddressCodec {
     // swiftlint:disable:next identifier_name
     final var MAX_32_BIT_UNSIGNED_INT: Int = 4294967295
@@ -27,7 +33,7 @@ public class AddressCodec {
      */
     public static func classicAddressToXAddress(
         classicAddress: String,
-        tag: UInt32? = nil,
+        tag: Int? = nil,
         isTest: Bool = false
     ) throws -> String {
         let accountID = try! XrplCodec.decodeClassicAddress(classicAddress: classicAddress)
@@ -35,14 +41,14 @@ public class AddressCodec {
         if accountID.count != 20 {
             throw AddressCodecError.invalidLength(error: "Account ID must be 20 bytes")
         }
-        
+
         let flags: [UInt8] = tag == nil ? [0x00] : [0x01]
         let tag = tag == nil ? [UInt8](UInt64(0).data) : [UInt8](UInt64(tag!).data)
-        
+
 //        if tag != nil && tag > [UInt8](MAX_32_BIT_UNSIGNED_INT) {
 //            throw AddressCodecError.invalidLength(error: "Invalid tag")
 //        }
-        
+
         let prefix: [UInt8] = isTest ? [0x04, 0x93] : [0x05, 0x44]
         let concatenated = prefix + accountID + flags + tag
         let check = [UInt8](Data(concatenated).sha256().sha256().prefix(through: 3))
@@ -62,7 +68,7 @@ public class AddressCodec {
      */
     public static func xAddressToClassicAddress(
         xAddress: String
-    ) throws -> [String: AnyObject] {
+    ) throws -> FullClassicAddress {
         guard let data = Data(base58Decoding: xAddress) else {
             throw AddressCodecError.valueError
         }
@@ -75,11 +81,12 @@ public class AddressCodec {
         let tag: UInt32? = try self.tagFromBuffer(buffer: concatenated)
         let classicAddressBytes: [UInt8] = [UInt8](concatenated[2..<22])
         let classicAddress = try XrplCodec.encodeClassicAddress(bytes: classicAddressBytes)
-        return [
-            "classicAddress": classicAddress,
-            "tag": tag as Any,
-            "isTest": isTest
-        ] as [String: AnyObject]
+        return FullClassicAddress(classicAddress: classicAddress, tag: tag, isTest: isTest)
+//        return [
+//            "classicAddress": classicAddress,
+//            "tag": tag as Any,
+//            "isTest": isTest
+//        ] as [String: AnyObject]
     }
 
     /**
@@ -145,7 +152,7 @@ public class AddressCodec {
     public static func isValidXAddress(xAddress: String) -> Bool {
         do {
             let result = try self.xAddressToClassicAddress(xAddress: xAddress)
-            guard let _ = result["classicAddress"] as? String else {
+            guard let _ = result.classicAddress as? String else {
                 return false
             }
             return true

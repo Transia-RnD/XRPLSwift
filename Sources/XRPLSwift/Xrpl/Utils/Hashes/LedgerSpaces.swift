@@ -76,8 +76,7 @@ public enum LedgerSpaces: String {
         case "depositPreauth":
             self = .depositPreauth
         default:
-            // TODO: Why?
-            self = .account
+            fatalError("Invalid Ledger Space")
         }
     }
 }

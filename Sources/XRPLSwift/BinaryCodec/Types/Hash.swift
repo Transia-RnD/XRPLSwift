@@ -83,7 +83,7 @@ class Hash: SerializedType {
     }
 
     class func getLength() -> Int {
-        print("HERE")
+        print("HASH HERE")
         return 0
 //        throw BinaryError.notImplemented
 //        return try self.getLength()

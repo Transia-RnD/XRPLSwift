@@ -156,7 +156,7 @@ final class TestAddressCodec: XCTestCase {
                 // test
                 let xAddressTest: String = try AddressCodec.classicAddressToXAddress(
                     classicAddress: classicAddress,
-                    tag: (tag != nil) ? UInt32(tag!) : nil,
+                    tag: (tag != nil) ? Int(tag!) : nil,
                     isTest: true
                 )
                 XCTAssert(xAddressTest == expectedTestXaddress)
@@ -164,7 +164,7 @@ final class TestAddressCodec: XCTestCase {
                 // main
                 let xAddressMain: String = try AddressCodec.classicAddressToXAddress(
                     classicAddress: classicAddress,
-                    tag: (tag != nil) ? UInt32(tag!) : nil,
+                    tag: (tag != nil) ? Int(tag!) : nil,
                     isTest: false
                 )
                 XCTAssert(xAddressMain == expectedMainXaddress)
@@ -187,14 +187,14 @@ final class TestAddressCodec: XCTestCase {
                 let testResult = try AddressCodec.xAddressToClassicAddress(
                     xAddress: expectedTestXaddress
                 )
-                let classicAddressTest = testResult["classicAddress"] as? String
+                let classicAddressTest = testResult.classicAddress
                 XCTAssert(classicAddressTest == classicAddress)
 
                 // main
                 let mainResult = try AddressCodec.xAddressToClassicAddress(
                     xAddress: expectedMainXaddress
                 )
-                let classicAddressMain = mainResult["classicAddress"] as? String
+                let classicAddressMain = mainResult.classicAddress
                 XCTAssert(classicAddressMain == classicAddress)
             } catch {
                 print(error.localizedDescription)
@@ -251,7 +251,7 @@ final class TestAddressCodec: XCTestCase {
         let classicAddress = "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59"
         let tag = 0
         let xaddress = "X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqZ"
-        let result = try! AddressCodec.classicAddressToXAddress(classicAddress: classicAddress, tag: UInt32(tag), isTest: false)
+        let result = try! AddressCodec.classicAddressToXAddress(classicAddress: classicAddress, tag: Int(tag), isTest: false)
         XCTAssertEqual(result, xaddress)
     }
 

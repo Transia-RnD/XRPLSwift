@@ -22,27 +22,30 @@ func ledgerSpaceHex(_ name: String) -> String {
     let lsvalue = Character(LedgerSpaces(name).rawValue).asciiValue!
     return [UInt8].init(repeating: 0x0, count: 1).toHex + String(lsvalue, radix: HASH_HEX)
 }
-//
-// let MASK: Int = 0xff
-// func currencyToHex(currency: String) -> String {
-//    if currency.count != 3 {
-//        return currency
-//    }
-//    
-//    var bytes = [UInt8].init(repeating: 0, count: 20)
-//    bytes[12] = Character(currency[0]).unicodeScalarCodePoint() & MASK
-//    bytes[13] = Character(currency[1]).unicodeScalarCodePoint() & MASK
-//    bytes[14] = Character(currency[2]).unicodeScalarCodePoint() & MASK
-//    return bytes.toHexString()
-// }
-//
-// extension Character {
-//    func unicodeScalarCodePoint() -> UInt32 {
-//        let characterString = String(self)
-//        let scalars = characterString.unicodeScalars
-//        return scalars[scalars.startIndex].value
-//    }
-// }
+
+let MASK: UInt32 = 0xff
+func currencyToHex(currency: String) -> String {
+    if currency.count != 3 {
+        return currency
+    }
+    
+    var bytes = [UInt8].init(repeating: 0, count: 20)
+//    bytes[12] = UInt8(Character(currency[0].asciiValue).unicodeScalarCodePoint & MASK)
+//    bytes[13] = UInt8(Character(currency[1].asciiValue).unicodeScalarCodePoint & MASK)
+//    bytes[14] = UInt8(Character(currency[2].asciiValue).unicodeScalarCodePoint & MASK)
+    bytes[12] = 0
+    bytes[13] = 0
+    bytes[14] = 0
+    return bytes.toHex
+}
+
+extension Character {
+    var unicodeScalarCodePoint: UInt32 {
+        let characterString = String(self)
+        let scalars = characterString.unicodeScalars
+        return scalars[scalars.startIndex].value
+    }
+}
 //
 /// **
 // * Hash the given binary transaction data with the single-signing prefix.
@@ -149,9 +152,13 @@ func ledgerSpaceHex(_ name: String) -> String {
 // * @returns The hash of the Escrow LedgerEntry.
 // * @category Utilities
 // */
-// public func hashEscrow(address: String, sequence: Int) -> String {
-//    return sha512Half(hex: ledgerSpaceHex("escrow") + addressToHex(address: address) + sequence.toString(HEX).padStart(BYTE_LENGTH * 2, "0"))
-// }
+public func hashEscrow(address: String, sequence: Int) -> String {
+    return sha512Half(
+        hex: ledgerSpaceHex("escrow") +
+        addressToHex(address: address) +
+        "00\(sequence.data.toHex)"
+    )
+}
 
 /**
  * Compute the hash of a Payment Channel.

@@ -18,7 +18,6 @@ public enum BinaryError: Error {
  Deserializes from hex-encoded XRPL binary format to JSON fields and values.
  */
 public class BinaryParser {
-
     public var bytes: [UInt8]
 
     /**

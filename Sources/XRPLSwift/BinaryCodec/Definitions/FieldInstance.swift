@@ -47,15 +47,15 @@ func getTypeByName(name: String) -> SerializedType.Type? {
  A collection of serialization information about a specific field type.
  */
 class FieldInstance {
-    public var nth: Int
-    public var isVLEncoded: Bool
-    public var isSerialized: Bool
-    public var isSigning: Bool
-    public var type: String
-    public var name: String
-    public var header: FieldHeader
-    public var ordinal: Int
-    public var associatedType: SerializedType.Type
+    var nth: Int
+    var isVLEncoded: Bool
+    var isSerialized: Bool
+    var isSigning: Bool
+    var type: String
+    var name: String
+    var header: FieldHeader
+    var ordinal: Int
+    var associatedType: SerializedType.Type
 
     /**
      Construct a FieldInstance.

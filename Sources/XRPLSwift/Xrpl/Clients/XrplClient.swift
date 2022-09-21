@@ -622,14 +622,12 @@ public class XrplClient: ConnectionDelegate {
         return self.connection.isConnected()
     }
 
-    //    /**
-    //     * @category Core
-    //     */
-    //    public autofill = autofill
-    //
-    //    /**
-    //     * @category Core
-    //     */
+//    public func autofill(transaction: Transaction, signersCount: Int? = 0) async throws -> EventLoopFuture<BaseTransaction> {
+//    let tx = try transaction.toAny() as! BaseTransaction
+    public func autofill(transaction: Transaction, signersCount: Int? = 0) async throws -> EventLoopFuture<[String: AnyObject]> {
+        return try await AutoFillSugar().autofill(client: self, transaction: try transaction.toJson(), signersCount: signersCount)
+    }
+
     public func submit(transaction: Transaction, opts: SubmitOptions?) async throws -> EventLoopFuture<Any> {
         return try await XRPLSwift.submit(
             this: self,
@@ -644,15 +642,6 @@ public class XrplClient: ConnectionDelegate {
     //     */
     //    public submitAndWait = submitAndWait
     //
-    //    /**
-    //     * @deprecated Use autofill instead, provided for users familiar with v1
-    //     */
-//    public func autofill() async throws -> Int {
-//        return try await XRPLSwift.autofill(client: self)
-//    }
-    //    /**
-    //     * @category Abstraction
-    //     */
     public func getXrpBalance(address: String) async throws -> String {
         return try await XRPLSwift.getXrpBalance(this: self, address: address)
     }
@@ -665,17 +654,9 @@ public class XrplClient: ConnectionDelegate {
     //     * @category Abstraction
     //     */
     //    public getOrderbook = getOrderbook
-    //
-    //    /**
-    //     * @category Abstraction
-    //     */
     public func getLedgerIndex() async throws -> Int {
         return try await XRPLSwift.getLedgerIndex(client: self)
     }
-    //
-    //    /**
-    //     * @category Faucet
-    //     */
     //    public fundWallet = fundWallet
 }
 
@@ -684,3 +665,4 @@ extension String {
         return range(of: "^[wW]{3}+.[a-zA-Z]{3,}+.[a-z]{2,}", options: .regularExpression) != nil
     }
 }
+

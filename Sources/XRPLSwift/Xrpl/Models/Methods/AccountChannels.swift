@@ -7,8 +7,8 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/methods/accountChannels.ts
 
-import Foundation
 import AnyCodable
+import Foundation
 
 public struct Channel: Codable {
     let account: String

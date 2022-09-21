@@ -203,11 +203,10 @@ public protocol ConnectionDelegate: AnyObject {
  an active WebSocket connection to a XRPL node.
  */
 public class Connection {
-    
     var delegate: ConnectionDelegate?
-    
+
     internal var trace: ConsoleLog?
-    
+
     internal let url: String?
     internal var ws: WebSocket?
     private var reconnectTimeoutID: Timer?
@@ -219,7 +218,7 @@ public class Connection {
     internal let config: ConnectionOptions
     private let requestManager = RequestManager()
     private let connectionManager = ConnectionManager()
-    
+
     /**
      Creates a new Connection object.
      - parameters:
@@ -431,6 +430,7 @@ public class Connection {
             //            }
             return
         }
+        print("RESPONSE: \(dict)")
         //        guard let br = br else {
         //            return
         //        }

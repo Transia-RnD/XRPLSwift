@@ -39,9 +39,9 @@ class AccountID: Hash160 {
 
     static func fromBase58(value: String) throws -> AccountID {
         if AddressCodec.isValidXAddress(xAddress: value) {
-            let classicDict: [String: AnyObject] = try AddressCodec.xAddressToClassicAddress(xAddress: value)
-            let classic: String = classicDict["classicAddress"] as! String
-            let tag: Int = classicDict["tag"] as? Int ?? 0
+            let fullClassic: FullClassicAddress = try AddressCodec.xAddressToClassicAddress(xAddress: value)
+            let classic: String = fullClassic.classicAddress
+            let tag = Int(fullClassic.tag ?? 0)
             if tag != 0 {
               throw BinaryError.unknownError(error: "Only allowed to have tag on Account or Destination")
             }

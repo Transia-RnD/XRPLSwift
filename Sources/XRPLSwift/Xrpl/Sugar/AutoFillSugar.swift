@@ -28,152 +28,150 @@ public class AutoFillSugar {
     // Expire unconfirmed transactions after 20 ledger versions, approximately 1 minute, by default
     // swiftlint:disable:next identifier_name
     let LEDGER_OFFSET = 20
-    struct ClassicAccountAndTag {
-        private let classicAccount: String
-        private let tag: Int? // JM: Int | Bool only false?
+    public struct ClassicAccountAndTag {
+        public let classicAccount: String
+        public let tag: Int? // JM: Int | Bool only false?
     }
 
-    func autofill<T: BaseTransaction>(
+//    func autofill<T: BaseTransaction>(
+//        client: XrplClient,
+//        transaction: T,
+//        signersCount: Int?
+//    ) async throws -> EventLoopFuture<BaseTransaction> {
+//        
+//    }
+    func autofill(
         client: XrplClient,
-        transaction: T,
+        transaction: [String: AnyObject],
         signersCount: Int?
-    ) async throws -> EventLoopFuture<T> {
-        let tx = transaction
+    ) async throws -> EventLoopFuture<[String: AnyObject]> {
+        var tx = transaction
 
-        //      setValidAddresses(tx)
+        try setValidAddresses(tx: &tx)
 
-        //      setTransactionFlagsToNumber(tx)
+        try setTransactionFlagsToNumber(tx: &tx)
 
         var promises: [Void] = []
-        if tx.sequence == nil {
-            await promises.append(self.setNextValidSequenceNumber(client: client, tx: tx))
+        if tx["Sequence"] == nil {
+            await promises.append(self.setNextValidSequenceNumber(client: client, tx: &tx))
         }
-        if tx.fee == nil {
-            await promises.append(try self.calculateFeePeTransactionType(client: client, tx: tx, signersCount: signersCount))
+        if tx["Fee"] == nil {
+            await promises.append(try self.calculateFeePerTransactionType(client: client, tx: &tx, signersCount: signersCount))
         }
-        if tx.lastLedgerSequence == nil {
-            await promises.append(try self.setLatestValidatedLedgerSequence(client: client, tx: tx))
+        if tx["LastLedgerSequence"] == nil {
+            await promises.append(try self.setLatestValidatedLedgerSequence(client: client, tx: &tx))
         }
-        if tx.transactionType == "AccountDelete" {
-            await promises.append(try self.checkAccountDeleteBlockers(client: client, tx: tx))
+        if tx["TransactionType"] as! String == "AccountDelete" {
+            await promises.append(try self.checkAccountDeleteBlockers(client: client, tx: &tx))
         }
-        let promise = autofillEventGroup.next().makePromise(of: T.self)
+        let promise = autofillEventGroup.next().makePromise(of: [String: AnyObject].self)
         _ = promises.compactMap({ $0 })
         promise.succeed(tx)
         return promise.futureResult
     }
-    //    func setValidAddresses(tx: Transaction) -> Void {
-    //      validateAccountAddress(tx, "Account", "SourceTag")
-    //      // eslint-disable-next-line @typescript-eslint/dot-notation -- Destination can exist on Transaction
-    //      if (tx["Destination"] != nil) {
-    //        validateAccountAddress(tx, "Destination", "DestinationTag")
-    //      }
-    //
-    //      // DepositPreauth:
-    //      convertToClassicAddress(tx, "Authorize")
-    //      convertToClassicAddress(tx, "Unauthorize")
-    //      // EscrowCancel, EscrowFinish:
-    //      convertToClassicAddress(tx, "Owner")
-    //      // SetRegularKey:
-    //      convertToClassicAddress(tx, "RegularKey")
-    //    }
-    //
-    //    func validateAccountAddress(
-    //      tx: Transaction,
-    //      accountField: String,
-    //      tagField: String,
-    //    ) -> Void {
-    //      // if X-address is given, convert it to classic address
-    //      let { classicAccount, tag } = getClassicAccountAndTag(tx[accountField])
-    //      // eslint-disable-next-line no-param-reassign -- param reassign is safe
-    //      tx[accountField] = classicAccount
-    //
-    //      if (tag != nil && tag !== false) {
-    //        if (tx[tagField] && tx[tagField] !== tag) {
-    //          throw new ValidationError(
-    //            `The ${tagField}, if present, must match the tag of the ${accountField} X-address`,
-    //          )
-    //        }
-    //        // eslint-disable-next-line no-param-reassign -- param reassign is safe
-    //        tx[tagField] = tag
-    //      }
-    //    }
-    //
-    //    func getClassicAccountAndTag(
-    //      Account: string,
-    //      expectedTag?: number,
-    //    ): ClassicAccountAndTag {
-    //      if (isValidXAddress(Account)) {
-    //        const classic = xAddressToClassicAddress(Account)
-    //        if (expectedTag != nil && classic.tag !== expectedTag) {
-    //          throw new ValidationError(
-    //            "address includes a tag that does not match the tag specified in the transaction",
-    //          )
-    //        }
-    //        return {
-    //          classicAccount: classic.classicAddress,
-    //          tag: classic.tag,
-    //        }
-    //      }
-    //      return {
-    //        classicAccount: Account,
-    //        tag: expectedTag,
-    //      }
-    //    }
-    //
-    //    func convertToClassicAddress(tx: Transaction, fieldName: String) -> {
-    //      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- assignment is safe
-    //      let account = tx[fieldName]
-    //      if (typeof account == "string") {
-    //        const { classicAccount } = getClassicAccountAndTag(account)
-    //        // eslint-disable-next-line no-param-reassign -- param reassign is safe
-    //        tx[fieldName] = classicAccount
-    //      }
-    //    }
-    //
-    func setNextValidSequenceNumber(
-        client: XrplClient,
-        tx: BaseTransaction
-    ) async {
-        let request = AccountInfoRequest(account: tx.account, ledgerIndex: .string("current"))
-        let response = try! await client.request(r: request).wait() as? BaseResponse<AccountInfoResponse>
-        print(response)
-        print(response!.result)
-        print(response!.result?.accountData.sequence)
-        tx.sequence = response!.result?.accountData.sequence
+    
+    func setValidAddresses(tx: inout [String: AnyObject]) throws {
+        try validateAccountAddress(tx: &tx, accountField: "Account", tagField: "SourceTag")
+        // eslint-disable-next-line @typescript-eslint/dot-notation -- Destination can exist on Transaction
+        if tx["Destination"] != nil {
+            try validateAccountAddress(tx: &tx, accountField: "Destination", tagField: "DestinationTag")
+        }
+
+        // DepositPreauth:
+        try convertToClassicAddress(tx: &tx, fieldName: "Authorize")
+        try convertToClassicAddress(tx: &tx, fieldName: "Unauthorize")
+        // EscrowCancel, EscrowFinish:
+        try convertToClassicAddress(tx: &tx, fieldName: "Owner")
+        // SetRegularKey:
+        try convertToClassicAddress(tx: &tx, fieldName: "RegularKey")
     }
 
-    //    async func fetchAccountDeleteFee(client: Client): EventLoopFuture<Int> {
-    //        let response = await client.request({ command: "server_state" })
-    //      let fee = response.result.state.validated_ledger?.reserve_inc
-    //
-    //      if fee == nil {
-    //        return Promise.reject(new Error("Could not fetch Owner Reserve."))
-    //      }
-    //
-    //      return new BigNumber(fee)
-    //    }
+    func validateAccountAddress(
+        tx: inout [String: AnyObject],
+        accountField: String,
+        tagField: String
+    ) throws {
+        // if X-address is given, convert it to classic address
+        let accountAndTag = try getClassicAccountAndTag(account: tx[accountField] as! String)
+        // eslint-disable-next-line no-param-reassign -- param reassign is safe
+        tx[accountField] = accountAndTag.classicAccount as AnyObject
 
-    func calculateFeePeTransactionType(
+        if accountAndTag.tag != nil {
+            if tx[tagField] != nil && tx[tagField] as! Int != accountAndTag.tag {
+                throw ValidationError("The \(tagField), if present, must match the tag of the \(accountField) X-address")
+            }
+            // eslint-disable-next-line no-param-reassign -- param reassign is safe
+            tx[tagField] = accountAndTag.tag as AnyObject?
+        }
+    }
+
+    func getClassicAccountAndTag(
+        account: String,
+        expectedTag: Int? = nil
+    ) throws -> ClassicAccountAndTag {
+        if AddressCodec.isValidXAddress(xAddress: account) {
+            let classic = try AddressCodec.xAddressToClassicAddress(xAddress: account)
+            if expectedTag != nil && classic.tag! != expectedTag! {
+                throw ValidationError("address includes a tag that does not match the tag specified in the transaction")
+            }
+            return ClassicAccountAndTag(
+                classicAccount: classic.classicAddress,
+                tag: Int(classic.tag!)
+            )
+        }
+        return ClassicAccountAndTag(
+            classicAccount: account,
+            tag: expectedTag
+        )
+    }
+
+    func convertToClassicAddress(tx: inout [String: AnyObject], fieldName: String) throws {
+        let account = tx[fieldName] as? String
+        if account != nil {
+            let classicAndTag = try getClassicAccountAndTag(account: account!)
+            tx[fieldName] = classicAndTag.classicAccount as AnyObject
+        }
+    }
+
+    func setNextValidSequenceNumber(
         client: XrplClient,
-        tx: BaseTransaction,
+        tx: inout [String: AnyObject]
+    ) async {
+        let request = AccountInfoRequest(account: tx["Account"] as! String, ledgerIndex: .string("current"))
+        let response = try! await client.request(r: request).wait() as? BaseResponse<AccountInfoResponse>
+        tx["sequence"] = response!.result?.accountData.sequence as AnyObject
+    }
+
+    func fetchAccountDeleteFee(client: XrplClient) async -> Decimal {
+        let request = ServerStateRequest()
+        let response = try! await client.request(request).wait() as? BaseResponse<ServerStateResponse>
+        let fee = response!.result?.state.validatedLedger?.reserveIncXrp
+        if fee == nil {
+            //        return Promise.reject(XrplError("Could not fetch Owner Reserve."))
+        }
+        return Decimal(fee!)
+    }
+
+    func calculateFeePerTransactionType(
+        client: XrplClient,
+        tx: inout [String: AnyObject],
         signersCount: Int? = 0
     ) async throws {
         // netFee is usually 0.00001 XRP (10 drops)
-//        let netFeeXRP = await getFeeXrp(client)
-//        let netFeeDrops = xrpToDrops(netFeeXRP)
-//        let baseFee = new BigNumber(netFeeDrops)
+        let netFeeXRP = try await getFeeXrp(client: client)
+        let netFeeDrops = try xrpToDrops(netFeeXRP)
+//        let baseFee = Decimal(netFeeDrops)
 
 //        // EscrowFinish Transaction with Fulfillment
-//        if tx.TransactionType == "EscrowFinish" && tx.Fulfillment != nil {
-//            let fulfillmentBytesSize: Int = Math.ceil(tx.Fulfillment.length / 2)
+//        if tx["TransactionType"] == "EscrowFinish" && tx["Fulfillment"] != nil {
+//            let fulfillmentBytesSize: Int = Math.ceil(tx["Fulfillment"].length / 2)
 //            // 10 drops × (33 + (Fulfillment size in bytes / 16))
-//            let product = new BigNumber(scaleValue(netFeeDrops, 33 + fulfillmentBytesSize / 16))
+//            let product = Decimal(scaleValue(netFeeDrops, 33 + fulfillmentBytesSize / 16))
 //            baseFee = product.dp(0, Int.ROUND_CEIL)
 //        }
-
+//
 //        // AccountDelete Transaction
-//        if tx.TransactionType == "AccountDelete" {
+//        if tx["TransactionType"] == "AccountDelete" {
 //            baseFee = await fetchAccountDeleteFee(client)
 //        }
 
@@ -181,19 +179,18 @@ public class AutoFillSugar {
          * Multi-signed Transaction
          * 10 drops × (1 + Number of Signatures Provided)
          */
-//        if (signersCount > 0) {
-//            baseFee = BigNumber.sum(baseFee, scaleValue(netFeeDrops, 1 + signersCount))
+//        if signersCount! > 0 {
+//            baseFee = BigInt.sum(baseFee, scaleValue(netFeeDrops, 1 + signersCount))
 //        }
 
 //        let maxFeeDrops = xrpToDrops(client.maxFeeXRP)
-//        let totalFee = tx.TransactionType === "AccountDelete"
+//        let totalFee = tx["TransactionType"] == "AccountDelete"
 //        ? baseFee
 //        : BigNumber.min(baseFee, maxFeeDrops)
 
-        // Round up baseFee and return it as a string
-        // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-magic-numbers -- param reassign is safe, base 10 magic num
-//        tx.Fee = totalFee.dp(0, Int.ROUND_CEIL).toString(10)
-        tx.fee = "100"
+        //        Round up baseFee and return it as a string
+        //        tx.Fee = totalFee.dp(0, Int.ROUND_CEIL).toString(10)
+        tx["Fee"] = "100" as AnyObject
     }
 
     func scaleValue(value: String, multiplier: Int) -> String {
@@ -202,26 +199,26 @@ public class AutoFillSugar {
 
     func setLatestValidatedLedgerSequence(
         client: XrplClient,
-        tx: BaseTransaction
+        tx: inout [String: AnyObject]
     ) async throws {
         let ledgerSequence = try await client.getLedgerIndex()
-        tx.lastLedgerSequence = ledgerSequence + LEDGER_OFFSET
+        tx["LastLedgerSequence"] = (ledgerSequence + LEDGER_OFFSET) as AnyObject
     }
 
     func checkAccountDeleteBlockers(
         client: XrplClient,
-        tx: BaseTransaction
+        tx: inout [String: AnyObject]
     ) async throws {
         let request = try AccountObjectsRequest([
             "command": "account_objects",
-            "account": tx.account,
+            "account": tx["Account"] as! String,
             "ledger_index": "validated",
             "deletion_blockers_only": true
         ] as [String: AnyObject])
         let response = try await client.request(request).wait() as? BaseResponse<AccountObjectsResponse>
         if let result = response?.result, result.accountObjects.count > 0 {
             throw XrplError(
-                "Account \(tx.account) cannot be deleted; there are Escrows, PayChannels, RippleStates, or Checks associated with the account."
+                "Account \(tx["Account"]) cannot be deleted; there are Escrows, PayChannels, RippleStates, or Checks associated with the account."
             )
         }
     }

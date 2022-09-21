@@ -5,16 +5,18 @@
 //  Created by Denis Angell on 7/2/22.
 //
 
+// 
+
 import Foundation
 
 /**
  A container class for simultaneous storage of a field's type code and field code.
  */
 public struct FieldHeader: Hashable {
-    
+
     public var typeCode: Int
     public var fieldCode: Int
-    
+
     /**
      Construct a FieldHeader.
      - parameters:
@@ -25,7 +27,7 @@ public struct FieldHeader: Hashable {
         self.typeCode = typeCode
         self.fieldCode = fieldCode
     }
-    
+
     /**
      Two FieldHeaders are equal if both type code and field_code are the same.
      */
@@ -34,18 +36,18 @@ public struct FieldHeader: Hashable {
         //            return NotImplemented
         //        }
         return typeCode == other.typeCode && self.fieldCode == other.fieldCode
-        
+
     }
-    
+
     /**
      Two equal FieldHeaders must have the same hash value.
      */
     func toHash() -> Int {
         //        return hash((self.typeCode, self.fieldCode))
         return 0
-        
+
     }
-    
+
     /**
      Get the bytes representation of a FieldHeader.
      - returns:
