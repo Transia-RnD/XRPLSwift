@@ -9,8 +9,7 @@
 
 import Foundation
 
-struct XrplError: Error {
-
+public struct XrplError: Error {
 //    var name: String?
     var message: String?
     var data: Data?

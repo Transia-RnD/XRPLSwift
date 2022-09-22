@@ -18,8 +18,26 @@
 - ``FieldHeader``
 - ``FieldInfo``
 - ``FieldInstance``
+
+### Binary Codec (Types)
+
 - ``AccountID``
-- ``xAmount``
+- ``Amount``
+- ``Blob``
+- ``Currency``
+- ``Hash``
+- ``Hash128``
+- ``Hash160``
+- ``Hash256``
+- ``PathSet``
+- ``SerializedType``
+- ``STArray``
+- ``STObject``
+- ``UInt8``
+- ``UInt16``
+- ``UInt32``
+- ``UInt64``
+- ``Vector256``
 
 ### Binary Codec (Utils)
 
@@ -27,7 +45,52 @@
 - ``BytesList``
 - ``getTypeByName``
 
-### Xrpl Methods
+### Keypairs
+
+- ``Keypairs``
+- ``KeypairsErrors``
+- ``KeypairsUtils``
+
+### Xrpl Clients
+
+- ``XrplClient``
+- ``XrplError``
+- ``Connection``
+- ``ConnectionManager``
+- ``ExponentialBackoff``
+- ``RequestManager``
+- ``WSWrapper``
+
+### Xrpl Sugar
+
+- ``AutoFillSugar``
+- ``BalancesSugar``
+- ``GetFeeXrpSugar``
+- ``GetOrderBookSugar``
+- ``SubmitSugar``
+- ``SugarUtils``
+
+### Xrpl Models: Ledger Objects ("LO")
+
+- ``AccountRoot``
+- ``Amendments``
+- ``BaseLedger``
+- ``BaseLedgerEntry``
+- ``Check``
+- ``DepositPreauth``
+- ``DirectoryNode``
+- ``Escrow``
+- ``FeeSettings``
+- ``LedgerEntry``
+- ``LedgerHashes``
+- ``NegativeUNL``
+- ``Offer``
+- ``PayChannel``
+- ``RippleStats``
+- ``SignerList``
+- ``Ticket``
+
+### Xrpl Models: Methods
 
 - ``AccountChannelsRequest``
 - ``AccountChannelsResponse``
@@ -98,7 +161,7 @@
 - ``TxRequest``
 - ``TxResponse``
 
-### Xrpl Transactions
+### Xrpl Models: Transactions
 
 - ``AccountDelete``
 - ``AccountSet``
@@ -123,3 +186,20 @@
 - ``SignerListSet``
 - ``TicketCreate``
 - ``TrustSet``
+
+### Xrpl Utils
+
+- ``deriveXAddress``
+- ``GetBalanceChangesUtils``
+- ``ParseNFTokenIDUtils``
+- ``SignPaymentChannelClaimUtils``
+- ``TimeConversionUtils``
+- ``VerifyPaymentChannelClaimUtils``
+- ``dropsToXrp``
+- ``xrpToDrops``
+
+### Xrpl Wallet
+
+- ``FundWallet``
+- ``Wallet``
+- ``WalletSigner``
