@@ -29,7 +29,6 @@ swift build -v
 
 ```bash
 swiftlint lint
-swiftlint analyze
 ```
 
 ## Running Tests

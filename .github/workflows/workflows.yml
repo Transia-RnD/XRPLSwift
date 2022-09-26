@@ -20,7 +20,7 @@ jobs:
       with:
         swift-version: "5.6.0"
     - run: swift build
-    - run: swiftlint lint
+    - run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml 
 
   unit:
     runs-on: macos-latest
@@ -32,23 +32,23 @@ jobs:
       with:
         swift-version: "5.6.0"
     - run: swift build
-    - run: swiftlint lint
+    - run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml 
     - run: swift test --filter XRPLSwiftUTests
 
-  integration:
-    runs-on: macos-latest
+  # integration:
+  #   runs-on: macos-latest
 
-    steps:
-    - uses: actions/checkout@v3
-    - run: brew install --cask docker
-    - run: docker run -d -p 6006:6006 -it natenichols/rippled-standalone:latest
-    - name: Use Swift "5.6.0"
-      uses: swift-actions/setup-swift@v1
-      with:
-        swift-version: "5.6.0"
-    - run: swift build
-    - run: swiftlint lint
-    - run: swift test --filter XRPLSwiftITests
-      env:
-        HOST: localhost
-        PORT: ${{ job.services.rippled.ports['6006'] }}
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - run: brew install --cask docker
+  #   - run: docker run -d -p 6006:6006 -it natenichols/rippled-standalone:latest
+  #   - name: Use Swift "5.6.0"
+  #     uses: swift-actions/setup-swift@v1
+  #     with:
+  #       swift-version: "5.6.0"
+  #   - run: swift build
+  #   - run: swiftlint lint
+  #   - run: swift test --filter XRPLSwiftITests
+  #     env:
+  #       HOST: localhost
+  #       PORT: ${{ job.services.rippled.ports['6006'] }}
