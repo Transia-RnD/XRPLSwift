@@ -10,7 +10,7 @@
 import Foundation
 
 public class FieldIdCodec {
-    
+
     /**
      This field ID consists of the type code and field code, in 1 to 3 bytes
      depending on whether those values are "common" (<16) or "uncommon" (>=16)
@@ -23,7 +23,7 @@ public class FieldIdCodec {
         let fieldHeader: FieldHeader = Definitions().getFieldHeaderFromName(fieldName: fieldName)
         return try self.encodeFieldId(fieldHeader: fieldHeader)
     }
-    
+
     /**
      Returns the field name represented by the given field ID.
      - parameters:
@@ -35,7 +35,7 @@ public class FieldIdCodec {
         let fieldHeader: FieldHeader = try self.decodeFieldId(fieldId: fieldId)
         return Definitions().getFieldNameFromHeader(fieldHeader: fieldHeader)
     }
-    
+
     /**
      Returns the unique field ID for a given field header. This field ID consists of the type code and field code, in 1 to 3 bytes
      depending on whether those values are "common" (<16) or "uncommon" (>=16)
@@ -82,7 +82,7 @@ public class FieldIdCodec {
             return [0x0] + byte2 + byte3
         }
     }
-    
+
     /**
      Returns a FieldHeader object representing the type code and field code of
      a decoded field ID.

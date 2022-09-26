@@ -80,7 +80,7 @@ public class InfoLedger: Codable {
      Base fee, in XRP. This may be represented in scientific notation.
      Such as 1e-05 for 0.00005.
      */
-    public let baseFeeXrp: Int
+    public let baseFeeXrp: Double
     /// Unique hash for the ledger, as hexadecimal.
     public let hash: String
     /**
@@ -126,7 +126,7 @@ public class LastClosed: Codable {
      The amount of time it took to reach a consensus on the most recently
      validated ledger version, in seconds.
      */
-    public let convergeTimeS: Int
+    public let convergeTimeS: Double
     /**
      How many trusted validators the server considered (including itself,
      if configured as a validator) in the consensus process for the most
@@ -146,7 +146,7 @@ public class ServerInfoWrapper: Codable {
      amendment blocked, the response omits this field.
      */
     public let amendmentBlocked: Bool?
-    /*The version number of the running rippled version. */
+    /// The version number of the running rippled version.
     public let buildVersion: String
     /**
      Information on the most recently closed ledger that has not been
@@ -179,7 +179,7 @@ public class ServerInfoWrapper: Codable {
      may mean that your server is unable to handle the transaction load of
      the XRP Ledger network.
      */
-    public let jqTransOverflow: String
+    public let jqTransOverflow: String?
     /**
      Information about the last time the server closed a ledger, including
      the amount of time it took to reach a consensus and the number of
@@ -231,8 +231,8 @@ public class ServerInfoWrapper: Codable {
      cost.
      */
     public let loadFactorServer: Int?
-    public var networkLedger: String = "waiting"
-    /*How many other rippled servers this one is currently connected to. */
+    public var networkLedger: String? = "waiting"
+    /// How many other rippled servers this one is currently connected to.
     public let peers: Int
     /**
      Public key used to verify this server for peer-to-peer communications.
@@ -241,7 +241,7 @@ public class ServerInfoWrapper: Codable {
      Keys.).
      */
     public let pubkeyNode: String
-    /*Public key used by this node to sign ledger validations. */
+    /// Public key used by this node to sign ledger validations.
     public let pubkeyValidator: String?
     /**
      A string indicating to what extent the server is participating in the
@@ -252,18 +252,18 @@ public class ServerInfoWrapper: Codable {
      The number of consecutive microseconds the server has been in the
      current state.
      */
-    public let serverStateDurationUs: Int
+    public let serverStateDurationUs: Int?
     /**
      A map of various server states with information about the time the
      server spends in each. This can be useful for tracking the long-term
      health of your server's connectivity to the network.
      */
-    public let stateAccounting: [ServerState: StateAccounting]
-    /*The current time in UTC, according to the server's clock. */
-    public let time: String
-    /*Number of consecutive seconds that the server has been operational. */
-    public let uptime: Int
-    /*Information about the most recent fully-validated ledger. */
+    public let stateAccounting: [ServerState: StateAccounting]?
+    /// The current time in UTC, according to the server's clock.
+    public let time: String?
+    /// Number of consecutive seconds that the server has been operational.
+    public let uptime: Int?
+    /// Information about the most recent fully-validated ledger.
     public let validatedLedger: InfoLedger?
     /**
      Minimum number of trusted validations required to validate a ledger
@@ -312,34 +312,34 @@ public class ServerInfoWrapper: Codable {
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        amendmentBlocked = try values.decode(Bool.self, forKey: .amendmentBlocked)
+        amendmentBlocked = try values.decodeIfPresent(Bool.self, forKey: .amendmentBlocked)
         buildVersion = try values.decode(String.self, forKey: .buildVersion)
-        closedLedger = try values.decode(InfoLedger.self, forKey: .closedLedger)
+        closedLedger = try values.decodeIfPresent(InfoLedger.self, forKey: .closedLedger)
         completeLedgers = try values.decode(String.self, forKey: .completeLedgers)
         hostid = try values.decode(String.self, forKey: .hostid)
         ioLatencyMs = try values.decode(Int.self, forKey: .ioLatencyMs)
-        jqTransOverflow = try values.decode(String.self, forKey: .jqTransOverflow)
+        jqTransOverflow = try values.decodeIfPresent(String.self, forKey: .jqTransOverflow)
         lastClose = try values.decode(LastClosed.self, forKey: .lastClose)
-        load = try values.decode(StateLoad.self, forKey: .load)
-        loadFactor = try values.decode(Int.self, forKey: .loadFactor)
-        loadFactorLocal = try values.decode(Int.self, forKey: .loadFactorLocal)
-        loadFactorNet = try values.decode(Int.self, forKey: .loadFactorNet)
-        loadFactorCluster = try values.decode(Int.self, forKey: .loadFactorCluster)
-        loadFactorFeeEscalation = try values.decode(Int.self, forKey: .loadFactorFeeEscalation)
-        loadFactorFeeQueue = try values.decode(Int.self, forKey: .loadFactorFeeQueue)
-        loadFactorServer = try values.decode(Int.self, forKey: .loadFactorServer)
-        networkLedger = try values.decode(String.self, forKey: .networkLedger)
+        load = try values.decodeIfPresent(StateLoad.self, forKey: .load)
+        loadFactor = try values.decodeIfPresent(Int.self, forKey: .loadFactor)
+        loadFactorLocal = try values.decodeIfPresent(Int.self, forKey: .loadFactorLocal)
+        loadFactorNet = try values.decodeIfPresent(Int.self, forKey: .loadFactorNet)
+        loadFactorCluster = try values.decodeIfPresent(Int.self, forKey: .loadFactorCluster)
+        loadFactorFeeEscalation = try values.decodeIfPresent(Int.self, forKey: .loadFactorFeeEscalation)
+        loadFactorFeeQueue = try values.decodeIfPresent(Int.self, forKey: .loadFactorFeeQueue)
+        loadFactorServer = try values.decodeIfPresent(Int.self, forKey: .loadFactorServer)
+        networkLedger = try values.decodeIfPresent(String.self, forKey: .networkLedger)
         peers = try values.decode(Int.self, forKey: .peers)
         pubkeyNode = try values.decode(String.self, forKey: .pubkeyNode)
-        pubkeyValidator = try values.decode(String.self, forKey: .pubkeyValidator)
+        pubkeyValidator = try values.decodeIfPresent(String.self, forKey: .pubkeyValidator)
         serverState = try values.decode(String.self, forKey: .serverState)
-        serverStateDurationUs = try values.decode(Int.self, forKey: .serverStateDurationUs)
-        stateAccounting = try values.decode([ServerState: StateAccounting].self, forKey: .stateAccounting)
-        time = try values.decode(String.self, forKey: .time)
-        uptime = try values.decode(Int.self, forKey: .uptime)
-        validatedLedger = try values.decode(InfoLedger.self, forKey: .validatedLedger)
+        serverStateDurationUs = try values.decodeIfPresent(Int.self, forKey: .serverStateDurationUs)
+        stateAccounting = try values.decodeIfPresent([ServerState: StateAccounting].self, forKey: .stateAccounting)
+        time = try values.decodeIfPresent(String.self, forKey: .time)
+        uptime = try values.decodeIfPresent(Int.self, forKey: .uptime)
+        validatedLedger = try values.decodeIfPresent(InfoLedger.self, forKey: .validatedLedger)
         validationQuorum = try values.decode(Int.self, forKey: .validationQuorum)
-        validatorListExpires = try values.decode(String.self, forKey: .validatorListExpires)
+        validatorListExpires = try values.decodeIfPresent(String.self, forKey: .validatorListExpires)
     }
 
     func toJson() throws -> [String: AnyObject] {
@@ -354,6 +354,6 @@ public class ServerInfoWrapper: Codable {
  *
  @category Responses
  */
- public class ServerInfoResponse: Codable {
-     public let info: ServerInfoWrapper
- }
+public class ServerInfoResponse: Codable {
+    public let info: ServerInfoWrapper
+}

@@ -19,7 +19,7 @@ class Blob: SerializedType {
     init(_ bytes: [UInt8]? = nil) {
         super.init(bytes: bytes ?? [])
     }
-    
+
     /**
      Construct a new Blob type from a BinaryParser.
      - parameters:

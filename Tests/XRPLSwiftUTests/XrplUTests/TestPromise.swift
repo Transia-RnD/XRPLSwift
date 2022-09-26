@@ -16,10 +16,10 @@
 //    //        _ = try! await self.client.connect()
 //    //        return await fundAccount(client: self.client, wallet: self.wallet)
 //        return Promise<Any>() {
-//            print("HERE")
+//            print("1")
 //        }
 //        let promise = Promise<Any?>()
-//        print("HERE")
+//        print("2")
 //        promise.resolve(with: 10)
 //        return promise
 //    }
@@ -29,7 +29,7 @@
 //            try await setupIClient().observe(using: { result in
 //                print(try! result.get())
 //            })
-//            print("FINISHED")
+//            print("3")
 //        }
 //    }
 // }

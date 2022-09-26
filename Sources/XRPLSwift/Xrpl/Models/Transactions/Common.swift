@@ -150,7 +150,7 @@ public class BaseTransaction: Codable {
     /**
      * Additional arbitrary information used to identify this transaction.
      */
-    public var memos: [Memo]?
+    public var memos: [MemoWrapper]?
     /**
      * Array of objects that represent a multi-signature which authorizes this
      * transaction.
@@ -206,7 +206,7 @@ public class BaseTransaction: Codable {
         accountTxnId: String? = nil,
         flags: Int? = nil,
         lastLedgerSequence: Int? = nil,
-        memos: [Memo]? = nil,
+        memos: [MemoWrapper]? = nil,
         signers: [Signer]? = nil,
         sourceTag: Int? = nil,
         signingPubKey: String? = nil,
@@ -255,17 +255,17 @@ public class BaseTransaction: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
         transactionType = try values.decode(String.self, forKey: .transactionType)
-        fee = try? values.decode(String.self, forKey: .fee)
-        sequence = try? values.decode(Int.self, forKey: .sequence)
-        accountTxnId = try? values.decode(String.self, forKey: .accountTxnId)
-        flags = try? values.decode(Int.self, forKey: .flags)
-        lastLedgerSequence = try? values.decode(Int.self, forKey: .lastLedgerSequence)
-        memos = try? values.decode([Memo].self, forKey: .memos)
-        signers = try? values.decode([Signer].self, forKey: .signers)
-        sourceTag = try? values.decode(Int.self, forKey: .sourceTag)
-        signingPubKey = try? values.decode(String.self, forKey: .signingPubKey)
-        ticketSequence = try? values.decode(Int.self, forKey: .ticketSequence)
-        txnSignature = try? values.decode(String.self, forKey: .txnSignature)
+        fee = try? values.decodeIfPresent(String.self, forKey: .fee)
+        sequence = try? values.decodeIfPresent(Int.self, forKey: .sequence)
+        accountTxnId = try? values.decodeIfPresent(String.self, forKey: .accountTxnId)
+        flags = try? values.decodeIfPresent(Int.self, forKey: .flags)
+        lastLedgerSequence = try? values.decodeIfPresent(Int.self, forKey: .lastLedgerSequence)
+        memos = try? values.decodeIfPresent([MemoWrapper].self, forKey: .memos)
+        signers = try? values.decodeIfPresent([Signer].self, forKey: .signers)
+        sourceTag = try? values.decodeIfPresent(Int.self, forKey: .sourceTag)
+        signingPubKey = try? values.decodeIfPresent(String.self, forKey: .signingPubKey)
+        ticketSequence = try? values.decodeIfPresent(Int.self, forKey: .ticketSequence)
+        txnSignature = try? values.decodeIfPresent(String.self, forKey: .txnSignature)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -304,7 +304,6 @@ extension BaseTransaction {
  When the common param is malformed.
  */
 public func validateBaseTransaction(common: [String: AnyObject]) throws {
-    print("VALIDATE BASE TX")
     if common["Account"] == nil {
         throw ValidationError("BaseTransaction: missing field Account")
     }

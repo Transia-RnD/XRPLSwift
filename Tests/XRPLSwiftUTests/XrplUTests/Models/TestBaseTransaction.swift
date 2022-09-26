@@ -59,7 +59,6 @@ final class TestBaseTransaction: XCTestCase {
                 "TxnSignature":
                     "3045022100C6708538AE5A697895937C758E99A595B57A16393F370F11B8D4C032E80B532002207776A8E85BB9FAF460A92113B9C60F170CD964196B1F084E0DAB65BAEC368B66"
             ] as! [String: AnyObject]
-            print(baseTx)
             try validateBaseTransaction(common: baseTx)
         } catch {
             XCTAssertNil(error)

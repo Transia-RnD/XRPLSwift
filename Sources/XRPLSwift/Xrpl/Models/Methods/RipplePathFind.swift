@@ -148,7 +148,7 @@ public class RipplePathFindResponse: Codable {
         ledgerCurrentIndex = try values.decode(Int.self, forKey: .ledgerCurrentIndex)
         sourceAccount = try values.decode(String.self, forKey: .sourceAccount)
         validated = try values.decode(Bool.self, forKey: .validated)
-//        try super.init(from: decoder)
+        //        try super.init(from: decoder)
     }
 
     func toJson() throws -> [String: AnyObject] {

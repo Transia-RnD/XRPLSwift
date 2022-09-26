@@ -93,8 +93,8 @@ public class SubmitMultisignedResponse: Codable {
     /// The complete transaction in hex string format.
     public let txBlob: String
     /// The complete transaction in JSON format.
-//    public let tx_json: Transaction & { hash: String? }
     public let txJson: Transaction
+    //    public let tx_json: Transaction & { hash: String? }
 
     enum CodingKeys: String, CodingKey {
         case engineResult = "engine_result"

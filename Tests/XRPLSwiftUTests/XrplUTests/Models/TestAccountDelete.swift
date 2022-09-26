@@ -22,10 +22,8 @@ final class TestAccountDelete: XCTestCase {
             "Sequence": 2470665,
             "Flags": 2147483648
         ] as! [String: AnyObject]
-        print(txJson)
         let tx = try! AccountDelete(json: txJson)
         do {
-            print(try! tx.toJson())
             try validateAccountDelete(tx: tx.toJson())
         } catch {
             print(error.localizedDescription)
@@ -42,7 +40,6 @@ final class TestAccountDelete: XCTestCase {
             "Sequence": 2470665,
             "Flags": 2147483648
         ] as! [String: AnyObject]
-        print(txJson)
         do {
             _ = try AccountDelete(json: txJson)
         } catch {

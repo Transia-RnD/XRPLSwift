@@ -16,7 +16,7 @@ open class Majority: Codable {
     /// The Amendment ID of the pending amendment.
     let amendment: String
     /**
-     The `close_time` field of the ledger version where this amendment most
+     The `closeTime` field of the ledger version where this amendment most
      recently gained a majority.
      */
     let closeTime: Int

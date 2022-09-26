@@ -54,7 +54,7 @@ import WebSocketKit
 
 class LinuxWebSocket: _WebSocket, XRPLWebSocket {
     func subscribe(account: String) {
-        print()
+        print("UNIMPLEMENTED")
     }
 
     var ws: WebSocket!

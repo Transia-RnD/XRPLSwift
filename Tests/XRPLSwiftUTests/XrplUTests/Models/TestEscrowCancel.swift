@@ -24,7 +24,6 @@ final class TestEscrowCancel: XCTestCase {
     }
 
     func testA() {
-        print(TestEscrowCancel.baseTx)
         let tx = try! EscrowCancel(json: TestEscrowCancel.baseTx)
         do {
             try validateEscrowCancel(tx: tx.toJson())

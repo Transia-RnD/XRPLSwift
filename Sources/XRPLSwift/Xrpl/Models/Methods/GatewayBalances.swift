@@ -17,11 +17,11 @@ import Foundation
  @example
  ```swift
  let gatewayBalances = GatewayBalanceRequest(
-   id: "example_gateway_balances_1",
-   account: "rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q",
-   strict: true,
-   hotwallet: ["rKm4uWpg9tfwbVSeATv4KxDe6mpE9yPkgJ","ra7JkEzrgeKHdzKgo4EUUVBnxggY4z37kt"],
-   ledgerIndex: "validated"
+ id: "example_gateway_balances_1",
+ account: "rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q",
+ strict: true,
+ hotwallet: ["rKm4uWpg9tfwbVSeATv4KxDe6mpE9yPkgJ","ra7JkEzrgeKHdzKgo4EUUVBnxggY4z37kt"],
+ ledgerIndex: "validated"
  )
  ```
  *
@@ -29,23 +29,24 @@ import Foundation
 public class GatewayBalancesRequest: BaseRequest {
     /// The Address to check. This should be the issuing address.
     public let account: String
-  /**
-   If true, only accept an address or public key for the account parameter.
-   Defaults to false.
-   */
+    /**
+     If true, only accept an address or public key for the account parameter.
+     Defaults to false.
+     */
     public let strict: Bool?
-  /**
-   An operational address to exclude from the balances issued, or an array of
-   Such addresses.
-   */
-//    public let hotwallet: String | [String]?
+    /**
+     An operational address to exclude from the balances issued, or an array of
+     Such addresses.
+     */
     public let hotwallet: String?
+    //    public let hotwallet: String | [String]?
+
     /// A 20-byte hex string for the ledger version to use.
     public let ledgerHash: String?
-  /**
-   The ledger index of the ledger version to use, or a shortcut string to
-   choose a ledger automatically.
-   */
+    /**
+     The ledger index of the ledger version to use, or a shortcut string to
+     choose a ledger automatically.
+     */
     public let ledgerIndex: LedgerIndex?
 
     enum CodingKeys: String, CodingKey {
@@ -132,41 +133,41 @@ public struct BaseCurrency: Codable {
  */
 public class GatewayBalancesResponse: Codable {
     /// The address of the account that issued the balances.
-      public let account: String
+    public let account: String
     /**
      Total amounts issued to addresses not excluded, as a map of currencies
      to the total value issued.
      */
-      public let obligations: BaseCurrency?
+    public let obligations: BaseCurrency?
     /**
      Amounts issued to the hotwallet addresses from the request. The keys are
      addresses and the values are arrays of currency amounts they hold.
      */
-      public let balances: BaseBalance?
+    public let balances: BaseBalance?
     /**
      Total amounts held that are issued by others. In the recommended
      configuration, the issuing address should have none.
      */
-      public let assets: BaseBalance?
+    public let assets: BaseBalance?
     /**
      The identifying hash of the ledger version that was used to generate
      this response.
      */
-      public let ledgerHash: String?
+    public let ledgerHash: String?
     /**
      The ledger index of the current in-progress ledger version, which was
      used to retrieve this information.
      */
-      public let ledgerIndex: Int?
+    public let ledgerIndex: Int?
     /**
      The ledger index of the ledger version that was used to generate this
      response.
      */
-      public let ledgerCurrentIndex: Int?
+    public let ledgerCurrentIndex: Int?
     /**
      validated
      */
-      public let validated: Bool?
+    public let validated: Bool?
 
     enum CodingKeys: String, CodingKey {
         case account = "account"

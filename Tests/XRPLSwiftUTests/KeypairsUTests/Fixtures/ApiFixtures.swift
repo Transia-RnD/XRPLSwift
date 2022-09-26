@@ -84,7 +84,6 @@ internal class ApiFixtures {
             self.ED25519_ADDRESS = ""
             self.ED25519_SIGNATURE = ""
             self.ED25519_MESSAGE = ""
-            print(error.localizedDescription)
         }
     }
 }

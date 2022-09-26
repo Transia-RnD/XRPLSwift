@@ -12,13 +12,13 @@ import Foundation
 import NIO
 
 public class ClientOptions: ConnectionUserOptions {
-    public var feeCushion: Int?
+    public var feeCushion: Double?
     public var maxFeeXRP: String?
 
     init(
         timeout: Timer,
         proxy: String? = nil,
-        feeCushion: Int? = nil,
+        feeCushion: Double? = nil,
         maxFeeXRP: String? = nil
     ) {
         super.init()
@@ -163,7 +163,7 @@ public class XrplClient: ConnectionDelegate {
      *
      * @category Fee
      */
-    public let feeCushion: Int
+    public let feeCushion: Double
 
     /**
      * Maximum transaction cost to allow, in decimal XRP. Must be a string-encoded
@@ -185,7 +185,7 @@ public class XrplClient: ConnectionDelegate {
         if server.isValidWss {
             throw ValidationError("server URI must start with `wss://`, `ws://`, `wss+unix://`, or `ws+unix://`.")
         }
-        self.feeCushion = options?.feeCushion ?? Int(DEFAULT_FEE_CUSHION)
+        self.feeCushion = options?.feeCushion ?? Double(DEFAULT_FEE_CUSHION)
         self.maxFeeXRP = options?.maxFeeXRP ?? DEFAULT_MAX_FEE_XRP
         self.connection = Connection(url: server, options: options)
     }
@@ -312,9 +312,9 @@ public class XrplClient: ConnectionDelegate {
         return await request(r: r)
     }
 //    // swiftlint:disable:next identifier_name
-//    func request(_ r: ServerStateRequest) async -> EventLoopFuture<Any> {
-//        return await request(r: r)
-//    }
+    func request(_ r: ServerStateRequest) async -> EventLoopFuture<Any> {
+        return await request(r: r)
+    }
     // swiftlint:disable:next identifier_name
     func request(_ r: SubmitRequest) async -> EventLoopFuture<Any> {
         return await request(r: r)
@@ -355,7 +355,6 @@ public class XrplClient: ConnectionDelegate {
     }
 
     public func request<R: BaseRequest>(_ rdict: R) async throws -> EventLoopFuture<Any> {
-        print(try rdict.jsonString())
         let data = try JSONSerialization.data(withJSONObject: rdict, options: .prettyPrinted)
         let decoder = JSONDecoder()
         let base = try decoder.decode(R.self, from: data)
@@ -378,8 +377,6 @@ public class XrplClient: ConnectionDelegate {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Necessary for overloading
         //        print(req)
         //        guard var requestDict = req as? [String: AnyObject] else {
-        //            print("DAMN")
-        //            print("SO")
         //            return nil
         //        }
         //        if let account: String = requestDict["account"] as? String {
@@ -665,4 +662,3 @@ extension String {
         return range(of: "^[wW]{3}+.[a-zA-Z]{3,}+.[a-z]{2,}", options: .regularExpression) != nil
     }
 }
-

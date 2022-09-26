@@ -17,7 +17,7 @@ import Foundation
  @example
  ```ts
  const feeRequest: FeeRequest = {
-  command: 'fee'
+ command: 'fee'
  }
  ```
  */

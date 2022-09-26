@@ -172,7 +172,12 @@ public class RequestManager {
                 try self.reject(id: baseResponse.id, error: XrplError(errorMessage))
                 return
             }
-            try self.reject(id: baseResponse.id, error: RippledError(returnedDecodable.errorException!))
+            if let errorException = returnedDecodable.errorException {
+                try self.reject(id: baseResponse.id, error: RippledError(errorException))
+                return
+            }
+            let error = returnedDecodable.error
+            try self.reject(id: baseResponse.id, error: XrplError(error))
             return
         }
         if baseResponse.status != "success" {
@@ -402,14 +407,14 @@ public class RequestManager {
             try self.resolve(responseObj.id, responseObj, nil)
             return
         }
-//        if map.requestType.self is ServerStateRequest.Type {
-//            let responseObj = BaseResponse(
-//                response: baseResponse,
-//                result: CodableHelper.decode(ServerStateResponse.self, from: jsonData).decodableObj
-//            )
-//            try self.resolve(responseObj.id, responseObj, nil)
-//            return
-//        }
+        if map.requestType.self is ServerStateRequest.Type {
+            let responseObj = BaseResponse(
+                response: baseResponse,
+                result: CodableHelper.decode(ServerStateResponse.self, from: jsonData).decodableObj
+            )
+            try self.resolve(responseObj.id, responseObj, nil)
+            return
+        }
         if map.requestType.self is SubmitRequest.Type {
             let responseObj = BaseResponse(
                 response: baseResponse,

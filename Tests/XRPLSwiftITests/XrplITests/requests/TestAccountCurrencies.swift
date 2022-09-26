@@ -56,8 +56,6 @@ final class TestIAccountCurrencies: RippledITestCase {
         var expectedJson: [String: AnyObject] = expected["result"] as! [String: AnyObject]
         expectedJson["ledger_hash"] = nil
         expectedJson["ledger_index"] = nil
-        print(responseJson)
-        print(expectedJson)
         XCTAssert(responseJson == expectedJson)
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)

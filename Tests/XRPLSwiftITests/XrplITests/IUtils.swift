@@ -43,7 +43,6 @@ public func fundAccount(
         return
     }
     await ledgerAccept(client: client)
-    print(response)
     var signedTx: [String: AnyObject] = try! result.txJson.toJson()
     signedTx["hash"] = nil
     //    await verifySubmittedTransaction(client: client, tx: try! Transaction(signedTx)!)
@@ -61,7 +60,6 @@ public func verifySubmittedTransaction(
     tx: Transaction,
     hashTx: String? = nil
 ) async {
-    print("verifySubmittedTransaction")
     //    let hash = hashTx ?? try! hashSignedTx(tx: tx)
     //    let response = await client.request(TxRequest([
     //        "command": "tx",

@@ -69,8 +69,6 @@ class FieldInstance {
         fieldName: String,
         fieldHeader: FieldHeader
     ) {
-        print("CONSTRUCT FIELD INSTANCE")
-        print(fieldInfo.type)
         self.nth = fieldInfo.nth
         self.isVLEncoded = fieldInfo.isVLEncoded
         self.isSerialized = fieldInfo.isSerialized
@@ -79,6 +77,7 @@ class FieldInstance {
         self.name = fieldName
         self.header = fieldHeader
         self.ordinal = header.typeCode << 16 | nth
+        // TODO: this fails
         self.associatedType = getTypeByName(name: self.type)!
     }
 }

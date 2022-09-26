@@ -104,8 +104,6 @@ public struct AccountNFToken: Codable {
 
 /**
  Response expected from an {@link AccountNFTsRequest}.
- *
- @category Responses
  */
 public class AccountNFTsResponse: Codable {
     /**
@@ -149,7 +147,7 @@ public class AccountNFTsResponse: Codable {
         validated = try values.decode(Bool.self, forKey: .validated)
         limit = try values.decodeIfPresent(Int.self, forKey: .limit)
         marker = try values.decodeIfPresent(AnyCodable.self, forKey: .marker)
-//        try super.init(from: decoder)
+        //        try super.init(from: decoder)
     }
 
     func toJson() throws -> [String: AnyObject] {

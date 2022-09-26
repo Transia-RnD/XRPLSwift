@@ -10,18 +10,18 @@
 
 import Foundation
 
+/**
+ Represents a [EscrowCancel](https://xrpl.org/escrowcancel.html) transaction,
+ transaction, which returns escrowed XRP to the sender after the Escrow has
+ expired.
+ */
 public class EscrowCancel: BaseTransaction {
-    /**
-     Represents an `EscrowCancel <https://xrpl.org/escrowcancel.html>`_
-     transaction, which returns escrowed XRP to the sender after the Escrow has
-     expired.
-     */
+    /// Address of the source account that funded the escrow payment.
     public var owner: String
 
     /**
      Transaction sequence (or Ticket number) of the EscrowCreate transaction
      that created the Escrow. This field is required.
-     
      */
     public var offerSequence: Int
 
@@ -36,7 +36,7 @@ public class EscrowCancel: BaseTransaction {
         super.init(account: "", transactionType: "EscrowCancel")
     }
 
-    public override init(json: [String: AnyObject]) throws {
+    override public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(EscrowCancel.self, from: data)
@@ -45,7 +45,7 @@ public class EscrowCancel: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         owner = try values.decode(String.self, forKey: .owner)
         offerSequence = try values.decode(Int.self, forKey: .offerSequence)

@@ -28,7 +28,7 @@ func currencyToHex(currency: String) -> String {
     if currency.count != 3 {
         return currency
     }
-    
+
     var bytes = [UInt8].init(repeating: 0, count: 20)
 //    bytes[12] = UInt8(Character(currency[0].asciiValue).unicodeScalarCodePoint & MASK)
 //    bytes[13] = UInt8(Character(currency[1].asciiValue).unicodeScalarCodePoint & MASK)

@@ -48,8 +48,6 @@ public func assertResultMatch<T: Codable>(
     expected: [String: AnyObject],
     _schemaName: String? = nil
 ) {
-    print(response)
-//    print(expected)
 //    guard let type = T.Type else {
 //        XCTFail("TESTING: Invalid Type")
 //    }

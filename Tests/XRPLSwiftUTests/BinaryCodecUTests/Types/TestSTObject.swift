@@ -36,7 +36,6 @@ final class TestSTObject: XCTestCase {
 
     func testFromValue() {
         let transaction: STObject = try! STObject.from(value: self.EXPECTED_JSON)
-        print("TRANSACTION: \(transaction.toJson())")
         XCTAssertEqual(self.BUFFER, transaction.str())
     }
 
@@ -50,7 +49,6 @@ final class TestSTObject: XCTestCase {
         let parser: BinaryParser = BinaryParser(hex: self.BUFFER)
         let transaction: SerializedType = try! STObject().fromParser(parser: parser, hint: nil)
         let result: [String: Any] = transaction.toJson()
-        print(result)
 //        XCTAssertEqual(result, self.EXPECTED_JSON)
     }
 

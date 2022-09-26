@@ -63,14 +63,13 @@ public class XrplCodec {
      */
     public static func decode(b58String: String, prefix: [UInt8]) throws -> [UInt8] {
         let prefixLength: Int = prefix.count
-        guard let decodedData = Data(base58Decoding: b58String) else {
+        guard let decodedData = Base58.base58CheckDecode(b58String) else {
+            throw AddressCodecError.invalidCheckSum()
+        }
+        if [UInt8](decodedData[0..<(prefixLength)]) != prefix {
             throw AddressCodecError.invalidPrefix()
         }
-        let versionEntropy = decodedData.bytes.prefix(decodedData.bytes.count - 4)
-        if [UInt8](versionEntropy[0...(prefixLength - 1)]) != prefix {
-            throw AddressCodecError.invalidPrefix()
-        }
-        return [UInt8](versionEntropy[prefixLength...])
+        return [UInt8](decodedData[prefixLength...])
     }
 
     /**
@@ -107,7 +106,6 @@ public class XrplCodec {
     public static func decodeSeed(seed: String) throws -> ([UInt8], AlgorithmType) {
         for seedType in AlgorithmType.types {
             if seedType == .ed25519 {
-                print("ed25519")
                 do {
                     let prefix: [UInt8] = _ED25519_SEED_PREFIX
                     let decodedResult: [UInt8] = try self.decode(b58String: seed, prefix: prefix)
@@ -117,7 +115,6 @@ public class XrplCodec {
                 }
             }
             if seedType == .secp256k1 {
-                print("secp256k1")
                 do {
                     let prefix: [UInt8] = _FAMILY_SEED_PREFIX
                     let decodedResult: [UInt8] = try self.decode(b58String: seed, prefix: prefix)

@@ -98,8 +98,8 @@ public class TransactionEntryResponse: Codable {
      */
     public let metadata: TransactionMetadata
     /// JSON representation of the Transaction object.
-//    public let txJson: Transaction + ResponseOnlyTxInfo
     public let txJson: Transaction
+    //    public let txJson: Transaction + ResponseOnlyTxInfo
 
     enum CodingKeys: String, CodingKey {
         case ledgerHash = "ledger_hash"
@@ -114,7 +114,7 @@ public class TransactionEntryResponse: Codable {
         ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
         metadata = try values.decode(TransactionMetadata.self, forKey: .metadata)
         txJson = try values.decode(Transaction.self, forKey: .txJson)
-//        try super.init(from: decoder)
+        //        try super.init(from: decoder)
     }
 
     func toJson() throws -> [String: AnyObject] {

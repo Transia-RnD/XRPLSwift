@@ -18,7 +18,7 @@ import Foundation
  @example
  ```swift
  let manifest: ManifestRequest(
-  publicKey: "nHUFE9prPXPrHcG3SkwP1UzAQbSphqyQkQK9ATXLZsfkezhhda3p"
+ publicKey: "nHUFE9prPXPrHcG3SkwP1UzAQbSphqyQkQK9ATXLZsfkezhhda3p"
  )
  ```
  */
@@ -83,7 +83,7 @@ public class ManifestResponse: Codable {
     public let requested: String
     /**
      The data contained in this manifest. Omitted if the server does not have
-      A manifest for the public_key from the request.
+     A manifest for the public_key from the request.
      */
     public let details: ManifestDetails?
     /**

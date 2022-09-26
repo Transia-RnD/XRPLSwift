@@ -30,7 +30,6 @@ final class TestEscrowCreate: XCTestCase {
     }
 
     func testA() {
-        print(TestEscrowCreate.baseTx)
         let tx = try! EscrowCreate(json: TestEscrowCreate.baseTx)
         do {
             try validateEscrowCreate(tx: tx.toJson())

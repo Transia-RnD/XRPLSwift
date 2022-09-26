@@ -48,7 +48,7 @@ open class Check: BaseLedgerEntry {
      currency for up to this amount.
      */
     public let sendMax: Amount
-    /*The sequence number of the CheckCreate transaction that created this check. */
+    /// The sequence number of the CheckCreate transaction that created this check.
     public let sequence: Int
     /**
      A hint indicating which page of the destination's owner directory links to
@@ -60,7 +60,7 @@ open class Check: BaseLedgerEntry {
      as a hosted recipient at the destination address.
      */
     public let destinationTag: Int?
-    /*Indicates the time after which this Check is considered expired. */
+    /// Indicates the time after which this Check is considered expired.
     public let expiration: Int?
     /**
      Arbitrary 256-bit hash provided by the sender as a specific reason or

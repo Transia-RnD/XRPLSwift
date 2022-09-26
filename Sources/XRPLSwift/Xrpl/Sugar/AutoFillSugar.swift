@@ -69,7 +69,7 @@ public class AutoFillSugar {
         promise.succeed(tx)
         return promise.futureResult
     }
-    
+
     func setValidAddresses(tx: inout [String: AnyObject]) throws {
         try validateAccountAddress(tx: &tx, accountField: "Account", tagField: "SourceTag")
         // eslint-disable-next-line @typescript-eslint/dot-notation -- Destination can exist on Transaction
@@ -116,7 +116,7 @@ public class AutoFillSugar {
             }
             return ClassicAccountAndTag(
                 classicAccount: classic.classicAddress,
-                tag: Int(classic.tag!)
+                tag: classic.tag as? Int
             )
         }
         return ClassicAccountAndTag(
@@ -139,17 +139,17 @@ public class AutoFillSugar {
     ) async {
         let request = AccountInfoRequest(account: tx["Account"] as! String, ledgerIndex: .string("current"))
         let response = try! await client.request(r: request).wait() as? BaseResponse<AccountInfoResponse>
-        tx["sequence"] = response!.result?.accountData.sequence as AnyObject
+        tx["Sequence"] = response!.result?.accountData.sequence as AnyObject
     }
 
-    func fetchAccountDeleteFee(client: XrplClient) async -> Decimal {
+    func fetchAccountDeleteFee(client: XrplClient) async -> Double {
         let request = ServerStateRequest()
         let response = try! await client.request(request).wait() as? BaseResponse<ServerStateResponse>
         let fee = response!.result?.state.validatedLedger?.reserveIncXrp
         if fee == nil {
             //        return Promise.reject(XrplError("Could not fetch Owner Reserve."))
         }
-        return Decimal(fee!)
+        return Double(fee!)
     }
 
     func calculateFeePerTransactionType(
@@ -160,37 +160,33 @@ public class AutoFillSugar {
         // netFee is usually 0.00001 XRP (10 drops)
         let netFeeXRP = try await getFeeXrp(client: client)
         let netFeeDrops = try xrpToDrops(netFeeXRP)
-//        let baseFee = Decimal(netFeeDrops)
+        var baseFee = Double(netFeeDrops)
 
-//        // EscrowFinish Transaction with Fulfillment
-//        if tx["TransactionType"] == "EscrowFinish" && tx["Fulfillment"] != nil {
-//            let fulfillmentBytesSize: Int = Math.ceil(tx["Fulfillment"].length / 2)
-//            // 10 drops × (33 + (Fulfillment size in bytes / 16))
-//            let product = Decimal(scaleValue(netFeeDrops, 33 + fulfillmentBytesSize / 16))
-//            baseFee = product.dp(0, Int.ROUND_CEIL)
-//        }
-//
-//        // AccountDelete Transaction
-//        if tx["TransactionType"] == "AccountDelete" {
-//            baseFee = await fetchAccountDeleteFee(client)
-//        }
+        // EscrowFinish Transaction with Fulfillment
+        if tx["TransactionType"] as! String == "EscrowFinish" && tx["Fulfillment"] != nil {
+            let fulfillmentBytesSize: Int = Int(ceil(Double((tx["Fulfillment"] as! String).count / 2)))
+            // 10 drops × (33 + (Fulfillment size in bytes / 16))
+            let product = Double(scaleValue(value: netFeeDrops, multiplier: 33 + fulfillmentBytesSize / 16))
+            baseFee = ceil(Double(product!))
+        }
+
+        // AccountDelete Transaction
+        if tx["TransactionType"] as! String == "AccountDelete" {
+            baseFee = await fetchAccountDeleteFee(client: client)
+        }
 
         /*
          * Multi-signed Transaction
          * 10 drops × (1 + Number of Signatures Provided)
          */
-//        if signersCount! > 0 {
-//            baseFee = BigInt.sum(baseFee, scaleValue(netFeeDrops, 1 + signersCount))
-//        }
+        if signersCount! > 0 {
+            baseFee = baseFee! + Double(scaleValue(value: netFeeDrops, multiplier: 1 + signersCount!))!
+        }
 
-//        let maxFeeDrops = xrpToDrops(client.maxFeeXRP)
-//        let totalFee = tx["TransactionType"] == "AccountDelete"
-//        ? baseFee
-//        : BigNumber.min(baseFee, maxFeeDrops)
-
-        //        Round up baseFee and return it as a string
-        //        tx.Fee = totalFee.dp(0, Int.ROUND_CEIL).toString(10)
-        tx["Fee"] = "100" as AnyObject
+        let maxFeeDrops = try xrpToDrops(client.maxFeeXRP)
+        let totalFee = tx["TransactionType"] as! String == "AccountDelete" ? baseFee : min(baseFee!, Double(maxFeeDrops)!)
+//        Round up baseFee and return it as a string
+        tx["Fee"] = String(Int(ceil(totalFee!))) as AnyObject
     }
 
     func scaleValue(value: String, multiplier: Int) -> String {

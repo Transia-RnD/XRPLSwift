@@ -200,7 +200,7 @@ public class AccountOffersResponse: Codable {
         ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
         ledgerIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerIndex)
         marker = try values.decodeIfPresent(AnyCodable.self, forKey: .marker)
-//        try super.init(from: decoder)
+        //        try super.init(from: decoder)
     }
 
     func toJson() throws -> [String: AnyObject] {

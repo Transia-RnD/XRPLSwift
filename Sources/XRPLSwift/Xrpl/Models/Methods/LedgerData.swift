@@ -18,10 +18,10 @@ import Foundation
  @example
  ```swift
  let ledgerDataRequest: LedgerDataRequest(
-   id: 2,
-   ledgerHash: "842B57C1CC0613299A686D3E9F310EC0422C84D3911E5056389AA7E5808A93C8",
-   limit: 5,
-   binary: true
+ id: 2,
+ ledgerHash: "842B57C1CC0613299A686D3E9F310EC0422C84D3911E5056389AA7E5808A93C8",
+ limit: 5,
+ binary: true
  )
  ```
  */
@@ -121,8 +121,6 @@ public struct State: Codable {
 
 /**
  The response expected from a {@link LedgerDataRequest}.
- *
- @category Responses
  */
 public class LedgerDataResponse: Codable {
     /**

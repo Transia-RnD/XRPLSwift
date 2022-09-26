@@ -83,7 +83,6 @@ class xPathStep: SerializedType {
          XRPLBinaryCodecException: If the number of bytes in the buffer
          is not a multiple of the hash length.
          */
-//        print(self.toHex())
         let parser = BinaryParser(hex: self.toHex())
         let dataType = Int(parser.readUInt8())
         var json: [String: AnyObject] = [:]
@@ -160,11 +159,8 @@ class xPathSet: SerializedType {
         if isPathSet(value: value) {
             var buffer: [UInt8] = []
             for pathDict in value {
-                print(pathDict)
                 let path = try! xPath.from(value: pathDict)
-                print(path.bytes)
                 buffer.append(contentsOf: path.bytes)
-                print([UInt8(PATH_SEPARATOR_BYTE)])
                 buffer.append(contentsOf: [UInt8(PATH_SEPARATOR_BYTE)])
             }
             buffer[buffer.count - 1] = UInt8(PATHSET_END_BYTE)

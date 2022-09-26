@@ -25,7 +25,6 @@ final class TestRequest: XCTestCase {
 //        let builtRequest = AccountObjectsRequest(account: MockRippled1.account_objects.normal)
 //        let request = try! await self.client.request(req: builtRequest)
 //        request?.whenFailure({ error in
-//            print(error)
 //            XCTFail()
 //            exp.fulfill()
 //        })

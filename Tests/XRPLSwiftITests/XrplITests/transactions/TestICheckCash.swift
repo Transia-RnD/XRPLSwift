@@ -55,7 +55,6 @@ final class TestICheckCash: RippledITestCase {
         }
 
         // actual test - cancel the check
-        print(check.index)
         let txJson = [
             "TransactionType": "CheckCash",
             "Account": self.wallet.classicAddress,

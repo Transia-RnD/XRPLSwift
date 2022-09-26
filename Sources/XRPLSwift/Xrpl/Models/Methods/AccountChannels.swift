@@ -48,7 +48,7 @@ public struct Channel: Codable {
  the ledger. Returns an {@link AccountChannelsResponse}.
  */
 public class AccountChannelsRequest: BaseRequest {
-//    var command: String = "account_channels"
+    //    var command: String = "account_channels"
     /**
      The unique identifier of an account, typically the account's address. The
      request returns channels where this account is the channel's owner/source.

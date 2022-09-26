@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Ticket.swift
 //  
 //
 //  Created by Denis Angell on 7/30/22.
@@ -38,7 +38,7 @@ open class Ticket: BaseLedgerEntry {
      modified this object.
      */
     let previousTxnLgrSeq: Int
-    /*The Sequence Number this Ticket sets aside. */
+    /// The Sequence Number this Ticket sets aside.
     let ticketSequence: Int
 
     enum CodingKeys: String, CodingKey {

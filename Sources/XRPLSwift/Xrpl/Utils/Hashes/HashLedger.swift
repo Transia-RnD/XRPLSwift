@@ -75,7 +75,7 @@ public func hashSignedTx(tx: String) throws -> String {
         throw ValidationError("The transaction must be signed to hash it.")
     }
 
-    let prefix: String = String(HashPrefix.TRANSACTION_ID.rawValue, radix: 16).uppercased()
+    let prefix = String(HashPrefix.TRANSACTION_ID.rawValue, radix: 16)
     return sha512Half(hex: prefix + txBlob)
 }
 

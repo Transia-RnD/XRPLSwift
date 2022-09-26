@@ -9,6 +9,8 @@
 
 import Foundation
 import Network
+import OSLog
+
 @testable import XRPLSwift
 
 func createResponse(
@@ -23,14 +25,30 @@ func createResponse(
     return jsonToString(cloneResp)
 }
 
+public struct MockError: Error {
+    var message: String?
+    var data: Data?
+
+    init(_ message: String?, _ data: Data? = nil) {
+        if let message = message {
+            self.message = message
+        }
+        self.data = data
+    }
+}
+
 public class PortResponse: BaseResponse<Any> {}
 
 class MockRippledSocket {
+
+    var logger = Logger()
+
     var listener: NWListener
     var connectedClients: [NWConnection] = []
 
     var timer: Timer?
     var responses: [String: AnyObject] = [:]
+    var suppressOutput: Bool = false
 
     init(port: Int) {
 
@@ -57,90 +75,94 @@ class MockRippledSocket {
     func start() {
         let serverQueue = DispatchQueue(label: "ServerQueue")
         listener.newConnectionHandler = { newConnection in
-            print("New connection connecting")
-            func receive() {
-                newConnection.receiveMessage { (data, context, _, error) in
-                    var request: [String: AnyObject] = [:]
-                    guard let data = data, let context = context else {
-                        receive()
-                        return
-                    }
-                    do {
-                        print("Received a new message from client")
-                        request = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as! [String: AnyObject]
-                        print(request)
-                        print(context)
-
-                        if request["id"] == nil {
-                            fatalError("Request has no id: \(jsonToString(request))")
-                        }
-                        if request["command"] == nil {
-                            fatalError("Request has no id: \(jsonToString(request))")
-                        }
-                        if request["command"] as! String == "ping" {
-                            try self.ping(conn: newConnection, request: request)
-                        } else if request["command"] as! String == "test_command" {
-                            try self.testCommand(conn: newConnection, request: request)
-                        } else if self.responses[request["command"] as! String] != nil {
-                            try self.send(conn: newConnection, string: try createResponse(request: request, response: try self.getResponse(request: request)))
-                        } else {
-                            fatalError("No event handler registered in mock rippled for \(request["command"])")
-                        }
-                    } catch {
-                        print(error.localizedDescription)
-//                        if (!(err instanceof Error)) {
-//                          throw err
-//                        }
-//
-//                        if (!mock.suppressOutput) {
-//                          // eslint-disable-next-line no-console -- only printed out on error
-//                          console.error(err.message)
-//                        }
-//                        if (request != null) {
-//                          conn.send(
-//                            createResponse(request, {
-//                              type: 'response',
-//                              status: 'error',
-//                              error: err.message,
-//                            }),
-//                          )
-//                        }
-                    }
-
-                }
-            }
-            receive()
+            self.logger.info("New connection connecting")
 
             newConnection.stateUpdateHandler = { state in
                 switch state {
-                case .ready:
-                    print("Client ready")
-//                    try! self.sendMessageToClient(data: JSONEncoder().encode(["t": "connect.connected"]), client: newConnection)
-                case .failed(let error):
-                    print("Client connection failed \(error.localizedDescription)")
-                case .waiting(let error):
-                    print("Waiting for long time \(error.localizedDescription)")
-                default:
-                    break
+                    case .ready:
+                        self.logger.info("Client ready")
+                        self.receive(conn: newConnection)
+                    case .failed(let error):
+                        self.logger.info("Client connection failed \(error.localizedDescription)")
+                    case .waiting(let error):
+                        self.logger.info("Waiting for long time \(error.localizedDescription)")
+                    default:
+                        self.logger.info("LISTENER UNKNOWN STATE")
+                        break
                 }
             }
-
             newConnection.start(queue: serverQueue)
         }
 
         listener.stateUpdateHandler = { state in
             switch state {
-            case .ready:
-                print("Server Ready")
-            case .failed(let error):
-                print("Server failed with \(error.localizedDescription)")
-            default:
-                break
+                case .ready:
+                    self.logger.info("Server Ready")
+                case .failed(let error):
+                    self.logger.info("Server failed with \(error.localizedDescription)")
+                default:
+                    self.logger.info("LISTENER UNKNOWN STATE")
+                    break
             }
         }
 
         listener.start(queue: serverQueue)
         startTimer()
+    }
+
+    func receive(conn: NWConnection) {
+        conn.receiveMessage { (data, context, _, error) in
+            self.logger.info("[MOCK] receive")
+            var request: [String: AnyObject] = [:]
+            print(request)
+            guard let data = data, let context = context else {
+                return
+            }
+            do {
+                self.logger.info("[MOCK] NEW MESSAGE")
+                request = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as! [String: AnyObject]
+                self.logger.info("\(jsonToString(request))")
+
+                if request["id"] == nil {
+                    throw XrplError("Request has no id: \(jsonToString(request))")
+                }
+                if request["command"] == nil {
+                    throw XrplError("Request has no id: \(jsonToString(request))")
+                }
+                if request["command"] as! String == "ping" {
+                    try self.ping(conn: conn, request: request)
+                } else if request["command"] as! String == "test_command" {
+                    try self.testCommand(conn: conn, request: request)
+                } else if self.responses[request["command"] as! String] != nil {
+                    try self.send(
+                        conn: conn,
+                        string: try createResponse(
+                            request: request,
+                            response: try self.getResponse(request: request)
+                        )
+                    )
+                } else {
+                    throw XrplError("No event handler registered in mock rippled for \(request["command"])")
+                }
+            } catch let error as XrplError {
+                if !self.suppressOutput {
+                    // eslint-disable-next-line no-console -- only logger.infoed out on error
+//                    console.error(error.message)
+                    self.logger.error("\(error.localizedDescription)")
+                }
+                if !request.isEmpty {
+                    let errorResponse = [
+                        "type": "response",
+                        "status": "error",
+                        "error": error.message,
+                    ] as [String: AnyObject]
+                    try! self.send(conn: conn, string: try createResponse(request: request, response: errorResponse))
+                }
+            } catch {
+                fatalError(error.localizedDescription)
+            }
+            self.receive(conn: conn)
+        }
     }
 
     func startTimer() {
@@ -162,7 +184,7 @@ class MockRippledSocket {
         let context = NWConnection.ContentContext(identifier: "context", metadata: [metadata])
         conn.send(content: data, contentContext: context, isComplete: true, completion: .contentProcessed({ error in
             if let error = error {
-                print(error.localizedDescription)
+                self.logger.info("\(error.localizedDescription)")
             } else {
                 // no-op
             }
@@ -176,7 +198,7 @@ class MockRippledSocket {
     //
     //        client.send(content: data, contentContext: context, isComplete: true, completion: .contentProcessed({ error in
     //            if let error = error {
-    //                print(error.localizedDescription)
+    //                logger.info(error.localizedDescription)
     //            } else {
     //                // no-op
     //            }
@@ -189,7 +211,7 @@ class MockRippledSocket {
         let context = NWConnection.ContentContext(identifier: "context", metadata: [metadata])
         conn.send(content: data, contentContext: context, isComplete: true, completion: .contentProcessed({ error in
             if let error = error {
-                print(error.localizedDescription)
+                self.logger.info("\(error.localizedDescription)")
             } else {
                 // no-op
             }
@@ -202,7 +224,7 @@ class MockRippledSocket {
      * If a function is passed in for `response`, then the response can be determined by the exact request shape
      */
     func addResponse(command: String, response: [String: AnyObject]) throws {
-        if response["type"] != nil && response["error"] != nil {
+        if response["type"] == nil && response["error"] == nil {
             throw XrplError("Bad response format. Must contain `type` or `error`. \(jsonToString(response))")
         }
         self.responses[command] = response as AnyObject
@@ -223,8 +245,8 @@ class MockRippledSocket {
     func testCommand(conn: NWConnection, request: [String: AnyObject]) throws {
         let data: [String: AnyObject] = request["data"] as! [String: AnyObject]
         if let disconnectIn = data["disconnectIn"] as? Int {
-            print("disconnectIn")
-            print(disconnectIn)
+            logger.info("disconnectIn")
+            logger.info("\(disconnectIn)")
             //          setTimeout(conn.terminate.bind(conn), request.data.disconnectIn)
             let response: [String: AnyObject] = [
                 "result": [:],
@@ -237,8 +259,8 @@ class MockRippledSocket {
                 string: responseString
             )
         } else if let openOnOtherPort = data["openOnOtherPort"] as? Int {
-            print("openOnOtherPort")
-            print(openOnOtherPort)
+            logger.info("openOnOtherPort")
+            logger.info("\(openOnOtherPort)")
             //          getFreePort().then((newPort) => {
             //            createMockRippled(newPort)
             //            conn.send(
@@ -250,15 +272,15 @@ class MockRippledSocket {
             //            )
             //          })
         } else if let closeServerAndReopen = data["closeServerAndReopen"] as? Int {
-            print("closeServerAndReopen")
-            print(closeServerAndReopen)
-//            conn.terminate()
-//            mock.close(() => {
-//                createMockRippled(port)
-//            })
+            logger.info("closeServerAndReopen")
+            logger.info("\(closeServerAndReopen)")
+            //            conn.terminate()
+            //            mock.close(() => {
+            //                createMockRippled(port)
+            //            })
         } else if let unrecognizedResponse = data["unrecognizedResponse"] as? Int {
-            print("unrecognizedResponse")
-            print(unrecognizedResponse)
+            logger.info("unrecognizedResponse")
+            logger.info("\(unrecognizedResponse)")
             let response: [String: AnyObject] = [
                 "result": [:],
                 "status": "unrecognized",
@@ -267,14 +289,14 @@ class MockRippledSocket {
             let responseString: String = try createResponse(request: request, response: response)
             try self.send(conn: conn, string: responseString)
         } else if let closeServer = data["closeServer"] as? Int {
-            print("closeServer")
-            print(closeServer)
+            logger.info("closeServer")
+            logger.info("\(closeServer)")
             conn.forceCancel()
             listener.cancel()
-            print(conn.state)
+//            logger.info("\(conn.state)")
         } else if let delayedResponseIn = data["delayedResponseIn"] as? Int {
-            print("delayedResponseIn")
-            print(delayedResponseIn)
+            logger.info("delayedResponseIn")
+            logger.info("\(delayedResponseIn)")
             let response: [String: AnyObject] = [
                 "result": [:],
                 "status": "Success",

@@ -9,7 +9,7 @@ import XRPLSwift
 
 class WebSocketTester: XRPLWebSocketDelegate {
     func onResponse(connection: XRPLWebSocket, response: BaseResponse<Any>) {
-        print("HERE")
+        print("onResponse")
 //        self.completion(response)
     }
 
@@ -32,10 +32,11 @@ class WebSocketTester: XRPLWebSocketDelegate {
     }
 
     func onResponse(connection: XRPLWebSocket, response: XRPLWebSocketResponse) {
+        print("onResponse")
         self.completion(response)
     }
 
     func onStream(connection: XRPLWebSocket, object: NSDictionary) {
-        print(object)
+        print("onStream")
     }
 }

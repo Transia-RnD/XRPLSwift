@@ -8,8 +8,8 @@
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/client/ConnectionManager.ts
 
 import Foundation
-import NIOCore
 import NIO
+import NIOCore
 
 let eventGroup = MultiThreadedEventLoopGroup(numberOfThreads: 4)
 
@@ -30,7 +30,6 @@ public class ConnectionManager {
      * Resolves all awaiting connections.
      */
     public func resolveAllAwaiting() {
-        print(promisesAwaitingConnection)
         _ = self.promisesAwaitingConnection.map { resolve in
             resolve.succeed("")
         }

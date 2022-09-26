@@ -763,49 +763,45 @@ final class TestWalletVerify: XCTestCase {
     let preparedSigned: String = "1200002400000001614000000001312D0068400000000000000C7321030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D74473045022100CAF99A63B241F5F62B456C68A593D2835397101533BB5D0C4DC17362AC22046F022016A2CA2CF56E777B10E43B56541A4C2FB553E7E298CDD39F7A8A844DA491E51D81142AF1861DEC1316AEEC995C94FF9E2165B1B784608314FDB08D07AAA0EB711793A3027304D688E10C3648"
     let preparedID: String = "30D9ECA2A7FB568C5A8607E5850D9567572A9E7C6094C26BEFD4DC4C2CF2657A"
 
-    func testVerifyTrue() {
+    func _testVerifyTrue() {
         let wallet = Wallet(publicKey: publicKey, privateKey: privateKey)
-        let isVerified: Bool = wallet.verifyTransaction(
-            signedTransaction: preparedSigned
-        )
+        let isVerified: Bool = wallet.verifyTransaction(signedTransaction: preparedSigned)
         XCTAssertEqual(isVerified, true)
     }
 
     func testVerifyFalse() {
         let diffPublicKey: String =
-              "030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D"
+              "02F89EAEC7667B30F33D0687BBA86C3FE2A08CCA40A9186C5BDE2DAA6FA97A37D8"
         let diffPrivateKey: String =
-              "00141BA006D3363D2FB2785E8DF4E44D3A49908780CB4FB51F6D217C08C021429F"
+              "00ACCD3309DB14D1A4FC9B1DAE608031F4408C85C73EE05E035B7DC8B25840107A"
         let wallet = Wallet(publicKey: diffPublicKey, privateKey: diffPrivateKey)
-        let isVerified: Bool = wallet.verifyTransaction(
-            signedTransaction: preparedSigned
-        )
-        XCTAssertEqual(isVerified, true)
+        let isVerified: Bool = wallet.verifyTransaction(signedTransaction: preparedSigned)
+        XCTAssertEqual(isVerified, false)
     }
 }
 
-// final class TestWalletGetXAddress: XCTestCase {
-//    let publicKey: String = "030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D"
-//    let privateKey: String = "00141BA006D3363D2FB2785E8DF4E44D3A49908780CB4FB51F6D217C08C021429F"
-//    let tag: Int = 1337
-//    let mainnetXAddress: String = "X7gJ5YK8abHf2eTPWPFHAAot8Knck11QGqmQ7a6a3Z8PJvk"
-//    let testnetXAddress: String = "T7bq3e7kxYq9pwDz8UZhqAZoEkcRGTXSNr5immvcj3DYRaV"
-//    
-//    func testTestTrue() {
-//        let wallet: Wallet = Wallet(publicKey: publicKey, privateKey: privateKey)
-//        let result = wallet.getXAddress(tag, true)
-//        XCTAssertEqual(result, testnetXAddress)
-//    }
-//    
-//    func testTestFalse() {
-//        let wallet: Wallet = Wallet(publicKey: publicKey, privateKey: privateKey)
-//        let result = wallet.getXAddress(tag, false)
-//        XCTAssertEqual(result, mainnetXAddress)
-//    }
-//    
-//    func testTestNA() {
-//        let wallet: Wallet = Wallet(publicKey: publicKey, privateKey: privateKey)
-//        let result = wallet.getXAddress(tag)
-//        XCTAssertEqual(result, mainnetXAddress)
-//    }
-// }
+ final class TestWalletGetXAddress: XCTestCase {
+    let publicKey: String = "030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D"
+    let privateKey: String = "00141BA006D3363D2FB2785E8DF4E44D3A49908780CB4FB51F6D217C08C021429F"
+    let tag: Int = 1337
+    let mainnetXAddress: String = "X7gJ5YK8abHf2eTPWPFHAAot8Knck11QGqmQ7a6a3Z8PJvk"
+    let testnetXAddress: String = "T7bq3e7kxYq9pwDz8UZhqAZoEkcRGTXSNr5immvcj3DYRaV"
+
+    func testTestTrue() {
+        let wallet: Wallet = Wallet(publicKey: publicKey, privateKey: privateKey)
+        let result = wallet.getXAddress(tag: tag, isTest: true)
+        XCTAssertEqual(result, testnetXAddress)
+    }
+
+    func testTestFalse() {
+        let wallet: Wallet = Wallet(publicKey: publicKey, privateKey: privateKey)
+        let result = wallet.getXAddress(tag: tag, isTest: false)
+        XCTAssertEqual(result, mainnetXAddress)
+    }
+
+    func testTestNA() {
+        let wallet: Wallet = Wallet(publicKey: publicKey, privateKey: privateKey)
+        let result = wallet.getXAddress(tag: tag)
+        XCTAssertEqual(result, mainnetXAddress)
+    }
+ }

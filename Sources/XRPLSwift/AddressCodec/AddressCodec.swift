@@ -11,7 +11,7 @@ import Foundation
 
 public struct FullClassicAddress {
     public var classicAddress: String = ""
-    public var tag: UInt32?
+    public var tag: Int?
     public var isTest = false
 }
 
@@ -36,8 +36,7 @@ public class AddressCodec {
         tag: Int? = nil,
         isTest: Bool = false
     ) throws -> String {
-        let accountID = try! XrplCodec.decodeClassicAddress(classicAddress: classicAddress)
-        print(accountID)
+        let accountID = try XrplCodec.decodeClassicAddress(classicAddress: classicAddress)
         if accountID.count != 20 {
             throw AddressCodecError.invalidLength(error: "Account ID must be 20 bytes")
         }
@@ -78,7 +77,7 @@ public class AddressCodec {
             throw AddressCodecError.invalidAddress
         }
         let isTest: Bool = try self.isTestAddress(prefix: [UInt8](concatenated[..<2]))
-        let tag: UInt32? = try self.tagFromBuffer(buffer: concatenated)
+        let tag: Int? = try self.tagFromBuffer(buffer: concatenated)
         let classicAddressBytes: [UInt8] = [UInt8](concatenated[2..<22])
         let classicAddress = try XrplCodec.encodeClassicAddress(bytes: classicAddressBytes)
         return FullClassicAddress(classicAddress: classicAddress, tag: tag, isTest: isTest)
@@ -117,7 +116,7 @@ public class AddressCodec {
      - throws:
      XRPLAddressCodecException: If the address is unsupported.
      */
-    static func tagFromBuffer(buffer: [UInt8]) throws -> UInt32? {
+    static func tagFromBuffer(buffer: [UInt8]) throws -> Int? {
         let flags = buffer[22]
         if flags >= 2 {
             // No support for 64-bit tags at this time
@@ -126,19 +125,19 @@ public class AddressCodec {
         if flags == 1 {
             // Little-endian to big-endian
             return (
-                UInt32(buffer[23]) +
-                UInt32(buffer[24]) *
-                UInt32(0x100) +
-                UInt32(buffer[25]) *
-                UInt32(0x10000) +
-                UInt32(buffer[26]) *
-                UInt32(0x1000000)
+                Int(buffer[23]) +
+                Int(buffer[24]) *
+                Int(0x100) +
+                Int(buffer[25]) *
+                Int(0x10000) +
+                Int(buffer[26]) *
+                Int(0x1000000)
             )
         }
         let tagBytes = buffer[23...]
         let data = Data(tagBytes)
         let tagInt: UInt64 = data.withUnsafeBytes { $0.pointee }
-        let tag: UInt32? = flags == 0x00 ? nil : UInt32(String(tagInt))!
+        let tag: Int? = flags == 0x00 ? nil : Int(String(tagInt))!
         return tag
     }
 

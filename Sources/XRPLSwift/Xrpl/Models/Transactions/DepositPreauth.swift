@@ -10,25 +10,18 @@
 import Foundation
 
 /**
- Represents a `CheckCreate <https://xrpl.org/checkcreate.html>`_ transaction,
- which creates a Check object. A Check object is a deferred payment
- that can be cashed by its intended destination. The sender of this
- transaction is the sender of the Check.
+ Represents a [DepositPreauth](https://xrpl.org/depositpreauth.html) transaction,
+ A DepositPreauth transaction gives another account pre-approval to deliver
+ payments to the sender of this transaction. This is only useful if the sender
+ of this transaction is using (or plans to use) Deposit Authorization.
  */
 public class DepositPreauth: BaseTransaction {
-    /**
-     The address of the `account
-     <https://xrpl.org/accounts.html>`_ that can cash the Check. This field is
-     required.
-     */
+    /// The XRP Ledger address of the sender to preauthorize.
     public let authorize: String?
 
     /**
-     Maximum amount of source token the Check is allowed to debit the
-     sender, including transfer fees on non-XRP tokens. The Check can only
-     credit the destination with the same token (from the same issuer, for
-     non-XRP tokens). This field is required.
-     :meta hide-value:
+     The XRP Ledger address of a sender whose preauthorization should be.
+     revoked.
      */
     public let unauthorize: String?
 
@@ -46,7 +39,7 @@ public class DepositPreauth: BaseTransaction {
         super.init(account: "", transactionType: "DepositPreauth")
     }
 
-    public override init(json: [String: AnyObject]) throws {
+    override public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(DepositPreauth.self, from: data)
@@ -55,7 +48,7 @@ public class DepositPreauth: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         authorize = try values.decodeIfPresent(String.self, forKey: .authorize)
         unauthorize = try values.decodeIfPresent(String.self, forKey: .unauthorize)

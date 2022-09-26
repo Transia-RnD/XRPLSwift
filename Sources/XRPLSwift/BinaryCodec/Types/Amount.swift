@@ -61,7 +61,7 @@ func verifyXrpValue(xrpValue: String) throws {
     }
 
     // Within valid range
-    let decimal: Decimal = Decimal(string: xrpValue)!
+    let decimal = Decimal(string: xrpValue)!
     // Zero is less than both the min and max XRP amounts but is valid.
     if decimal.isZero {
         return
@@ -84,16 +84,10 @@ func verifyIouValue(issuedCurrencyValue: String) throws {
         XRPLBinaryCodecException: If issued_currency_value is invalid.
     */
     let decimalValue = Decimal(string: issuedCurrencyValue)!
-    print("decimal: \(decimalValue)")
     if decimalValue.isZero {
         return
     }
     let exponent = decimalValue.exponent
-    print("exponent: \(exponent)")
-    print(MAX_IOU_PRECISION)
-    print(calculatePrecision(value: issuedCurrencyValue))
-    print((exponent > MAX_IOU_EXPONENT))
-    print((exponent < MIN_IOU_EXPONENT))
     if
         (calculatePrecision(value: issuedCurrencyValue) > MAX_IOU_PRECISION)
         || (exponent > MAX_IOU_EXPONENT)
@@ -162,7 +156,7 @@ func serializeIssuedCurrencyValue(value: String) throws -> [UInt8] {
         mantissa /= 10
         exp += 1
     }
-    
+
     if exp < MIN_IOU_EXPONENT || mantissa < MIN_IOU_MANTISSA {
         // Round to zero
         return try ZERO_CURRENCY_AMOUNT_HEX.data.toArray(type: UInt8.self).reversed()
@@ -268,9 +262,7 @@ class xAmount: SerializedType {
         let currency = xCurrency().fromParser(parser: parser)
         let issuer = AccountID().fromParser(parser: parser)
         let byte1: UInt8 = valueBytes[0]
-//        print("B1: \(byte1)")
         let byte2: UInt8 = valueBytes[1]
-//        print("B2: \(byte2)")
         let isPositive: UInt8 = byte1 & 0x40
         let sign: String = (isPositive != 0) ? "" : "-"
         let exponent = Int(((byte1 & 0x3F) << 2) + ((byte2 & 0xFF) >> 6)) - 97
@@ -331,9 +323,9 @@ extension Decimal {
     func digits() -> [String] {
         var string: String = "\(self.significand)"
         if let index = string.firstIndex(of: "-") { string.remove(at: index) }
-        return string.compactMap{ String($0.wholeNumberValue!) }
+        return string.compactMap { String($0.wholeNumberValue!) }
     }
-    
+
     // TODO: This exists but couldn't find func name
     func compare(_ value: Decimal) -> Int {
         if self > value { return 1 }

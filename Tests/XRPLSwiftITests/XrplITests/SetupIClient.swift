@@ -16,11 +16,13 @@ public class RippledITestCase: XCTestCase {
     public var wallet: Wallet!
 
     public override func setUp() async throws {
-        print("Setting Up I Client")
+        let exp = expectation(description: "base")
         self.wallet = Wallet.generate(algorithm: .secp256k1)
         self.client = try XrplClient(server: ServerUrl.serverUrl)
         _ = try await self.client.connect().wait()
         await fundAccount(client: self.client, wallet: self.wallet)
+        exp.fulfill()
+        await waitForExpectations(timeout: 5)
     }
 
     public override func tearDown() async throws {

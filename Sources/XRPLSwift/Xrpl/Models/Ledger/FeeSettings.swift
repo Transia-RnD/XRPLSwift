@@ -12,8 +12,6 @@ import Foundation
 /**
  The FeeSettings object type contains the current base transaction cost and
  reserve amounts as determined by fee voting.
- *
- @category Ledger Entries
  */
 open class FeeSettings: BaseLedgerEntry {
     var ledgerEntryType: String = "FeeSettings"

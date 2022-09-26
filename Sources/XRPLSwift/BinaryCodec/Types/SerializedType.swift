@@ -44,7 +44,6 @@ class SerializedType {
     //    }
     //
     //    func from(value: String) -> Data {
-    //        print("fromValue")
     //        return Data(hex: value)
     //    }
 

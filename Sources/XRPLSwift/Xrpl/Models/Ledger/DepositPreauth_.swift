@@ -12,8 +12,6 @@ import Foundation
 /**
  A DepositPreauth object tracks a preauthorization from one account to
  another. DepositPreauth transactions create these objects.
- *
- @category Ledger Entries
  */
 open class LODepositPreauth: BaseLedgerEntry {
     public var ledgerEntryType: String = "DepositPreauth"

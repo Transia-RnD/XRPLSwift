@@ -9,35 +9,34 @@
 
 import Foundation
 
+/**
+ Represents a [CheckCash](https://xrpl.org/checkcash.html) transaction,
+ which redeems a Check object to receive up to the amount authorized by the
+ corresponding CheckCreate transaction. Only the Destination address of a
+ Check can cash it.
+ */
 public class CheckCash: BaseTransaction {
-    /**
-     Represents a `CheckCash transaction <https://xrpl.org/checkcash.html>`_,
-     which redeems a Check object to receive up to the amount authorized by the
-     corresponding CheckCreate transaction. Only the Destination address of a
-     Check can cash it.
-     */
 
-    public let checkId: String
     /**
-     The ID of the `Check ledger object
-     <https://xrpl.org/check.html>`_ to cash, as a 64-character
+     The ID of the [Check ledger object](https://xrpl.org/check.html)  to cash, as a 64-character
      hexadecimal string. This field is required.
      :meta hide-value:
      */
+    public let checkId: String
 
-    public let amount: Amount?
     /**
      Redeem the Check for exactly this amount, if possible. The currency must
      match that of the SendMax of the corresponding CheckCreate transaction.
      You must provide either this field or ``DeliverMin``.
      */
+    public let amount: Amount?
 
-    public let deliverMin: Amount?
     /**
      Redeem the Check for at least this amount and for as much as possible.
      The currency must match that of the ``SendMax`` of the corresponding
      CheckCreate transaction. You must provide either this field or ``Amount``.
      */
+    public let deliverMin: Amount?
 
     enum CodingKeys: String, CodingKey {
         case checkId = "CheckID"
@@ -52,8 +51,8 @@ public class CheckCash: BaseTransaction {
         super.init(account: "", transactionType: "CheckCash")
     }
 
-    public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(CheckCash.self, from: data)
         self.checkId = decoded.checkId
@@ -62,7 +61,7 @@ public class CheckCash: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         checkId = try values.decode(String.self, forKey: .checkId)
         amount = try values.decodeIfPresent(Amount.self, forKey: .amount)

@@ -87,7 +87,9 @@ public enum Base58 {
 
         let bytes = answer.serialize()
         // swiftlint:disable:next identifier_name
-        return Array(byteString.prefix { i in i == alphabet[0] }) + bytes
+        let preFix: [UInt8] = Array(byteString.prefix { $0 == alphabet[0] }).map({ $0 == 114 ? 0 : $0})
+        return preFix + bytes
+//        return Array(byteString.prefix { i in i == alphabet[0] }) + bytes
     }
 
     /// Calculate a checksum for a given input by hashing twice and then taking the first four bytes.

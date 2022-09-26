@@ -303,7 +303,7 @@ public class Wallet {
         let tx = try! transaction.toJson()
         return try self.sign(transaction: tx, multisign: multisign, signingFor: signingFor)
     }
-    
+
     public func sign(
 //        transaction: Transaction,
         transaction: [String: AnyObject],
@@ -352,8 +352,6 @@ public class Wallet {
             )
             txToSignAndEncode["TxnSignature"] = signature as AnyObject
         }
-
-        print(txToSignAndEncode["SigningPubKey"])
         let serialized = try BinaryCodec.encode(json: txToSignAndEncode)
         try self.checkTxSerialization(serialized: serialized, tx: transaction)
         return SignatureResult(txBlob: serialized, hash: try hashSignedTx(tx: serialized))
@@ -479,8 +477,6 @@ public class Wallet {
 //                "Serialized transaction does not match original txJSON. See error.data",
 //                data
 //            )
-//            print((decoded["SigningPubKey"] as! Blob).toJson())
-//            print(data)
 //            throw error
         }
     }
@@ -506,9 +502,7 @@ func computeSignature(
     //        : signAs
     //        return sign(encodeForMultisigning(tx, classicAddress), privateKey)
     //    }
-    print(tx)
     let encoded = try BinaryCodec.encodeForSigning(json: tx)
-    print(encoded)
     return Keypairs.sign(
         message: Data(hex: encoded).bytes,
         privateKey: privateKey

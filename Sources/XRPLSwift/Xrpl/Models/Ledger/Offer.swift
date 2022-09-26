@@ -20,14 +20,14 @@ open class Offer: BaseLedgerEntry {
      object. Used in combination with the Account to identify this Offer.
      */
     let sequence: Int
-    /*The remaining amount and type of currency requested by the Offer creator. */
+    /// The remaining amount and type of currency requested by the Offer creator.
     let takerPays: Amount
     /**
      The remaining amount and type of currency being provided by the Offer
      creator.
      */
     let takerGets: Amount
-    /*The ID of the Offer Directory that links to this Offer. */
+    /// The ID of the Offer Directory that links to this Offer.
     let bookDirectory: String
     /**
      A hint indicating which page of the Offer Directory links to this object,

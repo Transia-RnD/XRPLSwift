@@ -56,8 +56,6 @@ final class TestIGatewayBalances: RippledITestCase {
         expectedJson["ledger_hash"] = nil
         expectedJson["ledger_index"] = nil
         expectedJson["ledger_current_index"] = responseJson["ledger_current_index"]
-        print(responseJson)
-        print(expectedJson)
         XCTAssert(responseJson == expectedJson)
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)

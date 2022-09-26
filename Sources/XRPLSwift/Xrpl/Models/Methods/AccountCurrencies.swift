@@ -13,8 +13,6 @@ import Foundation
  The `account_currencies` command retrieves a list of currencies that an
  account can send or receive, based on its trust lines. Expects an
  {@link AccountCurrenciesResponse}.
- *
- @category Requests
  */
 public class AccountCurrenciesRequest: BaseRequest {
     /// A unique identifier for the account, most commonly the account's address.

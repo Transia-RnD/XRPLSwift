@@ -17,7 +17,7 @@ import Foundation
  @example
  ```ts
  const ledgerCurrent: LedgerCurrentRequest = {
-   "command": "ledger_current"
+ "command": "ledger_current"
  }
  ```
  */

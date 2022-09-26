@@ -76,7 +76,7 @@ public class Trustline: Codable {
 
 /**
  The account_lines method returns information about an account's trust lines,
-  including balances in all non-XRP currencies and assets. All information
+ including balances in all non-XRP currencies and assets. All information
  retrieved is relative to a particular version of the ledger. Expects an
  {@link AccountLinesResponse}.
  *
@@ -230,7 +230,7 @@ open class AccountLinesResponse: Codable {
         ledgerIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerIndex)
         ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)
         marker = try values.decodeIfPresent(AnyCodable.self, forKey: .marker)
-//        try super.init(from: decoder)
+        //        try super.init(from: decoder)
     }
 
     func toJson() throws -> [String: AnyObject] {

@@ -30,7 +30,6 @@ public enum AccountRootFlags: Int, CaseIterable {
     case lsfDepositAuth = 0x01000000
 }
 
-
 /**
  The AccountRoot object type describes a single account, its settings, and XRP balance.
  */
@@ -57,7 +56,7 @@ public class AccountRoot: BaseLedgerEntry {
      modified this object.
      */
     public let previousTxnLgrSeq: Int
-    /*The sequence number of the next valid transaction for this account. */
+    /// The sequence number of the next valid transaction for this account.
     public let sequence: Int
     /**
      The identifying hash of the transaction most recently sent by this

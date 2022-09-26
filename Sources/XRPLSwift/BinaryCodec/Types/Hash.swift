@@ -21,7 +21,6 @@ class Hash: SerializedType {
     class func from(value: String) throws -> Hash {
         let bytes: [UInt8] = value.hexToBytes
         // TODO: Discuss workaround (Cannot access self in init aka self.getLength() doesnt work)
-        // WORKAROUND: If Hash ignore getLength Check.
         if self != Hash.self && bytes.count != self.getLength() {
             throw BinaryError.unknownError(error: "Invalid hash length \(bytes.count). Expected \(self.getLength())")
         }
@@ -38,7 +37,6 @@ class Hash: SerializedType {
         parser: BinaryParser,
         hint: Int? = nil
     ) -> Hash {
-        print(self.width)
         return Hash(try! parser.read(n: hint ?? self.width))
     }
 
@@ -83,10 +81,6 @@ class Hash: SerializedType {
     }
 
     class func getLength() -> Int {
-        print("HASH HERE")
-        return 0
-//        throw BinaryError.notImplemented
-//        return try self.getLength()
+        fatalError(BinaryError.notImplemented.localizedDescription)
     }
-
 }

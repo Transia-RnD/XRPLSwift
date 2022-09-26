@@ -10,30 +10,26 @@ import Foundation
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/models/transactions/accountDelete.ts
 
+/**
+ Represents an [AccountDelete](https://xrpl.org/accountdelete.html) transaction, which deletes an account and any
+ objects it owns in the XRP Ledger, if possible, sending the account's remaining
+ XRP to a specified destination account.
+ See [Deletion of Accounts](https://xrpl.org/accounts.html#deletion-of-accounts) for the requirements to
+ delete an account.
+ */
 public class AccountDelete: BaseTransaction {
-
-    /*
-     Represents an `AccountDelete transaction
-     <https://xrpl.org/accountdelete.html>`_, which deletes an account and any
-     objects it owns in the XRP Ledger, if possible, sending the account's remaining
-     XRP to a specified destination account.
-     See `Deletion of Accounts
-     <https://xrpl.org/accounts.html#deletion-of-accounts>`_ for the requirements to
-     delete an account.
-     */
-
-    public var destination: String
-    /*
+    /**
      The address of the account to which to send any remaining XRP.
      This field is required.
      :meta hide-value:
      */
-    public var destinationTag: Int?
-    /*
-     The `destination tag
-     <https://xrpl.org/source-and-destination-tags.html>`_ at the
+    public var destination: String
+
+    /**
+     The [destination tag](https://xrpl.org/source-and-destination-tags.html)  at the
      ``destination`` account where funds should be sent.
      */
+    public var destinationTag: Int?
 
     enum CodingKeys: String, CodingKey {
         case destination = "Destination"
@@ -79,7 +75,7 @@ public class AccountDelete: BaseTransaction {
  Verify the form and type of an AccountDelete at runtime.
  - parameters:
     - tx: An AccountDelete Transaction.
- - throws:
+- throws:
  When the AccountDelete is Malformed.
  */
 public func validateAccountDelete(tx: [String: AnyObject]) throws {

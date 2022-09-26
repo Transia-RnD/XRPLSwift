@@ -166,7 +166,7 @@ open class SubmitResponse: Codable {
         queued = try values.decode(Bool.self, forKey: .queued)
         openLedgerCost = try values.decode(String.self, forKey: .openLedgerCost)
         validatedLedgerIndex = try values.decode(Int.self, forKey: .validatedLedgerIndex)
-//        try super.init(from: decoder)
+        //        try super.init(from: decoder)
     }
 
     func toJson() throws -> [String: AnyObject] {

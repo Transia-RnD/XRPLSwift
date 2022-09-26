@@ -179,10 +179,6 @@ struct AssociatedValue {
         if field.associatedType.self is xUInt8.Type {
             return xUInt8().fromParser(parser: self.parser)
         }
-        //        if let av = field.associatedType.self as? xUInt.Type {
-        //            print("xUInt")
-        //            return try! xUInt.from(value: xaddressDecoded[field.name]! as! Int)
-        //        }
         if field.associatedType.self is Vector256.Type {
             return Vector256().fromParser(parser: self.parser)
         }
@@ -315,10 +311,9 @@ class STObject: SerializedType {
         var isUnlModify: Bool = false
 
         for field in sortedKeys {
-            print("FIELD NAME: \(field.name)")
             var associatedValue: SerializedType?
             do {
-                let dynamicValue: AssociatedValue = AssociatedValue(field: field, xaddressDecoded: xaddressDecoded)
+                let dynamicValue = AssociatedValue(field: field, xaddressDecoded: xaddressDecoded)
                 associatedValue = try dynamicValue.from()
             } catch {
                 // mildly hacky way to get more context in the error
@@ -326,8 +321,6 @@ class STObject: SerializedType {
                 // keeps the original stack trace
                 throw BinaryError.unknownError(error: "Error processing \(field.name): \(error.localizedDescription)")
             }
-//            print("AV VALUE: \(associatedValue)")
-//            print("AV VALUE TOJSON: \(associatedValue?.toHex())")
             if
                 field.name == "TransactionType"
                 && associatedValue?.str() == UNL_MODIFY_TX {
@@ -339,36 +332,28 @@ class STObject: SerializedType {
             // has been processed) and working with the Account field
             // The Account field must not be a part of the UNLModify pseudotransaction
             // encoding, due to a bug in rippled
-
-            print(field.name)
-            print(associatedValue)
             serializer.writeFieldAndValue(
                 field: field,
                 value: associatedValue!,
                 isUNLModifyWorkaround: isUnlModifyWorkaround
             )
-            print(serializer.sink.toBytes().toHex)
             if field.type == ST_OBJECT {
                 _ = serializer.sink.put(bytesArg: OBJECT_END_MARKER_BYTE)
             }
-//            print("END")
         }
         return STObject(serializer.sink.toBytes())
     }
 
     override func toJson() -> [String: AnyObject] {
-        print("TO JSON...")
         let parser = BinaryParser(hex: self.toHex())
         var accumulator: [String: AnyObject] = [:]
 
         while !parser.end() {
             let field: FieldInstance = parser.readField()
-            print("FIELD NAME: \(field.name)")
             if field.name == OBJECT_END_MARKER {
                 break
             }
             let jsonValue: Any = (try! parser.readFieldValue(field: field)! as! SerializedType).toJson()
-            print("FIELD VALUE: \(jsonValue)")
             accumulator[field.name] = enumToStr(field: field.name, value: jsonValue) as AnyObject
         }
         return accumulator

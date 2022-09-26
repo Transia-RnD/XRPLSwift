@@ -9,26 +9,25 @@
 
 import Foundation
 
-
 import XCTest
 @testable import XRPLSwift
 
 final class TestUtilsModels: XCTestCase {
-    
+
     final var flags: Int = 0
     final let flag1: Int = 0x00010000
     final let flag2: Int = 0x00020000
-    
+
     override func setUp() {
         flags = 0x00000000
     }
-    
+
     func testIsEnabled() {
         setUp()
         flags |= flag1 | flag2
         XCTAssertTrue(isFlagEnabled(flags: flags, checkFlag: flag1))
     }
-    
+
     func testIsNotEnabled() {
         setUp()
         flags |= flag2
@@ -37,7 +36,7 @@ final class TestUtilsModels: XCTestCase {
 }
 
 final class TestUtilsFlags: XCTestCase {
-    
+
     func testOfferFlags() {
         var tx = [
             "Account": "r3rhWeE31Jt5sWmi4QiGLMZnY3ENgqw96W",
@@ -45,7 +44,7 @@ final class TestUtilsFlags: XCTestCase {
             "Flags": [
                 OfferCreateFlags.tfPassive,
 //                OfferCreateFlags.tfImmediateOrCancel,
-                OfferCreateFlags.tfFillOrKill,
+                OfferCreateFlags.tfFillOrKill
 //                OfferCreateFlags.tfSell,
             ],
             "LastLedgerSequence": 65453019,
@@ -64,27 +63,27 @@ final class TestUtilsFlags: XCTestCase {
             "TxnSignature":
                 "3045022100D874CDDD6BB24ED66E83B1D3574D3ECAC753A78F26DB7EBA89EAB8E7D72B95F802207C8CCD6CEA64E4AE2014E59EE9654E02CA8F03FE7FCE0539E958EAE182234D91"
         ] as! [String: AnyObject]
-        
+
         let expected: Int = OfferCreateFlags.tfPassive.rawValue | OfferCreateFlags.tfFillOrKill.rawValue
         try! setTransactionFlagsToNumber(tx: &tx)
         XCTAssertEqual(tx["Flags"] as! Int, expected)
     }
-    
+
     func testPaymentChannelFlags() {
         var tx = [
             "Account": "r...",
             "TransactionType": "PaymentChannelClaim",
             "Channel": "C1AE6DDDEEC05CF2978C0BAD6FE302948E9533691DC749DCDD3B9E5992CA6198",
             "Flags": [
-                PaymentChannelClaimFlag.tfRenew,
+                PaymentChannelClaimFlag.tfRenew
             ]
         ] as! [String: AnyObject]
-        
+
         let expected: Int = PaymentChannelClaimFlag.tfRenew.rawValue
         try! setTransactionFlagsToNumber(tx: &tx)
         XCTAssertEqual(tx["Flags"] as! Int, expected)
     }
-    
+
     func testPaymentFlags() {
         var tx = [
             "TransactionType": "Payment",
@@ -96,12 +95,12 @@ final class TestUtilsFlags: XCTestCase {
                 PaymentFlags.tfLimitQuality
             ]
         ] as! [String: AnyObject]
-        
+
         let expected: Int = PaymentFlags.tfPartialPayment.rawValue | PaymentFlags.tfLimitQuality.rawValue
         try! setTransactionFlagsToNumber(tx: &tx)
         XCTAssertEqual(tx["Flags"] as! Int, expected)
     }
-    
+
     func testTrustSetFlags() {
         var tx = [
             "TransactionType": "TrustSet",
@@ -109,7 +108,7 @@ final class TestUtilsFlags: XCTestCase {
             "LimitAmount": [
               "currency": "XRP",
               "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
-              "value": "4329.23",
+              "value": "4329.23"
             ],
             "QualityIn": 1234,
             "QualityOut": 4321,
@@ -124,7 +123,7 @@ final class TestUtilsFlags: XCTestCase {
         try! setTransactionFlagsToNumber(tx: &tx)
         XCTAssertEqual(tx["Flags"] as! Int, expected)
     }
-    
+
     func testOtherTxFlags() {
         var tx = [
             "TransactionType": "DepositPreauth",
@@ -134,13 +133,13 @@ final class TestUtilsFlags: XCTestCase {
         try! setTransactionFlagsToNumber(tx: &tx)
         XCTAssertEqual(tx["Flags"] as! Int, 0)
     }
-    
+
 //    func testAccountFlagsAllEnabled() {
 //        let accountRootFlags: Int = AccountRootFlags.lsfDefaultRipple | AccountRootFlags.lsfDepositAuth | AccountRootFlags.lsfDisableMaster | AccountRootFlags.lsfDisallowXRP | AccountRootFlags.lsfGlobalFreeze | AccountRootFlags.lsfNoFreeze | AccountRootFlags.lsfPasswordSpent | AccountRootFlags.lsfRequireAuth | AccountRootFlags.lsfRequireDestTag
 ////        let parsed = parseAccountRootFlags(accountRootFlags)
 ////        XCTAssertTrue(parsed["lsfDefaultRipple"])
 //    }
-    
+
     func testAccountFlagsAllDisabled() {
         let parsed = parseAccountRootFlags(flags: 0)
         XCTAssertNil(parsed[.lsfDefaultRipple])

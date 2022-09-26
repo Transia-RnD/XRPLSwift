@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 /**
  The `server_state` command asks the server for various machine-readable
  information about the rippled server's current state. The response is almost
@@ -72,7 +71,7 @@ public class StateLedger: Codable {
     }
 }
 
-//public class ServerStateWrapper: Codable {
+// public class ServerStateWrapper: Codable {
 //    /**
 //     If true, this server is amendment blocked. If the server is not
 //     amendment blocked, the response omits this field.
@@ -254,12 +253,10 @@ public class StateLedger: Codable {
 //        let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
 //        return jsonResult as! [String: AnyObject]
 //    }
-//}
+// }
 
 /**
  Response expected from a {@link ServerStateRequest}.
- *
- @category Responses
  */
 public class ServerStateResponse: Codable {
     public let state: ServerInfoWrapper

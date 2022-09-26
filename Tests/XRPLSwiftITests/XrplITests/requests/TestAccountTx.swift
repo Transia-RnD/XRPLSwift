@@ -89,8 +89,6 @@ final class TestIAccounTx: RippledITestCase {
         expectedJson["ledger_index"] = nil
         expectedJson["TxnSignature"] = nil
         expectedJson["Sequence"] = nil
-        print(responseJson)
-        print(expectedJson)
         XCTAssert(responseJson == expectedJson)
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)

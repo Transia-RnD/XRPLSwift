@@ -30,9 +30,9 @@ public class AccountTxRequest: BaseRequest {
      version available.
      */
     public let ledgerIndexMax: Int?
-    /*Use to look for transactions from a single ledger only. */
+    /// Use to look for transactions from a single ledger only.
     public let ledgerHash: String?
-    /*Use to look for transactions from a single ledger only. */
+    /// Use to look for transactions from a single ledger only.
     public let ledgerIndex: LedgerIndex?
     /**
      If true, return transactions as hex strings instead of JSON. The default is
@@ -147,7 +147,7 @@ public class AccountTxRequest: BaseRequest {
 
 public struct AccountTransaction: Codable {
     /// The ledger index of the ledger version that included this transaction.
-//    public let ledgerIndex: Int
+    //    public let ledgerIndex: Int
     /**
      If binary is True, then this is a hex string of the transaction metadata.
      Otherwise, the transaction metadata is included in JSON format.
@@ -166,7 +166,7 @@ public struct AccountTransaction: Codable {
     public let validated: Bool
 
     enum CodingKeys: String, CodingKey {
-//        case ledgerIndex = "ledger_index"
+        //        case ledgerIndex = "ledger_index"
         case meta = "meta"
         case tx = "tx"
         case txBlob = "tx_blob"
@@ -175,7 +175,7 @@ public struct AccountTransaction: Codable {
 
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-//        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
+        //        ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
         meta = try values.decode(TransactionMetadata.self, forKey: .meta)
         tx = try values.decodeIfPresent(Transaction.self, forKey: .tx)
         txBlob = try values.decodeIfPresent(String.self, forKey: .txBlob)

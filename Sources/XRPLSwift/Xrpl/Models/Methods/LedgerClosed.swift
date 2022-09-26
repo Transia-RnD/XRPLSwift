@@ -15,15 +15,15 @@ import Foundation
  LedgerClosedResponse}.
  *
  @example
-  *
+ *
  ```ts
  const ledgerClosed: LedgerClosedRequest = {
-   "command": "ledger_closed"
+ "command": "ledger_closed"
  }
  ```
  */
 public class LedgerClosedRequest: BaseRequest {
-//    let command: String = "ledger_closed"
+    //    let command: String = "ledger_closed"
     public init(
         // Base
         id: Int? = nil,

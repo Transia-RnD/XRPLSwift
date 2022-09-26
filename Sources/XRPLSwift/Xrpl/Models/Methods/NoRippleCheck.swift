@@ -18,13 +18,13 @@ import Foundation
  @example
  ```ts
  const noRipple: NoRippleCheckRequest = {
-   "id": 0,
-   "command": "noripple_check",
-   "account": "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",
-    "role": "gateway",
-   "ledger_index": "current",
-   "limit": 2,
-   "transactions": true
+ "id": 0,
+ "command": "noripple_check",
+ "account": "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",
+ "role": "gateway",
+ "ledger_index": "current",
+ "limit": 2,
+ "transactions": true
  }
  ```
  */

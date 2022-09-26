@@ -63,6 +63,7 @@ class xUInt64: xUInt {
         if regex.matches(in: value, range: nsrange).isEmpty {
             throw BinaryError.unknownError(error: "\(value) is not a valid hex string")
         }
-        return xUInt64(value.padding(toLength: 16, withPad: "0", startingAt: 0).hexToBytes)
+        let strBuf = value.padding(toLength: 16, withPad: "0", startingAt: 0)
+        return xUInt64(strBuf.hexToBytes)
     }
 }

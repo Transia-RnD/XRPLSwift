@@ -70,8 +70,6 @@ final class TestIAccountInfo: RippledITestCase {
         expectedJson["PreviousTxnLgrSeq"] = nil
         expectedJson["Sequence"] = nil
         expectedJson["index"] = nil
-        print(responseJson)
-        print(expectedJson)
         XCTAssert(responseJson == expectedJson)
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)
@@ -101,8 +99,6 @@ final class TestIAccountInfo: RippledITestCase {
         expectedJson["PreviousTxnLgrSeq"] = nil
         expectedJson["Sequence"] = nil
         expectedJson["index"] = nil
-        print(responseJson)
-        print(expectedJson)
         XCTAssert(responseJson == expectedJson)
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)

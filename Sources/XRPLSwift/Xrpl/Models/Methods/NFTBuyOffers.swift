@@ -79,7 +79,7 @@ public class NFTBuyOffersResponse: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         offers = try values.decode([NFTOffer].self, forKey: .offers)
         nftId = try values.decode(String.self, forKey: .nftId)
-//        try super.init(from: decoder)
+        //        try super.init(from: decoder)
     }
 
     func toJson() throws -> [String: AnyObject] {

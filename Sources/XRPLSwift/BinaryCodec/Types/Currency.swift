@@ -72,27 +72,21 @@ class xCurrency: Hash160 {
         // Determine whether this currency code is in standard or nonstandard format:
         // https://xrpl.org/currency-formats.html#nonstandard-currency-codes
         if bytes?[0] != 0 {
-            print("non-standard currency")
             // non-standard currency
             self.iso = nil
         } else if bytes?.toHexString() == String(repeating: "0", count: 40) { // all 0s
             // the special case for literal XRP
-            print("XRP")
             self.iso = "XRP"
         } else {
-            print("ISO BYTES: \(codeBytes)")
-//            print("ISO HEX: \(try! isoCodeFromHex(value: codeBytes))")
             self.iso = try? isoCodeFromHex(value: codeBytes)
         }
     }
 
     override static func from(value: String) throws -> xCurrency {
         if isIsoCode(value: value) {
-            print("ISO")
             return xCurrency(try isoToBytes(iso: value))
         }
         if isHex(value: value) {
-            print("HEX")
             return xCurrency(value.hexToBytes)
         }
         throw BinaryError.unknownError(error: "Unsupported Currency representation: \(value)")
@@ -107,15 +101,13 @@ class xCurrency: Hash160 {
 
     override func toJson() -> Any {
         if self.iso != nil {
-            print("ISO NIL")
             return self.iso!
         }
-        print("ISO HEX")
         return self.bytes.toHex
     }
-    
+
     override func toJson() -> String {
         return (self.toJson() as Any) as! String
     }
-    
+
 }

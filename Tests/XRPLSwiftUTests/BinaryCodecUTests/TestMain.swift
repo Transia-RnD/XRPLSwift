@@ -128,8 +128,6 @@ final class TestBinarySimple: XCTestCase {
     func testSimple() {
         let encoded = try! BinaryCodec.encode(json: TX_JSON)
         let decoded = BinaryCodec.decode(buffer: encoded)
-        print(TX_JSON)
-        print(decoded)
         XCTAssert(TX_JSON == decoded)
     }
 
@@ -194,7 +192,6 @@ final class TestBinaryCodec: XCTestCase {
     func testXaddressXaddrAndMismatchedSourceTag() {
         var invalidJsonXAndSourceTag: [String: Any] = validJsonXAndTags
         invalidJsonXAndSourceTag.merge(["SourceTag": 999]) { (_, new) in new }
-        print(invalidJsonXAndSourceTag)
         XCTAssertThrowsError(try BinaryCodec.encode(json: invalidJsonXAndSourceTag))
     }
 
@@ -246,8 +243,7 @@ final class TestMainFixtures: XCTestCase {
         XCTAssertEqual(try BinaryCodec.encode(json: testJson), testBinary)
 //        XCTAssertTrue(BinaryCodec.decode(buffer: testBinary) == testJson)
     }
-    
-    
+
     func checkXaddressJsons(test: [String: AnyObject]) {
         let xJson: [String: AnyObject] = test["xjson"] as! [String: AnyObject]
         let rJson: [String: AnyObject] = test["rjson"] as! [String: AnyObject]
@@ -256,7 +252,6 @@ final class TestMainFixtures: XCTestCase {
     }
 
     func runFixturesTest(filename: String, category: String, testMethod: Any) {
-        print("runFixturesTest")
         var fixturesJson: [String: AnyObject] = [:]
         switch filename {
         case "codec-fixtures.json":
@@ -342,7 +337,6 @@ final class TestMainSigning: XCTestCase {
         let signingAccount: String = "rJZdUusLDtY9NEsGea7ijqhVrXv98rYBYN"
         var multisigJson: [String: Any] = signingJson
         multisigJson.merge(["SigningPubKey": ""]) { (_, new) in new }
-        print(multisigJson)
         let expected: String = "534D5400120000228000000024000000016140000000000003E868400000000000000A730081145B812C9D57731E27A2DA8B1830195F88EF32A3B68314B5F762798A53D543A014CAF8B297CFF8F2F937E8C0A5ABEF242802EFED4B041E8F2D4A8CC86AE3D1"
         XCTAssertEqual(
             try BinaryCodec.encodeForMultisigning(json: multisigJson, signingAccount: signingAccount),

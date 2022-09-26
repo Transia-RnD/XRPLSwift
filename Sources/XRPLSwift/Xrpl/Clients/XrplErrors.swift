@@ -131,13 +131,13 @@ typealias ValidationError = XrplError
  */
 typealias XRPLFaucetError = XrplError
 
-///**
+/// **
 // * Error thrown when xrpl.js cannot retrieve a transaction, ledger, account, etc.
 // * From rippled.
 // *
 // * @category Errors
 // */
-//typealias NotFoundError = XrplError {
+// typealias NotFoundError = XrplError {
 //    /**
 //     * Construct an XrplError.
 //     *

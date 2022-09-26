@@ -13,11 +13,9 @@ import Foundation
  The `account_info` command retrieves information about an account, its
  activity, and its XRP balance. All information retrieved is relative to a
  particular version of the ledger. Returns an {@link AccountInfoResponse}.
- *
- @category Requests
  */
 public class AccountInfoRequest: BaseRequest {
-//    let command: String = "account_info"
+    //    let command: String = "account_info"
     /// A unique identifier for the account, most commonly the account's address.
     public let account: String
     /// A 20-byte hex string for the ledger version to use.

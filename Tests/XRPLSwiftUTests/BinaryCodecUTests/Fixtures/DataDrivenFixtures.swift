@@ -86,7 +86,7 @@ internal class DataDrivenFixtures {
         let isNegative = valueTestDict["is_negative"] as? Bool ?? false
         let typeSpecialisationField = valueTestDict["type_specialisation_field"] as? String ?? ""
         let _error = valueTestDict["error"] as? String ?? ""
-        
+
         if let testJson = valueTestDict["test_json"] as? [String: AnyObject] {
             return ValueTest(
                 testJson: testJson,
@@ -99,7 +99,7 @@ internal class DataDrivenFixtures {
                 error: _error
             )
         }
-        
+
         if let testJson = valueTestDict["test_json"] as? Int {
             return ValueTest(
                 testString: String(testJson),
@@ -187,7 +187,7 @@ class ValueTest {
         self.typeSpecializationField = typeSpecializationField
         self.error = error
     }
-    
+
     init(
         testString: String,
         typeId: Int,

@@ -32,14 +32,12 @@ final class TestSerializedType: XCTestCase {
         } else {
             jsonValue = fixture.testString
         }
-        print(fixture.type)
         switch fixture.type {
         case "AccountID":
             XCTAssertEqual(try AccountID.from(value: jsonValue as! String).bytes.toHex, fixture.expectedHex)
         case "Amount":
             if jsonValue is [String: AnyObject] {
                 if !fixture.error.isEmpty {
-                    print(fixture.error)
                     XCTAssertThrowsError(try xAmount.from(value: jsonValue as! [String: String]))
                     return
                 }

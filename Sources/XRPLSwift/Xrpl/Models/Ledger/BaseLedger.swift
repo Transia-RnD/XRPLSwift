@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  BaseLedger.swift
 //  
 //
 //  Created by Denis Angell on 7/27/22.
@@ -34,7 +34,7 @@ public class BaseLedger: Codable {
      by which the close_time could be rounded.
      */
     public var closeTimeResolution: Int
-    /*Whether or not this ledger has been closed. */
+    /// Whether or not this ledger has been closed.
     public var closed: Bool
     /**
      The SHA-512Half of this ledger version. This serves as a unique identifier
@@ -46,16 +46,16 @@ public class BaseLedger: Codable {
      integer; some display it as a native JSON number.
      */
     public var ledgerIndex: String
-    /*The approximate time at which the previous ledger was closed. */
+    /// The approximate time at which the previous ledger was closed.
     public var parentCloseTime: Int
     /**
      Unique identifying hash of the ledger that came immediately before this
      one.
      */
     public var parentHash: String
-    /*Total number of XRP drops in the network, as a quoted integer. */
+    /// Total number of XRP drops in the network, as a quoted integer.
     public var totalCoins: String
-    /*Hash of the transaction information included in this ledger, as hex. */
+    /// Hash of the transaction information included in this ledger, as hex.
     public var transactionHash: String
     /**
      Transactions applied in this ledger version. By default, members are the
@@ -64,9 +64,10 @@ public class BaseLedger: Codable {
      either JSON or binary depending on whether the request specified binary
      as true.
      */
+    // TODO: transactions need to append the metadata
     //    var transactions?: Array<Transaction & { metaData?: TransactionMetadata }>
-    public var transactions: [BaseTransaction]?
-    /*All the state information in this ledger. */
+    public var transactions: [BaseLedgerWrapper]?
+    /// All the state information in this ledger.
     public var accountState: [LedgerEntry]?
 
     enum CodingKeys: String, CodingKey {
@@ -84,5 +85,35 @@ public class BaseLedger: Codable {
         case transactionHash = "transaction_hash"
         case transactions = "transactions"
         case accountState = "account_state"
+    }
+}
+
+public enum BaseLedgerWrapper: Codable {
+    case string(String)
+    case transaction(BaseTransaction)
+}
+extension BaseLedgerWrapper {
+    enum CodingError: Error {
+        case decoding(String)
+    }
+    public init(from decoder: Decoder) throws {
+        if let value = try? String(from: decoder) {
+            self = .string(value)
+            return
+        }
+        if let value = try? BaseTransaction(from: decoder) {
+            self = .transaction(value)
+            return
+        }
+        throw CodingError.decoding("Invalid BaseLedgerWrapper: BaseLedgerWrapper should be string or dict")
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        switch self {
+        case .string(let string):
+            try string.encode(to: encoder)
+        case .transaction(let tx):
+            try tx.encode(to: encoder)
+        }
     }
 }

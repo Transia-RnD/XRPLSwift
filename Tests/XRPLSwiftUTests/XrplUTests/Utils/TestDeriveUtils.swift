@@ -32,7 +32,7 @@ final class TestDeriveUtils: XCTestCase {
             "TVVrSWtmQQssgVcmoMBcFQZKKf56QscyWLKnUyiuZW8ALU4"
         )
     }
-    
+
     func testNoTagNil() {
         XCTAssertEqual(
             deriveXAddress(
@@ -40,7 +40,7 @@ final class TestDeriveUtils: XCTestCase {
                 tag: nil,
                 test: false
             ),
-            "TVVrSWtmQQssgVcmoMBcFQZKKf56QscyWLKnUyiuZW8ALU4"
+            "X7FbrqVEqdTNoX5qq94rTdarGjeVYmkxi8A1TKAJUnyLL9g"
         )
     }
 }

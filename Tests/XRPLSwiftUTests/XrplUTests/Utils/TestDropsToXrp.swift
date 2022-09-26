@@ -9,7 +9,6 @@
 
 import Foundation
 
-
 import XCTest
 @testable import XRPLSwift
 
@@ -19,7 +18,7 @@ final class TestDropsToXrpUtils: XCTestCase {
         let xrp = try? dropsToXrp("2000000")
         XCTAssertEqual(xrp, "2")
     }
-    
+
     func testFractions() {
         var xrp = try? dropsToXrp("3456789")
         XCTAssertEqual(xrp, "3.456789")
@@ -36,7 +35,7 @@ final class TestDropsToXrpUtils: XCTestCase {
         xrp = try? dropsToXrp("1.00")
         XCTAssertEqual(xrp, "0.000001")
     }
-    
+
     func testZero() {
         var xrp = try? dropsToXrp("0")
         XCTAssertEqual(xrp, "0")
@@ -53,16 +52,16 @@ final class TestDropsToXrpUtils: XCTestCase {
         xrp = try? dropsToXrp("1.00")
         XCTAssertEqual(xrp, "0.000001")
     }
-    
+
     func testNegative() {
         var xrp = try? dropsToXrp("-2000000")
         XCTAssertEqual(xrp, "-2")
     }
-    
+
     func testDecimal() {
         var xrp = try? dropsToXrp("2000000.")
         XCTAssertEqual(xrp, "2")
-        
+
         xrp = try? dropsToXrp("-2000000.")
         XCTAssertEqual(xrp, "-2")
     }

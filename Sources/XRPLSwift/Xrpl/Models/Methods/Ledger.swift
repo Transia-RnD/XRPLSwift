@@ -224,8 +224,8 @@ public struct Result {
      If true, this is a validated ledger version. If omitted or set to false,
      this ledger's data is not final.
      */
-    //    var queueData: Array<LedgerQueueData | string>?
     var queueData: [LedgerQueueData]?
+    //    var queueData: Array<LedgerQueueData | string>?
     /**
      Array of objects describing queued transactions, in the same order as
      the queue. If the request specified expand as true, members contain full
@@ -248,7 +248,7 @@ public class LedgerResponse: Codable {
      this ledger's data is not final.
      */
     //    var queueData: Array<LedgerQueueData | string>?
-//    var queueData: [rQueueData]?
+    //    var queueData: [rQueueData]?
     /**
      Array of objects describing queued transactions, in the same order as
      the queue. If the request specified expand as true, members contain full
@@ -262,7 +262,7 @@ public class LedgerResponse: Codable {
         case ledgerHash = "ledger_hash"
         case ledgerIndex = "ledger_index"
         case validated = "validated"
-//        case queueData = "queue_data"
+        //        case queueData = "queue_data"
     }
 
     public required init(from decoder: Decoder) throws {
@@ -271,8 +271,8 @@ public class LedgerResponse: Codable {
         ledgerHash = try values.decode(String.self, forKey: .ledgerHash)
         ledgerIndex = try values.decode(Int.self, forKey: .ledgerIndex)
         validated = try values.decodeIfPresent(Bool.self, forKey: .validated)
-//        queueData = try values.decode([rQueueData].self, forKey: .queueData)
-//        try super.init(from: decoder)
+        //        queueData = try values.decode([rQueueData].self, forKey: .queueData)
+        //        try super.init(from: decoder)
     }
 
     func toJson() throws -> [String: AnyObject] {

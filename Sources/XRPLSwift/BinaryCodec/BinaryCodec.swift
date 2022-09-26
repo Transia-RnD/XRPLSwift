@@ -74,7 +74,7 @@ class BinaryCodec {
         let buffer: Data = prefix + channel.bytes + amount.bytes
         return buffer.toHex
     }
-    
+
     /**
      Encode a transaction into binary format in preparation for providing one
      signature towards a multi-signed transaction.
@@ -94,7 +94,7 @@ class BinaryCodec {
             signingOnly: true
         )
     }
-    
+
     /**
      Decode a transaction from binary format to a JSON-like dictionary
      representation.

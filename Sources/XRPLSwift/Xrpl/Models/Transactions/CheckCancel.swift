@@ -10,17 +10,15 @@
 import Foundation
 
 /**
- Represents a `CheckCancel <https://xrpl.org/checkcancel.html>`_ transaction,
+ Represents a [CheckCancel](https://xrpl.org/checkcancel.html) transaction,
  which cancels an unredeemed Check, removing it from the ledger
  without sending any money. The source or the destination of the check
  can cancel a Check at any time using this transaction type. If the
  Check has expired, any address can cancel it.
  */
 public class CheckCancel: BaseTransaction {
-
     /**
-     The ID of the `Check ledger object
-     <https://xrpl.org/check.html>`_ to cash, as a 64-character
+     The ID of the [Check ledger object](https://xrpl.org/check.html) to cash, as a 64-character
      hexadecimal string. This field is required.
      :meta hide-value:
      */
@@ -35,15 +33,15 @@ public class CheckCancel: BaseTransaction {
         super.init(account: "", transactionType: "AccountSet")
     }
 
-    public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(CheckCancel.self, from: data)
         self.checkId = decoded.checkId
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         checkId = try values.decode(String.self, forKey: .checkId)
         try super.init(from: decoder)

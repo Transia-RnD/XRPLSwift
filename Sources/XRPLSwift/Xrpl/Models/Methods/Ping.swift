@@ -52,7 +52,7 @@ public class PingResponse: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         role = try values.decode(String.self, forKey: .role)
         unlimited = try values.decode(Bool.self, forKey: .unlimited)
-//        try super.init(from: decoder)
+        //        try super.init(from: decoder)
     }
 
     func toJson() throws -> [String: AnyObject] {

@@ -113,9 +113,7 @@ final class TestPayment: XCTestCase {
 
     func testInvalidSendMax() {
         TestPayment.setUp()
-        print(TestPayment.baseTx["SendMax"])
         TestPayment.baseTx["SendMax"] = 100000001 as AnyObject
-        print(TestPayment.baseTx["SendMax"])
 //        let tx = try! Payment(json: TestPayment.baseTx)
         XCTAssertThrowsError(try Payment(json: TestPayment.baseTx))
 //        XCTAssertThrowsError(try validatePayment(tx: tx.toJson()))
@@ -147,7 +145,6 @@ final class TestPayment: XCTestCase {
     func testInvalidDeliverMinNoFlag() {
         TestPayment.setUp()
         TestPayment.baseTx["DeliverMin"] = "10000" as AnyObject
-        print(TestPayment.baseTx)
         let tx = try! Payment(json: TestPayment.baseTx)
         XCTAssertThrowsError(try validatePayment(tx: tx.toJson()))
     }

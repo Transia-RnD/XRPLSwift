@@ -125,7 +125,6 @@ func submitAndWait(
     }
 
     let response = try await submitRequest(client: this, signedTransaction: signedTx, failHard: opts?.failHard)
-    print(response)
 //    let txHash = opts?.hashes.hashSignedTx(signedTx)
     //    return waitForFinalTransactionOutcome(
     //        this,Int
@@ -263,9 +262,7 @@ func getSignedTx(
 
     //    let tx = transaction is String ? (decode(transaction) as? Transaction) : transaction
 //    let encoder = JSONEncoder()
-//    print(try transaction.toJson())
 //    let txs = try encoder.encode(transaction)
-//    print(txs)
 //    var tx = try transaction.toAny() as! BaseTransaction
 //    if autofill {
 //        tx = try await AutoFillSugar().autofill(client: client, transaction: tx, signersCount: 0).wait()

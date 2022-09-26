@@ -285,7 +285,7 @@ public class AccountObjectsResponse: Codable {
         limit = try? values.decode(Int.self, forKey: .limit)
         marker = try? values.decode(AnyCodable.self, forKey: .marker)
         validated = try? values.decode(Bool.self, forKey: .validated)
-//        try super.init(from: decoder)
+        //        try super.init(from: decoder)
     }
 
     func toJson() throws -> [String: AnyObject] {

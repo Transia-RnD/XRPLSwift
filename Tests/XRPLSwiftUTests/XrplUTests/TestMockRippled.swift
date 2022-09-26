@@ -13,24 +13,24 @@ import XCTest
 @testable import XRPLSwift
 
 final class TestMockRippled: RippledMockTester {
-    
+
     override func setUp() async throws {
         try await super.setUp()
     }
-    
+
     func testMockNotProvided() async {
-//        self.mockRippled.suppressedOutput = true
         do {
             let request = ServerInfoRequest()
-            _ = try await self.client.request(req: request)
+            self.mockRippled.suppressOutput = true
+            _ = try await self.client.request(req: request)?.wait()
             XCTFail()
         } catch let error as XrplError {
-            XCTAssertEqual(error.message, "Not Connected")
+            XCTAssert(error is XrplError)
         } catch {
             XCTFail()
         }
     }
-    
+
     func testMockBadResponse() async {
         do {
             try self.mockRippled.addResponse(command: "account_info", response: [ "data": [:] ] as [String: AnyObject])

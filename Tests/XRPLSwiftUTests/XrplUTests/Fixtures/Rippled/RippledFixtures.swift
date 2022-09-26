@@ -10,6 +10,20 @@ import XCTest
 
 final class RippledFixtures {
 
+    public static func accountObjects() -> [String: AnyObject] {
+        do {
+            let data: Data = rippledAccountObjectsJson.data(using: .utf8)!
+            let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+            if let jsonResult = jsonResult as? [String: AnyObject] {
+                return jsonResult
+            }
+        } catch {
+            print(error.localizedDescription)
+            fatalError("INVALID JSON RESPONSE FIXTURE")
+        }
+        return [:]
+    }
+
     public static func accountInfo() -> [String: AnyObject] {
         do {
             let data: Data = rippledAccountInfoJson.data(using: .utf8)!
@@ -23,7 +37,7 @@ final class RippledFixtures {
         }
         return [:]
     }
-    
+
     public static func serverInfo() -> [String: AnyObject] {
         do {
             let data: Data = rippledServerInfoJson.data(using: .utf8)!
@@ -37,7 +51,7 @@ final class RippledFixtures {
         }
         return [:]
     }
-    
+
     public static func ledger() -> [String: AnyObject] {
         do {
             let data: Data = rippledLedgerJson.data(using: .utf8)!

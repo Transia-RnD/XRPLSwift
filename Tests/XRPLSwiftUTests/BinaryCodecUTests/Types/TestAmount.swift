@@ -45,13 +45,13 @@ let IOU_CASES: [String: [String: String]] = [
     [
         "currency": "XRP",
         "value": "2.1",
-        "issuer": "rrrrrrrrrrrrrrrrrrrrrhoLvTp",
+        "issuer": "rrrrrrrrrrrrrrrrrrrrrhoLvTp"
     ],
     "D843F28CB71571C700000000000000000000000055534400000000000000000000000000000000000000000000000001":
     [
         "currency": "USD",
         "value": "1111111111111111",
-        "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji",
+        "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
     ]
 ]
 
@@ -61,9 +61,6 @@ let XRP_CASES: [String: String] = [
 ]
 
 final class TestAmount: XCTestCase {
-
-    static let HEX_ENCODING: String = "5E7B112523F68D2F5E879DB4EAC51C6698A69304"
-    static let BASE58_ENCODING: String = "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59"
 
     func testAssertXrpIsValidPasses() {
         let validZero: String = "0"
@@ -142,7 +139,7 @@ final class TestAmount: XCTestCase {
             XCTAssertEqual(result as! String, json)
         }
     }
-    
+
     func testFixtures() {
         for fixture in dataDrivenFixturesForType(typeString: "Amount") {
             TestSerializedType.fixtureTest(fixture: fixture)

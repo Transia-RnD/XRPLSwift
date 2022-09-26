@@ -12,8 +12,6 @@ import Foundation
 /**
  The DirectoryNode object type provides a list of links to other objects in
  the ledger's state tree.
- *
- @category Ledger Entries
  */
 open class DirectoryNode: BaseLedgerEntry {
     var ledgerEntryType: String = "DirectoryNode"
@@ -22,9 +20,9 @@ open class DirectoryNode: BaseLedgerEntry {
      protocol defines no flags for DirectoryNode objects.
      */
     var flags: Int
-    /*The ID of root object for this directory. */
+    /// The ID of root object for this directory.
     let rootIndex: String
-    /*The contents of this Directory: an array of IDs of other objects. */
+    /// The contents of this Directory: an array of IDs of other objects.
     let indexes: [String]
     /**
      If this Directory consists of multiple pages, this ID links to the next
@@ -36,21 +34,21 @@ open class DirectoryNode: BaseLedgerEntry {
      previous object in the chain, wrapping around at the beginning.
      */
     let indexPrevious: Int?
-    /*The address of the account that owns the objects in this directory. */
+    /// The address of the account that owns the objects in this directory.
     let owner: String?
     /**
      The currency code of the TakerPays amount from the offers in this
      directory.
      */
     let takerPaysCurrency: String?
-    /*The issuer of the TakerPays amount from the offers in this directory. */
+    /// The issuer of the TakerPays amount from the offers in this directory.
     let takerPaysIssuer: String?
     /**
      The currency code of the TakerGets amount from the offers in this
      directory.
      */
     let takerGetsCurrency: String?
-    /*The issuer of the TakerGets amount from the offers in this directory. */
+    /// The issuer of the TakerGets amount from the offers in this directory.
     let takerGetsIssuer: String?
 
     public required init(from decoder: Decoder) throws {

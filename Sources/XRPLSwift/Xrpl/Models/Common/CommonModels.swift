@@ -37,11 +37,11 @@ public enum LedgerIndex: Codable {
 }
 
 extension LedgerIndex {
-    
+
     enum LedgerIndexCodingError: Error {
         case decoding(String)
     }
-    
+
     public init(from decoder: Decoder) throws {
         if let value = try? String.init(from: decoder) {
             self = .string(value)
@@ -53,7 +53,7 @@ extension LedgerIndex {
         }
         throw LedgerIndexCodingError.decoding("LedgerIndex not mapped")
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         switch self {
         case .string(let string):
@@ -108,13 +108,10 @@ public enum Amount: Codable {
     case string(String)
     case ic(IssuedCurrencyAmount)
 }
-
 extension Amount {
-
     enum AmountCodingError: Error {
         case decoding(String)
     }
-
     public var value: Any {
         switch self {
         case .string(let string):
@@ -123,9 +120,7 @@ extension Amount {
             return ic
         }
     }
-
     public init(from decoder: Decoder) throws {
-        print(decoder.self)
         if let value = try? String.init(from: decoder) {
             self = .string(value)
             return
@@ -181,10 +176,10 @@ public class Signer: Codable {
     }
 }
 
-public class BaseMemo: Codable {
-    public let memoData: String
-    public let memoType: String
-    public let memoFormat: String
+public class Memo: Codable {
+    public let memoData: String?
+    public let memoType: String?
+    public let memoFormat: String?
 
     enum CodingKeys: String, CodingKey {
         case memoData = "MemoData"
@@ -194,14 +189,14 @@ public class BaseMemo: Codable {
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        memoData = try values.decode(String.self, forKey: .memoData)
-        memoType = try values.decode(String.self, forKey: .memoType)
-        memoFormat = try values.decode(String.self, forKey: .memoFormat)
+        memoData = try values.decodeIfPresent(String.self, forKey: .memoData)
+        memoType = try values.decodeIfPresent(String.self, forKey: .memoType)
+        memoFormat = try values.decodeIfPresent(String.self, forKey: .memoFormat)
     }
 }
 
-public class Memo: Codable {
-    public let memo: BaseMemo
+public class MemoWrapper: Codable {
+    public let memo: Memo
     enum CodingKeys: String, CodingKey {
         case memo = "Memo"
     }

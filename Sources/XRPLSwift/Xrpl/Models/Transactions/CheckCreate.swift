@@ -10,15 +10,14 @@
 import Foundation
 
 /**
- Represents a `CheckCreate <https://xrpl.org/checkcreate.html>`_ transaction,
+ Represents a [CheckCreate](https://xrpl.org/checkcreate.html) transaction,
  which creates a Check object. A Check object is a deferred payment
  that can be cashed by its intended destination. The sender of this
  transaction is the sender of the Check.
  */
 public class CheckCreate: BaseTransaction {
     /**
-     The address of the `account
-     <https://xrpl.org/accounts.html>`_ that can cash the Check. This field is
+     The address of the [account](https://xrpl.org/accounts.html)  that can cash the Check. This field is
      required.
      */
     public let destination: String
@@ -33,8 +32,7 @@ public class CheckCreate: BaseTransaction {
     public let sendMax: Amount
 
     /**
-     An arbitrary `destination tag
-     <https://xrpl.org/source-and-destination-tags.html>`_ that
+     An arbitrary [destination tag](https://xrpl.org/source-and-destination-tags.html) that
      identifies the reason for the Check, or a hosted recipient to pay.
      */
     public let destinationTag: Int?

@@ -13,8 +13,6 @@ import Foundation
  The deposit_authorized command indicates whether one account is authorized to
  send payments directly to another. Expects a response in the form of a {@link
  DepositAuthorizedResponse}.
- *
- @category Requests
  */
 public class DepositAuthorizedRequest: BaseRequest {
     /// The sender of a possible payment.

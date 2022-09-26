@@ -25,74 +25,74 @@ let _DISABLE_TICK_SIZE: Int = 0
 // swiftlint:disable:next identifier_name
 let _MAX_DOMAIN_LENGTH: Int = 256
 
+/**
+ There are several options which can be either enabled or disabled for an account.
+ Account options are represented by different types of flags depending on the
+ situation. The AccountSet transaction type has several "AccountSet Flags" (prefixed
+ `asf`) that can enable an option when passed as the SetFlag parameter, or disable
+ an option when passed as the ClearFlag parameter. This enum represents those
+ options.
+ [See AccountSet Flags](https://xrpl.org/accountset.html#accountset-flags)
+ */
 public enum AccountSetAsfFlags: Int, Codable, CaseIterable {
-    /*
-    There are several options which can be either enabled or disabled for an account.
-    Account options are represented by different types of flags depending on the
-    situation. The AccountSet transaction type has several "AccountSet Flags" (prefixed
-    `asf`) that can enable an option when passed as the SetFlag parameter, or disable
-    an option when passed as the ClearFlag parameter. This enum represents those
-    options.
-    `See AccountSet Flags <https://xrpl.org/accountset.html#accountset-flags>`_
-    */
+    /**
+     Track the ID of this account"s most recent transaction. Required for
+     [AccountTxnID](https://xrpl.org/transaction-common-fields.html#accounttxnid)
+     */
     case asfAccountTxId = 5
-    /*
-    Track the ID of this account"s most recent transaction. Required for
-    `AccountTxnID <https://xrpl.org/transaction-common-fields.html#accounttxnid>`_
-    */
+
+    /**
+     Enable  [rippling](https://xrpl.org/rippling.html) on this account"s trust lines by default.
+     */
     case asfDefaultRipple = 8
-    /*
-    Enable `rippling
-    <https://xrpl.org/rippling.html>`_ on this account"s trust lines by default.
-    */
+
+    /**
+     Enable [Deposit Authorization](https://xrpl.org/depositauth.html) on this account.
+     */
     case asfDepositAuth = 9
-    /*
-    Enable `Deposit Authorization
-    <https://xrpl.org/depositauth.html>`_ on this account.
-    */
+
+    /**
+     Disallow use of the master key pair. Can only be enabled if the account has
+     configured another way to sign transactions, such as a [Regular Key](https://xrpl.org/cryptographic-keys.html) or a [Signer List](https://xrpl.org/multi-signing.html).
+     */
     case asfDisableMaster = 4
-    /*
-    Disallow use of the master key pair. Can only be enabled if the account has
-    configured another way to sign transactions, such as a `Regular Key
-    <https://xrpl.org/cryptographic-keys.html>`_ or a `Signer List
-    <https://xrpl.org/multi-signing.html>`_.
-    */
+
+    /// XRP should not be sent to this account. (Enforced by client applications)
     case asfDisallowXrp = 3
-    /* XRP should not be sent to this account. (Enforced by client applications)*/
+    /**
+     [Freeze](https://xrpl.org/freezes.html) all assets issued by this account.
+     */
     case asfGlobalFreeze = 7
-    /*
-    `Freeze
-    <https://xrpl.org/freezes.html>`_ all assets issued by this account.
-    */
+
+    /**
+     Permanently give up the ability to freeze individual trust lines or disable [Global Freeze](https://xrpl.org/freezes.html)
+     This flag can never be disabled
+     after being enabled.
+     */
     case asfNoFreeze = 6
-    /*
-    Permanently give up the ability to `freeze individual trust lines or disable
-    Global Freeze <https://xrpl.org/freezes.html>`_. This flag can never be disabled
-    after being enabled.
-    */
+    /**
+     Require authorization for users to hold balances issued by this address. Can
+     only be enabled if the address has no trust lines connected to it.
+     */
     case asfRequirAuth = 2
-    /*
-    Require authorization for users to hold balances issued by this address. Can
-    only be enabled if the address has no trust lines connected to it.
-    */
+    /// Require a destination tag to send transactions to this account.
     case asfRequireDest = 1
-    /*Require a destination tag to send transactions to this account.*/
+    /// Allow another account to mint and burn tokens on behalf of this account.
     case asfAuthorizedMinter = 10
-    /*Allow another account to mint and burn tokens on behalf of this account.*/
 }
 
 enum AccountSetTfFlags: Int, Codable, CaseIterable {
-    /** The same as SetFlag: asfRequireDest. */
+    /// The same as SetFlag: asfRequireDest.
     case tfRequireDestTag = 0x00010000
-    /** The same as ClearFlag: asfRequireDest. */
+    /// The same as ClearFlag: asfRequireDest.
     case tfOptionalDestTag = 0x00020000
-    /** The same as SetFlag: asfRequireAuth. */
+    /// The same as SetFlag: asfRequireAuth.
     case tfRequireAuth = 0x00040000
-    /** The same as ClearFlag: asfRequireAuth. */
+    /// The same as ClearFlag: asfRequireAuth.
     case tfOptionalAuth = 0x00080000
-    /** The same as SetFlag: asfDisallowXRP. */
+    /// The same as SetFlag: asfDisallowXRP.
     case tfDisallowXRP = 0x00100000
-    /** The same as ClearFlag: asfDisallowXRP. */
+    /// The same as ClearFlag: asfDisallowXRP.
     case tfAllowXRP = 0x00200000
 }
 
@@ -123,59 +123,55 @@ extension [AccountSetTfFlags] {
     }
 }
 
+/**
+ Represents an [AccountSet](https://xrpl.org/accountset.html) transaction,
+ which modifies the properties of an account in the XRP Ledger.
+ */
 public class AccountSet: BaseTransaction {
-    /*
-    Represents an `AccountSet transaction <https://xrpl.org/accountset.html>`_,
-    which modifies the properties of an account in the XRP Ledger.
-    */
-
+    /**
+     Disable a specific [AccountSet Flag](https://xrpl.org/accountset.html#accountset-flags)
+     */
     public var clearFlag: AccountSetAsfFlags?
-    /*
-    Disable a specific `AccountSet Flag
-    <https://xrpl.org/accountset.html#accountset-flags>`_
-    */
 
+    /**
+     Enable a specific [AccountSet Flag](https://xrpl.org/accountset.html#accountset-flags)
+     */
     public var setFlag: AccountSetAsfFlags?
-    /*
-    Enable a specific `AccountSet Flag
-    <https://xrpl.org/accountset.html#accountset-flags>`_
-    */
 
+    /**
+     Set the DNS domain of the account owner. Must be hex-encoded. You can
+     use `strToHex` to convert a UTF-8 string to hex.
+     */
     public var domain: String?
-    /*
-    Set the DNS domain of the account owner. Must be hex-encoded. You can
-    use `xrpl.utils.str_to_hex` to convert a UTF-8 string to hex.
-    */
 
+    /**
+     Set the MD5 Hash to be used for generating an avatar image for this
+     account.
+     */
     public var emailHash: String?
-    /*
-    Set the MD5 Hash to be used for generating an avatar image for this
-    account.
-    */
 
+    /// Set a public key for sending encrypted messages to this account.
     public var messageKey: Int?
-    // Set a public key for sending encrypted messages to this account.
 
+    /**
+     Set the transfer fee to use for tokens issued by this account. See
+    [TransferRate](https://xrpl.org/accountset.html#transferrate) for
+     details.
+     */
     public var transferRate: Int?
-    /*
-    Set the transfer fee to use for tokens issued by this account. See
-    `TransferRate <https://xrpl.org/accountset.html#transferrate>`_ for
-    details.
-    */
 
+    /**
+     Set the tick size to use when trading tokens issued by this account in
+     the decentralized exchange. See [Tick Size](https://xrpl.org/ticksize.html) for details.
+     */
     public var tickSize: Int?
-    /*
-    Set the tick size to use when trading tokens issued by this account in
-    the decentralized exchange. See `Tick Size
-    <https://xrpl.org/ticksize.html>`_ for details.
-    */
 
+    /**
+     Sets an alternate account that is allowed to mint NFTokens on this
+     account"s behalf using NFTokenMint"s `Issuer` field. If set, you must
+     also set the AccountSetFlag.ASF_AUTHORIZED_NFTOKEN_MINTER flag.
+     */
     public var nfTokenMinter: String?
-    /*
-    Sets an alternate account that is allowed to mint NFTokens on this
-    account"s behalf using NFTokenMint"s `Issuer` field. If set, you must
-    also set the AccountSetFlag.ASF_AUTHORIZED_NFTOKEN_MINTER flag.
-    */
 
     enum CodingKeys: String, CodingKey {
         case clearFlag = "ClearFlag"
@@ -208,7 +204,7 @@ public class AccountSet: BaseTransaction {
         super.init(account: "", transactionType: "AccountSet")
     }
 
-    public override init(json: [String: AnyObject]) throws {
+    override public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(AccountSet.self, from: data)
@@ -259,7 +255,6 @@ public func validateAccountSet(tx: [String: AnyObject]) throws {
     try validateBaseTransaction(common: tx)
 
     if tx["ClearFlag"] != nil {
-        print("NOT NIL")
         guard let _ = tx["ClearFlag"] as? Int else {
             throw ValidationError("AccountSet: invalid ClearFlag")
         }

@@ -277,8 +277,6 @@ public class BinaryParser {
      The value associated with the given field
      */
     func readFieldValue(field: FieldInstance) throws -> SerializedType? {
-//        print("READING FIELD...")
-//        print("FIELD NAME: \(field.name)")
         let associatedValue = AssociatedValue(field: field, parser: self)
         let sizeHint: Int? = field.isVLEncoded
         ? try self.readLengthPrefix()
@@ -287,7 +285,6 @@ public class BinaryParser {
         if value.bytes.isEmpty {
             throw BinaryError.unknownError(error: "fromParser for (\(field.name), \(field.type) -> nil ")
         }
-//        print("FIELD NAME: \(value.toJson())")
         return value
     }
 

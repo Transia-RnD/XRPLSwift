@@ -15,7 +15,7 @@ import Foundation
  form of a {@link RandomResponse}.
  */
 public class RandomRequest: BaseRequest {
-//    let command: String = "random"
+    //    let command: String = "random"
     public init(
         // Base
         id: Int? = nil,
@@ -50,7 +50,7 @@ public class RandomResponse: Codable {
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         random = try values.decode(String.self, forKey: .random)
-//        try super.init(from: decoder)
+        //        try super.init(from: decoder)
     }
 
     func toJson() throws -> [String: AnyObject] {

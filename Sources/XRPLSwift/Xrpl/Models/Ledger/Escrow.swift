@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Escrow.swift
 //  
 //
 //  Created by Denis Angell on 7/30/22.
@@ -10,8 +10,6 @@ import Foundation
 /**
  The Escrow object type represents a held payment of XRP waiting to be
  executed or canceled.
- *
- @category Ledger Entries
  */
 open class Escrow: BaseLedgerEntry {
     public var ledgerEntryType: String = "Escrow"
@@ -26,7 +24,7 @@ open class Escrow: BaseLedgerEntry {
      successful.
      */
     public let destination: String
-    /*The amount of XRP, in drops, to be delivered by the held payment. */
+    /// The amount of XRP, in drops, to be delivered by the held payment.
     public let amount: String
     /**
      A bit-map of boolean flags. No flags are defined for the Escrow type, so

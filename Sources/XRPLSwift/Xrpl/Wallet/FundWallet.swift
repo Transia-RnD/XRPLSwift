@@ -7,33 +7,33 @@
 //
 //// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/Wallet/fundWallet.ts
 //
-//import Foundation
+// import Foundation
 //
-//public struct FaucetAccount: Codable {
+// public struct FaucetAccount: Codable {
 //    let xAddress: String
 //    let classicAddress: String?
 //    let secret: String
-//}
+// }
 //
-//public struct FaucetWallet: Codable {
+// public struct FaucetWallet: Codable {
 //    let account: FaucetAccount
 //    let amount: Double
 //    let balance: Double
-//}
+// }
 //
-//public struct Funded {
+// public struct Funded {
 //    let wallet: Wallet
 //    let balance: Double
-//}
+// }
 //
-//enum FaucetNetwork: String {
+// enum FaucetNetwork: String {
 //    case testnet = "faucet.altnet.rippletest.net"
 //    case devnet = "faucet.devnet.rippletest.net"
 //    case nftDevnet = "faucet-nft.ripple.com"
-//}
+// }
 //
 //
-//public class FundWallet {
+// public class FundWallet {
 //    
 //    // Interval to check an account balance
 //    // swiftlint:disable:next identifier_name
@@ -352,4 +352,4 @@
 //        
 //        throw XRPLFaucetError.unknown("Faucet URL is not defined or inferrable.")
 //    }
-//}
+// }

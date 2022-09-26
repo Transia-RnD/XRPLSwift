@@ -214,7 +214,7 @@ public class Connection {
     private let retryConnectionBackoff = ExponentialBackoff(
         opts: ExponentialBackoffOptions(min: 100, max: SECONDS_PER_MINUTE * 1000)
     )
-    
+
     internal let config: ConnectionOptions
     private let requestManager = RequestManager()
     private let connectionManager = ConnectionManager()
@@ -260,22 +260,20 @@ public class Connection {
      ConnectionError if there is a connection error, RippleError if there is already a WebSocket in existence.
      */
     public func connect() async throws -> EventLoopFuture<Any> {
-        //        let promise = connEventGroup.next().makePromise(of: Any.self)
-        //        print("CONNECTION CONNECTED")
-        //        if (self.isConnected()) {
-        //            return EventLoopPromise(
-        //        }
-        //        if (self.state == WebSocketClient) {
-        //            print("self.state != self.ws?.isClosed")
-        //            return await self.connectionManager.awaitConnection()
-        //        }
-        //        if (self.url!.isEmpty) {
-        //            promise.fail(XrplError.connection("Cannot connect because no server was specified"))
-        //        }
-        //        if self.ws != nil {
-        //            // missing state
-        //            promise.fail(XrplError.connection("Websocket connection never cleaned up."))
-        //        }
+//        let promise = connEventGroup.next().makePromise(of: Any.self)
+//        if self.isConnected() {
+//            return promise.futureResult
+//        }
+//        if self.state == .closed {
+//            return await self.connectionManager.awaitConnection()
+//        }
+//        if self.url!.isEmpty {
+//            promise.fail(XrplError("Cannot connect because no server was specified"))
+//        }
+//        if self.ws != nil {
+//            // missing state
+//            promise.fail(XrplError("Websocket connection never cleaned up."))
+//        }
 
         let connectionTimeoutID: Timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.config.connectionTimeout), repeats: false) { (_) in
             Task {
@@ -305,7 +303,7 @@ public class Connection {
 
         //        this.ws.on('error', (error) => this.onConnectionFailed(error))
         //        this.ws.on('error', () => clearTimeout(connectionTimeoutID))
-        
+
         self.ws?.onClose.whenFailure({ error in
             self.onConnectionFailed(errorOrCode: error)
         })
@@ -397,10 +395,6 @@ public class Connection {
         //        self.trace("send", message)
         print("REQUEST: \(message)")
         _ = await websocketSendAsync(ws: ws, message: message)
-        // TODO: Workaround See `websocketSendAsync`: ws.send doesnt throw proper error so the request would hang until the `onClose` is called (Immediatly)
-        //        _ = ws.onClose.map {
-        //            try! self.requestManager.reject(id: id, error: DisconnectedError.connection("Disconnected"))
-        //        }
         return responsePromise
     }
 
@@ -627,7 +621,7 @@ public class Connection {
      A Promise that resolves to void when the heartbeat returns successfully.
     */
     private func heartbeat() async -> EventLoopPromise<Void> {
-        
+
         let promise = connEventGroup.next().makePromise(of: Void.self)
         let response = try! await self.request(request: BaseRequest(command: "ping"))
         response.whenFailure { error in
@@ -679,4 +673,3 @@ public class Connection {
         )
     }
 }
-
