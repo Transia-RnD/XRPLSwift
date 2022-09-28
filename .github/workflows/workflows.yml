@@ -13,10 +13,9 @@ jobs:
   build-and-lint:
     strategy:
       fail-fast: false
-      matrix:
-        swift: ["swift:5.6"]
     runs-on: ubuntu-latest
-    container: ${{ matrix.swift }}
+    container:
+      image: ghcr.io/realm/swiftlint:5.6-latest
     steps:
     - name: Get Swift Version
       id: get-swift-version
@@ -43,10 +42,9 @@ jobs:
   unit:
     strategy:
       fail-fast: false
-      matrix:
-        swift: ["swift:5.6"]
     runs-on: ubuntu-latest
-    container: ${{ matrix.swift }}
+    container:
+      image: ghcr.io/realm/swiftlint:5.6-latest
     steps:
     - name: Get Swift Version
       id: get-swift-version
@@ -75,10 +73,9 @@ jobs:
   integration:
     strategy:
       fail-fast: false
-      matrix:
-        swift: ["swift:5.6"]
     runs-on: ubuntu-latest
-    container: ${{ matrix.swift }}
+    container:
+      image: ghcr.io/realm/swiftlint:5.6-latest
     services:
       rippled:
         image: natenichols/rippled-standalone:latest
