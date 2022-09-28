@@ -66,7 +66,7 @@ public class DepositPreauth: BaseTransaction {
 /**
  Verify the form and type of an DepositPreauth at runtime.
  - parameters:
-    - tx: An DepositPreauth Transaction.
+ - tx: An DepositPreauth Transaction.
  - throws:
  When the DepositPreauth is Malformed.
  */

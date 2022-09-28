@@ -1,6 +1,6 @@
 //
 //  XrplClient.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/27/22.
 //
@@ -103,27 +103,27 @@ public protocol XrplClientDelegate {
  */
 public class XrplClient: ConnectionDelegate {
     public func error(code: Int, message: Any, data: Data) {
-//        self.emit("error", errorCode, errorMessage, data)
+        //        self.emit("error", errorCode, errorMessage, data)
     }
 
     public func connected() {
-//        self.emit("connected")
+        //        self.emit("connected")
     }
 
     public func disconnected(code: Int) {
-//        let finalCode = code
-//                    /*
-//                     * 4000: Connection uses a 4000 code internally to indicate a manual disconnect/close
-//                     * Since 4000 is a normal disconnect reason, we convert this to the standard exit code 1000
-//                     */
-//                    if (finalCode === INTENTIONAL_DISCONNECT_CODE) {
-//                        finalCode = NORMAL_DISCONNECT_CODE
-//                    }
-//                    self.emit("disconnected", finalCode)
+        //        let finalCode = code
+        //                    /*
+        //                     * 4000: Connection uses a 4000 code internally to indicate a manual disconnect/close
+        //                     * Since 4000 is a normal disconnect reason, we convert this to the standard exit code 1000
+        //                     */
+        //                    if (finalCode === INTENTIONAL_DISCONNECT_CODE) {
+        //                        finalCode = NORMAL_DISCONNECT_CODE
+        //                    }
+        //                    self.emit("disconnected", finalCode)
     }
 
     public func ledgerClosed(ledger: Any) {
-//        self.emit("ledgerClosed", ledger)
+        //        self.emit("ledgerClosed", ledger)
     }
 
     public func transaction(tx: Any) {
@@ -133,23 +133,23 @@ public class XrplClient: ConnectionDelegate {
     }
 
     public func validationReceived(validation: Any) {
-//        self.emit("validationReceived", validation)
+        //        self.emit("validationReceived", validation)
     }
 
     public func manifestReceived(manifest: Any) {
-//        self.emit("manifestReceived", manifest)
+        //        self.emit("manifestReceived", manifest)
     }
 
     public func peerStatusChange(status: Any) {
-//        self.emit("peerStatusChange", status)
+        //        self.emit("peerStatusChange", status)
     }
 
     public func consensusPhase(consensus: Any) {
-//        self.emit("consensusPhase", consensus)
+        //        self.emit("consensusPhase", consensus)
     }
 
     public func pathFind(path: Any) {
-//        self.emit("path_find", path)
+        //        self.emit("path_find", path)
     }
 
     /*
@@ -271,15 +271,15 @@ public class XrplClient: ConnectionDelegate {
     func request(_ r: LedgerDataRequest) async -> EventLoopFuture<Any> {
         return await request(r: r)
     }
-//    // swiftlint:disable:next identifier_name
-//    func request(_ r: LedgerEntryRequest) async -> EventLoopFuture<Any> {
-//        return await request(r: r)
-//    }
-//    // swiftlint:disable:next identifier_name
-//    func request(_ r: ManifestRequest) async -> EventLoopFuture<Any> {
-//        return await request(r: r)
-//    }
-//    // swiftlint:disable:next identifier_name
+    //    // swiftlint:disable:next identifier_name
+    //    func request(_ r: LedgerEntryRequest) async -> EventLoopFuture<Any> {
+    //        return await request(r: r)
+    //    }
+    //    // swiftlint:disable:next identifier_name
+    //    func request(_ r: ManifestRequest) async -> EventLoopFuture<Any> {
+    //        return await request(r: r)
+    //    }
+    //    // swiftlint:disable:next identifier_name
     func request(_ r: NFTBuyOffersRequest) async -> EventLoopFuture<Any> {
         return await request(r: r)
     }
@@ -287,14 +287,14 @@ public class XrplClient: ConnectionDelegate {
     func request(_ r: NFTSellOffersRequest) async -> EventLoopFuture<Any> {
         return await request(r: r)
     }
-//    // swiftlint:disable:next identifier_name
-//    func request(_ r: NoRippleCheckRequest) async -> EventLoopFuture<Any> {
-//        return await request(r: r)
-//    }
-//    // swiftlint:disable:next identifier_name
-//    func request(_ r: PathFindRequest) async -> EventLoopFuture<Any> {
-//        return await request(r: r)
-//    }
+    //    // swiftlint:disable:next identifier_name
+    //    func request(_ r: NoRippleCheckRequest) async -> EventLoopFuture<Any> {
+    //        return await request(r: r)
+    //    }
+    //    // swiftlint:disable:next identifier_name
+    //    func request(_ r: PathFindRequest) async -> EventLoopFuture<Any> {
+    //        return await request(r: r)
+    //    }
     // swiftlint:disable:next identifier_name
     func request(_ r: PingRequest) async -> EventLoopFuture<Any> {
         return await request(r: r)
@@ -311,7 +311,7 @@ public class XrplClient: ConnectionDelegate {
     func request(_ r: ServerInfoRequest) async -> EventLoopFuture<Any> {
         return await request(r: r)
     }
-//    // swiftlint:disable:next identifier_name
+    //    // swiftlint:disable:next identifier_name
     func request(_ r: ServerStateRequest) async -> EventLoopFuture<Any> {
         return await request(r: r)
     }
@@ -323,14 +323,14 @@ public class XrplClient: ConnectionDelegate {
     func request(_ r: SubmitMultisignedRequest) async -> EventLoopFuture<Any> {
         return await request(r: r)
     }
-//    // swiftlint:disable:next identifier_name
-//    func request(_ r: SubscribeRequest) async -> EventLoopFuture<Any> {
-//        return await request(r: r)
-//    }
-//    // swiftlint:disable:next identifier_name
-//    func request(_ r: UnsubscribeRequest) async -> EventLoopFuture<Any> {
-//        return await request(r: r)
-//    }
+    //    // swiftlint:disable:next identifier_name
+    //    func request(_ r: SubscribeRequest) async -> EventLoopFuture<Any> {
+    //        return await request(r: r)
+    //    }
+    //    // swiftlint:disable:next identifier_name
+    //    func request(_ r: UnsubscribeRequest) async -> EventLoopFuture<Any> {
+    //        return await request(r: r)
+    //    }
     // swiftlint:disable:next identifier_name
     func request(_ r: TransactionEntryRequest) async -> EventLoopFuture<Any> {
         return await request(r: r)
@@ -619,8 +619,8 @@ public class XrplClient: ConnectionDelegate {
         return self.connection.isConnected()
     }
 
-//    public func autofill(transaction: Transaction, signersCount: Int? = 0) async throws -> EventLoopFuture<BaseTransaction> {
-//    let tx = try transaction.toAny() as! BaseTransaction
+    //    public func autofill(transaction: Transaction, signersCount: Int? = 0) async throws -> EventLoopFuture<BaseTransaction> {
+    //    let tx = try transaction.toAny() as! BaseTransaction
     public func autofill(transaction: Transaction, signersCount: Int? = 0) async throws -> EventLoopFuture<[String: AnyObject]> {
         return try await AutoFillSugar().autofill(client: self, transaction: try transaction.toJson(), signersCount: signersCount)
     }

@@ -26,7 +26,7 @@ public class RippledITestCase: XCTestCase {
     }
 
     public override func tearDown() async throws {
-//        self.client.removeAllListeners()
+        //        self.client.removeAllListeners()
         _ = await self.client.disconnect()
     }
 }

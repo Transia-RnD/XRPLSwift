@@ -11,7 +11,6 @@ import BigInt
 import Foundation
 
 public class WalletSigner: Wallet {
-
     /**
      * Takes several transactions with Signer fields (in object or blob form) and creates a
      * single transaction with all Signers that then gets signed and returned.

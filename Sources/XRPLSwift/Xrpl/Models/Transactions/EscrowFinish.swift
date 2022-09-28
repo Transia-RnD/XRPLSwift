@@ -11,22 +11,22 @@
 import Foundation
 
 public class EscrowFinish: BaseTransaction {
-  /** Address of the source account that funded the held payment. */
+    /** Address of the source account that funded the held payment. */
     public let owner: String
-  /**
-   * Transaction sequence of EscrowFinish transaction that created the held.
-   * payment to finish.
-   */
+    /**
+     * Transaction sequence of EscrowFinish transaction that created the held.
+     * payment to finish.
+     */
     public let offerSequence: Int
-  /**
-   * Hex value matching the previously-supplied PREIMAGE-SHA-256.
-   * crypto-condition of the held payment.
-   */
+    /**
+     * Hex value matching the previously-supplied PREIMAGE-SHA-256.
+     * crypto-condition of the held payment.
+     */
     public let condition: String?
-  /**
-   * Hex value of the PREIMAGE-SHA-256 crypto-condition fulfillment matching.
-   * the held payment's Condition.
-   */
+    /**
+     * Hex value of the PREIMAGE-SHA-256 crypto-condition fulfillment matching.
+     * the held payment's Condition.
+     */
     public let fulfillment: String?
 
     enum CodingKeys: String, CodingKey {
@@ -49,7 +49,7 @@ public class EscrowFinish: BaseTransaction {
         super.init(account: "", transactionType: "EscrowFinish")
     }
 
-    public override init(json: [String: AnyObject]) throws {
+    override public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(EscrowFinish.self, from: data)
@@ -60,7 +60,7 @@ public class EscrowFinish: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         owner = try values.decode(String.self, forKey: .owner)
         offerSequence = try values.decode(Int.self, forKey: .offerSequence)
@@ -82,7 +82,7 @@ public class EscrowFinish: BaseTransaction {
 /**
  Verify the form and type of an EscrowFinish at runtime.
  - parameters:
-    - tx: An EscrowFinish Transaction.
+ - tx: An EscrowFinish Transaction.
  - throws:
  When the EscrowFinish is Malformed.
  */

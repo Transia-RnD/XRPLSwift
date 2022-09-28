@@ -20,23 +20,23 @@ final class TestRequest: XCTestCase {
         try await super.setUp()
     }
 
-//    func testClientConstructor() async {
-//        let exp = expectation(description: "WSS CALL")
-//        let builtRequest = AccountObjectsRequest(account: MockRippled1.account_objects.normal)
-//        let request = try! await self.client.request(req: builtRequest)
-//        request?.whenFailure({ error in
-//            XCTFail()
-//            exp.fulfill()
-//        })
-//        request?.whenSuccess({ result in
-//            guard let response = result as? BaseResponse<AccountObjectsResponse> else {
-//                XCTFail()
-//                return
-//            }
-//            XCTAssert(response.result != nil)
-//            assertResultMatch(response: response.result, expected: Fixtures4Testing().ACCOUNT_OBJECTS)
-//            exp.fulfill()
-//        })
-//        await waitForExpectations(timeout: 1)
-//    }
+    //    func testClientConstructor() async {
+    //        let exp = expectation(description: "WSS CALL")
+    //        let builtRequest = AccountObjectsRequest(account: MockRippled1.account_objects.normal)
+    //        let request = try! await self.client.request(req: builtRequest)
+    //        request?.whenFailure({ error in
+    //            XCTFail()
+    //            exp.fulfill()
+    //        })
+    //        request?.whenSuccess({ result in
+    //            guard let response = result as? BaseResponse<AccountObjectsResponse> else {
+    //                XCTFail()
+    //                return
+    //            }
+    //            XCTAssert(response.result != nil)
+    //            assertResultMatch(response: response.result, expected: Fixtures4Testing().ACCOUNT_OBJECTS)
+    //            exp.fulfill()
+    //        })
+    //        await waitForExpectations(timeout: 1)
+    //    }
 }

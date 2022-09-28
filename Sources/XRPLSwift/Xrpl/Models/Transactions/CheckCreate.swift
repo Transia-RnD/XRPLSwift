@@ -108,7 +108,7 @@ public class CheckCreate: BaseTransaction {
 /**
  Verify the form and type of an CheckCreate at runtime.
  - parameters:
-    - tx: An CheckCreate Transaction.
+ - tx: An CheckCreate Transaction.
  - throws:
  When the CheckCreate is Malformed.
  */

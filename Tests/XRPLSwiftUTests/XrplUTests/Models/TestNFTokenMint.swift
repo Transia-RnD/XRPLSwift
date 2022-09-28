@@ -41,7 +41,7 @@ final class TestNFTokenMint: XCTestCase {
             "Fee": "5000000",
             "Sequence": 2470665,
             "Flags": NFTokenMintFlags.tfTransferable.rawValue,
-//            "NFTokenTaxon": 0,
+            //            "NFTokenTaxon": 0,
             "Issuer": "rWYkbWkCeg8dP6rXALnjgZSjjLyih5NXm",
             "TransferFee": 1,
             "URI": "http://xrpl.org".bytes.toHex

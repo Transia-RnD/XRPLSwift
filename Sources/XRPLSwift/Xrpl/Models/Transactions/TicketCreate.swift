@@ -35,7 +35,7 @@ public class TicketCreate: BaseTransaction {
         super.init(account: "", transactionType: "TrustSet")
     }
 
-    public override init(json: [String: AnyObject]) throws {
+    override public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(TicketCreate.self, from: data)
@@ -43,7 +43,7 @@ public class TicketCreate: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         ticketCount = try values.decode(Int.self, forKey: .ticketCount)
         try super.init(from: decoder)
@@ -61,7 +61,7 @@ let MAX_TICKETS: Int = 250 // swiftlint:disable:this identifier_name
 /**
  Verify the form and type of an TicketCreate at runtime.
  - parameters:
-    - tx: An TicketCreate Transaction.
+ - tx: An TicketCreate Transaction.
  - throws:
  When the TicketCreate is Malformed.
  */
@@ -79,8 +79,8 @@ public func validateTicketCreate(tx: [String: AnyObject]) throws {
 
     if
         ticketCount == nil ||
-        ticketCount! < 1 ||
-        ticketCount! > MAX_TICKETS {
+            ticketCount! < 1 ||
+            ticketCount! > MAX_TICKETS {
         throw ValidationError("TicketCreate: TicketCount must be an integer from 1 to 250")
     }
 }

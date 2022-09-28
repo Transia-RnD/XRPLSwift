@@ -28,5 +28,4 @@ class ED25519: SigningAlgorithm {
         let publicKey = [UInt8](publicKey.suffix(from: 1))
         return Ed25519.verify(signature: signature, message: message, publicKey: publicKey)
     }
-
 }

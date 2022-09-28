@@ -1,6 +1,6 @@
 //
 //  TestWallet.swift
-//  
+//
 //
 //  Created by Denis Angell on 8/13/22.
 //
@@ -103,75 +103,75 @@ final class TestWallet: XCTestCase {
         XCTAssertEqual(wallet.privateKey, privateKey)
     }
 
-//    func testWalletFromMnemonicSECP256K1() {
-//
-//        let mnemonic: String = "CAB BETH HANK BIRD MEND SIGN GILD ANY KERN HYDE CHAT STUB"
-//        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
-//        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
-//            masterAddress: nil,
-//            derivationPath: DerivationPath(),
-//            mnemonicEncoding: "rfc1751",
-//            algorithm: .secp256k1
-//        )
-//        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
-//        XCTAssertEqual(wallet.seed, expectedSeed)
-//    }
+    //    func testWalletFromMnemonicSECP256K1() {
+    //
+    //        let mnemonic: String = "CAB BETH HANK BIRD MEND SIGN GILD ANY KERN HYDE CHAT STUB"
+    //        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
+    //        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
+    //            masterAddress: nil,
+    //            derivationPath: DerivationPath(),
+    //            mnemonicEncoding: "rfc1751",
+    //            algorithm: .secp256k1
+    //        )
+    //        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
+    //        XCTAssertEqual(wallet.seed, expectedSeed)
+    //    }
 
-//    func testWalletFromMnemonicED25519() {
-//
-//        let mnemonic: String = "CAB BETH HANK BIRD MEND SIGN GILD ANY KERN HYDE CHAT STUB"
-//        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
-//        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
-//            masterAddress: nil,
-//            derivationPath: DerivationPath(),
-//            mnemonicEncoding: "rfc1751",
-//            algorithm: .ed25519
-//        )
-//        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
-//        XCTAssertEqual(wallet.seed, expectedSeed)
-//    }
+    //    func testWalletFromMnemonicED25519() {
+    //
+    //        let mnemonic: String = "CAB BETH HANK BIRD MEND SIGN GILD ANY KERN HYDE CHAT STUB"
+    //        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
+    //        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
+    //            masterAddress: nil,
+    //            derivationPath: DerivationPath(),
+    //            mnemonicEncoding: "rfc1751",
+    //            algorithm: .ed25519
+    //        )
+    //        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
+    //        XCTAssertEqual(wallet.seed, expectedSeed)
+    //    }
 
-//    func testInvalidMnemonicAlgorithmRFC() {
-//
-//        let mnemonic: String = "CAB BETH HANK BIRD MEND SIGN GILD ANY KERN HYDE CHAT STUB"
-//        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
-//        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
-//            masterAddress: nil,
-//            derivationPath: DerivationPath(),
-//            mnemonicEncoding: "bip39",
-//            algorithm: .ed25519
-//        )
-//        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
-//        XCTAssertEqual(wallet.seed, expectedSeed)
-//    }
+    //    func testInvalidMnemonicAlgorithmRFC() {
+    //
+    //        let mnemonic: String = "CAB BETH HANK BIRD MEND SIGN GILD ANY KERN HYDE CHAT STUB"
+    //        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
+    //        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
+    //            masterAddress: nil,
+    //            derivationPath: DerivationPath(),
+    //            mnemonicEncoding: "bip39",
+    //            algorithm: .ed25519
+    //        )
+    //        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
+    //        XCTAssertEqual(wallet.seed, expectedSeed)
+    //    }
 
-//    func testInvalidMnemonicAlgorithmBIP() {
-//
-//        let mnemonic: String = "draw attack antique swing base employ blur above palace lucky glide clap pen use illegal"
-//        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
-//        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
-//            masterAddress: nil,
-//            derivationPath: DerivationPath(),
-//            mnemonicEncoding: "rfc1751",
-//            algorithm: .ed25519
-//        )
-//        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
-//        XCTAssertEqual(wallet.seed, expectedSeed)
-//    }
+    //    func testInvalidMnemonicAlgorithmBIP() {
+    //
+    //        let mnemonic: String = "draw attack antique swing base employ blur above palace lucky glide clap pen use illegal"
+    //        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
+    //        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
+    //            masterAddress: nil,
+    //            derivationPath: DerivationPath(),
+    //            mnemonicEncoding: "rfc1751",
+    //            algorithm: .ed25519
+    //        )
+    //        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
+    //        XCTAssertEqual(wallet.seed, expectedSeed)
+    //    }
 
-//    func testWalletFromMnemonicRFCLower() {
-//
-//        let mnemonic: String = "cab beth hank bird mend sign gild any kern hyde chat stub"
-//        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
-//        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
-//            masterAddress: nil,
-//            derivationPath: DerivationPath(),
-//            mnemonicEncoding: "rfc1751",
-//            algorithm: .ed25519
-//        )
-//        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
-//        XCTAssertEqual(wallet.seed, expectedSeed)
-//    }
+    //    func testWalletFromMnemonicRFCLower() {
+    //
+    //        let mnemonic: String = "cab beth hank bird mend sign gild any kern hyde chat stub"
+    //        let expectedSeed = "snVB4iTWYqsWZaj1hkvAy1QzqNbAg"
+    //        let mnemonicOptions: MnemonicOptions = MnemonicOptions(
+    //            masterAddress: nil,
+    //            derivationPath: DerivationPath(),
+    //            mnemonicEncoding: "rfc1751",
+    //            algorithm: .ed25519
+    //        )
+    //        let wallet: Wallet = try! Wallet.fromMnemonic(mnemonic: mnemonic, opts: mnemonicOptions)
+    //        XCTAssertEqual(wallet.seed, expectedSeed)
+    //    }
 
     func testWalletFromKeyPair() {
 
@@ -718,13 +718,13 @@ final class TestWalletSign: XCTestCase {
             "Fee": "10",
             "URI": "697066733a2f2f62616679626569676479727a74357366703775646d37687537367568377932366e6634646675796c71616266336f636c67747179353566627a6469",
             "Memos": [
-              [
-                "Memo": [
-                  "MemoType":
-                    "687474703a2f2f6578616d706c652e636f6d2f6d656d6f2f67656e65726963",
-                  "MemoData": "72656e74"
+                [
+                    "Memo": [
+                        "MemoType":
+                            "687474703a2f2f6578616d706c652e636f6d2f6d656d6f2f67656e65726963",
+                        "MemoData": "72656e74"
+                    ]
                 ]
-              ]
             ]
         ] as! [String: AnyObject])!
         let result = try! wallet.sign(transaction: tx)
@@ -742,13 +742,13 @@ final class TestWalletSign: XCTestCase {
             "Fee": "10",
             "URI": "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf4dfuylqabf3oclgtqy55fbzdi",
             "Memos": [
-              [
-                "Memo": [
-                  "MemoType":
-                    "687474703a2f2f6578616d706c652e636f6d2f6d656d6f2f67656e65726963",
-                  "MemoData": "72656e74"
+                [
+                    "Memo": [
+                        "MemoType":
+                            "687474703a2f2f6578616d706c652e636f6d2f6d656d6f2f67656e65726963",
+                        "MemoData": "72656e74"
+                    ]
                 ]
-              ]
             ]
         ] as! [String: AnyObject])!
         XCTAssertThrowsError(try wallet.sign(transaction: tx))
@@ -757,9 +757,9 @@ final class TestWalletSign: XCTestCase {
 
 final class TestWalletVerify: XCTestCase {
     let publicKey: String =
-          "030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D"
+        "030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D"
     let privateKey: String =
-          "00141BA006D3363D2FB2785E8DF4E44D3A49908780CB4FB51F6D217C08C021429F"
+        "00141BA006D3363D2FB2785E8DF4E44D3A49908780CB4FB51F6D217C08C021429F"
     let preparedSigned: String = "1200002400000001614000000001312D0068400000000000000C7321030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D74473045022100CAF99A63B241F5F62B456C68A593D2835397101533BB5D0C4DC17362AC22046F022016A2CA2CF56E777B10E43B56541A4C2FB553E7E298CDD39F7A8A844DA491E51D81142AF1861DEC1316AEEC995C94FF9E2165B1B784608314FDB08D07AAA0EB711793A3027304D688E10C3648"
     let preparedID: String = "30D9ECA2A7FB568C5A8607E5850D9567572A9E7C6094C26BEFD4DC4C2CF2657A"
 
@@ -771,16 +771,16 @@ final class TestWalletVerify: XCTestCase {
 
     func testVerifyFalse() {
         let diffPublicKey: String =
-              "02F89EAEC7667B30F33D0687BBA86C3FE2A08CCA40A9186C5BDE2DAA6FA97A37D8"
+            "02F89EAEC7667B30F33D0687BBA86C3FE2A08CCA40A9186C5BDE2DAA6FA97A37D8"
         let diffPrivateKey: String =
-              "00ACCD3309DB14D1A4FC9B1DAE608031F4408C85C73EE05E035B7DC8B25840107A"
+            "00ACCD3309DB14D1A4FC9B1DAE608031F4408C85C73EE05E035B7DC8B25840107A"
         let wallet = Wallet(publicKey: diffPublicKey, privateKey: diffPrivateKey)
         let isVerified: Bool = wallet.verifyTransaction(signedTransaction: preparedSigned)
         XCTAssertEqual(isVerified, false)
     }
 }
 
- final class TestWalletGetXAddress: XCTestCase {
+final class TestWalletGetXAddress: XCTestCase {
     let publicKey: String = "030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D"
     let privateKey: String = "00141BA006D3363D2FB2785E8DF4E44D3A49908780CB4FB51F6D217C08C021429F"
     let tag: Int = 1337
@@ -804,4 +804,4 @@ final class TestWalletVerify: XCTestCase {
         let result = wallet.getXAddress(tag: tag)
         XCTAssertEqual(result, mainnetXAddress)
     }
- }
+}

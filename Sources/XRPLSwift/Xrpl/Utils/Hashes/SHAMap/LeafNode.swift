@@ -1,6 +1,6 @@
 //
 //  LeafNode.swift
-//  
+//
 //
 //  Created by Denis Angell on 8/6/22.
 //
@@ -27,7 +27,7 @@ class LeafNode: HashesNode {
      * @param type - One of TYPE_ACCOUNT_STATE, TYPE_TRANSACTION_MD etc.
      */
     public init(tag: String, data: String, type: NodeType) {
-//        super()
+        //        super()
         self.tag = tag
         self.type = type
         self.data = data

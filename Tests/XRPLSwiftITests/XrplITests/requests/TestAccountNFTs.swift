@@ -44,15 +44,15 @@ final class TestIAccounNFTs: RippledITestCase {
         let request: AccountNFTsRequest = try! AccountNFTsRequest(json)
         let response: BaseResponse = try! await self.client.request(r: request).wait() as! BaseResponse<AccountNFTsResponse>
         XCTAssertEqual(response.type, expected["type"] as! String)
-//        XCTAssert(response.result?.ledgerHash is String)
-//        XCTAssert(response.result?.ledgerIndex is Int)
+        //        XCTAssert(response.result?.ledgerHash is String)
+        //        XCTAssert(response.result?.ledgerIndex is Int)
 
         var responseJson: [String: AnyObject] = try! response.result!.toJson()
-//        responseJson["ledger_hash"] = nil
-//        responseJson["ledger_index"] = nil
+        //        responseJson["ledger_hash"] = nil
+        //        responseJson["ledger_index"] = nil
         var expectedJson: [String: AnyObject] = expected["result"] as! [String: AnyObject]
-//        expectedJson["ledger_hash"] = nil
-//        expectedJson["ledger_index"] = nil
+        //        expectedJson["ledger_hash"] = nil
+        //        expectedJson["ledger_index"] = nil
         XCTAssert(responseJson == expectedJson)
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)
@@ -66,15 +66,15 @@ final class TestIAccounNFTs: RippledITestCase {
         )
         let response: BaseResponse = try! await self.client.request(r: request).wait() as! BaseResponse<AccountNFTsResponse>
         XCTAssertEqual(response.type, expected["type"] as! String)
-//        XCTAssert(response.result?.ledgerHash is String)
-//        XCTAssert(response.result?.ledgerIndex is Int)
+        //        XCTAssert(response.result?.ledgerHash is String)
+        //        XCTAssert(response.result?.ledgerIndex is Int)
 
         var responseJson: [String: AnyObject] = try! response.result!.toJson()
-//        responseJson["ledger_hash"] = nil
-//        responseJson["ledger_index"] = nil
+        //        responseJson["ledger_hash"] = nil
+        //        responseJson["ledger_index"] = nil
         var expectedJson: [String: AnyObject] = expected["result"] as! [String: AnyObject]
-//        expectedJson["ledger_hash"] = nil
-//        expectedJson["ledger_index"] = nil
+        //        expectedJson["ledger_hash"] = nil
+        //        expectedJson["ledger_index"] = nil
         XCTAssert(responseJson == expectedJson)
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)

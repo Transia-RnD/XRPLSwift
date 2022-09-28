@@ -65,7 +65,7 @@ public class NFTokenCancelOffer: BaseTransaction {
 /**
  Verify the form and type of an NFTokenCancelOffer at runtime.
  - parameters:
-    - tx: An NFTokenCancelOffer Transaction.
+ - tx: An NFTokenCancelOffer Transaction.
  - throws:
  When the NFTokenCancelOffer is Malformed.
  */

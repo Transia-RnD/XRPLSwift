@@ -25,11 +25,11 @@ func sha512HalfHash(data: [UInt8]) -> [UInt8] {
 // }
 
 extension Data {
-//    mutating func getPointer() -> UnsafeMutablePointer<UInt8> {
-//        return self.withUnsafeMutableBytes { (bytePtr) in
-//            bytePtr.bindMemory(to: UInt8.self).baseAddress!
-//        }
-//    }
+    //    mutating func getPointer() -> UnsafeMutablePointer<UInt8> {
+    //        return self.withUnsafeMutableBytes { (bytePtr) in
+    //            bytePtr.bindMemory(to: UInt8.self).baseAddress!
+    //        }
+    //    }
 
     func sha512Half() -> Data {
         Data(self.sha512().prefix(through: 31))

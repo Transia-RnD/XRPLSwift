@@ -12,47 +12,47 @@ import XCTest
 
 let IOU_CASES: [String: [String: String]] = [
     "800000000000000000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44":
-    [
-        "value": "0",
-        "currency": "USD",
-        "issuer": "rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw"
-    ],
+        [
+            "value": "0",
+            "currency": "USD",
+            "issuer": "rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw"
+        ],
     "D4838D7EA4C6800000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44":
-    [
-        "value": "1",
-        "currency": "USD",
-        "issuer": "rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw"
-    ],
+        [
+            "value": "1",
+            "currency": "USD",
+            "issuer": "rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw"
+        ],
     "D4871AFD498D000000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44":
-    [
-        "value": "2",
-        "currency": "USD",
-        "issuer": "rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw"
-    ],
+        [
+            "value": "2",
+            "currency": "USD",
+            "issuer": "rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw"
+        ],
     "94871AFD498D000000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44":
-    [
-        "value": "-2",
-        "currency": "USD",
-        "issuer": "rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw"
-    ],
+        [
+            "value": "-2",
+            "currency": "USD",
+            "issuer": "rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw"
+        ],
     "D48775F05A07400000000000000000000000000055534400000000008B1CE810C13D6F337DAC85863B3D70265A24DF44":
-    [
-        "value": "2.1",
-        "currency": "USD",
-        "issuer": "rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw"
-    ],
+        [
+            "value": "2.1",
+            "currency": "USD",
+            "issuer": "rDgZZ3wyprx4ZqrGQUkquE9Fs2Xs8XBcdw"
+        ],
     "D48775F05A07400000000000000000000000000000000000000000000000000000000000000000000000000000000000":
-    [
-        "currency": "XRP",
-        "value": "2.1",
-        "issuer": "rrrrrrrrrrrrrrrrrrrrrhoLvTp"
-    ],
+        [
+            "currency": "XRP",
+            "value": "2.1",
+            "issuer": "rrrrrrrrrrrrrrrrrrrrrhoLvTp"
+        ],
     "D843F28CB71571C700000000000000000000000055534400000000000000000000000000000000000000000000000001":
-    [
-        "currency": "USD",
-        "value": "1111111111111111",
-        "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
-    ]
+        [
+            "currency": "USD",
+            "value": "1111111111111111",
+            "issuer": "rrrrrrrrrrrrrrrrrrrrBZbvji"
+        ]
 ]
 
 let XRP_CASES: [String: String] = [
@@ -101,12 +101,12 @@ final class TestAmount: XCTestCase {
     }
 
     // NOT SWIFT IMPLEMENTATION
-//    func testRaisesInvalidValueType() {
-//        invalid_value = [1, 2, 3]
-//        self.assertRaises(
-//            XRPLBinaryCodecException, amount.Amount.from_value, invalid_value
-//        )
-//    }
+    //    func testRaisesInvalidValueType() {
+    //        invalid_value = [1, 2, 3]
+    //        self.assertRaises(
+    //            XRPLBinaryCodecException, amount.Amount.from_value, invalid_value
+    //        )
+    //    }
 
     func testFromValueIssuedCurrency() {
         for (serialized, json) in IOU_CASES {

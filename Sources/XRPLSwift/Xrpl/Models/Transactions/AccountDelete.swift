@@ -74,8 +74,8 @@ public class AccountDelete: BaseTransaction {
 /**
  Verify the form and type of an AccountDelete at runtime.
  - parameters:
-    - tx: An AccountDelete Transaction.
-- throws:
+ - tx: An AccountDelete Transaction.
+ - throws:
  When the AccountDelete is Malformed.
  */
 public func validateAccountDelete(tx: [String: AnyObject]) throws {

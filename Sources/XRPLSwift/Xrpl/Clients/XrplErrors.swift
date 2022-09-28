@@ -1,6 +1,6 @@
 //
 //  XrplError.swift
-//  
+//
 //
 //  Created by Denis Angell on 11/21/20.
 //
@@ -10,20 +10,20 @@
 import Foundation
 
 public struct XrplError: Error {
-//    var name: String?
+    //    var name: String?
     var message: String?
     var data: Data?
-//    var timeout: Timer?
+    //    var timeout: Timer?
 
     init(_ message: String?, _ data: Data? = nil) {
-//        self.name = self.name ?? "Error"
+        //        self.name = self.name ?? "Error"
         if let message = message {
             self.message = message
         }
         self.data = data
-//        if Error.captureStackTrace != nil {
-//            Error.captureStackTrace(self, self.constructor)
-//        }
+        //        if Error.captureStackTrace != nil {
+        //            Error.captureStackTrace(self, self.constructor)
+        //        }
     }
 }
 

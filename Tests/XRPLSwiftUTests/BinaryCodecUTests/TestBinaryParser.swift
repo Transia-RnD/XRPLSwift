@@ -41,7 +41,7 @@ final class TestBinaryParser: XCTestCase {
     }
 
     func testReadVariableLengthLength() {
-//        [100, 1000, 10000].forEach { _case in
+        //        [100, 1000, 10000].forEach { _case in
         [100].forEach { _case in
             let binarySerializer = BinarySerializer()
             let byteString: String = String(repeating: "A2", count: _case)

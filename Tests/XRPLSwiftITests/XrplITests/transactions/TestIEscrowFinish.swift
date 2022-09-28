@@ -1,6 +1,6 @@
 //
 //  TestIEscrowFinish.swift
-//  
+//
 //
 //  Created by Denis Angell on 8/26/22.
 //
@@ -26,7 +26,7 @@ final class TestIEscrowFinish: RippledITestCase {
         // create the expectation
         let exp = expectation(description: "base")
 
-//        XCTFail()
+        //        XCTFail()
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)
     }

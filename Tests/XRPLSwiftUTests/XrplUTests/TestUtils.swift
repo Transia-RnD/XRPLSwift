@@ -48,9 +48,9 @@ public func assertResultMatch<T: Codable>(
     expected: [String: AnyObject],
     _schemaName: String? = nil
 ) {
-//    guard let type = T.Type else {
-//        XCTFail("TESTING: Invalid Type")
-//    }
+    //    guard let type = T.Type else {
+    //        XCTFail("TESTING: Invalid Type")
+    //    }
 
     let jsonData = try! JSONSerialization.data(
         withJSONObject: expected,
@@ -60,5 +60,5 @@ public func assertResultMatch<T: Codable>(
     let e = CodableHelper.decode(T.self, from: jsonData).decodableObj
     let edata: Data = try! encoder.encode(e)
     let rdata: Data = try! encoder.encode(response)
-//    XCTAssertEqual(edata.bytes, rdata.bytes)
+    //    XCTAssertEqual(edata.bytes, rdata.bytes)
 }

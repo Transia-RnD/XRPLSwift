@@ -1,6 +1,6 @@
 //
 //  Wallet.swift
-//  
+//
 //
 //  Created by Denis Angell on 8/6/22.
 //
@@ -124,8 +124,8 @@ public class Wallet {
         self.publicKey = publicKey
         self.privateKey = privateKey
         self.classicAddress = !(masterAddress ?? "").isEmpty
-        ? try! ensureClassicAddress(account: masterAddress!)
-        : try! Keypairs.deriveAddress(publicKey: publicKey)
+            ? try! ensureClassicAddress(account: masterAddress!)
+            : try! Keypairs.deriveAddress(publicKey: publicKey)
         self.seed = seed
     }
 
@@ -228,7 +228,7 @@ public class Wallet {
         let privateKey = finalMasterPrivateKey.toHex
         // TODO: Shouldn't the mnemonic wallet append the address from `deriveAddress`
         //        let opts: SeedOptions = SeedOptions(masterAddress: address, seed: nil)
-        let opts: SeedOptions = SeedOptions(masterAddress: opts.masterAddress, seed: nil)
+        let opts = SeedOptions(masterAddress: opts.masterAddress, seed: nil)
         return Wallet(
             publicKey: publicKey,
             privateKey: privateKey,
@@ -254,7 +254,7 @@ public class Wallet {
         //        let seed = rfc1751MnemonicToKey(mnemonic)
         let seed: [UInt8] = []
         let encodedSeed = try XrplCodec.encodeSeed(entropy: seed, type: opts.algorithm)
-        let seedOpts: SeedOptions = SeedOptions(
+        let seedOpts = SeedOptions(
             masterAddress: opts.masterAddress,
             algorithm: opts.algorithm,
             seed: nil
@@ -305,7 +305,7 @@ public class Wallet {
     }
 
     public func sign(
-//        transaction: Transaction,
+        //        transaction: Transaction,
         transaction: [String: AnyObject],
         //    multisign?: boolean | string,
         multisign: Bool = false,
@@ -318,7 +318,7 @@ public class Wallet {
             multisignAddress = self.classicAddress
         }
 
-//        let tx = try! transaction.toJson()
+        //        let tx = try! transaction.toJson()
         var tx = transaction
 
         if tx["TxnSignature"] != nil || tx["Signers"] != nil {
@@ -327,9 +327,9 @@ public class Wallet {
 
         removeTrailingZeros(tx: &tx)
 
-//        let encoder = JSONEncoder()
-//        let txData = try encoder.encode(transaction)
-//        var txToSignAndEncode = try JSONSerialization.jsonObject(with: tx, options: .mutableLeaves) as? [String: AnyObject]
+        //        let encoder = JSONEncoder()
+        //        let txData = try encoder.encode(transaction)
+        //        var txToSignAndEncode = try JSONSerialization.jsonObject(with: tx, options: .mutableLeaves) as? [String: AnyObject]
         var txToSignAndEncode = tx
 
         txToSignAndEncode["SigningPubKey"] = !multisignAddress.isEmpty ? "" as AnyObject : self.publicKey as AnyObject
@@ -395,7 +395,7 @@ public class Wallet {
     private func checkTxSerialization(serialized: String, tx: [String: AnyObject]) throws {
         // Decode the serialized transaction:
         var decoded: [String: AnyObject] = BinaryCodec.decode(buffer: serialized) as [String: AnyObject]
-//        var txCopy = try tx.toJson()
+        //        var txCopy = try tx.toJson()
         var txCopy = tx
 
         /*
@@ -473,11 +473,11 @@ public class Wallet {
                 "decoded": decoded,
                 "tx": txCopy
             ] as [String: AnyObject]
-//            let error = ValidationError(
-//                "Serialized transaction does not match original txJSON. See error.data",
-//                data
-//            )
-//            throw error
+            //            let error = ValidationError(
+            //                "Serialized transaction does not match original txJSON. See error.data",
+            //                data
+            //            )
+            //            throw error
         }
     }
 }
@@ -518,11 +518,11 @@ func computeSignature(
  * @param tx - The transaction prior to signing.
  */
 func removeTrailingZeros(tx: inout [String: AnyObject]) {
-    if let tt = tx["TransactionType"] as? String, tt == "Payment", let amountValue = tx["amount"] as? String, amountValue.contains(where: { $0 == "."}) {
-//        tx["Amount"] = BigInt(tx["Amount"]) as AnyObject
+    if let tt = tx["TransactionType"] as? String, tt == "Payment", let amountValue = tx["amount"] as? String, amountValue.contains(where: { $0 == "." }) {
+        //        tx["Amount"] = BigInt(tx["Amount"]) as AnyObject
         tx["Amount"] = tx["Amount"]
     }
- }
+}
 
 /**
  * Convert an ISO code to a hex string representation

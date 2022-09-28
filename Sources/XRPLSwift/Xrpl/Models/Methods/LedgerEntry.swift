@@ -38,7 +38,7 @@
 //    public let ledger_hash?: string
 //    /*The ledger index of the ledger to use, or a shortcut string. */
 //    public let ledger_index?: LedgerIndex
-//    
+//
 //    /*
 //     Only one of the following properties should be defined in a single request
 //     https://xrpl.org/ledger_entry.html.
@@ -46,13 +46,13 @@
 //     Retrieve any type of ledger object by its unique ID.
 //     */
 //    public let index?: String
-//    
+//
 //    /**
 //     Retrieve an AccountRoot object by its address. This is roughly equivalent
 //     to the an {@link AccountInfoRequest}.
 //     */
 //    public let account_root?: String
-//    
+//
 //    /**
 //     The DirectoryNode to retrieve. If a string, must be the object ID of the
 //     directory, as hexadecimal. If an object, requires either `dir_root` o
@@ -68,7 +68,7 @@
 //        owner?: String
 //    }
 //    | String
-//    
+//
 //    /**
 //     The Offer object to retrieve. If a string, interpret as the unique object
 //     ID to the Offer. If an object, requires the sub-fields `account` and `seq`
@@ -82,7 +82,7 @@
 //    seq: Int
 //    }
 //    | String
-//    
+//
 //    /**
 //     Object specifying the RippleState (trust line) object to retrieve. The
 //     accounts and currency sub-fields are required to uniquely specify the
@@ -97,10 +97,10 @@
 //        /*Currency Code of the RippleState object to retrieve. */
 //    currency: String
 //    }
-//    
+//
 //    /*The object ID of a Check object to retrieve. */
 //    public let check?: String
-//    
+//
 //    /**
 //     The Escrow object to retrieve. If a string, must be the object ID of the
 //     escrow, as hexadecimal. If an object, requires owner and seq sub-fields.
@@ -113,10 +113,10 @@
 //    seq: Int
 //    }
 //    | String
-//    
+//
 //    /*The object ID of a PayChannel object to retrieve. */
 //    public let payment_channel?: String
-//    
+//
 //    /**
 //     Specify a DepositPreauth object to retrieve. If a string, must be the
 //     object ID of the DepositPreauth object, as hexadecimal. If an object,
@@ -130,7 +130,7 @@
 //    authorized: String
 //    }
 //    | String
-//    
+//
 //    /**
 //     The Ticket object to retrieve. If a string, must be the object ID of the
 //     Ticket, as hexadecimal. If an object, the `owner` and `ticket_sequence`

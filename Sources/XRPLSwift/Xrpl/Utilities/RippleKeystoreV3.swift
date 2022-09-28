@@ -136,7 +136,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
             return nil
         }
     }
-    
+
     public init? (privateKey: Data, password: String = "xrp3swift", aesMode: String = "aes-128-cbc") throws {
         guard privateKey.count == 29 else {return nil}
         try encryptDataToStorage(password, keyData: privateKey, aesMode: aesMode)
@@ -162,7 +162,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         if aesCipher == nil { throw AbstractRippleKeystoreError.aesError }
 
         guard let seed = String(data: keyData!, encoding: .utf8) else {throw AbstractRippleKeystoreError.keyDerivationError}
-//        guard let bytes = try? Keypairs.deriveKeypair(seed: seed) else {throw AbstractRippleKeystoreError.noEntropyError}
+        //        guard let bytes = try? Keypairs.deriveKeypair(seed: seed) else {throw AbstractRippleKeystoreError.noEntropyError}
         guard let encryptedKey = try aesCipher?.encrypt(keyData!.bytes) else {throw AbstractRippleKeystoreError.aesError}
         let encryptedKeyData = Data(encryptedKey)
         var dataForMAC = Data()
@@ -230,14 +230,14 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
             guard let algo = keystoreParams.crypto.kdfparams.prf else {return nil}
             var hashVariant: HMAC.Variant?
             switch algo {
-                case "hmac-sha256" :
-                    hashVariant = HMAC.Variant.sha256
-                case "hmac-sha384" :
-                    hashVariant = HMAC.Variant.sha384
-                case "hmac-sha512" :
-                    hashVariant = HMAC.Variant.sha512
-                default:
-                    hashVariant = nil
+            case "hmac-sha256" :
+                hashVariant = HMAC.Variant.sha256
+            case "hmac-sha384" :
+                hashVariant = HMAC.Variant.sha384
+            case "hmac-sha512" :
+                hashVariant = HMAC.Variant.sha512
+            default:
+                hashVariant = nil
             }
             guard hashVariant != nil else {return nil}
             guard let c = keystoreParams.crypto.kdfparams.c else {return nil}

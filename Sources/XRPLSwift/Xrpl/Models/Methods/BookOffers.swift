@@ -121,7 +121,6 @@ public class BookOffersRequest: BaseRequest {
         if let limit = limit { try values.encode(limit, forKey: .limit) }
         if let taker = taker { try values.encode(taker, forKey: .taker) }
     }
-
 }
 
 public class BookOffer: Offer {

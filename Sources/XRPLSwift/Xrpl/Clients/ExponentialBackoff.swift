@@ -41,8 +41,8 @@ class ExponentialBackoff {
     /**
      Constructs an ExponentialBackoff object.
      - parameters:
-        - opts - The options for the object.
-    */
+     - opts - The options for the object.
+     */
     init(opts: ExponentialBackoffOptions? = nil) {
         self.ms = opts?.min ?? DEFAULT_MIN
         self.max = opts?.max ?? DEFAULT_MAX

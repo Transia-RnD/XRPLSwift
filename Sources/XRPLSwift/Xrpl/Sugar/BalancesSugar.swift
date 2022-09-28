@@ -1,6 +1,6 @@
 //
 //  BalancesSugar.swift
-//  
+//
 //
 //  Created by Denis Angell on 9/4/22.
 //

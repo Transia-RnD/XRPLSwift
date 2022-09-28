@@ -1,6 +1,6 @@
 //
 //  SerializedType.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/2/22.
 //
@@ -148,5 +148,4 @@ class SerializedType {
         // Get the length of a SerializedType's bytes.
         return bytes.count
     }
-
 }

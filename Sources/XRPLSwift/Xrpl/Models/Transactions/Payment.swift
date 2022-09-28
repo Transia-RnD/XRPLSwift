@@ -186,7 +186,7 @@ public class Payment: BaseTransaction {
 /**
  Verify the form and type of an Payment at runtime.
  - parameters:
-    - tx: An Payment Transaction.
+ - tx: An Payment Transaction.
  - throws:
  When the Payment is Malformed.
  */

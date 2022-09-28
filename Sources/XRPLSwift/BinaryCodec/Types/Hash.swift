@@ -1,6 +1,6 @@
 //
 //  Hash.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/4/22.
 //
@@ -10,7 +10,6 @@
 import Foundation
 
 class Hash: SerializedType {
-
     internal var width: Int
 
     init(_ bytes: [UInt8]? = nil) {
@@ -47,9 +46,9 @@ class Hash: SerializedType {
      */
     func compareTo(other: Hash) -> Int {
         return 0
-//        return self.bytes.compare(
-//            (this.constructor as typeof Hash).from(other).bytes,
-//        )
+        //        return self.bytes.compare(
+        //            (this.constructor as typeof Hash).from(other).bytes,
+        //        )
     }
 
     /**
@@ -58,17 +57,17 @@ class Hash: SerializedType {
     override func str() -> String {
         return self.toHex()
     }
-//    
-//    override func toJson() -> String {
-//        return self.toJson()
-//    }
+    //
+    //    override func toJson() -> String {
+    //        return self.toJson()
+    //    }
 
     /**
-       * Returns four bits at the specified depth within a hash
-       *
-       * @param depth The depth of the four bits
-       * @returns The number represented by the four bits
-       */
+     * Returns four bits at the specified depth within a hash
+     *
+     * @param depth The depth of the four bits
+     * @returns The number represented by the four bits
+     */
     func nibblet(depth: Int) -> Int {
         let byteIx = depth > 0 ? (depth / 2) | 0 : 0
         var bytes: UInt8 = self.bytes[byteIx]

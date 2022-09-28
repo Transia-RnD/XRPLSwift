@@ -24,7 +24,7 @@ internal struct VarInt: ExpressibleByIntegerLiteral {
      0xfd : 253
      0xfe : 254
      0xff : 255
-     
+
      0~252 : 1-byte(0x00 ~ 0xfc)
      253 ~ 65535: 3-byte(0xfd00fd ~ 0xfdffff)
      65536 ~ 4294967295 : 5-byte(0xfe010000 ~ 0xfeffffffff)

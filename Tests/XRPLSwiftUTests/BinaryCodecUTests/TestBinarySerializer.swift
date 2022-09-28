@@ -11,7 +11,7 @@ import XCTest
 final class TestBinarySerializer: XCTestCase {
 
     func testWriteLengthEncoded() {
-//        [100, 1000, 10000].forEach { _case in
+        //        [100, 1000, 10000].forEach { _case in
         [100].forEach { _case in
             let byteString: String = String(repeating: "A2", count: _case)
             let blob = try! Blob.from(value: byteString)

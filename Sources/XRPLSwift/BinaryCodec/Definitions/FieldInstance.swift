@@ -1,6 +1,6 @@
 //
 //  FieldInstance.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/2/22.
 //
@@ -33,7 +33,7 @@ let binaryTypes: [String: SerializedType.Type] = [
 /**
  Convert the string name of a class to the class object itself.
  - parameters:
-    - name: The name of the class.
+ - name: The name of the class.
  - returns:
  The corresponding class object.
  */
@@ -60,9 +60,9 @@ class FieldInstance {
     /**
      Construct a FieldInstance.
      - parameters:
-        - fieldInfo: The field's serialization info from definitions.json.
-        - fieldName: The field's string name.
-        - fieldHeader: A FieldHeader object with the typeCode and fieldCode.
+     - fieldInfo: The field's serialization info from definitions.json.
+     - fieldName: The field's string name.
+     - fieldHeader: A FieldHeader object with the typeCode and fieldCode.
      */
     init(
         fieldInfo: FieldInfo,

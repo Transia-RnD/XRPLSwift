@@ -32,7 +32,7 @@ public class SetRegularKey: BaseTransaction {
         super.init(account: "", transactionType: "SetRegularKey")
     }
 
-    public override init(json: [String: AnyObject]) throws {
+    override public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(SetRegularKey.self, from: data)
@@ -40,7 +40,7 @@ public class SetRegularKey: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         regularKey = try values.decodeIfPresent(String.self, forKey: .regularKey)
         try super.init(from: decoder)
@@ -56,7 +56,7 @@ public class SetRegularKey: BaseTransaction {
 /**
  Verify the form and type of an SetRegularKey at runtime.
  - parameters:
-    - tx: An SetRegularKey Transaction.
+ - tx: An SetRegularKey Transaction.
  - throws:
  When the SetRegularKey is Malformed.
  */

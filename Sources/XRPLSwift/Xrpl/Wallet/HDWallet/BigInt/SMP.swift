@@ -163,8 +163,8 @@ infix operator ** : ExponentiationPrecedence
 ///        ... +
 ///        (ln * 2^(n*64))
 internal struct BInt: SignedNumeric, // Implies Numeric, Equatable, ExpressibleByIntegerLiteral
-    BinaryInteger, // Implies Hashable, CustomStringConvertible, Strideable, Comparable
-ExpressibleByFloatLiteral {
+                      BinaryInteger, // Implies Hashable, CustomStringConvertible, Strideable, Comparable
+                      ExpressibleByFloatLiteral {
     //
     //
     // MARK: - Internal data
@@ -941,7 +941,7 @@ fileprivate extension String {
             res.insert(chars[(sum % toBase).toInt()!], at: res.startIndex)
             sum /= BInt(toBase)
         }
-            while sum != 0
+        while sum != 0
 
         return res
     }
@@ -1011,7 +1011,7 @@ fileprivate extension Array where Element == Digit {
     mutating func addOneDigit(
         _ addend: Limb,
         padding paddingZeros: Int
-        ) {
+    ) {
         let sc = self.count
 
         if paddingZeros > sc { self += Digits(repeating: 0, count: paddingZeros &- sc) }
@@ -1149,7 +1149,7 @@ fileprivate extension Array where Element == Limb {
     mutating func setBit(
         at i: Int,
         to bit: Bool
-        ) {
+    ) {
         let limbIndex = Int(Limb(i) >> 6)
 
         if limbIndex >= self.count && !bit { return }
@@ -1330,7 +1330,7 @@ fileprivate extension Array where Element == Limb {
     mutating func addLimbs(
         _ addend: Limbs,
         padding paddingZeros: Int
-        ) {
+    ) {
         let sc = self.count
 
         if paddingZeros > sc { self += Digits(repeating: 0, count: paddingZeros &- sc) }
@@ -1383,7 +1383,7 @@ fileprivate extension Array where Element == Limb {
     mutating func addOneLimb(
         _ addend: Limb,
         padding paddingZeros: Int
-        ) {
+    ) {
         let sc = self.count
 
         if paddingZeros > sc { self += Digits(repeating: 0, count: paddingZeros &- sc) }
@@ -1518,7 +1518,7 @@ fileprivate extension Array where Element == Limb {
     mutating func addProductOf(
         multiplier: Limbs,
         multiplicand: Limbs
-        ) {
+    ) {
         let (mpc, mcc) = (multiplier.count, multiplicand.count)
 
         self.reserveCapacity(mpc + mcc)
@@ -1545,7 +1545,7 @@ fileprivate extension Array where Element == Limb {
     mutating func addProductOf(
         multiplier: Limbs,
         multiplicand: Limb
-        ) {
+    ) {
         if multiplicand < 2 {
             if multiplicand == 1 { self.addLimbs(multiplier) }
             // If r == 0 then do nothing with res

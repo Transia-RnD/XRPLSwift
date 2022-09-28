@@ -63,7 +63,7 @@ public class EscrowCancel: BaseTransaction {
 /**
  Verify the form and type of an EscrowCancel at runtime.
  - parameters:
-    - tx: An EscrowCancel Transaction.
+ - tx: An EscrowCancel Transaction.
  - throws:
  When the EscrowCancel is Malformed.
  */

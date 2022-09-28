@@ -1,6 +1,6 @@
 //
 //  FieldIdCodec.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/24/22.
 //
@@ -10,12 +10,11 @@
 import Foundation
 
 public class FieldIdCodec {
-
     /**
      This field ID consists of the type code and field code, in 1 to 3 bytes
      depending on whether those values are "common" (<16) or "uncommon" (>=16)
      - parameters:
-        - fieldName: The name of the field to get the serialization data type for.
+     - fieldName: The name of the field to get the serialization data type for.
      - returns:
      The serialization data type for the given field name.
      */
@@ -27,7 +26,7 @@ public class FieldIdCodec {
     /**
      Returns the field name represented by the given field ID.
      - parameters:
-        - fieldId: The field_id to decode.
+     - fieldId: The field_id to decode.
      - returns:
      The field name represented by the given field ID.
      */
@@ -40,7 +39,7 @@ public class FieldIdCodec {
      Returns the unique field ID for a given field header. This field ID consists of the type code and field code, in 1 to 3 bytes
      depending on whether those values are "common" (<16) or "uncommon" (>=16)
      - parameters:
-        - fieldHeader: The fieldHeader to decode.
+     - fieldHeader: The fieldHeader to decode.
      - returns:
      The unique field as data
      */
@@ -87,7 +86,7 @@ public class FieldIdCodec {
      Returns a FieldHeader object representing the type code and field code of
      a decoded field ID.
      - parameters:
-        - fieldId: The fieldId to decode.
+     - fieldId: The fieldId to decode.
      - returns:
      A FieldHeader object representing the type code and field code of
      */
@@ -119,7 +118,7 @@ public class FieldIdCodec {
     /**
      Returns a Data representation of  the FieldId Codec
      - parameters:
-        - i: The integer to convert to bytes
+     - i: The integer to convert to bytes
      - returns:
      A Data representation of  the FieldId Codec
      */

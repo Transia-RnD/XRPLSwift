@@ -10,12 +10,11 @@
 import Foundation
 
 class Hash256: Hash {
-
     /*
-    Codec for serializing and deserializing a hash field with a width
-    of 256 bits (32 bytes).
-    `See Hash Fields <https://xrpl.org/serialization.html#hash-fields>`_
-    */
+     Codec for serializing and deserializing a hash field with a width
+     of 256 bits (32 bytes).
+     `See Hash Fields <https://xrpl.org/serialization.html#hash-fields>`_
+     */
 
     internal static var WIDTH256: Int = 32
     internal static var ZERO256 = Hash256([UInt8].init(repeating: 0x0, count: Hash256.WIDTH256))

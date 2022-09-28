@@ -95,7 +95,6 @@ public class NFTokenMint: BaseTransaction {
         transferFee: Int? = nil,
         uri: String? = nil
     ) {
-
         self.nftokenTaxon = nftokenTaxon
         self.issuer = issuer
         self.transferFee = transferFee
@@ -103,8 +102,8 @@ public class NFTokenMint: BaseTransaction {
         super.init(account: "", transactionType: "NFTokenMint")
     }
 
-    public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(NFTokenMint.self, from: data)
         self.nftokenTaxon = decoded.nftokenTaxon
@@ -114,7 +113,7 @@ public class NFTokenMint: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         nftokenTaxon = try values.decode(Int.self, forKey: .nftokenTaxon)
         issuer = try values.decodeIfPresent(String.self, forKey: .issuer)
@@ -136,7 +135,7 @@ public class NFTokenMint: BaseTransaction {
 /**
  Verify the form and type of an NFTokenMint at runtime.
  - parameters:
-    - tx: An NFTokenMint Transaction.
+ - tx: An NFTokenMint Transaction.
  - throws:
  When the NFTokenMint is Malformed.
  */

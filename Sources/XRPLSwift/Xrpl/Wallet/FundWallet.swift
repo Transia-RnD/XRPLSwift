@@ -34,16 +34,16 @@
 //
 //
 // public class FundWallet {
-//    
+//
 //    // Interval to check an account balance
 //    // swiftlint:disable:next identifier_name
 //    let INTERVAL_SECONDS: Int = 1
 //    // Maximum attempts to retrieve a balance
 //    // swiftlint:disable:next identifier_name
 //    let MAX_ATTEMPTS: Int = 20
-//    
+//
 //    var timer: Timer? = nil
-//    
+//
 //    /**
 //     * Generates a random wallet with some amount of XRP (usually 1000 XRP).
 //     *
@@ -74,26 +74,26 @@
 //        if !this.isConnected() {
 //            throw ValidationError.validation("Client not connected, cannot call faucet")
 //        }
-//        
+//
 //        // Generate a new Wallet if no existing Wallet is provided or its address is invalid to fund
 //        let walletToFund = wallet != nil && XrplCodec.isValidClassicAddress(classicAddress: wallet!.classicAddress) ? wallet : Wallet.generate()
-//        
+//
 //        // Create the POST request body
 //        let params = [
 //            "destination": walletToFund!.classicAddress
 //        ] as [String : Any]
 //        let postBody = try JSONSerialization.data(withJSONObject: params, options: .prettyPrinted)
-//        
+//
 //        var startingBalance: Double = 0.0
 //        do {
 //            startingBalance = Double(try await this.getXrpBalance(address: walletToFund!.classicAddress))!
 //        } catch {
 //            /* startingBalance remains "0" */
 //        }
-//        
+//
 //        // Options to pass to https.request
 //        let httpOptions: URLRequest = getHTTPOptions(client: this, postBody: postBody.bytes, hostname: faucetHost)
-//        
+//
 //        return returnPromise(
 //            options: httpOptions,
 //            client: this,
@@ -115,7 +115,7 @@
 //            // Load user from server.
 //            promise(.success(user))  // or promise(.failure(error))
 //            // Handle Address to String Better
-//            
+//
 //            let session = URLSession.shared
 //            session.dataTask(with: options, completionHandler: { data, response, error in
 //                guard error == nil else {
@@ -170,7 +170,7 @@
 //        postBody: [UInt8],
 //        hostname: String? = nil
 //    ) -> URLRequest {
-//        
+//
 //        let url = try! URL(string: hostname != nil ? hostname! : getFaucetHost(client)!.rawValue)
 //        var request = URLRequest(url: url!)
 //        request.httpMethod = "POST"
@@ -226,7 +226,7 @@
 //        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- We know this is safe and correct
 //        let faucetWallet = body
 //        let classicAddress = faucetWallet.account.classicAddress
-//        
+//
 //        if classicAddress == nil {
 //            print("The faucet account is undefined")
 //    //        reject(XRPLFaucetError("The faucet account is undefined"))
@@ -239,7 +239,7 @@
 //                address: classicAddress!,
 //                originalBalance: startingBalance
 //            )
-//            
+//
 //            if (updatedBalance > startingBalance) {
 //                print("updatedBalance > startingBalance")
 //    //            resolve({
@@ -341,15 +341,15 @@
 //        if connectionUrl.contains(where: { String($0) == "altnet" }) || connectionUrl.contains(where: { String($0) == "testnet" }) {
 //            return FaucetNetwork.testnet
 //        }
-//        
+//
 //        if connectionUrl.contains(where: { String($0) == "devnet" }) {
 //            return FaucetNetwork.devnet
 //        }
-//        
+//
 //        if connectionUrl.contains(where: { String($0) == "xls20-sandbox" }) {
 //            return FaucetNetwork.nftDevnet
 //        }
-//        
+//
 //        throw XRPLFaucetError.unknown("Faucet URL is not defined or inferrable.")
 //    }
 // }

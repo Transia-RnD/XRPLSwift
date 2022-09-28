@@ -1,6 +1,6 @@
 //
 //  Definitions.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/2/22.
 //
@@ -8,7 +8,6 @@
 import Foundation
 
 public struct LoadDefinitions {
-
     public var TYPES: [String: Int]
     // swiftlint:disable:next identifier_name
     public var LEDGER_ENTRY_TYPES: [String: Int]
@@ -39,7 +38,7 @@ public struct LoadDefinitions {
 
         let fields = dict["FIELDS"] as! [[AnyObject]]
         var fieldsDict: [String: AnyObject] = [:]
-        _ = fields.map { (array) in
+        _ = fields.map { array in
             let field = array[0] as! String
             fieldsDict[field] = array[1] as! NSDictionary
         }
@@ -65,7 +64,7 @@ public struct LoadDefinitions {
 
         for field in self.FIELDS {
             let fieldInfo = FieldInfo(dict: field.value as! NSDictionary)
-            let header: FieldHeader = FieldHeader(
+            let header = FieldHeader(
                 typeCode: self.TYPE_ORDINAL_MAP[fieldInfo.type]!,
                 fieldCode: fieldInfo.nth
             )
@@ -76,7 +75,6 @@ public struct LoadDefinitions {
 }
 
 public struct Definitions {
-
     // instance variables
     public var definitions: LoadDefinitions!
 
@@ -102,64 +100,64 @@ public struct Definitions {
     }
 
     /*
-    Returns the serialization data type for the given field name.
-    `Serialization Type List <https://xrpl.org/serialization.html#type-list>`_
+     Returns the serialization data type for the given field name.
+     `Serialization Type List <https://xrpl.org/serialization.html#type-list>`_
 
-    Args:
-        field_name: The name of the field to get the serialization data type for.
+     Args:
+     field_name: The name of the field to get the serialization data type for.
 
-    Returns:
-        The serialization data type for the given field name.
-    */
+     Returns:
+     The serialization data type for the given field name.
+     */
     func getFieldTypeName(fieldName: String) -> String {
         return definitions.FIELD_INFO_MAP[fieldName]!.type
     }
 
     /*
-    Returns the type code associated with the given field.
-    `Serialization Type Codes <https://xrpl.org/serialization.html#type-codes>`_
+     Returns the type code associated with the given field.
+     `Serialization Type Codes <https://xrpl.org/serialization.html#type-codes>`_
 
-    Args:
-        field_name: The name of the field get a type code for.
+     Args:
+     field_name: The name of the field get a type code for.
 
-    Returns:
-        The type code associated with the given field name.
+     Returns:
+     The type code associated with the given field name.
 
-    Raises:
-        XRPLBinaryCodecException: If definitions.json is invalid.
-    */
+     Raises:
+     XRPLBinaryCodecException: If definitions.json is invalid.
+     */
     func getFieldTypeCode(fieldName: String) throws -> Int {
         let fieldTypeName: String = self.getFieldTypeName(fieldName: fieldName)
         let fieldTypeCode: Int = definitions.TYPE_ORDINAL_MAP[fieldTypeName]!
-//        if (type(of: fieldTypeCode) != type(of: Int.self)) {
-//            throw BinaryError.unknownError(error: "Field type codes in definitions.json must be ints.")
-//        }
+        //        if (type(of: fieldTypeCode) != type(of: Int.self)) {
+        //            throw BinaryError.unknownError(error: "Field type codes in definitions.json must be ints.")
+        //        }
         return fieldTypeCode
     }
 
     /*
-    Returns the field code associated with the given field.
-    `Serialization Field Codes <https://xrpl.org/serialization.html#field-codes>`_
+     Returns the field code associated with the given field.
+     `Serialization Field Codes <https://xrpl.org/serialization.html#field-codes>`_
 
-    Args:
-        field_name: The name of the field to get a field code for.
+     Args:
+     field_name: The name of the field to get a field code for.
 
-    Returns:
-        The field code associated with the given field.
-    */
+     Returns:
+     The field code associated with the given field.
+     */
     func getFieldCode(fieldName: String) -> Int {
         return definitions.FIELD_INFO_MAP[fieldName]!.nth
     }
 
     /*
-    Returns a FieldHeader object for a field of the given field name.
+     Returns a FieldHeader object for a field of the given field name.
 
-    Args:
-        field_name: The name of the field to get a FieldHeader for.
+     Args:
+     field_name: The name of the field to get a FieldHeader for.
 
-    Returns:
-        A FieldHeader object for a field of the given field name.
-    */
+     Returns:
+     A FieldHeader object for a field of the given field name.
+     */
     func getFieldHeaderFromName(fieldName: String) -> FieldHeader {
         return FieldHeader(
             typeCode: try! self.getFieldTypeCode(fieldName: fieldName),
@@ -168,25 +166,25 @@ public struct Definitions {
     }
 
     /*
-    Returns the field name described by the given FieldHeader object.
+     Returns the field name described by the given FieldHeader object.
 
-    Args:
-        field_header: The header to get a field name for.
+     Args:
+     field_header: The header to get a field name for.
 
-    Returns:
-        The name of the field described by the given FieldHeader.
-    */
+     Returns:
+     The name of the field described by the given FieldHeader.
+     */
     func getFieldNameFromHeader(fieldHeader: FieldHeader) -> String {
         return definitions.FIELD_HEADER_NAME_MAP[fieldHeader]!
     }
 
     /*
-    Return a FieldInstance object for the given field name.
-    Args:
-        field_name: The name of the field to get a FieldInstance for.
-    Returns:
-        A FieldInstance object for the given field name.
-    */
+     Return a FieldInstance object for the given field name.
+     Args:
+     field_name: The name of the field to get a FieldInstance for.
+     Returns:
+     A FieldInstance object for the given field name.
+     */
     func getFieldInstance(fieldName: String) -> FieldInstance {
         let info: FieldInfo = definitions.FIELD_INFO_MAP[fieldName]!
         let fieldHeader = getFieldHeaderFromName(fieldName: fieldName)
@@ -198,68 +196,68 @@ public struct Definitions {
     }
 
     /*
-    Return an integer representing the given transaction type string in an enum.
-    Args:
-        transaction_type: The name of the transaction type to get the enum value for.
-    Returns:
-        An integer representing the given transaction type string in an enum.
-    */
+     Return an integer representing the given transaction type string in an enum.
+     Args:
+     transaction_type: The name of the transaction type to get the enum value for.
+     Returns:
+     An integer representing the given transaction type string in an enum.
+     */
     func getTransactionTypeCode(transactionType: String) -> Int {
         return definitions.TRANSACTION_TYPES[transactionType]!
     }
 
     /*
-    Return string representing the given transaction type from the enum.
-    Args:
-        transaction_type: The enum value of the transaction type.
-    Returns:
-        The string name of the transaction type.
-    */
+     Return string representing the given transaction type from the enum.
+     Args:
+     transaction_type: The enum value of the transaction type.
+     Returns:
+     The string name of the transaction type.
+     */
     func getTransactionTypeName(transactionType: Int) -> String {
         return definitions.TRANSACTION_TYPES_REVERSE[transactionType]!
     }
 
     /*
-    Return an integer representing the given transaction result string in an enum.
-    Args:
-        transaction_result_type: The name of the transaction result type to get the
-            enum value for.
-    Returns:
-        An integer representing the given transaction result type string in an enum.
-    */
+     Return an integer representing the given transaction result string in an enum.
+     Args:
+     transaction_result_type: The name of the transaction result type to get the
+     enum value for.
+     Returns:
+     An integer representing the given transaction result type string in an enum.
+     */
     func getTransactionResultCode(transactionResultType: String) -> Int {
         return definitions.TRANSACTION_RESULTS[transactionResultType]!
     }
 
     /*
-    Return string representing the given transaction result type from the enum.
-    Args:
-        transaction_result_type: The enum value of the transaction result type.
-    Returns:
-        The string name of the transaction result type.
-    */
+     Return string representing the given transaction result type from the enum.
+     Args:
+     transaction_result_type: The enum value of the transaction result type.
+     Returns:
+     The string name of the transaction result type.
+     */
     func getTransactionResultName(transactionResultType: Int) -> String {
         return definitions.TRANSACTION_RESULTS_REVERSE[transactionResultType]!
     }
 
     /*
-    Return an integer representing the given ledger entry type string in an enum.
-    Args:
-        ledger_entry_type: The name of the ledger entry type to get the enum value for.
-    Returns:
-        An integer representing the given ledger entry type string in an enum.
-    */
+     Return an integer representing the given ledger entry type string in an enum.
+     Args:
+     ledger_entry_type: The name of the ledger entry type to get the enum value for.
+     Returns:
+     An integer representing the given ledger entry type string in an enum.
+     */
     func getLedgerEntryTypeCode(ledgerEntryType: String) -> Int {
         return definitions.LEDGER_ENTRY_TYPES[ledgerEntryType]!
     }
 
     /*
-    Return string representing the given ledger entry type from the enum.
-    Args:
-        ledger_entry_type: The enum value of the ledger entry type.
-    Returns:
-        The string name of the ledger entry type.
-    */
+     Return string representing the given ledger entry type from the enum.
+     Args:
+     ledger_entry_type: The enum value of the ledger entry type.
+     Returns:
+     The string name of the ledger entry type.
+     */
     func getLedgerEntryTypeName(ledgerEntryType: Int) -> String {
         return definitions.LEDGER_ENTRY_TYPES_REVERSE[ledgerEntryType]!
     }

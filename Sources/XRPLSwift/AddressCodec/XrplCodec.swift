@@ -1,6 +1,6 @@
 //
 //  XrplCodec.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/2/22.
 //

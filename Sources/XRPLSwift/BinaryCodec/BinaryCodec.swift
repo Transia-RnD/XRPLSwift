@@ -1,6 +1,6 @@
 //
 //  BinaryCodec.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/24/22.
 //
@@ -24,7 +24,7 @@ class BinaryCodec {
     /**
      Encode a transaction or other object into the canonical binary format.
      - parameters:
-        - json: A JSON-like dictionary representation of an object.
+     - json: A JSON-like dictionary representation of an object.
      - returns:
      The binary-encoded object, as a hexadecimal string.
      */
@@ -35,7 +35,7 @@ class BinaryCodec {
     /**
      Encode a transaction or other object into the canonical binary format.
      - parameters:
-        - data: A Data representation of an object.
+     - data: A Data representation of an object.
      - returns:
      The binary-encoded object, as a hexadecimal string.
      */
@@ -47,7 +47,7 @@ class BinaryCodec {
     /**
      Encode a transaction into binary format in preparation for signing. (Only encodes fields that are intended to be signed.)
      - parameters:
-        - json: A JSON-like dictionary representation of a transaction.
+     - json: A JSON-like dictionary representation of a transaction.
      - returns:
      The binary-encoded transaction, ready to be signed.
      */
@@ -63,7 +63,7 @@ class BinaryCodec {
      Encode a `payment channel <https://xrpl.org/payment-channels.html>`_ Claim
      to be signed.
      - parameters:
-        - json: A JSON-like dictionary representation of a Claim.
+     - json: A JSON-like dictionary representation of a Claim.
      - returns:
      The binary-encoded claim, ready to be signed.
      */
@@ -80,8 +80,8 @@ class BinaryCodec {
      signature towards a multi-signed transaction.
      (Only encodes fields that are intended to be signed.)
      - parameters:
-        - json: A JSON-like dictionary representation of a transaction.
-        - signingAccount: The address of the signer who'll provide the signature.
+     - json: A JSON-like dictionary representation of a transaction.
+     - signingAccount: The address of the signer who'll provide the signature.
      - returns:
      A hex string of the encoded transaction.
      */
@@ -99,7 +99,7 @@ class BinaryCodec {
      Decode a transaction from binary format to a JSON-like dictionary
      representation.
      - parameters:
-        - buffer: The encoded transaction binary, as a hexadecimal string.
+     - buffer: The encoded transaction binary, as a hexadecimal string.
      - returns:
      A JSON-like dictionary representation of the transaction.
      */
@@ -112,10 +112,10 @@ class BinaryCodec {
     /**
      Serialize the json object into a hex string
      - parameters:
-        - json: A JSON-like dictionary representation of a STObject.
-        - prefix: A byte prefix
-        - suffix: A byte suffix
-        - signingOnly: A boolean represeting if the STObject needs to be signed
+     - json: A JSON-like dictionary representation of a STObject.
+     - prefix: A byte prefix
+     - suffix: A byte suffix
+     - signingOnly: A boolean represeting if the STObject needs to be signed
      - returns:
      A hex string of the encoded transaction.
      */

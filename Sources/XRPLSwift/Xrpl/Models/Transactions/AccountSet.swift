@@ -155,7 +155,7 @@ public class AccountSet: BaseTransaction {
 
     /**
      Set the transfer fee to use for tokens issued by this account. See
-    [TransferRate](https://xrpl.org/accountset.html#transferrate) for
+     [TransferRate](https://xrpl.org/accountset.html#transferrate) for
      details.
      */
     public var transferRate: Int?
@@ -247,7 +247,7 @@ public class AccountSet: BaseTransaction {
 /**
  Verify the form and type of an AccountSet at runtime.
  - parameters:
-    - tx: An AccountSet Transaction.
+ - tx: An AccountSet Transaction.
  - throws:
  When the AccountSet is Malformed.
  */

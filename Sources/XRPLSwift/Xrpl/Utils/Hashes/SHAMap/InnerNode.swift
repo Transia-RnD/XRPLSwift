@@ -1,6 +1,6 @@
 ////
 ////  InnerNode.swift
-////  
+////
 ////
 ////  Created by Denis Angell on 8/6/22.
 ////
@@ -22,7 +22,7 @@
 //    public let type: NodeType
 //    public let depth: Int
 //    public let empty: Bool
-//    
+//
 //    /**
 //     * Define an Inner (non-leaf) node in a SHAMap tree.
 //     *
@@ -35,7 +35,7 @@
 //        self.depth = depth
 //        self.empty = true
 //    }
-//    
+//
 //    /**
 //     * Adds an item to the InnerNode.
 //     *
@@ -45,12 +45,12 @@
 //     */
 //    public func addItem(tag: String, node: Node) -> Void {
 //        let existingNode = self.getNode(parseInt(tag[self.depth], HEX))
-//        
+//
 //        if existingNode == nil {
 //            self.setNode(parseInt(tag[self.depth], HEX), node)
 //            return
 //        }
-//        
+//
 //        // A node already exists in this slot
 //        if (existingNode instanceof InnerNode) {
 //            // There is an inner node, so we need to go deeper
@@ -61,17 +61,17 @@
 //                throw XrplError("Tried to add a node to a SHAMap that was already in there.")
 //            } else {
 //                let newInnerNode = InnerNode(self.depth + 1)
-//                
+//
 //                // Parent new and existing node
 //                newInnerNode.addItem(existingNode.tag, existingNode)
 //                newInnerNode.addItem(tag, node)
-//                
+//
 //                // And place the newly created inner node in the slot
 //                self.setNode(parseInt(tag[this.depth], HEX), newInnerNode)
 //            }
 //        }
 //    }
-//    
+//
 //    /**
 //     * Overwrite the node that is currently in a given slot.
 //     *
@@ -86,7 +86,7 @@
 //        self.leaves[slot] = node
 //        self.empty = false
 //    }
-//    
+//
 //    /**
 //     * Get the node that is currently in a given slot.
 //     *
@@ -100,7 +100,7 @@
 //        }
 //        return self.leaves[slot]
 //    }
-//    
+//
 //    /**
 //     * Get the hash of a LeafNode.
 //     *
@@ -116,7 +116,7 @@
 //            const hash: string = child == null ? HEX_ZERO : child.hash
 //            hex += hash
 //        }
-//        
+//
 //        let prefix = HashPrefix.INNER_NODE.toString(HEX)
 //        return sha512Half(prefix + hex)
 //    }

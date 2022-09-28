@@ -7,8 +7,8 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/utils/hashes/sha512Half.ts
 
-import Foundation
 import CommonCrypto
+import Foundation
 
 // swiftlint:disable:next identifier_name
 let HASH_SIZE: Int = 32
@@ -20,6 +20,6 @@ let HASH_SIZE: Int = 32
  * @returns Hash of hex.
  */
 public func sha512Half(hex: String) -> String {
-    let hash: Data = Data(hex: hex).sha512()
+    let hash = Data(hex: hex).sha512()
     return [UInt8](hash.prefix(through: HASH_SIZE - 1)).toHex
 }

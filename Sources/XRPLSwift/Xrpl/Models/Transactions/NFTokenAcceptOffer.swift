@@ -77,8 +77,8 @@ public class NFTokenAcceptOffer: BaseTransaction {
         super.init(account: "", transactionType: "NFTokenAcceptOffer")
     }
 
-    public override init(json: [String: AnyObject]) throws {
-        let decoder: JSONDecoder = JSONDecoder()
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(NFTokenAcceptOffer.self, from: data)
         self.nftokenSellOffer = decoded.nftokenSellOffer
@@ -87,7 +87,7 @@ public class NFTokenAcceptOffer: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         nftokenSellOffer = try values.decodeIfPresent(String.self, forKey: .nftokenSellOffer)
         nftokenBuyOffer = try values.decodeIfPresent(String.self, forKey: .nftokenBuyOffer)
@@ -122,7 +122,7 @@ func validateNFTokenBrokerFee(tx: [String: AnyObject]) throws {
 /**
  Verify the form and type of an NFTokenAcceptOffer at runtime.
  - parameters:
-    - tx: An NFTokenAcceptOffer Transaction.
+ - tx: An NFTokenAcceptOffer Transaction.
  - throws:
  When the NFTokenAcceptOffer is Malformed.
  */

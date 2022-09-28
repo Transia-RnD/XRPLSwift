@@ -1,6 +1,6 @@
 //
 //  TestAccountID.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/4/22.
 //
@@ -29,8 +29,8 @@ final class TestAccountID: XCTestCase {
     }
 
     // MARK: NOT SWIFT IMPLEMENTATION
-//    func testRaisesInvalidValueType() {
-//        let invalidValue: Int = 30
-//        //        self.assertRaises(XRPLBinaryCodecException, AccountID.from_value, invalid_value)
-//    }
+    //    func testRaisesInvalidValueType() {
+    //        let invalidValue: Int = 30
+    //        //        self.assertRaises(XRPLBinaryCodecException, AccountID.from_value, invalid_value)
+    //    }
 }

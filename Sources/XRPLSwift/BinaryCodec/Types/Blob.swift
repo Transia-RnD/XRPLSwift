@@ -1,6 +1,6 @@
 //
 //  Blob.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/3/22.
 //
@@ -14,7 +14,6 @@ import Foundation
  See `Blob Fields <https://xrpl.org/serialization.html#blob-fields>`_
  */
 class Blob: SerializedType {
-
     // Construct a new Blob type from a ``bytes`` value.
     init(_ bytes: [UInt8]? = nil) {
         super.init(bytes: bytes ?? [])
@@ -23,7 +22,7 @@ class Blob: SerializedType {
     /**
      Construct a new Blob type from a BinaryParser.
      - parameters:
-        - parser: The parser to construct a Blob from.
+     - parser: The parser to construct a Blob from.
      - returns:
      A new Blob.
      */
@@ -37,7 +36,7 @@ class Blob: SerializedType {
     /**
      Construct a new Blob type from a number.
      - parameters:
-        - value: The value to construct a Blob from.
+     - value: The value to construct a Blob from.
      - returns:
      A new Blob.
      - throws: RPLBinaryCodecException: If a Blob cannot be constructed.

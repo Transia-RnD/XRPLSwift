@@ -56,7 +56,7 @@ public class PaymentChannelFund: BaseTransaction {
         super.init(account: "", transactionType: "PaymentChannelFund")
     }
 
-    public override init(json: [String: AnyObject]) throws {
+    override public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(PaymentChannelFund.self, from: data)
@@ -66,7 +66,7 @@ public class PaymentChannelFund: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         channel = try values.decode(String.self, forKey: .channel)
         amount = try values.decode(Amount.self, forKey: .amount)
@@ -81,13 +81,12 @@ public class PaymentChannelFund: BaseTransaction {
         try values.encode(amount, forKey: .amount)
         if let expiration = expiration { try values.encode(expiration, forKey: .expiration) }
     }
-
 }
 
 /**
  Verify the form and type of an PaymentChannelFund at runtime.
  - parameters:
-    - tx: An PaymentChannelFund Transaction.
+ - tx: An PaymentChannelFund Transaction.
  - throws:
  When the PaymentChannelFund is Malformed.
  */

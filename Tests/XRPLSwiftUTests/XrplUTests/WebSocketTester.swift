@@ -10,7 +10,7 @@ import XRPLSwift
 class WebSocketTester: XRPLWebSocketDelegate {
     func onResponse(connection: XRPLWebSocket, response: BaseResponse<Any>) {
         print("onResponse")
-//        self.completion(response)
+        //        self.completion(response)
     }
 
     var completion: (XRPLWebSocketResponse) -> Void

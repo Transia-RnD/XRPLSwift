@@ -1,6 +1,6 @@
 //
 //  TestSigner.swift
-//  
+//
 //
 //  Created by Denis Angell on 8/17/22.
 //
@@ -102,13 +102,13 @@ final class TestSigner: XCTestCase {
             "Sequence": 2,
             "Signers": [
                 [
-//                    "Signer": [
-//                        "Account": "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW",
-//                        "SigningPubKey":
-//                            "02B3EC4E5DD96029A647CFA20DA07FE1F85296505552CCAC114087E66B46BD77DF",
-//                        "TxnSignature":
-//                            "30450221009C195DBBF7967E223D8626CA19CF02073667F2B22E206727BFE848FF42BEAC8A022048C323B0BED19A988BDBEFA974B6DE8AA9DCAE250AA82BBD1221787032A864E5",
-//                    ],
+                    //                    "Signer": [
+                    //                        "Account": "rsA2LpzuawewSBQXkiju3YQTMzW13pAAdW",
+                    //                        "SigningPubKey":
+                    //                            "02B3EC4E5DD96029A647CFA20DA07FE1F85296505552CCAC114087E66B46BD77DF",
+                    //                        "TxnSignature":
+                    //                            "30450221009C195DBBF7967E223D8626CA19CF02073667F2B22E206727BFE848FF42BEAC8A022048C323B0BED19A988BDBEFA974B6DE8AA9DCAE250AA82BBD1221787032A864E5",
+                    //                    ],
                     "Signer": [
                         "Account": "rJvuSQhQR37czfxRou4vNWaM97uEhT4ShE",
                         "SigningPubKey":
@@ -124,68 +124,68 @@ final class TestSigner: XCTestCase {
         self.expectedMultisign = try! BinaryCodec.encode(json: self.multisignJSON)
     }
 
-//    func testValidMultisign() {
-//        let transactions = [self.multisignTxToCombine1!, self.multisignTxToCombine2!]
-//
-//        XCTAssertEqual(try WalletSigner.multisign(transactions: transactions), expectedMultisign)
-//    }
+    //    func testValidMultisign() {
+    //        let transactions = [self.multisignTxToCombine1!, self.multisignTxToCombine2!]
+    //
+    //        XCTAssertEqual(try WalletSigner.multisign(transactions: transactions), expectedMultisign)
+    //    }
 
-//    func testValidMultisignXAddress() {
-//        self.multisignTxToCombine1.Account =
-//        "XVJfK5FpouB7gtk3kaZHqbgV4Bswir4ccz3rsJw9oMf71tc"
-//        self.multisignTxToCombine2.Account =
-//        "XVJfK5FpouB7gtk3kaZHqbgV4Bswir4ccz3rsJw9oMf71tc"
-//
-//        let transactions = [self.multisignTxToCombine1!, self.multisignTxToCombine2!]
-//
-//        XCTAssertEqual(try rSigner.multisign(transactions: transactions), expectedMultisign)
-//    }
+    //    func testValidMultisignXAddress() {
+    //        self.multisignTxToCombine1.Account =
+    //        "XVJfK5FpouB7gtk3kaZHqbgV4Bswir4ccz3rsJw9oMf71tc"
+    //        self.multisignTxToCombine2.Account =
+    //        "XVJfK5FpouB7gtk3kaZHqbgV4Bswir4ccz3rsJw9oMf71tc"
+    //
+    //        let transactions = [self.multisignTxToCombine1!, self.multisignTxToCombine2!]
+    //
+    //        XCTAssertEqual(try rSigner.multisign(transactions: transactions), expectedMultisign)
+    //    }
 
-//    func testValidMultisignTxBlobs() {
-//
-//        let transactions = [self.multisignTxToCombine1!, self.multisignTxToCombine2!]
-//
-//        let encodedTransactions = transactions.map(try! BinaryCodec.encode)
-//
-//        XCTAssertEqual(try rSigner.multisign(transactions: transactions), expectedMultisign)
-//    }
+    //    func testValidMultisignTxBlobs() {
+    //
+    //        let transactions = [self.multisignTxToCombine1!, self.multisignTxToCombine2!]
+    //
+    //        let encodedTransactions = transactions.map(try! BinaryCodec.encode)
+    //
+    //        XCTAssertEqual(try rSigner.multisign(transactions: transactions), expectedMultisign)
+    //    }
 
-//    func testInvalidMultisignTxsEmpty() {
-//        let transactions: [String] = []
-//        XCTAssertThrowsError(try rSigner.multisign(transactions: transactions))
-//    }
+    //    func testInvalidMultisignTxsEmpty() {
+    //        let transactions: [String] = []
+    //        XCTAssertThrowsError(try rSigner.multisign(transactions: transactions))
+    //    }
 
-//    func testInvalidMultisignTxsDiff() {
-//        let differentMultisignedTx: Transaction = try! Transaction([
-//            "TransactionType": "Payment",
-//            "Sequence": 1,
-//            "Amount": "20000000",
-//            "Fee": "12",
-//            "SigningPubKey": "",
-//            "Account": "rhvh5SrgBL5V8oeV9EpDuVszeJSSCEkbPc",
-//            "Destination": "rQ3PTWGLCbPz8ZCicV5tCX3xuymojTng5r",
-//            "Signers": [
-//                [
-//                    "Signer": [
-//                        "SigningPubKey":
-//                            "02A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F544",
-//                        "TxnSignature":
-//                            "3044022077BCE143B9A0B51A7716BB93CBC0C99FB41BA339D91A87CB9E47DA80A7EF660802205C81AA49D408771F65A131200CCBFC536ACFE212C1414E05E43B56BE1F9380F2",
-//                        "Account": "rHLEki8gPUMnF72JnuALvnAMRhRemzhRke"
-//                    ]
-//                ]
-//            ]
-//        ] as! [String: AnyObject])!
-//        let transactions = [self.multisignTxToCombine1, differentMultisignedTx]
-////        XCTAssertThrowsError(try rSigner.multisign(transactions: transactions))
-//    }
+    //    func testInvalidMultisignTxsDiff() {
+    //        let differentMultisignedTx: Transaction = try! Transaction([
+    //            "TransactionType": "Payment",
+    //            "Sequence": 1,
+    //            "Amount": "20000000",
+    //            "Fee": "12",
+    //            "SigningPubKey": "",
+    //            "Account": "rhvh5SrgBL5V8oeV9EpDuVszeJSSCEkbPc",
+    //            "Destination": "rQ3PTWGLCbPz8ZCicV5tCX3xuymojTng5r",
+    //            "Signers": [
+    //                [
+    //                    "Signer": [
+    //                        "SigningPubKey":
+    //                            "02A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F544",
+    //                        "TxnSignature":
+    //                            "3044022077BCE143B9A0B51A7716BB93CBC0C99FB41BA339D91A87CB9E47DA80A7EF660802205C81AA49D408771F65A131200CCBFC536ACFE212C1414E05E43B56BE1F9380F2",
+    //                        "Account": "rHLEki8gPUMnF72JnuALvnAMRhRemzhRke"
+    //                    ]
+    //                ]
+    //            ]
+    //        ] as! [String: AnyObject])!
+    //        let transactions = [self.multisignTxToCombine1, differentMultisignedTx]
+    ////        XCTAssertThrowsError(try rSigner.multisign(transactions: transactions))
+    //    }
 
-//    func testInvalidMultisignTxsCombine() {
-//        let signedTxBlob: String = "120000228000000024013A0F74201B013A0FC36140000000014FB18068400000000000000C732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F544744730450221009ECB5324717E14DD6970126271F05BC2626D2A8FA9F3797555D417F8257C1E6002206BDD74A0F30425F2BA9DB69C90F21B3E27735C190FB4F3A640F066ACBBF06AD98114B3263BD0A9BF9DFDBBBBD07F536355FF477BF0E98314F667B0CA50CC7709A220B0561B85E53A48461FA8"
-//
-//        let transactions: [String] = [signedTxBlob]
-////        XCTAssertThrowsError(try rSigner.multisign(transactions: transactions))
-//    }
+    //    func testInvalidMultisignTxsCombine() {
+    //        let signedTxBlob: String = "120000228000000024013A0F74201B013A0FC36140000000014FB18068400000000000000C732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F544744730450221009ECB5324717E14DD6970126271F05BC2626D2A8FA9F3797555D417F8257C1E6002206BDD74A0F30425F2BA9DB69C90F21B3E27735C190FB4F3A640F066ACBBF06AD98114B3263BD0A9BF9DFDBBBBD07F536355FF477BF0E98314F667B0CA50CC7709A220B0561B85E53A48461FA8"
+    //
+    //        let transactions: [String] = [signedTxBlob]
+    ////        XCTAssertThrowsError(try rSigner.multisign(transactions: transactions))
+    //    }
 
     func testValidChannelSECP() {
         let secpWallet: Wallet = Wallet.fromSeed(seed: "snGHNrPbHrdUcszeuDEigMdC1Lyyd")
@@ -211,17 +211,17 @@ final class TestSigner: XCTestCase {
         XCTAssertTrue(WalletSigner.verifySignature(tx: signedTx.txBlob))
     }
 
-//    535458001200002400000001614000000001312D0068400000000000000C7321030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D81142AF1861DEC1316AEEC995C94FF9E2165B1B784608314FDB08D07AAA0EB711793A3027304D688E10C3648
-//    53545800120000614000000001312D0068400000000000000C7321030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D81142AF1861DEC1316AEEC995C94FF9E2165B1B784608314FDB08D07AAA0EB711793A3027304D688E10C3648
-//    3045022100CAF99A63B241F5F62B456C68A593D2835397101533BB5D0C4DC17362AC22046F022016A2CA2CF56E777B10E43B56541A4C2FB553E7E298CDD39F7A8A844DA491E51D00
-//
-//    func testInvalidSignatureTx() {
-//        let signedTx = try! self.verifyWallet.sign(transaction: self.tx)
-//        let decodedTx = BinaryCodec.decode(signedTx.txBlob)
-//
-//        // Use a different key for validation
-//        decodedTx["SigningPubKey"] = "0330E7FC9D56BB25D6893BA3F317AE5BCF33B3291BD63DB32654A313222F7FD020"
-//
-//        XCTAssertTrue(rSigner.verifySignature(signedTx.txBlob))
-//    }
+    //    535458001200002400000001614000000001312D0068400000000000000C7321030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D81142AF1861DEC1316AEEC995C94FF9E2165B1B784608314FDB08D07AAA0EB711793A3027304D688E10C3648
+    //    53545800120000614000000001312D0068400000000000000C7321030E58CDD076E798C84755590AAF6237CA8FAE821070A59F648B517A30DC6F589D81142AF1861DEC1316AEEC995C94FF9E2165B1B784608314FDB08D07AAA0EB711793A3027304D688E10C3648
+    //    3045022100CAF99A63B241F5F62B456C68A593D2835397101533BB5D0C4DC17362AC22046F022016A2CA2CF56E777B10E43B56541A4C2FB553E7E298CDD39F7A8A844DA491E51D00
+    //
+    //    func testInvalidSignatureTx() {
+    //        let signedTx = try! self.verifyWallet.sign(transaction: self.tx)
+    //        let decodedTx = BinaryCodec.decode(signedTx.txBlob)
+    //
+    //        // Use a different key for validation
+    //        decodedTx["SigningPubKey"] = "0330E7FC9D56BB25D6893BA3F317AE5BCF33B3291BD63DB32654A313222F7FD020"
+    //
+    //        XCTAssertTrue(rSigner.verifySignature(signedTx.txBlob))
+    //    }
 }

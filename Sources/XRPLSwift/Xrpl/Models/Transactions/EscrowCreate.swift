@@ -84,7 +84,7 @@ public class EscrowCreate: BaseTransaction {
         super.init(account: "", transactionType: "EscrowCreate")
     }
 
-    public override init(json: [String: AnyObject]) throws {
+    override public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(EscrowCreate.self, from: data)
@@ -97,7 +97,7 @@ public class EscrowCreate: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         amount = try values.decode(Amount.self, forKey: .amount)
         destination = try values.decode(String.self, forKey: .destination)
@@ -123,7 +123,7 @@ public class EscrowCreate: BaseTransaction {
 /**
  Verify the form and type of an EscrowCreate at runtime.
  - parameters:
-    - tx: An EscrowCreate Transaction.
+ - tx: An EscrowCreate Transaction.
  - throws:
  When the EscrowCreate is Malformed.
  */

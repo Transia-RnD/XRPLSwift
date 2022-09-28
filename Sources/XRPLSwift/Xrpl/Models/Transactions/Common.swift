@@ -1,6 +1,6 @@
 //
 //  Common.swift
-//  
+//
 //
 //  Created by Denis Angell on 8/1/22.
 //
@@ -30,11 +30,11 @@ func isMemo(obj: [ String: AnyObject? ]) -> Bool {
 
     return (
         size >= 1 &&
-        size <= MEMO_SIZE &&
-        validData &&
-        validFormat &&
-        validType &&
-        onlyHasFields(obj: memo, fields: ["MemoFormat", "MemoData", "MemoType"])
+            size <= MEMO_SIZE &&
+            validData &&
+            validFormat &&
+            validType &&
+            onlyHasFields(obj: memo, fields: ["MemoFormat", "MemoData", "MemoType"])
     )
 }
 
@@ -52,9 +52,9 @@ func isSigner(obj: [ String: AnyObject? ]) -> Bool {
     }
     return (
         signer.count == SIGNER_SIZE &&
-        signer["Account"] is String &&
-        signer["TxnSignature"] is String &&
-        signer["SigningPubKey"] is String
+            signer["Account"] is String &&
+            signer["TxnSignature"] is String &&
+            signer["SigningPubKey"] is String
     )
 }
 
@@ -251,7 +251,7 @@ public class BaseTransaction: Codable {
         self.txnSignature = decoded.txnSignature
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         account = try values.decode(String.self, forKey: .account)
         transactionType = try values.decode(String.self, forKey: .transactionType)
@@ -299,7 +299,7 @@ extension BaseTransaction {
  optional, and will check transaction form at runtime. This should be called
  any time a transaction will be verified.
  - parameters:
-    - common: An interface w/ common transaction fields.
+ - common: An interface w/ common transaction fields.
  - throws:
  When the common param is malformed.
  */

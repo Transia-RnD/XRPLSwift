@@ -1,6 +1,6 @@
 //
 //  FieldInfo.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/2/22.
 //
@@ -22,6 +22,5 @@ public class FieldInfo {
         self.isSerialized = dict["isSerialized"] as! Bool
         self.isSigningField = dict["isSigningField"] as! Bool
         self.type = dict["type"] as! String
-
     }
 }

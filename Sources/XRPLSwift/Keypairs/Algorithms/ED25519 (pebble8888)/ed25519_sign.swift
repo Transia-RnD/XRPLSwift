@@ -39,8 +39,8 @@ public struct Ed25519 {
         r = [UInt8](repeating: 0, count: len)
         // @note Apple API
         r = try! URandom().bytes(count: len)
-//        let result = SecRandomCopyBytes(kSecRandomDefault, len, &r)
-//        assert(result == 0)
+        //        let result = SecRandomCopyBytes(kSecRandomDefault, len, &r)
+        //        assert(result == 0)
     }
 
     private static func crypto_verify_32(_ x: [UInt8], _ y: [UInt8]) -> Bool {

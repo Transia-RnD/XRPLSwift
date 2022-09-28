@@ -1,6 +1,6 @@
 //
 //  xCurrency.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/4/22.
 //
@@ -20,7 +20,7 @@ func isIsoCode(value: String) -> Bool {
 }
 
 func isoCodeFromHex(value: [UInt8]) throws -> String? {
-    let candidateIso: String = String(data: Data(value), encoding: .ascii)!
+    let candidateIso = String(data: Data(value), encoding: .ascii)!
     if candidateIso == "XRP" {
         throw BinaryError.unknownError(
             error: "Disallowed currency code: to indicate the currency XRP you must use 20 bytes of 0s"
@@ -60,8 +60,7 @@ func isoToBytes(iso: String) throws -> [UInt8] {
 
 // swiftlint:disable:next type_name
 class xCurrency: Hash160 {
-
-    static var defaultCurrency: xCurrency = xCurrency([UInt8].init(repeating: 0x0, count: 20))
+    static var defaultCurrency = xCurrency([UInt8].init(repeating: 0x0, count: 20))
 
     public var iso: String?
 
@@ -109,5 +108,4 @@ class xCurrency: Hash160 {
     override func toJson() -> String {
         return (self.toJson() as Any) as! String
     }
-
 }

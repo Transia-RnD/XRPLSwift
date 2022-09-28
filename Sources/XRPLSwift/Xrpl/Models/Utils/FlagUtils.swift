@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Denis Angell on 9/17/22.
 //
@@ -79,12 +79,12 @@ func convertAccountSetFlagsToNumber(
         }
         // swiftlint:disable:next force_unwrapping
         return interface[flag]! == true
-        ? resultFlags | flag.rawValue : resultFlags
+            ? resultFlags | flag.rawValue : resultFlags
     }
 }
 
 func convertOfferCreateFlagsToNumber(
-  flags: [OfferCreateFlags]
+    flags: [OfferCreateFlags]
 ) throws -> Int {
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
@@ -93,12 +93,12 @@ func convertOfferCreateFlagsToNumber(
         }
         // swiftlint:disable:next force_unwrapping
         return interface[flag]! == true
-        ? resultFlags | flag.rawValue : resultFlags
+            ? resultFlags | flag.rawValue : resultFlags
     }
 }
 
 func convertPaymentChannelClaimFlagsToNumber(
-  flags: [PaymentChannelClaimFlag]
+    flags: [PaymentChannelClaimFlag]
 ) throws -> Int {
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
@@ -107,12 +107,12 @@ func convertPaymentChannelClaimFlagsToNumber(
         }
         // swiftlint:disable:next force_unwrapping
         return interface[flag]! == true
-        ? resultFlags | flag.rawValue : resultFlags
+            ? resultFlags | flag.rawValue : resultFlags
     }
 }
 
 func convertPaymentTransactionFlagsToNumber(
-  flags: [PaymentFlags]
+    flags: [PaymentFlags]
 ) throws -> Int {
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
@@ -121,7 +121,7 @@ func convertPaymentTransactionFlagsToNumber(
         }
         // swiftlint:disable:next force_unwrapping
         return interface[flag]! == true
-        ? resultFlags | flag.rawValue : resultFlags
+            ? resultFlags | flag.rawValue : resultFlags
     }
 }
 
@@ -135,6 +135,6 @@ func convertTrustSetFlagsToNumber(
         }
         // swiftlint:disable:next force_unwrapping
         return interface[flag]! == true
-        ? resultFlags | flag.rawValue : resultFlags
+            ? resultFlags | flag.rawValue : resultFlags
     }
 }

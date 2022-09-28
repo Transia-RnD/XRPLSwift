@@ -19,8 +19,8 @@ public class TestData: Codable {
 public class BaseRequest: Codable, Equatable {
     public static func == (lhs: BaseRequest, rhs: BaseRequest) -> Bool {
         return lhs.id == rhs.id
-        && lhs.command == rhs.command
-        && lhs.apiVersion == rhs.apiVersion
+            && lhs.command == rhs.command
+            && lhs.apiVersion == rhs.apiVersion
     }
 
     public var id: Int?
@@ -78,8 +78,8 @@ public struct Warning: Codable {
 open class RippleBaseResponse: Decodable {
     public static func == (lhs: RippleBaseResponse, rhs: RippleBaseResponse) -> Bool {
         return lhs.id == rhs.id
-        && lhs.status == rhs.status
-        && lhs.type == rhs.type
+            && lhs.status == rhs.status
+            && lhs.type == rhs.type
     }
 
     public var id: Int
@@ -120,7 +120,7 @@ open class RippleBaseResponse: Decodable {
         case apiVersion
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         id = try values.decode(Int.self, forKey: .id)
         status = try values.decode(String.self, forKey: .status)

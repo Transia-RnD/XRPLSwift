@@ -43,7 +43,7 @@ class AccountID: Hash160 {
             let classic: String = fullClassic.classicAddress
             let tag = Int(fullClassic.tag ?? 0)
             if tag != 0 {
-              throw BinaryError.unknownError(error: "Only allowed to have tag on Account or Destination")
+                throw BinaryError.unknownError(error: "Only allowed to have tag on Account or Destination")
             }
             return AccountID(try XrplCodec.decodeClassicAddress(classicAddress: classic))
         } else {

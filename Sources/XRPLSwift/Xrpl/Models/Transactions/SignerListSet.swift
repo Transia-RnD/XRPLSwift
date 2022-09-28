@@ -43,7 +43,7 @@ public class SignerListSet: BaseTransaction {
         super.init(account: "", transactionType: "SignerListSet")
     }
 
-    public override init(json: [String: AnyObject]) throws {
+    override public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(SignerListSet.self, from: data)
@@ -52,7 +52,7 @@ public class SignerListSet: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         signerQuorum = try values.decode(Int.self, forKey: .signerQuorum)
         signerEntries = try values.decode([SignerEntry].self, forKey: .signerEntries)
@@ -73,7 +73,7 @@ let MAX_SIGNERS: Int = 8
 /**
  Verify the form and type of an SignerListSet at runtime.
  - parameters:
-    - tx: An SignerListSet Transaction.
+ - tx: An SignerListSet Transaction.
  - throws:
  When the SignerListSet is Malformed.
  */

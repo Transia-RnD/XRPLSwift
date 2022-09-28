@@ -1,6 +1,6 @@
 //
 //  ModelUtils.swift
-//  
+//
 //
 //  Created by Denis Angell on 8/7/22.
 //
@@ -12,8 +12,8 @@ import Foundation
 /**
  Verify that all fields of an object are in fields.
  - parameters:
-    - obj: Object to verify fields.
-    - fields: Fields to verify.
+ - obj: Object to verify fields.
+ - fields: Fields to verify.
  - returns:
  True if keys in object are all in fields.
  */
@@ -29,8 +29,8 @@ public func onlyHasFields(
 /**
  Perform bitwise AND (&) to check if a flag is enabled within Flags (as a number).
  - parameters:
-    - flags: A number that represents flags enabled.
-    - checkFlag: A specific flag to check if it's enabled within Flags.
+ - flags: A number that represents flags enabled.
+ - checkFlag: A specific flag to check if it's enabled within Flags.
  - returns:
  True if checkFlag is enabled within Flags.
  */
@@ -41,7 +41,7 @@ public func isFlagEnabled(flags: Int, checkFlag: Int) -> Bool {
 /**
  Check if string is in hex format.
  - parameters:
-    - str: The string to check if it's in hex format.
+ - str: The string to check if it's in hex format.
  - returns:
  True if string is in hex format
  */

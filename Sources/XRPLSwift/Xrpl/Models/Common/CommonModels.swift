@@ -1,6 +1,6 @@
 //
 //  CommonModels.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/26/22.
 //
@@ -37,17 +37,16 @@ public enum LedgerIndex: Codable {
 }
 
 extension LedgerIndex {
-
     enum LedgerIndexCodingError: Error {
         case decoding(String)
     }
 
     public init(from decoder: Decoder) throws {
-        if let value = try? String.init(from: decoder) {
+        if let value = try? String(from: decoder) {
             self = .string(value)
             return
         }
-        if let value = try? Int.init(from: decoder) {
+        if let value = try? Int(from: decoder) {
             self = .number(value)
             return
         }
@@ -121,11 +120,11 @@ extension Amount {
         }
     }
     public init(from decoder: Decoder) throws {
-        if let value = try? String.init(from: decoder) {
+        if let value = try? String(from: decoder) {
             self = .string(value)
             return
         }
-        if let value = try? IssuedCurrencyAmount.init(from: decoder) {
+        if let value = try? IssuedCurrencyAmount(from: decoder) {
             self = .ic(value)
             return
         }

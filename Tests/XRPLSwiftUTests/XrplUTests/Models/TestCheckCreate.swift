@@ -71,9 +71,9 @@ final class TestCheckCreate: XCTestCase {
             "Fee": "12"
         ] as! [String: AnyObject]
         // MARK: Required Fields are validated on init Optional validated on validated
-//        let tx = try! CheckCreate(json: baseTx)
+        //        let tx = try! CheckCreate(json: baseTx)
         XCTAssertThrowsError(try CheckCreate(json: baseTx))
-//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+        //        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidExpiration() {
@@ -88,9 +88,9 @@ final class TestCheckCreate: XCTestCase {
             "Fee": "12"
         ] as! [String: AnyObject]
         // MARK: Required Fields are validated on init Optional validated on validated
-//        let tx = try! CheckCreate(json: baseTx)
+        //        let tx = try! CheckCreate(json: baseTx)
         XCTAssertThrowsError(try CheckCreate(json: baseTx))
-//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+        //        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidInvoiceID() {
@@ -106,7 +106,7 @@ final class TestCheckCreate: XCTestCase {
         ] as! [String: AnyObject]
         // MARK: Required Fields are validated on init Optional validated on validated
         let tx = try! CheckCreate(json: baseTx)
-//        XCTAssertThrowsError(try CheckCreate(json: baseTx))
+        //        XCTAssertThrowsError(try CheckCreate(json: baseTx))
         XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 }

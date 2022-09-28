@@ -16,9 +16,9 @@ internal let MAX_IOU_EXPONENT: Int = 80
 // swiftlint:disable:next identifier_name
 internal let MAX_IOU_PRECISION: Int = 16
 // swiftlint:disable:next identifier_name
-internal let MAX_DROPS: Decimal = Decimal(string: "1e17")!
+internal let MAX_DROPS = Decimal(string: "1e17")!
 // swiftlint:disable:next identifier_name
-internal let MIN_XRP: Decimal = Decimal(string: "1e-6")!
+internal let MIN_XRP = Decimal(string: "1e-6")!
 // swiftlint:disable:next identifier_name
 internal let mask = Int(0x00000000ffffffff)
 // swiftlint:disable:next identifier_name
@@ -35,9 +35,9 @@ internal let CURRENCY_AMOUNT_BYTE_LENGTH: Int = 48
 
 // Constants for validating amounts.
 // swiftlint:disable:next identifier_name
-internal let MIN_IOU_MANTISSA: Int = Int(10**15)
+internal let MIN_IOU_MANTISSA = Int(10 ** 15)
 // swiftlint:disable:next identifier_name
-internal let MAX_IOU_MANTISSA: Int = Int(10**16 - 1)
+internal let MAX_IOU_MANTISSA = Int(10 ** 16 - 1)
 
 func containsDecimal(string: String) -> Bool {
     // Returns True if the given string contains a decimal point character.
@@ -73,16 +73,16 @@ func verifyXrpValue(xrpValue: String) throws {
 
 func verifyIouValue(issuedCurrencyValue: String) throws {
     /*
-    Validates the format of an issued currency amount value.
-    Raises if value is invalid.
-    Args:
-        issued_currency_value: A string representing the "value"
-                               field of an issued currency amount.
-    Returns:
-        None, but raises if issued_currency_value is not valid.
-    Raises:
-        XRPLBinaryCodecException: If issued_currency_value is invalid.
-    */
+     Validates the format of an issued currency amount value.
+     Raises if value is invalid.
+     Args:
+     issued_currency_value: A string representing the "value"
+     field of an issued currency amount.
+     Returns:
+     None, but raises if issued_currency_value is not valid.
+     Raises:
+     XRPLBinaryCodecException: If issued_currency_value is invalid.
+     */
     let decimalValue = Decimal(string: issuedCurrencyValue)!
     if decimalValue.isZero {
         return
@@ -90,8 +90,8 @@ func verifyIouValue(issuedCurrencyValue: String) throws {
     let exponent = decimalValue.exponent
     if
         (calculatePrecision(value: issuedCurrencyValue) > MAX_IOU_PRECISION)
-        || (exponent > MAX_IOU_EXPONENT)
-        || (exponent < MIN_IOU_EXPONENT) {
+            || (exponent > MAX_IOU_EXPONENT)
+            || (exponent < MIN_IOU_EXPONENT) {
         throw BinaryError.unknownError(error: "Decimal precision out of range for issued currency value.")
     }
     try verifyNoDecimal(decimal: decimalValue)
@@ -108,15 +108,15 @@ func calculatePrecision(value: String) -> Int {
 
 func verifyNoDecimal(decimal: Decimal) throws {
     /*
-    Ensure that the value after being multiplied by the exponent
-    does not contain a decimal.
-    :param decimal: A Decimal object.
-    */
+     Ensure that the value after being multiplied by the exponent
+     does not contain a decimal.
+     :param decimal: A Decimal object.
+     */
     let actualExponent: Int = decimal.exponentXrp
     let exponent = Decimal(string: "1e" + String(-(Int(actualExponent) - 15)))
     var intNumberString: String = ""
     if actualExponent == 0 {
-        intNumberString = decimal.digits().joined(separator: "")
+        intNumberString = decimal.digits().joined()
     } else {
         intNumberString = "\(decimal * exponent!)"
     }
@@ -127,10 +127,10 @@ func verifyNoDecimal(decimal: Decimal) throws {
 
 func serializeIssuedCurrencyValue(value: String) throws -> [UInt8] {
     /*
-    Serializes the value field of an issued currency amount to its bytes representation.
-    :param value: The value to serialize, as a string.
-    :return: A bytes object encoding the serialized value.
-    */
+     Serializes the value field of an issued currency amount to its bytes representation.
+     :param value: The value to serialize, as a string.
+     :return: A bytes object encoding the serialized value.
+     */
     try verifyIouValue(issuedCurrencyValue: value)
     let decimalValue = Decimal(string: value)!
     if decimalValue.isZero {
@@ -141,7 +141,7 @@ func serializeIssuedCurrencyValue(value: String) throws -> [UInt8] {
     let sign: Int = decimalValue.isSignMinus ? 1 : 0
     let digits: [String] = decimalValue.digits()
     var exp: Int = decimalValue.exponent
-    var mantissa = Int(digits.map({ String($0) }).joined(separator: ""))!
+    var mantissa = Int(digits.map({ String($0) }).joined())!
 
     // Canonicalize to expected range ---------------------------------------
     while mantissa < MIN_IOU_MANTISSA && exp > MIN_IOU_EXPONENT {
@@ -184,12 +184,12 @@ func serializeIssuedCurrencyValue(value: String) throws -> [UInt8] {
 
 func serializeXrpAmount(value: String) throws -> [UInt8] {
     /*
-    Serializes an XRP amount.
-    Args:
-        value: A string representing a quantity of XRP.
-    Returns:
-        The bytes representing the serialized XRP amount.
-    */
+     Serializes an XRP amount.
+     Args:
+     value: A string representing a quantity of XRP.
+     Returns:
+     The bytes representing the serialized XRP amount.
+     */
     try verifyXrpValue(xrpValue: value)
     // set the "is positive" bit (this is backwards from usual two's complement!)
     let valueWithPosBit = Int(value)! | POS_SIGN_BIT_MASK
@@ -199,11 +199,11 @@ func serializeXrpAmount(value: String) throws -> [UInt8] {
 func serializeIssuedCurrencyAmount(value: [String: String]) throws -> [UInt8] {
     /*
      Serializes an issued currency amount.
-    Args:
-        value: A dictionary representing an issued currency amount
-    Returns:
-         The bytes representing the serialized issued currency amount.
-    */
+     Args:
+     value: A dictionary representing an issued currency amount
+     Returns:
+     The bytes representing the serialized issued currency amount.
+     */
     let amountString: String = value["value"]!
     let amountBytes: [UInt8] = try serializeIssuedCurrencyValue(value: amountString)
     let currencyBytes: [UInt8] = try xCurrency.from(value: value["currency"]!).toBytes()
@@ -213,8 +213,7 @@ func serializeIssuedCurrencyAmount(value: [String: String]) throws -> [UInt8] {
 
 // swiftlint:disable:next type_name
 class xAmount: SerializedType {
-
-    static var defaultAmount: xAmount = xAmount(bytes: "4000000000000000".hexToBytes)
+    static var defaultAmount = xAmount(bytes: "4000000000000000".hexToBytes)
 
     override init(bytes: [UInt8]? = nil) {
         super.init(bytes: bytes ?? xAmount.defaultAmount.bytes)
@@ -245,11 +244,11 @@ class xAmount: SerializedType {
 
     override func toJson() -> Any {
         /*
-        Construct a JSON object representing this Amount.
+         Construct a JSON object representing this Amount.
 
-        Returns:
-            The JSON representation of this amount.
-        */
+         Returns:
+         The JSON representation of this amount.
+         */
 
         if self.isNative() {
             let sign: String = self.isPositive() ? "" : "-"
@@ -288,9 +287,9 @@ class xAmount: SerializedType {
         /*
          Returns True if this amount is a native XRP amount.
 
-        Returns:
-            True if this amount is a native XRP amount, False otherwise.
-        */
+         Returns:
+         True if this amount is a native XRP amount, False otherwise.
+         */
         // 1st bit in 1st byte is set to 0 for native XRP
         return (self.bytes[0] & 0x80) == 0
     }
@@ -299,18 +298,17 @@ class xAmount: SerializedType {
         /*
          Returns True if 2nd bit in 1st byte is set to 1 (positive amount).
 
-        Returns:
-            True if 2nd bit in 1st byte is set to 1 (positive amount),
-            False otherwise.
-        */
+         Returns:
+         True if 2nd bit in 1st byte is set to 1 (positive amount),
+         False otherwise.
+         */
         return (self.bytes[0] & 0x40) > 0
     }
 }
 
 extension Decimal {
-
     var asInt: Int {
-        guard let int =  Int("\(self)") else {
+        guard let int = Int("\(self)") else {
             return 0
         }
         return int

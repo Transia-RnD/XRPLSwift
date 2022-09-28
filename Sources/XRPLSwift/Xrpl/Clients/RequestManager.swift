@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/27/22.
 //
@@ -149,7 +149,7 @@ public class RequestManager {
      */
     // swiftlint:disable:next cyclomatic_complexity
     public func handleResponse(response: [String: AnyObject]?) throws {
-//        NSLog("RESPONSE: \(response)")
+        //        NSLog("RESPONSE: \(response)")
         let decoder = JSONDecoder()
         let baseData = try JSONSerialization.data(withJSONObject: response!, options: .prettyPrinted)
         let baseResponse = try RippleBaseResponse(data: baseData)
@@ -327,22 +327,22 @@ public class RequestManager {
             try self.resolve(responseObj.id, responseObj, nil)
             return
         }
-//        if map.requestType.self is LedgerEntryRequest.Type {
-//            let responseObj = BaseResponse(
-//                response: baseResponse,
-//                result: CodableHelper.decode(LedgerEntryResponse.self, from: jsonData).decodableObj
-//            )
-//            try self.resolve(responseObj.id, responseObj, nil)
-//            return
-//        }
-//        if map.requestType.self is ManifestRequest.Type {
-//            let responseObj = BaseResponse(
-//                response: baseResponse,
-//                result: CodableHelper.decode(ManifestReseponse.self, from: jsonData).decodableObj
-//            )
-//            try self.resolve(responseObj.id, responseObj, nil)
-//            return
-//        }
+        //        if map.requestType.self is LedgerEntryRequest.Type {
+        //            let responseObj = BaseResponse(
+        //                response: baseResponse,
+        //                result: CodableHelper.decode(LedgerEntryResponse.self, from: jsonData).decodableObj
+        //            )
+        //            try self.resolve(responseObj.id, responseObj, nil)
+        //            return
+        //        }
+        //        if map.requestType.self is ManifestRequest.Type {
+        //            let responseObj = BaseResponse(
+        //                response: baseResponse,
+        //                result: CodableHelper.decode(ManifestReseponse.self, from: jsonData).decodableObj
+        //            )
+        //            try self.resolve(responseObj.id, responseObj, nil)
+        //            return
+        //        }
         if map.requestType.self is NFTBuyOffersRequest.Type {
             let responseObj = BaseResponse(
                 response: baseResponse,
@@ -367,14 +367,14 @@ public class RequestManager {
             try self.resolve(responseObj.id, responseObj, nil)
             return
         }
-//        if map.requestType.self is PathFindRequest.Type {
-//            let responseObj = BaseResponse(
-//                response: baseResponse,
-//                result: CodableHelper.decode(PathFindRequest.self, from: jsonData).decodableObj
-//            )
-//            try self.resolve(responseObj.id, responseObj, nil)
-//            return
-//        }
+        //        if map.requestType.self is PathFindRequest.Type {
+        //            let responseObj = BaseResponse(
+        //                response: baseResponse,
+        //                result: CodableHelper.decode(PathFindRequest.self, from: jsonData).decodableObj
+        //            )
+        //            try self.resolve(responseObj.id, responseObj, nil)
+        //            return
+        //        }
         if map.requestType.self is PingRequest.Type {
             let responseObj = BaseResponse(
                 response: baseResponse,
@@ -431,22 +431,22 @@ public class RequestManager {
             try self.resolve(responseObj.id, responseObj, nil)
             return
         }
-//        if map.requestType.self is SubscribeRequest.Type {
-//            let responseObj = BaseResponse(
-//                response: baseResponse,
-//                result: CodableHelper.decode(SubscribeResponse.self, from: jsonData).decodableObj
-//            )
-//            try self.resolve(responseObj.id, responseObj, nil)
-//            return
-//        }
-//        if map.requestType.self is UnsubscribeRequest.Type {
-//            let responseObj = BaseResponse(
-//                response: baseResponse,
-//                result: CodableHelper.decode(UnsubscribeResponse.self, from: jsonData).decodableObj
-//            )
-//            try self.resolve(responseObj.id, responseObj, nil)
-//            return
-//        }
+        //        if map.requestType.self is SubscribeRequest.Type {
+        //            let responseObj = BaseResponse(
+        //                response: baseResponse,
+        //                result: CodableHelper.decode(SubscribeResponse.self, from: jsonData).decodableObj
+        //            )
+        //            try self.resolve(responseObj.id, responseObj, nil)
+        //            return
+        //        }
+        //        if map.requestType.self is UnsubscribeRequest.Type {
+        //            let responseObj = BaseResponse(
+        //                response: baseResponse,
+        //                result: CodableHelper.decode(UnsubscribeResponse.self, from: jsonData).decodableObj
+        //            )
+        //            try self.resolve(responseObj.id, responseObj, nil)
+        //            return
+        //        }
         if map.requestType.self is TransactionEntryRequest.Type {
             let responseObj = BaseResponse(
                 response: baseResponse,

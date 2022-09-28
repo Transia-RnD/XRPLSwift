@@ -1,6 +1,6 @@
 //
 //  TestBinaryCodec.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/24/22.
 //
@@ -241,7 +241,7 @@ final class TestMainFixtures: XCTestCase {
         let testBinary: String = test["binary"] as! String
         let testJson: [String: AnyObject] = test["json"] as! [String: AnyObject]
         XCTAssertEqual(try BinaryCodec.encode(json: testJson), testBinary)
-//        XCTAssertTrue(BinaryCodec.decode(buffer: testBinary) == testJson)
+        //        XCTAssertTrue(BinaryCodec.decode(buffer: testBinary) == testJson)
     }
 
     func checkXaddressJsons(test: [String: AnyObject]) {
@@ -312,7 +312,7 @@ final class TestMainFixtures: XCTestCase {
         let wholeObjectTests = DataDrivenFixtures().getWholeObjectTests()
         for wholeObject in wholeObjectTests {
             XCTAssertEqual(try BinaryCodec.encode(json: wholeObject.txJson), wholeObject.expectedHex)
-//            XCTAssertTrue(BinaryCodec.decode(buffer: wholeObject.expectedHex) == wholeObject.txJson)
+            //            XCTAssertTrue(BinaryCodec.decode(buffer: wholeObject.expectedHex) == wholeObject.txJson)
         }
     }
 }

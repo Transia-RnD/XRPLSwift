@@ -1,6 +1,6 @@
 //
 //  TestVector256.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/12/22.
 //

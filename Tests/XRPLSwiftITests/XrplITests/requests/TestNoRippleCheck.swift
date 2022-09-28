@@ -54,9 +54,9 @@ final class TestINoRippleCheck: RippledITestCase {
         let request: NoRippleCheckRequest = try! NoRippleCheckRequest(json)
         let response: BaseResponse = try! await self.client.request(r: request).wait() as! BaseResponse<NoRippleCheckResponse>
         XCTAssertEqual(response.type, expected["type"] as! String)
-//        XCTAssert(response.result?.ledgerHash is String)
-//        XCTAssert(response.result?.ledgerIndex is Int)
-//        XCTAssert(response.result?.marker is Any)
+        //        XCTAssert(response.result?.ledgerHash is String)
+        //        XCTAssert(response.result?.ledgerIndex is Int)
+        //        XCTAssert(response.result?.marker is Any)
 
         //        assert.equal(response.type, expected.type)
         //            assert.equal(typeof response.result.transactions[0].Fee, "number")
@@ -79,9 +79,9 @@ final class TestINoRippleCheck: RippledITestCase {
         )
         let response: BaseResponse = try! await self.client.request(r: request).wait() as! BaseResponse<NoRippleCheckResponse>
         XCTAssertEqual(response.type, expected["type"] as! String)
-//        XCTAssert(response.result?.ledgerHash is String)
-//        XCTAssert(response.result?.ledgerIndex is Int)
-//        XCTAssert(response.result?.marker is Any)
+        //        XCTAssert(response.result?.ledgerHash is String)
+        //        XCTAssert(response.result?.ledgerIndex is Int)
+        //        XCTAssert(response.result?.marker is Any)
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)
     }

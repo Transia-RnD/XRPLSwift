@@ -69,28 +69,28 @@ final class TestAutoFill: RippledMockTester {
         await waitForExpectations(timeout: 5)
     }
 
-//    func testShouldThrowAccountDelete() async {
-//        let exp = expectation(description: "base")
-//        let json: [String: AnyObject] = [
-//            "TransactionType": "AccountDelete",
-//            "Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
-//            "Destination": "X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqZ",
-//            "Fee": TestAutoFill.fee,
-//            "Sequence": TestAutoFill.sequence,
-//            "LastLedgerSequence": TestAutoFill.lastLedgerSequence
-//        ] as [String: AnyObject]
-//        try! self.mockRippled.addResponse(command: "account_info", response: RippledFixtures.accountInfo())
-//        try! self.mockRippled.addResponse(command: "server_info", response: RippledFixtures.serverInfo())
-//        try! self.mockRippled.addResponse(command: "ledger", response: RippledFixtures.ledger())
-//        try! self.mockRippled.addResponse(command: "account_objects", response: RippledFixtures.accountObjects())
-//        do {
-//            try await self.client.autofill(transaction: Transaction(json)!).wait() as [String: AnyObject]
-//            XCTFail()
-//        } catch {
-//            exp.fulfill()
-//        }
-//        await waitForExpectations(timeout: 5)
-//    }
+    //    func testShouldThrowAccountDelete() async {
+    //        let exp = expectation(description: "base")
+    //        let json: [String: AnyObject] = [
+    //            "TransactionType": "AccountDelete",
+    //            "Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+    //            "Destination": "X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqZ",
+    //            "Fee": TestAutoFill.fee,
+    //            "Sequence": TestAutoFill.sequence,
+    //            "LastLedgerSequence": TestAutoFill.lastLedgerSequence
+    //        ] as [String: AnyObject]
+    //        try! self.mockRippled.addResponse(command: "account_info", response: RippledFixtures.accountInfo())
+    //        try! self.mockRippled.addResponse(command: "server_info", response: RippledFixtures.serverInfo())
+    //        try! self.mockRippled.addResponse(command: "ledger", response: RippledFixtures.ledger())
+    //        try! self.mockRippled.addResponse(command: "account_objects", response: RippledFixtures.accountObjects())
+    //        do {
+    //            try await self.client.autofill(transaction: Transaction(json)!).wait() as [String: AnyObject]
+    //            XCTFail()
+    //        } catch {
+    //            exp.fulfill()
+    //        }
+    //        await waitForExpectations(timeout: 5)
+    //    }
 
     func testShouldAutofillFee() async {
         let exp = expectation(description: "base")
@@ -116,15 +116,15 @@ final class TestAutoFill: RippledMockTester {
             "Owner": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
             "OfferSequence": 7,
             "Condition":
-              "A0258020E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855810100",
-            "Fulfillment": "A0028000",
+                "A0258020E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855810100",
+            "Fulfillment": "A0028000"
         ] as [String: AnyObject]
         try! self.mockRippled.addResponse(command: "account_info", response: RippledFixtures.accountInfo())
         try! self.mockRippled.addResponse(command: "server_info", response: RippledFixtures.serverInfo())
         try! self.mockRippled.addResponse(command: "ledger", response: RippledFixtures.ledger())
         let txResult = try! await self.client.autofill(transaction: Transaction(json)!, signersCount: 4).wait() as [String: AnyObject]
         XCTAssertEqual(txResult["Fee"] as! String, "456")
-//        XCTAssertEqual(txResult["Fee"] as! String, "459")
+        //        XCTAssertEqual(txResult["Fee"] as! String, "459")
         // TODO: See above calc difference
         exp.fulfill()
         await waitForExpectations(timeout: 5)
@@ -138,15 +138,15 @@ final class TestAutoFill: RippledMockTester {
             "Owner": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
             "OfferSequence": 7,
             "Condition":
-              "A0258020E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855810100",
-            "Fulfillment": "A0028000",
+                "A0258020E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855810100",
+            "Fulfillment": "A0028000"
         ] as [String: AnyObject]
         try! self.mockRippled.addResponse(command: "account_info", response: RippledFixtures.accountInfo())
         try! self.mockRippled.addResponse(command: "server_info", response: RippledFixtures.serverInfo())
         try! self.mockRippled.addResponse(command: "ledger", response: RippledFixtures.ledger())
         let txResult = try! await self.client.autofill(transaction: Transaction(json)!, signersCount: 4).wait() as [String: AnyObject]
         XCTAssertEqual(txResult["Fee"] as! String, "456")
-//        XCTAssertEqual(txResult["Fee"] as! String, "459")
+        //        XCTAssertEqual(txResult["Fee"] as! String, "459")
         // TODO: See above calc difference
         exp.fulfill()
         await waitForExpectations(timeout: 5)

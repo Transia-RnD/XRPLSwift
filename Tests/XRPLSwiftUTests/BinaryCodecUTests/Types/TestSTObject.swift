@@ -1,6 +1,6 @@
 //
 //  TestSTObject.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/23/22.
 //
@@ -42,14 +42,14 @@ final class TestSTObject: XCTestCase {
     func testFromValueToJson() {
         let transaction: STObject = try! STObject.from(value: self.EXPECTED_JSON)
         let result: [String: Any] = transaction.toJson()
-//        XCTAssertEqual(result, self.EXPECTED_JSON)
+        //        XCTAssertEqual(result, self.EXPECTED_JSON)
     }
 
     func testFromParserToJson() {
         let parser: BinaryParser = BinaryParser(hex: self.BUFFER)
         let transaction: SerializedType = try! STObject().fromParser(parser: parser, hint: nil)
         let result: [String: Any] = transaction.toJson()
-//        XCTAssertEqual(result, self.EXPECTED_JSON)
+        //        XCTAssertEqual(result, self.EXPECTED_JSON)
     }
 
 }

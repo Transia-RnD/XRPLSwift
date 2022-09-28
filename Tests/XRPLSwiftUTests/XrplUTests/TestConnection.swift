@@ -73,28 +73,28 @@ final class TestConnection: RippledMockTester {
         await waitForExpectations(timeout: 5)
     }
 
-//    func testDisconnectedOnOpen() async {
-//        let exp = expectation(description: "WSS CALL")
-//        let request: BaseRequest = try! BaseRequest(json: [
-//            "command": "test_command",
-//            "data": [
-//                "closeServer": true
-//            ],
-//        ] as! [String: AnyObject])
-//        do {
-//            let response = try await self.client.request(req: request)
-//            response?.whenFailure { error in
-//                XCTAssertTrue(error is DisconnectedError)
-//                exp.fulfill()
-//            }
-//            response?.whenSuccess { error in
-//                XCTFail()
-//            }
-//        } catch {
-//            XCTFail()
-//        }
-//        await waitForExpectations(timeout: 1)
-//    }
+    //    func testDisconnectedOnOpen() async {
+    //        let exp = expectation(description: "WSS CALL")
+    //        let request: BaseRequest = try! BaseRequest(json: [
+    //            "command": "test_command",
+    //            "data": [
+    //                "closeServer": true
+    //            ],
+    //        ] as! [String: AnyObject])
+    //        do {
+    //            let response = try await self.client.request(req: request)
+    //            response?.whenFailure { error in
+    //                XCTAssertTrue(error is DisconnectedError)
+    //                exp.fulfill()
+    //            }
+    //            response?.whenSuccess { error in
+    //                XCTFail()
+    //            }
+    //        } catch {
+    //            XCTFail()
+    //        }
+    //        await waitForExpectations(timeout: 1)
+    //    }
 
     func testResponseFormatError() async {
         let exp = expectation(description: "WSS CALL")

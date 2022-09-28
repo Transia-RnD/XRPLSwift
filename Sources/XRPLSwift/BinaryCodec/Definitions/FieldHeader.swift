@@ -1,11 +1,11 @@
 //
 //  FieldHeader.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/2/22.
 //
 
-// 
+//
 
 import Foundation
 
@@ -13,15 +13,14 @@ import Foundation
  A container class for simultaneous storage of a field's type code and field code.
  */
 public struct FieldHeader: Hashable {
-
     public var typeCode: Int
     public var fieldCode: Int
 
     /**
      Construct a FieldHeader.
      - parameters:
-        - typeCode: The code for this field's serialization type.
-        - fieldCode: The sort code that orders fields of the same type.
+     - typeCode: The code for this field's serialization type.
+     - fieldCode: The sort code that orders fields of the same type.
      */
     init(typeCode: Int, fieldCode: Int) {
         self.typeCode = typeCode
@@ -36,7 +35,6 @@ public struct FieldHeader: Hashable {
         //            return NotImplemented
         //        }
         return typeCode == other.typeCode && self.fieldCode == other.fieldCode
-
     }
 
     /**
@@ -45,7 +43,6 @@ public struct FieldHeader: Hashable {
     func toHash() -> Int {
         //        return hash((self.typeCode, self.fieldCode))
         return 0
-
     }
 
     /**

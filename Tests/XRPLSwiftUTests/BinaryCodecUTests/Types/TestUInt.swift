@@ -1,6 +1,6 @@
 //
 //  TestInt.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/11/22.
 //
@@ -53,11 +53,11 @@ final class TestUInt: XCTestCase {
     }
 
     // MARK: INVALID SWIFT IMPLEMENTATION
-//    func test_raises_invalid_value_type() {
-//        let invalidValue: [UInt8] = [1, 2, 3]
-//        XCTAssertThrowsError(try xUInt8().from(value: invalidValue))
-//        XCTAssertThrowsError(try xUInt16().from(value: invalidValue))
-//        XCTAssertThrowsError(try xUInt32().from(value: invalidValue))
-//        XCTAssertThrowsError(try xUInt64().from(value: invalidValue))
-//    }
+    //    func test_raises_invalid_value_type() {
+    //        let invalidValue: [UInt8] = [1, 2, 3]
+    //        XCTAssertThrowsError(try xUInt8().from(value: invalidValue))
+    //        XCTAssertThrowsError(try xUInt16().from(value: invalidValue))
+    //        XCTAssertThrowsError(try xUInt32().from(value: invalidValue))
+    //        XCTAssertThrowsError(try xUInt64().from(value: invalidValue))
+    //    }
 }

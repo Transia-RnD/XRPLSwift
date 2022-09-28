@@ -22,9 +22,9 @@ public class AddressCodec {
     /**
      Returns the X-Address representation of the data.
      - parameters:
-        - classicAddress: The base58 encoding of the classic address.
-        - tag: The destination tag.
-        - isTest: Whether it is the test network or the main network.
+     - classicAddress: The base58 encoding of the classic address.
+     - tag: The destination tag.
+     - isTest: Whether it is the test network or the main network.
      - returns:
      The X-Address representation of the data.
      - throws:
@@ -44,9 +44,9 @@ public class AddressCodec {
         let flags: [UInt8] = tag == nil ? [0x00] : [0x01]
         let tag = tag == nil ? [UInt8](UInt64(0).data) : [UInt8](UInt64(tag!).data)
 
-//        if tag != nil && tag > [UInt8](MAX_32_BIT_UNSIGNED_INT) {
-//            throw AddressCodecError.invalidLength(error: "Invalid tag")
-//        }
+        //        if tag != nil && tag > [UInt8](MAX_32_BIT_UNSIGNED_INT) {
+        //            throw AddressCodecError.invalidLength(error: "Invalid tag")
+        //        }
 
         let prefix: [UInt8] = isTest ? [0x04, 0x93] : [0x05, 0x44]
         let concatenated = prefix + accountID + flags + tag
@@ -59,7 +59,7 @@ public class AddressCodec {
      Returns a tuple containing the classic address, tag, and whether the address
      is on a test network for an X-Address.
      - parameters:
-        - xAddress: base58-encoded X-Address.
+     - xAddress: base58-encoded X-Address.
      - returns:
      A dict containing: classicAddress: the base58 classic address, tag: the destination tag, isTest: whether the address is on the test network (or main)
      - throws:
@@ -81,17 +81,17 @@ public class AddressCodec {
         let classicAddressBytes: [UInt8] = [UInt8](concatenated[2..<22])
         let classicAddress = try XrplCodec.encodeClassicAddress(bytes: classicAddressBytes)
         return FullClassicAddress(classicAddress: classicAddress, tag: tag, isTest: isTest)
-//        return [
-//            "classicAddress": classicAddress,
-//            "tag": tag as Any,
-//            "isTest": isTest
-//        ] as [String: AnyObject]
+        //        return [
+        //            "classicAddress": classicAddress,
+        //            "tag": tag as Any,
+        //            "isTest": isTest
+        //        ] as [String: AnyObject]
     }
 
     /**
      Returns whether a decoded X-Address is a test address.
      - parameters:
-        - prefix: The first 2 bytes of an X-Address.
+     - prefix: The first 2 bytes of an X-Address.
      - returns:
      Whether a decoded X-Address is a test address.
      - throws:
@@ -110,7 +110,7 @@ public class AddressCodec {
     /**
      Returns the destination tag extracted from the suffix of the X-Address.
      - parameters:
-        - buffer: The buffer to extract a destination tag from.
+     - buffer: The buffer to extract a destination tag from.
      - returns:
      The destination tag extracted from the suffix of the X-Address.
      - throws:
@@ -126,12 +126,12 @@ public class AddressCodec {
             // Little-endian to big-endian
             return (
                 Int(buffer[23]) +
-                Int(buffer[24]) *
-                Int(0x100) +
-                Int(buffer[25]) *
-                Int(0x10000) +
-                Int(buffer[26]) *
-                Int(0x1000000)
+                    Int(buffer[24]) *
+                    Int(0x100) +
+                    Int(buffer[25]) *
+                    Int(0x10000) +
+                    Int(buffer[26]) *
+                    Int(0x1000000)
             )
         }
         let tagBytes = buffer[23...]
@@ -144,7 +144,7 @@ public class AddressCodec {
     /**
      Returns whether `xAddress` is a valid X-Address.
      - parameters:
-        - xAddress: The X-Address to check for validity.
+     - xAddress: The X-Address to check for validity.
      - returns:
      Whether `xAddress` is a valid X-Address.
      */

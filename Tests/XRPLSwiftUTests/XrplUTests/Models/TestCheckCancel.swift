@@ -34,7 +34,7 @@ final class TestCheckCancel: XCTestCase {
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try CheckCancel(json: baseTx))
         // MARK: This is because the fields are validated on init
-//        let tx = try! CheckCancel(json: baseTx)
-//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+        //        let tx = try! CheckCancel(json: baseTx)
+        //        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 }

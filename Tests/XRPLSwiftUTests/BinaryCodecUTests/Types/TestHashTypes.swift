@@ -1,6 +1,6 @@
 //
 //  TestHashTypes.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/11/22.
 //
@@ -35,10 +35,10 @@ final class TestHash128: XCTestCase {
     }
 
     // This test is not necessary in Swift?
-//    func testRaisesInvalidValueType() {
-//        let invalidValue: Int = 1
-//        XCTAssertThrowsError(try! Hash128().from(value: invalidValue))
-//    }
+    //    func testRaisesInvalidValueType() {
+    //        let invalidValue: Int = 1
+    //        XCTAssertThrowsError(try! Hash128().from(value: invalidValue))
+    //    }
 }
 
 final class TestHash160: XCTestCase {
@@ -66,10 +66,10 @@ final class TestHash160: XCTestCase {
     }
 
     // This test is not necessary in Swift?
-//    func testRaisesInvalidValueType() {
-//        let invalidValue: Int = 1
-//        XCTAssertThrowsError(try! Hash160().from(value: invalidValue))
-//    }
+    //    func testRaisesInvalidValueType() {
+    //        let invalidValue: Int = 1
+    //        XCTAssertThrowsError(try! Hash160().from(value: invalidValue))
+    //    }
 }
 
 final class TestHash256: XCTestCase {
@@ -97,8 +97,8 @@ final class TestHash256: XCTestCase {
     }
 
     // MARK: INVALID SWIFT IMPLEMENTATION
-//    func testRaisesInvalidValueType() {
-//        let invalidValue: Int = 1
-//        XCTAssertThrowsError(try! Hash256().from(value: invalidValue))
-//    }
+    //    func testRaisesInvalidValueType() {
+    //        let invalidValue: Int = 1
+    //        XCTAssertThrowsError(try! Hash256().from(value: invalidValue))
+    //    }
 }

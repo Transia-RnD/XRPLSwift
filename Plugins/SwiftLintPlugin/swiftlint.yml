@@ -1,11 +1,10 @@
-#included:
-#  - Sources
-#  - Tests
+included:
+  - ../../Sources
+#  - ../../Tests
 excluded:
-#    - Sources/XRPLSwift/Keypairs/ED25519 (pebble8888)/ed25519_verify
-#    - Sources/XRPLSwift/Keypairs/ED25519 (pebble8888)/ed25519_fe
-#    - Sources/XRPLSwift/Keypairs/ED25519 (pebble8888)/ed25519_ge
-#    - Sources/XRPLSwift/Keypairs/ED25519 (pebble8888)/ed25519_sc
+    - ../../Sources/XRPLSwift/Keypairs/Algorithms/ED25519 (pebble8888)
+    - ../../Sources/XRPLSwift/Keypairs/Algorithms/ED25519
+    - ../../Sources/XRPLSwift/Keypairs/Algorithms/SECP256K1
 analyzer_rules:
     - unused_declaration
     - unused_import

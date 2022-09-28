@@ -1,6 +1,6 @@
 //
 //  STArray.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/16/22.
 //
@@ -17,11 +17,10 @@ internal let ARRAY_END_MARKER_NAME: String = "ArrayEndMarker"
 internal let _OBJECT_END_MARKER: [UInt8] = [0xE1]
 
 class STArray: SerializedType {
-
     /*
-    Class for serializing and deserializing Lists of objects.
-    See `Array Fields <https://xrpl.org/serialization.html#array-fields>`_
-    */
+     Class for serializing and deserializing Lists of objects.
+     See `Array Fields <https://xrpl.org/serialization.html#array-fields>`_
+     */
 
     init(_ bytes: [UInt8]? = nil) {
         super.init(bytes: bytes ?? [])
@@ -45,9 +44,9 @@ class STArray: SerializedType {
     }
 
     static func from(value: [[String: AnyObject]]) throws -> STArray {
-//        if value.count > 0 && value[0] is [String: AnyObject] {
-//            throw BinaryError.unknownError(error: "Cannot construct STArray from a list of non-dict")
-//        }
+        //        if value.count > 0 && value[0] is [String: AnyObject] {
+        //            throw BinaryError.unknownError(error: "Cannot construct STArray from a list of non-dict")
+        //        }
 
         var bytestring: [UInt8] = []
         for obj in value {
@@ -63,7 +62,7 @@ class STArray: SerializedType {
         let parser = BinaryParser(hex: self.str())
         while !parser.end() {
             let field = parser.readField()
-                if field.name == ARRAY_END_MARKER_NAME {
+            if field.name == ARRAY_END_MARKER_NAME {
                 break
             }
             var outer: [String: AnyObject] = [:]

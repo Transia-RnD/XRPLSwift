@@ -47,7 +47,7 @@ internal class SECP256K1: SigningAlgorithm {
         let intermediateSecretKey = findSecretKey(ctx: ctx, startingKey: rootPublicKey.compressed + tr)
 
         // derive intermediate public key (useful for debugging)
-//        _ = try derivePublicKey(ctx: ctx, secretKey: intermediateSecretKey.getPointer())
+        //        _ = try derivePublicKey(ctx: ctx, secretKey: intermediateSecretKey.getPointer())
 
         // derive master private key
         let bigRootPrivate = BigUInt(rootSecretKey.toHexString(), radix: 16)!
@@ -130,8 +130,8 @@ internal class SECP256K1: SigningAlgorithm {
         }
 
         // TODO: IDK WHY I HAVE TO DO THIS
-//        _ = _data.getPointer()
-//        _ = _privateKey.getPointer()
+        //        _ = _data.getPointer()
+        //        _ = _privateKey.getPointer()
 
         var tmp: [UInt8] = Array(repeating: 0, count: 72)
         var size = tmp.count
@@ -146,7 +146,7 @@ internal class SECP256K1: SigningAlgorithm {
     static func verify(signature: [UInt8], message: [UInt8], publicKey: [UInt8]) throws -> Bool {
         let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_VERIFY))
         var sig = secp256k1_ecdsa_signature()
-        
+
         var _signatureData = Data(signature)
         var _pubKeyData = Data(publicKey)
         var _msgDigest = Data(sha512HalfHash(data: message))
@@ -157,7 +157,7 @@ internal class SECP256K1: SigningAlgorithm {
         }
 
         // TODO: IDK WHY I HAVE TO DO THIS
-//        _ = _signatureData.getPointer()
+        //        _ = _signatureData.getPointer()
 
         var pubKey = secp256k1_pubkey()
         let resultParsePublicKey = secp256k1_ec_pubkey_parse(
@@ -168,7 +168,7 @@ internal class SECP256K1: SigningAlgorithm {
         )
 
         // TODO: IDK WHY I HAVE TO DO THIS
-//        _ = _pubKeyData.getPointer()
+        //        _ = _pubKeyData.getPointer()
 
         if resultParsePublicKey == 0 {
             secp256k1_context_destroy(ctx)
@@ -178,7 +178,7 @@ internal class SECP256K1: SigningAlgorithm {
         let result = secp256k1_ecdsa_verify(ctx!, &sig, _msgDigest.getPointer(), &pubKey)
 
         // TODO: IDK WHY I HAVE TO DO THIS
-//        _ = _msgDigest.getPointer()
+        //        _ = _msgDigest.getPointer()
 
         secp256k1_context_destroy(ctx)
 

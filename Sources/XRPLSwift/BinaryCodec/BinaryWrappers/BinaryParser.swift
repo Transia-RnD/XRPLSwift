@@ -1,6 +1,6 @@
 //
 //  BinaryParser.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/2/22.
 //
@@ -23,7 +23,7 @@ public class BinaryParser {
     /**
      Initialize bytes to a hex string
      - parameters:
-        - hex: A hex string
+     - hex: A hex string
      */
     public init(hex: String) {
         bytes = hex.hexToBytes
@@ -44,7 +44,7 @@ public class BinaryParser {
     /**
      Consume the first n bytes of the BinaryParser
      - parameters:
-        - n: The number of bytes to skip
+     - n: The number of bytes to skip
      */
     // swiftlint:disable:next identifier_name
     public func skip(n: Int) throws {
@@ -57,7 +57,7 @@ public class BinaryParser {
     /**
      Read the first n bytes from the BinaryParser
      - parameters:
-        - n: The number of bytes to read
+     - n: The number of bytes to read
      - returns:
      The bytes
      */
@@ -71,7 +71,7 @@ public class BinaryParser {
     /**
      Read an integer of given size
      - parameters:
-        - n: The number of bytes to read
+     - n: The number of bytes to read
      - returns:
      The number represented by those bytes
      */
@@ -126,7 +126,7 @@ public class BinaryParser {
      Returns whether the binary parser has finished parsing (e.g. there is nothing
      left in the buffer that needs to be processed).
      - parameters:
-        - customEnd: An ending byte-phrase.
+     - customEnd: An ending byte-phrase.
      - returns:
      Whether or not it's the end.
      */
@@ -166,7 +166,7 @@ public class BinaryParser {
     /**
      Reads the field ordinal from the BinaryParser
      - parameters:
-        - customEnd: An ending byte-phrase.
+     - customEnd: An ending byte-phrase.
      - returns:
      Field ordinal
      */
@@ -205,7 +205,7 @@ public class BinaryParser {
     /**
      Read a given type from the BinaryParser
      - parameters:
-        - type: The type that you want to read from the BinaryParser
+     - type: The type that you want to read from the BinaryParser
      - returns:
      The instance of that type read from the BinaryParser
      */
@@ -261,7 +261,7 @@ public class BinaryParser {
     /**
      Get the type associated with a given field
      - parameters:
-        - type: The field that you want to get the type of
+     - type: The field that you want to get the type of
      - returns:
      The type associated with the given field
      */
@@ -272,15 +272,15 @@ public class BinaryParser {
     /**
      Read value of the type specified by field from the BinaryParser
      - parameters:
-        - field: The field tinstance that you are reading
+     - field: The field tinstance that you are reading
      - returns:
      The value associated with the given field
      */
     func readFieldValue(field: FieldInstance) throws -> SerializedType? {
         let associatedValue = AssociatedValue(field: field, parser: self)
         let sizeHint: Int? = field.isVLEncoded
-        ? try self.readLengthPrefix()
-        : nil
+            ? try self.readLengthPrefix()
+            : nil
         let value = associatedValue.fromParser(hint: sizeHint)!
         if value.bytes.isEmpty {
             throw BinaryError.unknownError(error: "fromParser for (\(field.name), \(field.type) -> nil ")

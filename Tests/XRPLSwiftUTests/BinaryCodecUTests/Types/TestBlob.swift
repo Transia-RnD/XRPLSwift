@@ -23,8 +23,8 @@ final class TestBlob: XCTestCase {
     }
 
     // This test is not necessary in Swift?
-//    func testRaisesInvalidValueType() {
-//        let invalidValue = [1, 2, 3]
-//        XCTAssertThrowsError(Blob.from(value: invalidValue))
-//    }
+    //    func testRaisesInvalidValueType() {
+    //        let invalidValue = [1, 2, 3]
+    //        XCTAssertThrowsError(Blob.from(value: invalidValue))
+    //    }
 }

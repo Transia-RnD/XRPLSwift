@@ -73,6 +73,6 @@ final class TestAccountDelete: XCTestCase {
         // TODO: Review
         // The second (validation) is not reached because types are checked at decode, and validation is checked later
         XCTAssertThrowsError(try AccountDelete(json: txJson))
-//        XCTAssertThrowsError(try validateAccountDelete(tx: tx.toJson()))
+        //        XCTAssertThrowsError(try validateAccountDelete(tx: tx.toJson()))
     }
 }

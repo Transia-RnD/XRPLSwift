@@ -46,8 +46,8 @@ final class TestIGatewayBalances: RippledITestCase {
         let request: GatewayBalancesRequest = try! GatewayBalancesRequest(json)
         let response: BaseResponse = try! await self.client.request(r: request).wait() as! BaseResponse<GatewayBalancesResponse>
         XCTAssertEqual(response.type, expected["type"] as! String)
-//        XCTAssert(response.result?.ledgerHash is String)
-//        XCTAssert(response.result?.ledgerIndex is Int)
+        //        XCTAssert(response.result?.ledgerHash is String)
+        //        XCTAssert(response.result?.ledgerIndex is Int)
 
         var responseJson: [String: AnyObject] = try! response.result!.toJson()
         responseJson["ledger_hash"] = nil
@@ -71,8 +71,8 @@ final class TestIGatewayBalances: RippledITestCase {
         )
         let response: BaseResponse = try! await self.client.request(r: request).wait() as! BaseResponse<GatewayBalancesResponse>
         XCTAssertEqual(response.type, expected["type"] as! String)
-//        XCTAssert(response.result?.ledgerHash is String)
-//        XCTAssert(response.result?.ledgerIndex is Int)
+        //        XCTAssert(response.result?.ledgerHash is String)
+        //        XCTAssert(response.result?.ledgerIndex is Int)
 
         var responseJson: [String: AnyObject] = try! response.result!.toJson()
         responseJson["ledger_hash"] = nil

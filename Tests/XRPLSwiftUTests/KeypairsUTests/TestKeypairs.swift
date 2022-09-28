@@ -66,12 +66,12 @@ final class TestApi: XCTestCase {
     }
 
     // MARK: Python Library doesnt allow this
-//    func testDeriveKeypairED25519Validator() {
-//        let keypair = try! Keypairs.deriveKeypair(seed: TestApi.fixtures.ED25519_SEED, isValidator: true)
-//        // Had an issue with the KeyPair Object
-//        XCTAssertEqual(keypair.privateKey, TestApi.fixtures.ED25519_VALIDATOR_KEYPAIR.privateKey)
-//        XCTAssertEqual(keypair.publicKey, TestApi.fixtures.ED25519_VALIDATOR_KEYPAIR.publicKey)
-//    }
+    //    func testDeriveKeypairED25519Validator() {
+    //        let keypair = try! Keypairs.deriveKeypair(seed: TestApi.fixtures.ED25519_SEED, isValidator: true)
+    //        // Had an issue with the KeyPair Object
+    //        XCTAssertEqual(keypair.privateKey, TestApi.fixtures.ED25519_VALIDATOR_KEYPAIR.privateKey)
+    //        XCTAssertEqual(keypair.publicKey, TestApi.fixtures.ED25519_VALIDATOR_KEYPAIR.publicKey)
+    //    }
 
     func testDeriveAddressSECP256K1() {
         let address = try! Keypairs.deriveAddress(publicKey: TestApi.fixtures.SECP256K1_KEYPAIR.publicKey)
@@ -117,11 +117,11 @@ final class TestApi: XCTestCase {
         XCTAssertTrue(Keypairs.verify(signature: Data(hex: signature).bytes, message: messageHex, publicKey: publicKey))
     }
 
-//    func testDeriveNodeAddress() {
-//        let x = "n9KHn8NfbBsZV5q8bLfS72XyGqwFt5mgoPbcTV4c6qKiuPTAtXYk"
-//        let y = "rU7bM9ENDkybaxNrefAVjdLTyNLuue1KaJ"
-//        XCTAssertEqual(Keypairs.deriveNodeAddress(publicKey: x), y)
-//    }
+    //    func testDeriveNodeAddress() {
+    //        let x = "n9KHn8NfbBsZV5q8bLfS72XyGqwFt5mgoPbcTV4c6qKiuPTAtXYk"
+    //        let y = "rU7bM9ENDkybaxNrefAVjdLTyNLuue1KaJ"
+    //        XCTAssertEqual(Keypairs.deriveNodeAddress(publicKey: x), y)
+    //    }
 
     func testRandomAddress() {
         let seed = try! Keypairs.generateSeed(options: KeypairsOptions(algorithm: .secp256k1))

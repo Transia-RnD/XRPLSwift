@@ -91,13 +91,13 @@ final class TestCurrency: XCTestCase {
     }
 
     // MARK: INVALID SWIFT IMPLEMENTATION
-//    func testRaisesInvalidValueType() {
-//        let invalidValue = [1, 2, 3]
-//        XCTAssertThrowsError(Currency.from(value: invalidValue))
-//    }
+    //    func testRaisesInvalidValueType() {
+    //        let invalidValue = [1, 2, 3]
+    //        XCTAssertThrowsError(Currency.from(value: invalidValue))
+    //    }
 
     // TODO: FIX THIS
-//    func testRaisesInvalidXrpEncoding() {
-//        XCTAssertThrowsError(try xCurrency.from(value: ILLEGAL_XRP_HEX_CODE))
-//    }
+    //    func testRaisesInvalidXrpEncoding() {
+    //        XCTAssertThrowsError(try xCurrency.from(value: ILLEGAL_XRP_HEX_CODE))
+    //    }
 }

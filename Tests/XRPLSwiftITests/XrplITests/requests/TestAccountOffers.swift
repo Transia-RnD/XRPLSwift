@@ -22,8 +22,8 @@ final class TestIAccounOffers: RippledITestCase {
             "result": [
                 "account": self.wallet.classicAddress,
                 "offers": []
-//                "ledger_current_index": 150,
-//                "validated": true,
+                //                "ledger_current_index": 150,
+                //                "validated": true,
             ],
             "type": "response"
         ] as [String: AnyObject]

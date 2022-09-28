@@ -9,7 +9,7 @@
 // @testable import XRPLSwift
 //
 // public class PromiseTestCase: XCTestCase {
-//    
+//
 //    public func setupIClient() async throws -> Promise<Any?> {
 //    //        self.client = try XrplClient(server: ServerUrl.serverUrl)
 //    //        self.wallet = Wallet.generate(algorithm: .secp256k1)

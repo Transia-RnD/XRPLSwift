@@ -1,6 +1,6 @@
 //
 //  TestPaymentChannelClaim.swift
-//  
+//
 //
 //  Created by Denis Angell on 8/12/22.
 //

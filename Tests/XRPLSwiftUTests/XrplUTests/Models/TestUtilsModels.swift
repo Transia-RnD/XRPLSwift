@@ -1,6 +1,6 @@
 //
 //  TestUtilsModels.swift
-//  
+//
 //
 //  Created by Denis Angell on 9/17/22.
 //
@@ -43,9 +43,9 @@ final class TestUtilsFlags: XCTestCase {
             "Fee": "10",
             "Flags": [
                 OfferCreateFlags.tfPassive,
-//                OfferCreateFlags.tfImmediateOrCancel,
+                //                OfferCreateFlags.tfImmediateOrCancel,
                 OfferCreateFlags.tfFillOrKill
-//                OfferCreateFlags.tfSell,
+                //                OfferCreateFlags.tfSell,
             ],
             "LastLedgerSequence": 65453019,
             "Sequence": 40949322,
@@ -106,9 +106,9 @@ final class TestUtilsFlags: XCTestCase {
             "TransactionType": "TrustSet",
             "Account": "rUn84CUYbNjRoTQ6mSW7BVJPSVJNLb1QLo",
             "LimitAmount": [
-              "currency": "XRP",
-              "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
-              "value": "4329.23"
+                "currency": "XRP",
+                "issuer": "rcXY84C4g14iFp6taFXjjQGVeHqSCh9RX",
+                "value": "4329.23"
             ],
             "QualityIn": 1234,
             "QualityOut": 4321,
@@ -134,11 +134,11 @@ final class TestUtilsFlags: XCTestCase {
         XCTAssertEqual(tx["Flags"] as! Int, 0)
     }
 
-//    func testAccountFlagsAllEnabled() {
-//        let accountRootFlags: Int = AccountRootFlags.lsfDefaultRipple | AccountRootFlags.lsfDepositAuth | AccountRootFlags.lsfDisableMaster | AccountRootFlags.lsfDisallowXRP | AccountRootFlags.lsfGlobalFreeze | AccountRootFlags.lsfNoFreeze | AccountRootFlags.lsfPasswordSpent | AccountRootFlags.lsfRequireAuth | AccountRootFlags.lsfRequireDestTag
-////        let parsed = parseAccountRootFlags(accountRootFlags)
-////        XCTAssertTrue(parsed["lsfDefaultRipple"])
-//    }
+    //    func testAccountFlagsAllEnabled() {
+    //        let accountRootFlags: Int = AccountRootFlags.lsfDefaultRipple | AccountRootFlags.lsfDepositAuth | AccountRootFlags.lsfDisableMaster | AccountRootFlags.lsfDisallowXRP | AccountRootFlags.lsfGlobalFreeze | AccountRootFlags.lsfNoFreeze | AccountRootFlags.lsfPasswordSpent | AccountRootFlags.lsfRequireAuth | AccountRootFlags.lsfRequireDestTag
+    ////        let parsed = parseAccountRootFlags(accountRootFlags)
+    ////        XCTAssertTrue(parsed["lsfDefaultRipple"])
+    //    }
 
     func testAccountFlagsAllDisabled() {
         let parsed = parseAccountRootFlags(flags: 0)

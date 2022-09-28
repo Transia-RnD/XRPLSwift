@@ -33,13 +33,13 @@ public class AutoFillSugar {
         public let tag: Int? // JM: Int | Bool only false?
     }
 
-//    func autofill<T: BaseTransaction>(
-//        client: XrplClient,
-//        transaction: T,
-//        signersCount: Int?
-//    ) async throws -> EventLoopFuture<BaseTransaction> {
-//        
-//    }
+    //    func autofill<T: BaseTransaction>(
+    //        client: XrplClient,
+    //        transaction: T,
+    //        signersCount: Int?
+    //    ) async throws -> EventLoopFuture<BaseTransaction> {
+    //
+    //    }
     func autofill(
         client: XrplClient,
         transaction: [String: AnyObject],
@@ -164,7 +164,7 @@ public class AutoFillSugar {
 
         // EscrowFinish Transaction with Fulfillment
         if tx["TransactionType"] as! String == "EscrowFinish" && tx["Fulfillment"] != nil {
-            let fulfillmentBytesSize: Int = Int(ceil(Double((tx["Fulfillment"] as! String).count / 2)))
+            let fulfillmentBytesSize = Int(ceil(Double((tx["Fulfillment"] as! String).count / 2)))
             // 10 drops × (33 + (Fulfillment size in bytes / 16))
             let product = Double(scaleValue(value: netFeeDrops, multiplier: 33 + fulfillmentBytesSize / 16))
             baseFee = ceil(Double(product!))
@@ -185,7 +185,7 @@ public class AutoFillSugar {
 
         let maxFeeDrops = try xrpToDrops(client.maxFeeXRP)
         let totalFee = tx["TransactionType"] as! String == "AccountDelete" ? baseFee : min(baseFee!, Double(maxFeeDrops)!)
-//        Round up baseFee and return it as a string
+        //        Round up baseFee and return it as a string
         tx["Fee"] = String(Int(ceil(totalFee!))) as AnyObject
     }
 

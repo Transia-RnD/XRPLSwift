@@ -1,6 +1,6 @@
 //
 //  STObject.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/16/22.
 //
@@ -235,7 +235,6 @@ func enumToStr(field: String, value: Any) -> Any {
 }
 
 class STObject: SerializedType {
-
     init(_ bytes: [UInt8]? = nil) {
         super.init(bytes: bytes ?? [])
     }
@@ -271,23 +270,23 @@ class STObject: SerializedType {
                 let handled = try handleXAddress(field: k, xaddress: v as! String)
                 if (
                     handled.contains(where: { $0.key == SOURCE_TAG })
-                    && handled[SOURCE_TAG] != nil
-                    && value.contains(where: { $0.key == SOURCE_TAG })
-                    && value[SOURCE_TAG] != nil
-                    && handled[SOURCE_TAG] as? Int != value[SOURCE_TAG] as? Int
+                        && handled[SOURCE_TAG] != nil
+                        && value.contains(where: { $0.key == SOURCE_TAG })
+                        && value[SOURCE_TAG] != nil
+                        && handled[SOURCE_TAG] as? Int != value[SOURCE_TAG] as? Int
                 ) {
                     throw BinaryError.unknownError(error: "Cannot have mismatched Account X-Address and SourceTag")
                 }
                 if (
                     handled.contains(where: { $0.key == DEST_TAG })
-                    && handled[DEST_TAG] != nil
-                    && value.contains(where: { $0.key == DEST_TAG })
-                    && value[DEST_TAG] != nil
-                    && handled[DEST_TAG] as? Int != value[DEST_TAG] as? Int
+                        && handled[DEST_TAG] != nil
+                        && value.contains(where: { $0.key == DEST_TAG })
+                        && value[DEST_TAG] != nil
+                        && handled[DEST_TAG] as? Int != value[DEST_TAG] as? Int
                 ) {
                     throw BinaryError.unknownError(error: "Cannot have mismatched Destination X-Address and DestinationTag")
                 }
-                xaddressDecoded.merge(handled) { (_, new) in new }
+                xaddressDecoded.merge(handled) { _, new in new }
             } else {
                 xaddressDecoded[k] = strToEnum(field: k, value: v) as AnyObject
             }
@@ -298,7 +297,7 @@ class STObject: SerializedType {
             let fieldInstance = Definitions().getFieldInstance(fieldName: fieldName.key)
             if
                 xaddressDecoded[fieldInstance.name] != nil
-                && fieldInstance.isSerialized {
+                    && fieldInstance.isSerialized {
                 sortedKeys.append(fieldInstance)
             }
         }
@@ -308,7 +307,7 @@ class STObject: SerializedType {
             sortedKeys = sortedKeys.filter({ $0.isSigning })
         }
 
-        var isUnlModify: Bool = false
+        var isUnlModify = false
 
         for field in sortedKeys {
             var associatedValue: SerializedType?
@@ -323,7 +322,7 @@ class STObject: SerializedType {
             }
             if
                 field.name == "TransactionType"
-                && associatedValue?.str() == UNL_MODIFY_TX {
+                    && associatedValue?.str() == UNL_MODIFY_TX {
                 // triggered when the TransactionType field has a value of 'UNLModify'
                 isUnlModify = true
             }

@@ -1,6 +1,6 @@
 //
 //  BinarySerializer.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/2/22.
 //
@@ -144,7 +144,7 @@ public class BinarySerializer {
             return Data(fromArray: [byte1, byte2, byte3])
         }
         fatalError("VariableLength field must be <= \(_MAX_LENGTH_VALUE) bytes long")
-//        throw BinaryError.unknownError(error: "VariableLength field must be <= \(_MAX_LENGTH_VALUE) bytes long")
+        //        throw BinaryError.unknownError(error: "VariableLength field must be <= \(_MAX_LENGTH_VALUE) bytes long")
     }
     /**
      Write a variable length encoded value to the BinarySerializer.

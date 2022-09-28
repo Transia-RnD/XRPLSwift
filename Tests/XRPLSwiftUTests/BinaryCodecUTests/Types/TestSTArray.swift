@@ -1,6 +1,6 @@
 //
 //  TestSTArray.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/16/22.
 //
@@ -41,31 +41,31 @@ final class TestSTArray: XCTestCase {
     func testFromValueToJson() {
         let serializedList: STArray = try! STArray.from(value: EXPECTED_JSON)
         let actualJson: [[String: AnyObject]] = serializedList.toJson()
-//        XCTAssertEqual(actualJson[0], actualJson[1])
-//        XCTAssertEqual(actualJson, EXPECTED_JSON)
+        //        XCTAssertEqual(actualJson[0], actualJson[1])
+        //        XCTAssertEqual(actualJson, EXPECTED_JSON)
     }
 
     func testFromParserToJson() {
         let parser: BinaryParser = BinaryParser(hex: BUFFER)
         let serializedList: STArray = STArray().fromParser(parser: parser)
-//        XCTAssertEqual(serializedList.toJson() as? [[String: AnyObject]], EXPECTED_JSON)
+        //        XCTAssertEqual(serializedList.toJson() as? [[String: AnyObject]], EXPECTED_JSON)
     }
 
-//    func testFromValueNonList():
-//        obj = 123
-//        with self.assertRaises(XRPLBinaryCodecException):
-//            STArray.from_value(obj)
+    //    func testFromValueNonList():
+    //        obj = 123
+    //        with self.assertRaises(XRPLBinaryCodecException):
+    //            STArray.from_value(obj)
 
-//    func testFromValueBadList():
-//        obj = [123]
-//        with self.assertRaises(XRPLBinaryCodecException):
-//            STArray.from_value(obj)
-//
-//    func testRaisesInvalidValueType():
-//        invalid_value = 1
-//        self.assertRaises(
-//            XRPLBinaryCodecException,
-//            STArray.from_value,
-//            invalid_value,
-//        )
+    //    func testFromValueBadList():
+    //        obj = [123]
+    //        with self.assertRaises(XRPLBinaryCodecException):
+    //            STArray.from_value(obj)
+    //
+    //    func testRaisesInvalidValueType():
+    //        invalid_value = 1
+    //        self.assertRaises(
+    //            XRPLBinaryCodecException,
+    //            STArray.from_value,
+    //            invalid_value,
+    //        )
 }

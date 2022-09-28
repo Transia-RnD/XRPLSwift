@@ -11,7 +11,6 @@ import Foundation
 
 // swiftlint:disable:next type_name
 class xUInt: SerializedType {
-
     init(_ bytes: [UInt8]) {
         super.init(bytes: bytes)
     }
@@ -23,11 +22,11 @@ class xUInt: SerializedType {
     }
 
     /**
-    Convert a UInt object to JSON.
+     Convert a UInt object to JSON.
 
-    Returns:
-        The JSON representation of the UInt object.
-    */
+     Returns:
+     The JSON representation of the UInt object.
+     */
     override func toJson() -> Any {
         if self.value is Int {
             return Int(self.value)

@@ -148,7 +148,7 @@ public class TrustSet: BaseTransaction {
 /**
  Verify the form and type of an TrustSet at runtime.
  - parameters:
-    - tx: An TrustSet Transaction.
+ - tx: An TrustSet Transaction.
  - throws:
  When the TrustSet is Malformed.
  */

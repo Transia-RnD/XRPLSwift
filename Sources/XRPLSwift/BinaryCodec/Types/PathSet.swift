@@ -36,7 +36,6 @@ internal func isPathSet(value: [[[String: AnyObject]]]) -> Bool {
 
 // swiftlint:disable:next type_name
 class xPathStep: SerializedType {
-
     static func from(value: [String: AnyObject]) throws -> xPathStep {
         var dataType: Int = 0x00
         var buffer: [UInt8] = []
@@ -154,7 +153,6 @@ class xPath: SerializedType {
 
 // swiftlint:disable:next type_name
 class xPathSet: SerializedType {
-
     static func from(value: [[[String: AnyObject]]]) throws -> xPathSet {
         if isPathSet(value: value) {
             var buffer: [UInt8] = []
@@ -183,7 +181,6 @@ class xPathSet: SerializedType {
         }
         // TODO: Review this function
         return xPathSet(bytes: buffer)
-
     }
 
     override func toJson() -> [[[String: AnyObject]]] {

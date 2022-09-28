@@ -1,6 +1,6 @@
 //
 //  TestCheckCash.swift
-//  
+//
 //
 //  Created by Denis Angell on 8/7/22.
 //
@@ -37,8 +37,8 @@ final class TestCheckCash: XCTestCase {
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try CheckCash(json: baseTx))
         // MARK: This is because the fields are validated on init
-//        let tx = try! CheckCancel(json: baseTx)
-//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+        //        let tx = try! CheckCancel(json: baseTx)
+        //        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidAmount() {
@@ -50,8 +50,8 @@ final class TestCheckCash: XCTestCase {
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try CheckCash(json: baseTx))
         // MARK: This is because the fields are validated on init
-//        let tx = try! CheckCancel(json: baseTx)
-//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+        //        let tx = try! CheckCancel(json: baseTx)
+        //        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidAmountAndDeliverMin() {
@@ -64,8 +64,8 @@ final class TestCheckCash: XCTestCase {
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try CheckCash(json: baseTx))
         // MARK: This is because the fields are validated on init
-//        let tx = try! CheckCancel(json: baseTx)
-//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+        //        let tx = try! CheckCancel(json: baseTx)
+        //        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 
     func testInvalidDeliverMin() {
@@ -77,7 +77,7 @@ final class TestCheckCash: XCTestCase {
         ] as! [String: AnyObject]
         XCTAssertThrowsError(try CheckCash(json: baseTx))
         // MARK: This is because the fields are validated on init
-//        let tx = try! CheckCancel(json: baseTx)
-//        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
+        //        let tx = try! CheckCancel(json: baseTx)
+        //        XCTAssertThrowsError(try validateCheckCancel(tx: tx.toJson()))
     }
 }

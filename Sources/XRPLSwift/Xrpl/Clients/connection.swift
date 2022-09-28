@@ -1,6 +1,6 @@
 //
 //  connection.swift
-//  
+//
 //
 //  Created by Denis Angell on 7/27/22.
 //
@@ -129,8 +129,8 @@ public let INTENTIONAL_DISCONNECT_CODE = 4000 // swiftlint:disable:this identifi
 /**
  Create a new websocket given your URL and optional proxy/certificate configuration.
  - parameters:
-    - url: The URL to connect to.
-    - config: The configuration options for the WebSocket.
+ - url: The URL to connect to.
+ - config: The configuration options for the WebSocket.
  - returns:
  A Websocket that fits the given configuration parameters.
  */
@@ -171,8 +171,8 @@ public func createWebSocket(
 /**
  Ws.send(), but promisified.
  - parameters:
-    - ws: Websocket to send with.
-    - message: Message to send.
+ - ws: Websocket to send with.
+ - message: Message to send.
  - returns:
  When the message has been sent.
  */
@@ -222,14 +222,14 @@ public class Connection {
     /**
      Creates a new Connection object.
      - parameters:
-        - ws: URL to connect to.
-        - options: Options for the Connection object.
+     - ws: URL to connect to.
+     - options: Options for the Connection object.
      */
     public init(url: String?, options: ConnectionUserOptions? = nil) {
         //    super()
         //        ws.setMaxListeners(1000000)
         self.url = url
-        self.config = ConnectionOptions.init()
+        self.config = ConnectionOptions()
         //        self.config = {
         //            self.timeout: TIMEOUT * 1000,
         //        connectionTimeout: CONNECTION_TIMEOUT * 1000,
@@ -260,22 +260,22 @@ public class Connection {
      ConnectionError if there is a connection error, RippleError if there is already a WebSocket in existence.
      */
     public func connect() async throws -> EventLoopFuture<Any> {
-//        let promise = connEventGroup.next().makePromise(of: Any.self)
-//        if self.isConnected() {
-//            return promise.futureResult
-//        }
-//        if self.state == .closed {
-//            return await self.connectionManager.awaitConnection()
-//        }
-//        if self.url!.isEmpty {
-//            promise.fail(XrplError("Cannot connect because no server was specified"))
-//        }
-//        if self.ws != nil {
-//            // missing state
-//            promise.fail(XrplError("Websocket connection never cleaned up."))
-//        }
+        //        let promise = connEventGroup.next().makePromise(of: Any.self)
+        //        if self.isConnected() {
+        //            return promise.futureResult
+        //        }
+        //        if self.state == .closed {
+        //            return await self.connectionManager.awaitConnection()
+        //        }
+        //        if self.url!.isEmpty {
+        //            promise.fail(XrplError("Cannot connect because no server was specified"))
+        //        }
+        //        if self.ws != nil {
+        //            // missing state
+        //            promise.fail(XrplError("Websocket connection never cleaned up."))
+        //        }
 
-        let connectionTimeoutID: Timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.config.connectionTimeout), repeats: false) { (_) in
+        let connectionTimeoutID = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.config.connectionTimeout), repeats: false) { _ in
             Task {
                 // swiftlint:disable:next line_length
                 self.onConnectionFailed(errorOrCode: ConnectionError("Error: connect() timed out after \(self.config.connectionTimeout)ms. If your internet connection is working, the rippled server may be blocked or inaccessible. You can also try setting the `connectionTimeout` option in the Client constructor.")
@@ -288,7 +288,7 @@ public class Connection {
             throw ConnectionError("Connection: unvalid url")
         }
         let client: WebSocketClient = createWebSocket(url: url, config: self.config)!
-        try client.connect(scheme: isscheme, host: ishost, port: isport, onUpgrade: { (ws) -> Void in
+        try client.connect(scheme: isscheme, host: ishost, port: isport, onUpgrade: { ws -> Void in
             print("CONNECTED")
             self.ws = ws
             Task {
@@ -373,8 +373,8 @@ public class Connection {
     /**
      Sends a request to the rippled server.
      - parameters:
-        - request: The request to send to the server.
-        - timeout: How long the Connection instance should wait before assuming that there will not be a response.
+     - request: The request to send to the server.
+     - timeout: How long the Connection instance should wait before assuming that there will not be a response.
      - returns:
      The response from the rippled server.
      - throws:
@@ -410,7 +410,7 @@ public class Connection {
     /**
      Handler for when messages are received from the server.
      - parameters:
-        - message: The message received from the server.
+     - message: The message received from the server.
      */
     private func onMessage(data: Data) {
         //        self.trace("receive", message)
@@ -455,7 +455,7 @@ public class Connection {
     /**
      Handler for when messages are received from the server.
      - parameters:
-        - message: The message received from the server.
+     - message: The message received from the server.
      */
     private func onMessage(message: String) {
         let data: Data = message.data(using: .utf8)!
@@ -483,12 +483,12 @@ public class Connection {
     /**
      Handler for what to do once the connection to the server is open.
      - parameters:
-        - connectionTimeoutID: Timeout in case the connection hangs longer than expected.
+     - connectionTimeoutID: Timeout in case the connection hangs longer than expected.
      - returns:
      A promise that resolves to void when the connection is fully established.
      - throws:
      Error if the websocket initialized is somehow null.
-    */
+     */
     private func onceOpen(connectionTimeoutID: Timer) async throws {
         if self.ws == nil {
             throw ConnectionError("onceOpen: ws is nil")
@@ -571,12 +571,12 @@ public class Connection {
     /**
      Handler for what to do once the connection to the server is open.
      - parameters:
-        - connectionTimeoutID: Timeout in case the connection hangs longer than expected.
+     - connectionTimeoutID: Timeout in case the connection hangs longer than expected.
      - returns:
      A promise that resolves to void when the connection is fully established.
      - throws:
      Error if the websocket initialized is somehow null.
-    */
+     */
     private func intentionalDisconnect() {
         let retryTimeout: Int = self.retryConnectionBackoff.duration()
         //            self.trace("reconnect", "Retrying connection in \(retryTimeout)ms.")
@@ -586,7 +586,7 @@ public class Connection {
          * Start the reconnect timeout, but set it to `this.reconnectTimeoutID`
          * so that we can cancel one in-progress on disconnect.
          */
-        self.reconnectTimeoutID = Timer.scheduledTimer(withTimeInterval: TimeInterval(retryTimeout), repeats: false) { (_) in
+        self.reconnectTimeoutID = Timer.scheduledTimer(withTimeInterval: TimeInterval(retryTimeout), repeats: false) { _ in
             Task {
                 try await self.reconnect()
             }
@@ -595,7 +595,7 @@ public class Connection {
 
     /**
      Clears the heartbeat connection interval.
-    */
+     */
     private func clearHeartbeatInterval() {
         if self.heartbeatIntervalID != nil {
             self.heartbeatIntervalID?.invalidate()
@@ -603,11 +603,11 @@ public class Connection {
     }
 
     /**
-    Starts a heartbeat to check the connection with the server.
-    */
+     Starts a heartbeat to check the connection with the server.
+     */
     private func startHeartbeatInterval() {
         self.clearHeartbeatInterval()
-        self.heartbeatIntervalID = Timer.scheduledTimer(withTimeInterval: self.config.timeout.timeInterval, repeats: false) { (_) in
+        self.heartbeatIntervalID = Timer.scheduledTimer(withTimeInterval: self.config.timeout.timeInterval, repeats: false) { _ in
             Task {
                 await self.heartbeat()
             }
@@ -619,9 +619,8 @@ public class Connection {
      If this succeeds, we"re good. If it fails, disconnect so that the consumer can reconnect, if desired.
      - returns:
      A Promise that resolves to void when the heartbeat returns successfully.
-    */
+     */
     private func heartbeat() async -> EventLoopPromise<Void> {
-
         let promise = connEventGroup.next().makePromise(of: Void.self)
         let response = try! await self.request(request: BaseRequest(command: "ping"))
         response.whenFailure { error in
@@ -640,8 +639,8 @@ public class Connection {
     /**
      Process a failed connection.
      - parameters:
-        - errorOrCode: (Optional) Error or code for connection failure.
-    */
+     - errorOrCode: (Optional) Error or code for connection failure.
+     */
     private func onConnectionFailed(errorOrCode: Error) {
         if self.ws != nil {
             //            self.ws.removeAllListeners()
@@ -659,8 +658,8 @@ public class Connection {
     /**
      Process a failed connection.
      - parameters:
-        - errorOrCode: (Optional) Error or code for connection failure.
-    */
+     - errorOrCode: (Optional) Error or code for connection failure.
+     */
     private func onConnectionFailed(errorOrCode: Int) {
         if self.ws != nil {
             //            self.ws.removeAllListeners()

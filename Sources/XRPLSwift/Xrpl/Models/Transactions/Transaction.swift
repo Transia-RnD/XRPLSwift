@@ -10,7 +10,7 @@
 import Foundation
 
 /**
- 
+
  */
 public enum Transaction: Codable {
     case accountDelete(AccountDelete)
@@ -392,23 +392,23 @@ public class TransactionAndMetadata: Codable {
     public let transaction: Transaction
     public let metadata: TransactionMetadata
 
-//    enum CodingKeys: String, CodingKey {
-//        case transaction = "transaction"
-//        case metadata = "metadata"
-//    }
-//    
-//    required public init(from decoder: Decoder) throws {
-//        let values = try decoder.container(keyedBy: CodingKeys.self)
-//        transaction = try values.decode(Transaction.self, forKey: .transaction)
-//        metadata = try values.decode(TransactionMetadata.self, forKey: .metadata)
-//    }
+    //    enum CodingKeys: String, CodingKey {
+    //        case transaction = "transaction"
+    //        case metadata = "metadata"
+    //    }
+    //
+    //    required public init(from decoder: Decoder) throws {
+    //        let values = try decoder.container(keyedBy: CodingKeys.self)
+    //        transaction = try values.decode(Transaction.self, forKey: .transaction)
+    //        metadata = try values.decode(TransactionMetadata.self, forKey: .metadata)
+    //    }
 }
 
 /**
  Verifies various Transaction Types.
  Encode/decode and individual type validation.
  - parameters:
-    - transaction: A Transaction.
+ - transaction: A Transaction.
  - throws:
  ValidationError When the Transaction is malformed.
  */
@@ -470,12 +470,12 @@ public func validate(transaction: [String: AnyObject]) throws {
     default:
         throw ValidationError("Invalid field TransactionType: \(tt)")
     }
-//    if (
-//        !_.isEqual(
-//            decode(encode(tx)),
-//            _.omitBy(tx, (value) => value == null),
-//        )
-//    ) {
-//        throw new ValidationError(`Invalid Transaction: ${tx.TransactionType}`)
-//    }
+    //    if (
+    //        !_.isEqual(
+    //            decode(encode(tx)),
+    //            _.omitBy(tx, (value) => value == null),
+    //        )
+    //    ) {
+    //        throw new ValidationError(`Invalid Transaction: ${tx.TransactionType}`)
+    //    }
 }

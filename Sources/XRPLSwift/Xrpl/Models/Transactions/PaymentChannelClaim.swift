@@ -155,7 +155,7 @@ public class PaymentChannelClaim: BaseTransaction {
 /**
  Verify the form and type of an PaymentChannelClaim at runtime.
  - parameters:
-    - tx: An PaymentChannelClaim Transaction.
+ - tx: An PaymentChannelClaim Transaction.
  - throws:
  When the PaymentChannelClaim is Malformed.
  */

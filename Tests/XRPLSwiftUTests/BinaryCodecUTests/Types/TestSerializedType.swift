@@ -1,6 +1,6 @@
 //
 //  TestSerializedType.swift
-//  
+//
 //
 //  Created by Denis Angell on 9/14/22.
 //

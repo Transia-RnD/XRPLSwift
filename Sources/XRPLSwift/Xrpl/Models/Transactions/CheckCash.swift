@@ -16,7 +16,6 @@ import Foundation
  Check can cash it.
  */
 public class CheckCash: BaseTransaction {
-
     /**
      The ID of the [Check ledger object](https://xrpl.org/check.html)  to cash, as a 64-character
      hexadecimal string. This field is required.
@@ -81,7 +80,7 @@ public class CheckCash: BaseTransaction {
 /**
  Verify the form and type of an CheckCash at runtime.
  - parameters:
-    - tx: An CheckCash Transaction.
+ - tx: An CheckCash Transaction.
  - throws:
  When the CheckCash is Malformed.
  */

@@ -157,7 +157,7 @@ class ModifiedMetadata: TransactionMetadata {
         )
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
 }
@@ -175,8 +175,8 @@ public enum LedgerQueueTx: Codable {
         switch self {
         case .metadata(let metadata):
             return metadata
-            //        case .modified(let modified):
-            //            return modified
+        //        case .modified(let modified):
+        //            return modified
         case .json(let json):
             return json
         }
@@ -186,8 +186,8 @@ public enum LedgerQueueTx: Codable {
         switch self {
         case .metadata:
             return "metadata"
-            //        case .modified:
-            //            return "modified"
+        //        case .modified:
+        //            return "modified"
         case .json:
             return "json"
         }

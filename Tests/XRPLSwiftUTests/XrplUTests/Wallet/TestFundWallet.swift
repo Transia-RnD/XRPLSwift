@@ -11,10 +11,10 @@
 // let MAX_ATTEMPTS: Int = 20
 //
 // public class PromiseTestCase: XCTestCase {
-//    
+//
 //    var timer: Timer? = nil
 //    var attempts = MAX_ATTEMPTS
-//    
+//
 //    public func fundTest(
 //        client: XrplClient,
 //        address: String,
@@ -28,7 +28,7 @@
 //            } catch {
 //                /* newBalance remains undefined */
 //            }
-//            
+//
 //            if (newBalance > originalBalance) {
 //                print("CLEAR INTERVAL")
 //                print("RESOLVE")
@@ -49,7 +49,7 @@
 //            //                reject(err)
 //        }
 //    }
-//    
+//
 //    public func test() async throws {
 //        let client = try XrplClient(server: "wss://s.altnet.rippletest.net/")
 //        try await client.connect()
@@ -58,7 +58,7 @@
 ////            print("HERE")
 ////        })
 //    }
-//    
+//
 ////    @objc func eventWith(timer: Timer!) {
 ////        if (attempts < 0) {
 ////            print("CLEAR INTERVAL")

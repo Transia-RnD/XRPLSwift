@@ -112,7 +112,6 @@ public class GatewayBalancesRequest: BaseRequest {
         if let ledgerHash = ledgerHash { try values.encode(ledgerHash, forKey: .ledgerHash) }
         if let ledgerIndex = ledgerIndex { try values.encode(ledgerIndex, forKey: .ledgerIndex) }
     }
-
 }
 
 public struct Balance: Codable {

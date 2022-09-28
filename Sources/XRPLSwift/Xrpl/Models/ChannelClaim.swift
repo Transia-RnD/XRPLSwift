@@ -1,6 +1,6 @@
 //
 //  ChannelClaim.swift
-//  
+//
 //
 //  Created by Denis Angell on 5/25/22.
 //

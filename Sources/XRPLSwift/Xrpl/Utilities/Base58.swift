@@ -87,9 +87,9 @@ public enum Base58 {
 
         let bytes = answer.serialize()
         // swiftlint:disable:next identifier_name
-        let preFix: [UInt8] = Array(byteString.prefix { $0 == alphabet[0] }).map({ $0 == 114 ? 0 : $0})
+        let preFix: [UInt8] = Array(byteString.prefix { $0 == alphabet[0] }).map({ $0 == 114 ? 0 : $0 })
         return preFix + bytes
-//        return Array(byteString.prefix { i in i == alphabet[0] }) + bytes
+        //        return Array(byteString.prefix { i in i == alphabet[0] }) + bytes
     }
 
     /// Calculate a checksum for a given input by hashing twice and then taking the first four bytes.
@@ -117,7 +117,6 @@ public enum Base58 {
 }
 
 extension String {
-
     public init(base58Encoding bytes: Data, alphabet: [UInt8] = AddressCodecUtils.xrplAlphabet) {
         var answer: [UInt8] = []
         let radix = BigUInt(alphabet.count)
@@ -137,11 +136,9 @@ extension String {
         self = String(bytes: answer, encoding: String.Encoding.utf8)!
         // swiftlint:enable force_unwrapping
     }
-
 }
 
 extension Data {
-
     init?(base58Decoding string: String, alphabet: [UInt8] = AddressCodecUtils.xrplAlphabet) {
         var answer = BigUInt(0)
         // swiftlint:disable:next identifier_name
@@ -158,7 +155,7 @@ extension Data {
         }
 
         let bytes = answer.serialize()
-        let preFix: [UInt8] = Array(byteString.prefix { $0 == alphabet[0] }).map({ $0 == 114 ? 0 : $0})
+        let preFix: [UInt8] = Array(byteString.prefix { $0 == alphabet[0] }).map({ $0 == 114 ? 0 : $0 })
         self = preFix + bytes
     }
 }

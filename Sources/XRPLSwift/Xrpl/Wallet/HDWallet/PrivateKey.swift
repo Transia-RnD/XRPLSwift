@@ -6,11 +6,11 @@
 //  Copyright © 2018 Essentia. All rights reserved.
 //
 
-import Foundation
 import CryptoSwift
+import Foundation
 import secp256k1
 #if os(Linux)
-    import Glibc
+import Glibc
 #endif
 
 // swiftlint:disable all
@@ -97,9 +97,9 @@ internal struct PrivateKey {
         }
 
         #if os(Linux)
-            let derivingIndex = Glibc.ntohl(node.hardens ? (edge | node.index) : node.index)
+        let derivingIndex = Glibc.ntohl(node.hardens ? (edge | node.index) : node.index)
         #else
-            let derivingIndex = CFSwapInt32BigToHost(node.hardens ? (edge | node.index) : node.index)
+        let derivingIndex = CFSwapInt32BigToHost(node.hardens ? (edge | node.index) : node.index)
         #endif
         data += derivingIndex.data
 

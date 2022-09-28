@@ -30,9 +30,9 @@ func currencyToHex(currency: String) -> String {
     }
 
     var bytes = [UInt8].init(repeating: 0, count: 20)
-//    bytes[12] = UInt8(Character(currency[0].asciiValue).unicodeScalarCodePoint & MASK)
-//    bytes[13] = UInt8(Character(currency[1].asciiValue).unicodeScalarCodePoint & MASK)
-//    bytes[14] = UInt8(Character(currency[2].asciiValue).unicodeScalarCodePoint & MASK)
+    //    bytes[12] = UInt8(Character(currency[0].asciiValue).unicodeScalarCodePoint & MASK)
+    //    bytes[13] = UInt8(Character(currency[1].asciiValue).unicodeScalarCodePoint & MASK)
+    //    bytes[14] = UInt8(Character(currency[2].asciiValue).unicodeScalarCodePoint & MASK)
     bytes[12] = 0
     bytes[13] = 0
     bytes[14] = 0
@@ -135,11 +135,11 @@ extension Character {
 // ) -> String {
 //    let address1Hex = addressToHex(address: address1)
 //    let address2Hex = addressToHex(address: address2)
-//    
+//
 //    let swap = new BigNumber(address1Hex, 16).isGreaterThan(BigNumber(address2Hex, 16))
 //    let lowAddressHex = swap ? address2Hex : address1Hex
 //    let highAddressHex = swap ? address1Hex : address2Hex
-//    
+//
 //    let prefix: String = ledgerSpaceHex("rippleState")
 //    return sha512Half(hex: prefix + lowAddressHex + highAddressHex + currencyToHex(currency: currency))
 // }
@@ -155,8 +155,8 @@ extension Character {
 public func hashEscrow(address: String, sequence: Int) -> String {
     return sha512Half(
         hex: ledgerSpaceHex("escrow") +
-        addressToHex(address: address) +
-        "00\(sequence.data.toHex)"
+            addressToHex(address: address) +
+            "00\(sequence.data.toHex)"
     )
 }
 
@@ -175,9 +175,9 @@ public func hashPaymentChannel(
     sequence: Int
 ) -> String {
     let hexString: String = ledgerSpaceHex("paychan") +
-    addressToHex(address: address) +
-    addressToHex(address: dstAddress) +
-    [UInt8].init(repeating: 0x0, count: BYTE_LENGTH * 2).toHex +
-    String(sequence, radix: HASH_HEX)
+        addressToHex(address: address) +
+        addressToHex(address: dstAddress) +
+        [UInt8].init(repeating: 0x0, count: BYTE_LENGTH * 2).toHex +
+        String(sequence, radix: HASH_HEX)
     return sha512Half(hex: hexString)
 }

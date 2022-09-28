@@ -1,6 +1,6 @@
 //
 //  QualityUtils.swift
-//  
+//
 //
 //  Created by Denis Angell on 8/28/22.
 //
@@ -39,7 +39,7 @@ func percentToDecimal(percent: String) throws -> String {
  * @category Utilities
  */
 public func decimalToTransferRate(decimal: String) throws -> Int {
-//    let rate = new BigNumber(decimal).times(ONE_BILLION).plus(ONE_BILLION)
+    //    let rate = new BigNumber(decimal).times(ONE_BILLION).plus(ONE_BILLION)
     let rate = BigInt(decimal)! * BigInt(ONE_BILLION)! + BigInt(ONE_BILLION)!
     if rate < BigInt(ONE_BILLION)! || rate > BigInt(TWO_BILLION)! {
         throw ValidationError("Decimal value must be between 0 and 1.00.")

@@ -11,7 +11,6 @@ import Foundation
 
 // Transaction Flags for an NFTokenCreateOffer Transaction.
 public enum NFTokenCreateOfferFlags: Int {
-
     /**
      If set, indicates that the offer is a sell offer.
      Otherwise, it is a buy offer.
@@ -98,7 +97,7 @@ public class NFTokenCreateOffer: BaseTransaction {
         super.init(account: "", transactionType: "NFTokenCreateOffer")
     }
 
-    public override init(json: [String: AnyObject]) throws {
+    override public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
         let decoded = try decoder.decode(NFTokenCreateOffer.self, from: data)
@@ -110,7 +109,7 @@ public class NFTokenCreateOffer: BaseTransaction {
         try super.init(json: json)
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         nftokenId = try values.decode(String.self, forKey: .nftokenId)
         amount = try values.decode(Amount.self, forKey: .amount)
@@ -150,7 +149,7 @@ func validateNFTokenBuyOfferCases(tx: [String: AnyObject]) throws {
 /**
  Verify the form and type of an NFTokenCreateOffer at runtime.
  - parameters:
-    - tx: An NFTokenCreateOffer Transaction.
+ - tx: An NFTokenCreateOffer Transaction.
  - throws:
  When the NFTokenCreateOffer is Malformed.
  */

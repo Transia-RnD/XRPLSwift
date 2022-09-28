@@ -1,6 +1,6 @@
 //
 //  MockRippled.swift
-//  
+//
 //
 //  Created by Denis Angell on 8/18/22.
 //
@@ -79,16 +79,16 @@ class MockRippledSocket {
 
             newConnection.stateUpdateHandler = { state in
                 switch state {
-                    case .ready:
-                        self.logger.info("Client ready")
-                        self.receive(conn: newConnection)
-                    case .failed(let error):
-                        self.logger.info("Client connection failed \(error.localizedDescription)")
-                    case .waiting(let error):
-                        self.logger.info("Waiting for long time \(error.localizedDescription)")
-                    default:
-                        self.logger.info("LISTENER UNKNOWN STATE")
-                        break
+                case .ready:
+                    self.logger.info("Client ready")
+                    self.receive(conn: newConnection)
+                case .failed(let error):
+                    self.logger.info("Client connection failed \(error.localizedDescription)")
+                case .waiting(let error):
+                    self.logger.info("Waiting for long time \(error.localizedDescription)")
+                default:
+                    self.logger.info("LISTENER UNKNOWN STATE")
+                    break
                 }
             }
             newConnection.start(queue: serverQueue)
@@ -96,13 +96,13 @@ class MockRippledSocket {
 
         listener.stateUpdateHandler = { state in
             switch state {
-                case .ready:
-                    self.logger.info("Server Ready")
-                case .failed(let error):
-                    self.logger.info("Server failed with \(error.localizedDescription)")
-                default:
-                    self.logger.info("LISTENER UNKNOWN STATE")
-                    break
+            case .ready:
+                self.logger.info("Server Ready")
+            case .failed(let error):
+                self.logger.info("Server failed with \(error.localizedDescription)")
+            default:
+                self.logger.info("LISTENER UNKNOWN STATE")
+                break
             }
         }
 
@@ -147,14 +147,14 @@ class MockRippledSocket {
             } catch let error as XrplError {
                 if !self.suppressOutput {
                     // eslint-disable-next-line no-console -- only logger.infoed out on error
-//                    console.error(error.message)
+                    //                    console.error(error.message)
                     self.logger.error("\(error.localizedDescription)")
                 }
                 if !request.isEmpty {
                     let errorResponse = [
                         "type": "response",
                         "status": "error",
-                        "error": error.message,
+                        "error": error.message
                     ] as [String: AnyObject]
                     try! self.send(conn: conn, string: try createResponse(request: request, response: errorResponse))
                 }
@@ -293,7 +293,7 @@ class MockRippledSocket {
             logger.info("\(closeServer)")
             conn.forceCancel()
             listener.cancel()
-//            logger.info("\(conn.state)")
+            //            logger.info("\(conn.state)")
         } else if let delayedResponseIn = data["delayedResponseIn"] as? Int {
             logger.info("delayedResponseIn")
             logger.info("\(delayedResponseIn)")

@@ -1,6 +1,6 @@
 //
 //  Keypairs.swift
-//  
+//
 //
 //  Created by Denis Angell on 8/6/22.
 //
@@ -39,7 +39,6 @@ public enum AlgorithmType {
             return "secp256k1"
         }
     }
-
 }
 
 public struct KeypairsOptions {
@@ -55,10 +54,10 @@ public struct KeypairsOptions {
 }
 
 public protocol rKeypairs {
-    var privateKey: String {get}
-    var publicKey: String {get}
-    var address: String {get}
-    var accountID: [UInt8] {get}
+    var privateKey: String { get }
+    var publicKey: String { get }
+    var address: String { get }
+    var accountID: [UInt8] { get }
     init()
     static func generateSeed(options: KeypairsOptions?) -> String
     static func deriveKeypair() -> KeyPair
@@ -70,7 +69,6 @@ public protocol rKeypairs {
 }
 
 public class Keypairs {
-
     public static func generateSeed(options: KeypairsOptions) throws -> String {
         //        assert.ok(
         //          !options.entropy || options.entropy.length >= 16,
@@ -99,29 +97,29 @@ public class Keypairs {
         switch seedType {
         case .ed25519:
             let keyPair = try! ED25519.deriveKeyPair(seed: entropy.bytes, isValidator: isValidator)
-//            let messageToVerify = hash("This test message should verify.")
-//            let signature = method.sign(messageToVerify, keypair.privateKey)
-//            /* istanbul ignore if */
-//            if algorithm.verify(
-//                signature: signature,
-//                message: messageToVerify,
-//                publicKey: keypair.publicKey
-//            ) != true {
-//                throw KeyPairError.invalidPrivateKey("derived keypair did not generate verifiable signature")
-//            }
+            //            let messageToVerify = hash("This test message should verify.")
+            //            let signature = method.sign(messageToVerify, keypair.privateKey)
+            //            /* istanbul ignore if */
+            //            if algorithm.verify(
+            //                signature: signature,
+            //                message: messageToVerify,
+            //                publicKey: keypair.publicKey
+            //            ) != true {
+            //                throw KeyPairError.invalidPrivateKey("derived keypair did not generate verifiable signature")
+            //            }
             return keyPair
         case .secp256k1:
             let keyPair = try! SECP256K1.deriveKeyPair(seed: entropy.bytes, isValidator: isValidator)
-//            let messageToVerify = hash("This test message should verify.")
-//            let signature = method.sign(messageToVerify, keypair.privateKey)
-// istanbul ignore if
-//            if algorithm.verify(
-//                signature: signature,
-//                message: messageToVerify,
-//                publicKey: keypair.publicKey
-//            ) != true {
-//                throw KeyPairError.invalidPrivateKey("derived keypair did not generate verifiable signature")
-//            }
+            //            let messageToVerify = hash("This test message should verify.")
+            //            let signature = method.sign(messageToVerify, keypair.privateKey)
+            // istanbul ignore if
+            //            if algorithm.verify(
+            //                signature: signature,
+            //                message: messageToVerify,
+            //                publicKey: keypair.publicKey
+            //            ) != true {
+            //                throw KeyPairError.invalidPrivateKey("derived keypair did not generate verifiable signature")
+            //            }
             return keyPair
         }
     }
@@ -133,7 +131,6 @@ public class Keypairs {
 
     public static func sign(message: [UInt8], privateKey: String) -> [UInt8] {
         do {
-
             let algorithm = Keypairs.getAlgorithmFromKey(key: privateKey).algorithm
             return try algorithm.sign(message: message, privateKey: Data(hex: privateKey).bytes)
         } catch {

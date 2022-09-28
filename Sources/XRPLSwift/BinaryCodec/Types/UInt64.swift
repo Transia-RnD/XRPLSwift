@@ -15,11 +15,11 @@ internal let HEXREGEX64: String = "^[a-fA-F0-9]{1,16}$"
 // swiftlint:disable:next type_name
 class xUInt64: xUInt {
     /*
-    Class for serializing and deserializing an 8-bit UInt.
-    See `UInt Fields <https://xrpl.org/serialization.html#uint-fields>`_
+     Class for serializing and deserializing an 8-bit UInt.
+     See `UInt Fields <https://xrpl.org/serialization.html#uint-fields>`_
      */
 
-    static public var ZERO64: xUInt64 = xUInt64([UInt8].init(repeating: 0x0, count: WIDTH64))
+    public static var ZERO64 = xUInt64([UInt8].init(repeating: 0x0, count: WIDTH64))
 
     override init(_ bytes: [UInt8]? = nil) {
         // Construct a new xUInt64 type from a ``bytes`` value.
@@ -27,12 +27,12 @@ class xUInt64: xUInt {
     }
 
     /*
-    Construct a new xUInt64 type from a BinaryParser.
-    Args:
-        parser: The parser to construct a xUInt32 from.
-    Returns:
-        A new xUInt64.
-    */
+     Construct a new xUInt64 type from a BinaryParser.
+     Args:
+     parser: The parser to construct a xUInt32 from.
+     Returns:
+     A new xUInt64.
+     */
     override func fromParser(
         parser: BinaryParser,
         hint: Int? = nil
@@ -41,14 +41,14 @@ class xUInt64: xUInt {
     }
 
     /*
-    Construct a new xUInt64 type from a number.
-    Args:
-        value: The value to construct a xUInt64 from.
-    Returns:
-        A new xUInt64.
-    Raises:
-        XRPLBinaryCodecException: If a UInt8 cannot be constructed.
-    */
+     Construct a new xUInt64 type from a number.
+     Args:
+     value: The value to construct a xUInt64 from.
+     Returns:
+     A new xUInt64.
+     Raises:
+     XRPLBinaryCodecException: If a UInt8 cannot be constructed.
+     */
     class func from(value: Int) throws -> xUInt64 {
         if value < 0 {
             throw BinaryError.unknownError(error: "\(value) must be an unsigned integer")
