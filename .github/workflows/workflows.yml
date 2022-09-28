@@ -27,6 +27,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Swift Cache
+      id: swift-cache
+      uses: actions/cache@v2
+      with:
+          path: ${{ github.workspace }}/XRPLSwift
+          key: ${{ runner.os }}-XRPLSwift-${{ hashFiles('**/XRPLSwift.podspec') }}
+          restore-keys: ${{ runner.os }}-XRPLSwift-
     - name: Use Swift "5.6.0"
       uses: swift-actions/setup-swift@v1
       with:

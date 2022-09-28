@@ -40,7 +40,7 @@ public enum TrustSetFlag: Int {
     // Unfreeze the trust line.
 }
 
-extension [TrustSetFlag] {
+extension Array where Element == TrustSetFlag {
     var interface: [TrustSetFlag: Bool] {
         var flags: [TrustSetFlag: Bool] = [:]
         for flag in self {

@@ -38,7 +38,7 @@ public enum PaymentChannelClaimFlag: Int {
      */
 }
 
-extension [PaymentChannelClaimFlag] {
+extension Array where Element == PaymentChannelClaimFlag {
     var interface: [PaymentChannelClaimFlag: Bool] {
         var flags: [PaymentChannelClaimFlag: Bool] = [:]
         for flag in self {

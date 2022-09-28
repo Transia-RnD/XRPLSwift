@@ -96,7 +96,7 @@ enum AccountSetTfFlags: Int, Codable, CaseIterable {
     case tfAllowXRP = 0x00200000
 }
 
-extension [AccountSetTfFlags] {
+extension Array where Element == AccountSetTfFlags {
     var interface: [AccountSetTfFlags: Bool] {
         var flags: [AccountSetTfFlags: Bool] = [:]
         for flag in self {

@@ -50,7 +50,7 @@ public enum OfferCreateFlags: Int, Codable {
      */
 }
 
-extension [OfferCreateFlags] {
+extension Array where Element == OfferCreateFlags {
     var interface: [OfferCreateFlags: Bool] {
         var flags: [OfferCreateFlags: Bool] = [:]
         for flag in self {

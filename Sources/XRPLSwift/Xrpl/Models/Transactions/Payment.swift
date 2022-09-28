@@ -38,7 +38,7 @@ public enum PaymentFlags: Int {
      */
 }
 
-extension [PaymentFlags] {
+extension Array where Element == PaymentFlags {
     var interface: [PaymentFlags: Bool] {
         var flags: [PaymentFlags: Bool] = [:]
         for flag in self {
