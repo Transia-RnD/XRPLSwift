@@ -11,51 +11,105 @@ on:
 
 jobs:
   build-and-lint:
-    runs-on: macos-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        swift: ["swift:5.6"]
+    runs-on: ubuntu-latest
+    container: ${{ matrix.swift }}
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Swift "5.6.0"
-      uses: swift-actions/setup-swift@v1
-      with:
-        swift-version: "5.6.0"
-    - run: swift build
-    - run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml 
-
-  unit:
-    runs-on: macos-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Swift Cache
-      id: swift-cache
+    - name: Get Swift Version
+      id: get-swift-version
+      run: |
+        echo "::set-output name=version::$(swift -version | head -n 1 | sed s/,// )"
+      shell: bash
+    - uses: actions/checkout@master
+    - name: Cache resolved dependencies
+      id: cache-resolved-dependencies
       uses: actions/cache@v2
       with:
-          path: ${{ github.workspace }}/XRPLSwift
-          key: ${{ runner.os }}-XRPLSwift-${{ hashFiles('**/XRPLSwift.podspec') }}
-          restore-keys: ${{ runner.os }}-XRPLSwift-
-    - name: Use Swift "5.6.0"
-      uses: swift-actions/setup-swift@v1
+        path: .build
+        key: ${{ env.cache_version }}-${{ runner.os }}-${{ steps.get-swift-version.outputs.version }}-spm-deps-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ env.cache_version }}-${{ runner.os }}-${{ steps.get-swift-version.outputs.version }}-spm-deps-
+    - name: Resolve dependencies
+      if: steps.cache-resolved-dependencies.outputs.cache-hit != 'true'
+      run: swift package resolve
+    - name: Build
+      run: swift build --build-tests
+    - name: Lint
+      run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml
+
+  unit:
+    strategy:
+      fail-fast: false
+      matrix:
+        swift: ["swift:5.6"]
+    runs-on: ubuntu-latest
+    container: ${{ matrix.swift }}
+    steps:
+    - name: Get Swift Version
+      id: get-swift-version
+      run: |
+        echo "::set-output name=version::$(swift -version | head -n 1 | sed s/,// )"
+      shell: bash
+    - uses: actions/checkout@master
+    - name: Cache resolved dependencies
+      id: cache-resolved-dependencies
+      uses: actions/cache@v2
       with:
-        swift-version: "5.6.0"
-    - run: swift build
-    - run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml 
-    - run: swift test --filter XRPLSwiftUTests
+        path: .build
+        key: ${{ env.cache_version }}-${{ runner.os }}-${{ steps.get-swift-version.outputs.version }}-spm-deps-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ env.cache_version }}-${{ runner.os }}-${{ steps.get-swift-version.outputs.version }}-spm-deps-
+    - name: Resolve dependencies
+      if: steps.cache-resolved-dependencies.outputs.cache-hit != 'true'
+      run: swift package resolve
+    - name: Build
+      run: swift build --build-tests
+    - name: Lint
+      run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml 
+    - name: Test
+      run: swift test --filter XRPLSwiftUTests
 
-  # integration:
-  #   runs-on: macos-latest
-
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - run: brew install --cask docker
-  #   - run: docker run -d -p 6006:6006 -it natenichols/rippled-standalone:latest
-  #   - name: Use Swift "5.6.0"
-  #     uses: swift-actions/setup-swift@v1
-  #     with:
-  #       swift-version: "5.6.0"
-  #   - run: swift build
-  #   - run: swiftlint lint
-  #   - run: swift test --filter XRPLSwiftITests
-  #     env:
-  #       HOST: localhost
-  #       PORT: ${{ job.services.rippled.ports['6006'] }}
+  integration:
+    strategy:
+      fail-fast: false
+      matrix:
+        swift: ["swift:5.6"]
+    runs-on: ubuntu-latest
+    container: ${{ matrix.swift }}
+    services:
+      rippled:
+        image: natenichols/rippled-standalone:latest
+        ports:
+        - 6006:6006
+        options:
+          --health-cmd="wget localhost:6006 || exit 1" --health-interval=5s --health-retries=10 --health-timeout=2s
+    steps:
+    - name: Get Swift Version
+      id: get-swift-version
+      run: |
+        echo "::set-output name=version::$(swift -version | head -n 1 | sed s/,// )"
+      shell: bash
+    - uses: actions/checkout@master
+    - name: Cache resolved dependencies
+      id: cache-resolved-dependencies
+      uses: actions/cache@v2
+      with:
+        path: .build
+        key: ${{ env.cache_version }}-${{ runner.os }}-${{ steps.get-swift-version.outputs.version }}-spm-deps-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ env.cache_version }}-${{ runner.os }}-${{ steps.get-swift-version.outputs.version }}-spm-deps-
+    - name: Resolve dependencies
+      if: steps.cache-resolved-dependencies.outputs.cache-hit != 'true'
+      run: swift package resolve
+    - name: Build
+      run: swift build --build-tests
+    - name: Lint
+      run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml 
+    - name: Test
+      run: swift test --filter XRPLSwiftITests
+      env:
+        HOST: localhost
+        PORT: ${{ job.services.rippled.ports['6006'] }}
