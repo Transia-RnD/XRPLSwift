@@ -54,6 +54,12 @@ swift build -vv
 swift test --filter XRPLSwiftITests -vv
 ```
 
+## Build the swift/swiftlint docker ci
+
+`docker build --tag transia/swiftlint:latest -f swiftlint.dockerfile .`
+
+`docker push transia/swiftlint:latest`
+
 ## Generate reference docs
 
 You can see the complete reference documentation at [`XRPLSwift` docs](https://js.xrpl.org). You can also generate them locally using `$(xcrun --find docc) process-archive transform-for-static-hosting "$ARCHIVE" --hosting-base-path ModularSlothCreator/$ARCHIVE_NAME --output-path ../docs/$ARCHIVE_NAME`
