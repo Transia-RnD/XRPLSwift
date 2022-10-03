@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
     runs-on: ubuntu-latest
-    container:
+    docker:
       image: transia/swiftlint:latest
     steps:
     - name: Get Swift Version
@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
     runs-on: ubuntu-latest
-    container:
+    docker:
       image: transia/swiftlint:latest
     steps:
     - name: Get Swift Version
@@ -74,7 +74,7 @@ jobs:
     strategy:
       fail-fast: false
     runs-on: ubuntu-latest
-    container:
+    docker:
       image: transia/swiftlint:latest
     services:
       rippled:

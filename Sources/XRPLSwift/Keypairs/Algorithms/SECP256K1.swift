@@ -72,10 +72,10 @@ internal class SECP256K1: SigningAlgorithm {
 
         // TODO: IDK WHY I HAVE TO DO THIS
         _ = masterPrivateKeyForDerivation.getPointer()
-        let masterPublicKeyHex = masterPublicKey.compressed.toHexString()
+        let masterPublicKeyHex = masterPublicKey.compressed.toHex
         secp256k1_context_destroy(ctx)
 
-        return KeyPair(privateKey: finalMasterPrivateKey.toHexString().uppercased(), publicKey: masterPublicKeyHex.uppercased())
+        return KeyPair(privateKey: finalMasterPrivateKey.toHex, publicKey: masterPublicKeyHex)
 
     }
 

@@ -5,6 +5,8 @@
 //  Created by Denis Angell on 7/4/22.
 //
 
+// https://github.com/XRPLF/xrpl-py/blob/master/tests/unit/core/binarycodec/test_definition_service.py
+
 import XCTest
 @testable import XRPLSwift
 

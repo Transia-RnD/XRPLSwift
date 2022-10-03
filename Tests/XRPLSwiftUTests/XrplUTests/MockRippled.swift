@@ -127,7 +127,7 @@ class MockRippledSocket {
                     throw XrplError("Request has no id: \(jsonToString(request))")
                 }
                 if request["command"] == nil {
-                    throw XrplError("Request has no id: \(jsonToString(request))")
+                    throw XrplError("Request has no command: \(jsonToString(request))")
                 }
                 if request["command"] as! String == "ping" {
                     try self.ping(conn: conn, request: request)
@@ -190,20 +190,6 @@ class MockRippledSocket {
             }
         }))
     }
-
-    //    func send(data: Data, client: NWConnection) throws {
-    //        //        let data = try JSONSerialization.data(withJSONObject: request, options: .prettyPrinted)
-    //        let metadata = NWProtocolWebSocket.Metadata(opcode: .binary)
-    //        let context = NWConnection.ContentContext(identifier: "context", metadata: [metadata])
-    //
-    //        client.send(content: data, contentContext: context, isComplete: true, completion: .contentProcessed({ error in
-    //            if let error = error {
-    //                logger.info(error.localizedDescription)
-    //            } else {
-    //                // no-op
-    //            }
-    //        }))
-    //    }
 
     func send(conn: NWConnection, string: String) throws {
         let data: Data = string.data(using: .utf8)!

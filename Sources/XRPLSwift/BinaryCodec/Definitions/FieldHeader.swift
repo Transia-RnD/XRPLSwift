@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 7/2/22.
 //
 
-//
+// https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/definitions/field_header.py
 
 import Foundation
 

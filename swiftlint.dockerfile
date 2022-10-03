@@ -1,6 +1,8 @@
+# docker build --tag transia/swiftlint:latest -f swiftlint.dockerfile .
+# docker push transia/swiftlint:latest
 FROM cimg/base:2020.05
 
-LABEL maintainer="BytesGuy <bytesguy@users.noreply.github.com>"
+LABEL maintainer="dangell@transia.co"
 
 ENV SWIFTLINT_VERSION 0.46.5
 ENV SWIFT_VERSION 5.6.1

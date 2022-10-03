@@ -5,6 +5,8 @@
 //  Created by Denis Angell on 7/4/22.
 //
 
+// https://github.com/XRPLF/xrpl-py/blob/master/tests/unit/core/binarycodec/test_field_id_codec.py
+
 import XCTest
 @testable import XRPLSwift
 
@@ -14,7 +16,7 @@ final class TestFieldIDCodec: XCTestCase {
 
     func testEncode() {
         for test in TestFieldIDCodec.fieldTests {
-            let result: String = try! FieldIdCodec.encode(fieldName: test.name).toHexString().uppercased()
+            let result: String = try! FieldIdCodec.encode(fieldName: test.name).toHex
             XCTAssertEqual(test.expectedHex, result)
         }
     }

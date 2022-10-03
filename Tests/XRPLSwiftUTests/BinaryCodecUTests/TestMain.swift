@@ -166,7 +166,7 @@ final class TestBinarySimple: XCTestCase {
     }
 }
 
-final class TestBinaryCodec: XCTestCase {
+final class TestBinaryXAddress: XCTestCase {
 
     func testXaddressEncode() {
         XCTAssertEqual(try BinaryCodec.encode(json: jsonX1), try BinaryCodec.encode(json: jsonR1))

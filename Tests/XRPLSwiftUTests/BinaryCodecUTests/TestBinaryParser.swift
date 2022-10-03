@@ -5,6 +5,8 @@
 //  Created by Denis Angell on 7/2/22.
 //
 
+// https://github.com/XRPLF/xrpl-py/blob/master/tests/unit/core/binarycodec/test_binary_parser.py
+
 import XCTest
 @testable import XRPLSwift
 
@@ -40,7 +42,7 @@ final class TestBinaryParser: XCTestCase {
         XCTAssertEqual(int32, 3)
     }
 
-    func testReadVariableLengthLength() {
+    func testReadVariableLength() {
         //        [100, 1000, 10000].forEach { _case in
         [100].forEach { _case in
             let binarySerializer = BinarySerializer()
