@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: transia/swiftlint:latest
+      options: --user circleci
     steps:
     - name: Get Swift Version
       id: get-swift-version
@@ -45,6 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: transia/swiftlint:latest
+      options: --user circleci
     steps:
     - name: Get Swift Version
       id: get-swift-version
@@ -76,6 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: transia/swiftlint:latest
+      options: --user circleci
     services:
       rippled:
         image: natenichols/rippled-standalone:latest
