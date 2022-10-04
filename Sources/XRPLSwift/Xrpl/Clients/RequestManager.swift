@@ -93,10 +93,11 @@ public class RequestManager {
      * @returns Request ID, new request form, and the promise for resolving the request.
      * @throws XrplError if request with the same ID is already pending.
      */
-    @objc func resolveTimer(_ sender: Timer) {
-        guard let id = sender.userInfo as? Int else { return }
-        try! resolve(id: id, error: XrplError1.timeout())
-    }
+//    @objc func resolveTimer(_ sender: Timer) {
+//        guard let id = sender.userInfo as? Int else { return }
+//        try! resolve(id: id, error: XrplError1.timeout())
+//    }
+
     public func createRequest<R: BaseRequest>(
         request: R,
         timeout: Int
@@ -111,17 +112,11 @@ public class RequestManager {
         request.id = newId
         let encoder = JSONEncoder()
         let newRequest = try! encoder.encode(request).to(type: String.self)
-        let timer = Timer.scheduledTimer(
-            timeInterval: Double(timeout),
-            target: self,
-            selector: #selector(self.resolveTimer),
-            userInfo: self.nextId,
-            repeats: false
-        )
-        //    let timer = setTimeout(
-        //      () => self.reject(newId, new TimeoutError()),
-        //      timeout,
-        //    )
+        let timer = Timer.scheduledTimer(withTimeInterval: Double(timeout), repeats: false) { _ in
+            Task {
+                try! self.reject(id: newId, error: TimeoutError("Timeout Error"))
+            }
+        }
         //    /*
         //     * Node.js won"t exit if a timer is still running, so we tell Node to ignore.
         //     * (Node will still wait for the request to complete).
@@ -130,9 +125,10 @@ public class RequestManager {
         //    if (timer.unref) {
         //      timer.unref()
         //    }
-        //    if (self.promisesAwaitingResponse.has(newId)) {
-        //      throw new XrplError(`Response with id "${newId}" is already pending`)
-        //    }
+
+        if self.promisesAwaitingResponse.contains(where: { $0.key == newId }) {
+            throw XrplError("Response with id `\(newId)` is already pending")
+        }
 
         let newPromise = eventGroup.next().makePromise(of: Any.self)
         let reqMap = RequestMap<Any>(timer: timer, promise: newPromise, requestType: R.self)

@@ -60,7 +60,7 @@ public class ConnectionOptions {
     public var key: String?
     public var passphrase: String?
     public var certificate: String?
-    public var timeout = Timer()
+    public var timeout: Timer?
     public var connectionTimeout: Int = 3600
     public var headers: [String: [String: String]]?
 }
@@ -350,7 +350,7 @@ public class Connection {
          * trigger that.
          */
         if self.ws != nil && self.state != WebsocketState.closing {
-            _ = self.ws?.close(code: .normalClosure)
+            _ = try self.ws?.close(code: .normalClosure)
         }
 
         return promise.futureResult
@@ -607,7 +607,7 @@ public class Connection {
      */
     private func startHeartbeatInterval() {
         self.clearHeartbeatInterval()
-        self.heartbeatIntervalID = Timer.scheduledTimer(withTimeInterval: self.config.timeout.timeInterval, repeats: false) { _ in
+        self.heartbeatIntervalID = Timer.scheduledTimer(withTimeInterval: self.config.timeout!.timeInterval, repeats: false) { _ in
             Task {
                 await self.heartbeat()
             }
