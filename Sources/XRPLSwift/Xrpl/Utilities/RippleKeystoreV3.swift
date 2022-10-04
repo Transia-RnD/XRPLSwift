@@ -287,7 +287,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
 public extension Data {
 
     static func randomBytes(length: Int) -> Data? {
-        #if NO_USE_Security
+        #if os(Linux)
         // TODO: NOT THAT SECURE - BUT THE KEYSTORE ISNT CONNECTED
         return Data((0 ..< length).map { _ in UInt8.random(in: UInt8.min ... UInt8.max) })
         #else
