@@ -5,10 +5,13 @@
 //  Created by Mitch Lang on 5/3/19.
 //
 
-// Copyright Keefer Taylor, 2019.
 import BigInt
-import CommonCrypto
 import Foundation
+#if NO_USE_CryptoSwift
+import CommonCrypto
+#else
+import CryptoSwift
+#endif
 
 /// A static utility class which provides Base58 encoding and decoding functionality.
 public enum Base58 {
@@ -106,6 +109,7 @@ public enum Base58 {
     /// - Parameter data: Input data to hash.
     /// - Returns: A sha256 hash of the input data.
     private static func sha256(_ data: [UInt8]) -> [UInt8] {
+        #if NO_USE_CryptoSwift
         let res = NSMutableData(length: Int(CC_SHA256_DIGEST_LENGTH))!
         CC_SHA256(
             (Data(data) as NSData).bytes,
@@ -113,6 +117,9 @@ public enum Base58 {
             res.mutableBytes.assumingMemoryBound(to: UInt8.self)
         )
         return [UInt8](res as Data)
+        #else
+        return data.sha256()
+        #endif
     }
 }
 

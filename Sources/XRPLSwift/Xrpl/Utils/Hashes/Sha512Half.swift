@@ -7,7 +7,6 @@
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/utils/hashes/sha512Half.ts
 
-import CommonCrypto
 import Foundation
 
 // swiftlint:disable:next identifier_name

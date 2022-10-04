@@ -56,7 +56,9 @@ swift test --filter XRPLSwiftITests -vv
 
 ## Build the swift/swiftlint docker ci
 
-`docker build --tag transia/swiftlint:latest -f swiftlint.dockerfile .`
+`docker build --platform=linux/amd64 --tag transia/swiftlint:latest -f swiftlint.dockerfile .`
+
+`docker run --platform=linux/amd64 --rm -it transia/swiftlint:latest`
 
 `docker push transia/swiftlint:latest`
 

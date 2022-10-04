@@ -7,7 +7,7 @@
 
 // https://github.com/XRPLF/xrpl-py/blob/master/xrpl/core/binarycodec/types/account_id.py
 
-import CryptoSwift
+//import CryptoSwift
 import Foundation
 
 // swiftlint:disable:next identifier_name
