@@ -350,7 +350,7 @@ public class Connection {
          * trigger that.
          */
         if self.ws != nil && self.state != WebsocketState.closing {
-            _ = try self.ws?.close(code: .normalClosure)
+            _ = try? await self.ws?.close(code: .normalClosure)
         }
 
         return promise.futureResult

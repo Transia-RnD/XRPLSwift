@@ -16,12 +16,11 @@ import Foundation
  * @returns The account's classic address.
  * @throws Error if the X-Address has an associated tag.
  */
-// eslint-disable-next-line import/prefer-default-export -- okay for a utils file - there could be more exports later
 public func ensureClassicAddress(account: String) throws -> String {
     if AddressCodec.isValidXAddress(xAddress: account) {
-        let result: AnyObject? = try AddressCodec.xAddressToClassicAddress(xAddress: account) as AnyObject
-        let classicAddress: String? = result?["classicAddress"] as? String
-        let tag: Int? = result?["tag"] as? Int
+        let result: FullClassicAddress = try AddressCodec.xAddressToClassicAddress(xAddress: account)
+        let classicAddress: String? = result.classicAddress
+        let tag: Int? = result.tag
         /*
          * Except for special cases, X-addresses used for requests
          * must not have an embedded tag. In other words,
