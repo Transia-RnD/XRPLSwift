@@ -283,3 +283,29 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         return data
     }
 }
+
+public extension Data {
+
+    static func randomBytes(length: Int) -> Data? {
+        #if NO_USE_Security
+        // TODO: NOT THAT SECURE - BUT THE KEYSTORE ISNT CONNECTED
+        return Data((0 ..< length).map { _ in UInt8.random(in: UInt8.min ... UInt8.max) })
+        #else
+        for _ in 0...1024 {
+            var data = Data(repeating: 0, count: length)
+            let result = data.withUnsafeMutableBytes { (body: UnsafeMutableRawBufferPointer) -> Int32? in
+                if let bodyAddress = body.baseAddress, !body.isEmpty {
+                    let pointer = bodyAddress.assumingMemoryBound(to: UInt8.self)
+                    return SecRandomCopyBytes(kSecRandomDefault, 32, pointer)
+                } else {
+                    return nil
+                }
+            }
+            if let notNilResult = result, notNilResult == errSecSuccess {
+                return data
+            }
+        }
+        return nil
+        #endif
+    }
+}
