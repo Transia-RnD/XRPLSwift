@@ -97,7 +97,7 @@ Use `XRPLSwift` to build Swift applications that leverage the [XRP Ledger](https
 * Methods for inspecting accounts — See [XRPL Account Methods](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.account.html) for more information.
 * Codecs for encoding and decoding addresses and other objects — See [Core Codecs](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.core.html) for more information.
 
-## [➡️ Reference Documentation](https://XRPLSwift.readthedocs.io/en/stable/)
+## [➡️ Reference Documentation](https://transia-rnd.github.io/XRPLSwift)
 
 See the complete [`XRPLSwift` reference documentation on Read the Docs](https://XRPLSwift.readthedocs.io/en/stable/index.html).
 
