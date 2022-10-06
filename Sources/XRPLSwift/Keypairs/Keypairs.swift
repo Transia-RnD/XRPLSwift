@@ -118,10 +118,6 @@ public class Keypairs {
                 ) != true {
                     throw KeypairsErrors.validation("derived keypair did not generate verifiable signature")
                 }
-                print(keypair.privateKey)
-                print(signature.toHex)
-                print(messageToVerify.toHex)
-                print(keypair.publicKey)
                 return keypair
         }
     }

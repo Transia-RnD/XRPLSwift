@@ -64,7 +64,14 @@ swift test --filter XRPLSwiftITests -vv
 
 ## Generate reference docs
 
-You can see the complete reference documentation at [`XRPLSwift` docs](https://js.xrpl.org). You can also generate them locally using `$(xcrun --find docc) process-archive transform-for-static-hosting "$ARCHIVE" --hosting-base-path ModularSlothCreator/$ARCHIVE_NAME --output-path ../docs/$ARCHIVE_NAME`
+```
+xcodebuild docbuild \
+-scheme TARGET_NAME \
+-derivedDataPath PATH_TO_SAVE_DERIVED_DATA_FOLDER \
+-destination 'platform=iOS Simulator,name=iPhone 13'
+```
+
+You can see the complete reference documentation at [`XRPLSwift` docs](https://js.xrpl.org). You can also generate them locally using `$(xcrun --find docc) process-archive transform-for-static-hosting "$ARCHIVE" --hosting-base-path transia-rnd.github.io/$ARCHIVE_NAME --output-path ../docs/$ARCHIVE_NAME`
 
 This updates `docs/` at the top level, where GitHub Pages looks for the docs.
 

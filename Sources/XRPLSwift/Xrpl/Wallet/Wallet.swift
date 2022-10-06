@@ -364,9 +364,6 @@ public class Wallet {
         let tx = BinaryCodec.decode(buffer: signedTransaction)
         let messageHex: String = try! BinaryCodec.encodeForSigning(json: tx)
         let signature = tx["TxnSignature"] as? String
-        print(signature)
-        print(messageHex)
-        print(self.publicKey)
         return Keypairs.verify(
             signature: Data(hex: signature!).bytes,
             message: Data(hex: messageHex).bytes,
