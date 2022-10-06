@@ -57,7 +57,7 @@ public class CheckCancel: BaseTransaction {
 /**
  Verify the form and type of an CheckCancel at runtime.
  - parameters:
- - tx: An CheckCancel Transaction.
+    - tx: An CheckCancel Transaction.
  - throws:
  When the CheckCancel is Malformed.
  */

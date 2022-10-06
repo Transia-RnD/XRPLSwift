@@ -10,26 +10,8 @@
 import Foundation
 import NIO
 
-/** Approximate time for a ledger to close, in milliseconds */
-// swiftlint:disable:next identifier_name
-let LEDGER_CLOSE_TIME = 4000
-
-/**
- * Submits a signed/unsigned transaction.
- * Steps performed on a transaction:
- *    1. Autofill.
- *    2. Sign & Encode.
- *    3. Submit.
- *
- * @param this - A Client.
- * @param transaction - A transaction to autofill, sign & encode, and submit.
- * @param opts - (Optional) Options used to sign and submit a transaction.
- * @param opts.autofill - If true, autofill a transaction.
- * @param opts.failHard - If true, and the transaction fails locally, do not retry or relay the transaction to other servers.
- * @param opts.wallet - A wallet to sign a transaction. It must be provided when submitting an unsigned transaction.
- * @returns A promise that contains SubmitResponse.
- * @throws RippledError if submit request fails.
- */
+/// Approximate time for a ledger to close, in milliseconds
+let LEDGER_CLOSE_TIME = 4000 // swiftlint:disable:this identifier_name
 
 public enum SubmitTransaction: Codable {
     case tx(Transaction)
@@ -79,30 +61,46 @@ public class SubmitOptions {
     }
 }
 
+/**
+ Submits a signed/unsigned transaction.
+ Steps performed on a transaction:
+     1. Autofill.
+     2. Sign & Encode.
+     3. Submit.
+ - parameters:
+    - client: A Client.
+    - transaction: A transaction to autofill, sign & encode, and submit.
+    - autofill: If true, autofill a transaction.
+    - failHard: If true, and the transaction fails locally, do not retry or relay the transaction to other servers.
+    - wallet: A wallet to sign a transaction. It must be provided when submitting an unsigned transaction.
+ - returns:
+ A promise that contains SubmitResponse.
+ - throws:
+ RippledError if submit request fails.
+ */
 func submit(
-    this: XrplClient,
+    client: XrplClient,
     transaction: Transaction,
     autofill: Bool? = false,
     failHard: Bool? = false,
     wallet: Wallet?
-    // ) async throws -> EventLoopFuture<TxResponse> {
 ) async throws -> EventLoopFuture<Any> {
-    let signedTx = try await getSignedTx(client: this, transaction: transaction, wallet: wallet)
-    return try await submitRequest(client: this, signedTransaction: signedTx, failHard: failHard)
+    let signedTx = try await getSignedTx(client: client, transaction: transaction, wallet: wallet)
+    return try await submitRequest(client: client, signedTransaction: signedTx, failHard: failHard)
 }
 
 /**
- * Asynchronously submits a transaction and verifies that it has been included in a
- * validated ledger (or has errored/will not be included for some reason).
- * See [Reliable Transaction Submission](https://xrpl.org/reliable-transaction-submission.html).
- *
- * @param this - A Client.
- * @param transaction - A transaction to autofill, sign & encode, and submit.
- * @param opts - (Optional) Options used to sign and submit a transaction.
- * @param opts.autofill - If true, autofill a transaction.
- * @param opts.failHard - If true, and the transaction fails locally, do not retry or relay the transaction to other servers.
- * @param opts.wallet - A wallet to sign a transaction. It must be provided when submitting an unsigned transaction.
- * @returns A promise that contains TxResponse, that will return when the transaction has been validated.
+ Asynchronously submits a transaction and verifies that it has been included in a
+ validated ledger (or has errored/will not be included for some reason).
+ See [Reliable Transaction Submission](https://xrpl.org/reliable-transaction-submission.html).
+ - parameters:
+    - client: A Client.
+    - transaction: A transaction to autofill, sign & encode, and submit.
+    - autofill: If true, autofill a transaction.
+    - failHard: If true, and the transaction fails locally, do not retry or relay the transaction to other servers.
+    - wallet: A wallet to sign a transaction. It must be provided when submitting an unsigned transaction.
+ - returns:
+ A promise that contains TxResponse, that will return when the transaction has been validated.
  */
 func submitAndWait(
     this: XrplClient,
@@ -133,8 +131,6 @@ func submitAndWait(
     //    )
     return ""
 }
-
-// Helper functions
 
 // Encodes and submits a signed transaction.
 func submitRequest(
@@ -247,7 +243,7 @@ func isSigned(transaction: [String: AnyObject]) -> Bool {
 func getSignedTx(
     client: XrplClient,
     transaction: String,
-    autofill: Bool? = true,
+    autofill: Bool = true,
     wallet: Wallet?
     // ) async throws -> EventLoopFuture<String> {
 ) async throws -> String {
@@ -259,15 +255,11 @@ func getSignedTx(
         throw ValidationError("Wallet must be provided when submitting an unsigned transaction")
     }
 
-    //    let tx = transaction is String ? (decode(transaction) as? Transaction) : transaction
-    //    let encoder = JSONEncoder()
-    //    let txs = try encoder.encode(transaction)
-    //    var tx = try transaction.toAny() as! BaseTransaction
-    //    if autofill {
-    //        tx = try await AutoFillSugar().autofill(client: client, transaction: tx, signersCount: 0).wait()
-    //    }
-    //    return try opts.wallet.sign(transaction: transaction, multisign: false).txBlob
-    return ""
+    var tx = BinaryCodec.decode(buffer: transaction)
+    if autofill {
+        tx = try await AutoFillSugar().autofill(client: client, transaction: tx, signersCount: 0).wait()
+    }
+    return try wallet.sign(transaction: tx, multisign: false).txBlob
 }
 func getSignedTx(
     client: XrplClient,
@@ -291,15 +283,18 @@ func getSignedTx(
 
 // checks if there is a LastLedgerSequence as a part of the transaction
 func getLastLedgerSequence(
-    //  transaction: Transaction | string,
     transaction: String
 ) -> Int? {
-    //    let tx = typeof transaction === "string" ? decode(transaction) : transaction
-    let tx = transaction
-    //   eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- converts LastLedgSeq to number if present.
+    let tx = BinaryCodec.decode(buffer: transaction)
+    return tx["LastLedgerSequence"] as? Int
+}
 
-    //    return tx.LastLedgerSequence as? Int
-    return 0
+// checks if there is a LastLedgerSequence as a part of the transaction
+func getLastLedgerSequence(
+    transaction: Transaction
+) -> Int? {
+    let tx = try! transaction.toJson() as! [String: AnyObject]
+    return tx["LastLedgerSequence"] as? Int
 }
 
 // checks if the transaction is an AccountDelete transaction

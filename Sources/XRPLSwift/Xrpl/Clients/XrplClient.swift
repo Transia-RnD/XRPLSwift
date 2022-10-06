@@ -23,7 +23,7 @@ public class ClientOptions: ConnectionUserOptions {
     ) {
         super.init()
         // SUPER
-        self.timeout = timeout
+        self.timeout = Int(timeout.timeInterval)
         self.proxy = proxy
         self.feeCushion = feeCushion
         self.maxFeeXRP = maxFeeXRP
@@ -374,21 +374,18 @@ public class XrplClient: ConnectionDelegate {
     }
 
     public func request<R: BaseRequest>(req: R) async throws -> EventLoopFuture<Any>? {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Necessary for overloading
-        //        print(req)
-        //        guard var requestDict = req as? [String: AnyObject] else {
-        //            return nil
-        //        }
-        //        if let account: String = requestDict["account"] as? String {
-        //            requestDict["account"] = ensureClassicAddress(account) as AnyObject
-        //        } else {
-        //            requestDict["account"] = nil
-        //        }
+//        guard var requestDict = req as? [String: AnyObject] else {
+//            return nil
+//        }
+//        if let account: String = requestDict["account"] as? String {
+//            requestDict["account"] = ensureClassicAddress(account) as AnyObject
+//        } else {
+//            requestDict["account"] = nil
+//        }
         let response = try await self.connection.request(request: req)
 
-        //        // mutates `response` to add warnings
-        //        handlePartialPayment(req.command, response)
-
+        // mutates `response` to add warnings
+//        handlePartialPayment(req.command, response)
         return response
     }
 
@@ -627,7 +624,7 @@ public class XrplClient: ConnectionDelegate {
 
     public func submit(transaction: Transaction, opts: SubmitOptions?) async throws -> EventLoopFuture<Any> {
         return try await XRPLSwift.submit(
-            this: self,
+            client: self,
             transaction: transaction,
             autofill: opts?.autofill,
             failHard: opts?.failHard,
@@ -640,7 +637,7 @@ public class XrplClient: ConnectionDelegate {
     //    public submitAndWait = submitAndWait
     //
     public func getXrpBalance(address: String) async throws -> String {
-        return try await XRPLSwift.getXrpBalance(this: self, address: address)
+        return try await XRPLSwift.getXrpBalance(client: self, address: address)
     }
     //    /**
     //     * @category Abstraction
@@ -662,3 +659,4 @@ extension String {
         return range(of: "^[wW]{3}+.[a-zA-Z]{3,}+.[a-z]{2,}", options: .regularExpression) != nil
     }
 }
+

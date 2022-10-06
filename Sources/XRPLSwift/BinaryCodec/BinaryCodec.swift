@@ -131,7 +131,6 @@ class BinaryCodec {
         }
 
         buffer += try STObject.from(value: json, onlySigning: signingOnly).bytes
-        print(buffer.count)
 
         if let suffix = suffix {
             buffer += suffix

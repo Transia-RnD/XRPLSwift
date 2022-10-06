@@ -8,12 +8,9 @@
 import BigInt
 import Foundation
 
-// swiftlint:disable:next identifier_name
-let BASE_TEN: Int = 10
-// swiftlint:disable:next identifier_name
-let ONE_BILLION: String = "1000000000"
-// swiftlint:disable:next identifier_name
-let TWO_BILLION: String = "2000000000"
+let BASE_TEN: Int = 10 // swiftlint:disable:this identifier_name
+let ONE_BILLION: String = "1000000000" // swiftlint:disable:this identifier_name
+let TWO_BILLION: String = "2000000000" // swiftlint:disable:this identifier_name
 
 func percentToDecimal(percent: String) throws -> String {
     if !percent.hasSuffix("%") {
@@ -30,16 +27,15 @@ func percentToDecimal(percent: String) throws -> String {
 }
 
 /**
- * Converts a string decimal to "billionths" format for use with TransferRate.
- *
- * @param decimal - A string decimal between 0 and 1.00
- * @returns A number in the "billionths" format.
- * @throws ValidationError when the parameter is not convertible to
- * "billionths" format.
- * @category Utilities
+ Converts a string decimal to "billionths" format for use with TransferRate.
+ - parameters:
+    - decimal: A string decimal between 0 and 1.00
+ - returns:
+ A number in the "billionths" format.
+ - throws:
+ ValidationError when the parameter is not convertible to "billionths" format.
  */
 public func decimalToTransferRate(decimal: String) throws -> Int {
-    //    let rate = new BigNumber(decimal).times(ONE_BILLION).plus(ONE_BILLION)
     let rate = BigInt(decimal)! * BigInt(ONE_BILLION)! + BigInt(ONE_BILLION)!
     if rate < BigInt(ONE_BILLION)! || rate > BigInt(TWO_BILLION)! {
         throw ValidationError("Decimal value must be between 0 and 1.00.")
@@ -63,27 +59,27 @@ public func decimalToTransferRate(decimal: String) throws -> Int {
 }
 
 /**
- * Converts a string percent to "billionths" format for use with TransferRate.
- *
- * @param percent - A string percent between 0% and 100%.
- * @returns A number in the "billionths" format.
- * @throws ValidationError when the percent parameter is not convertible to
- * "billionths" format.
- * @category Utilities
+ Converts a string percent to "billionths" format for use with TransferRate.
+ - parameters:
+    - percent: A string percent between 0% and 100%.
+ - returns:
+ A number in the "billionths" format.
+ - throws:
+ ValidationError when the percent parameter is not convertible to "billionths" format.
  */
 public func percentToTransferRate(percent: String) throws -> Int {
     return try decimalToTransferRate(decimal: percentToDecimal(percent: percent))
 }
 
 /**
- * Converts a string decimal to the "billionths" format for use with QualityIn/
- * QualityOut
- *
- * @param decimal - A string decimal (i.e. ".00034").
- * @returns A number in the "billionths" format.
- * @throws ValidationError when the parameter is not convertible to
- * "billionths" format.
- * @category Utilities
+ Converts a string decimal to the "billionths" format for use with QualityIn/
+ QualityOut
+ - parameters:
+    - decimal: A string decimal (i.e. ".00034").
+ - returns:
+ A number in the "billionths" format.
+ - throws:
+ ValidationError when the parameter is not convertible to "billionths" format.
  */
 public func decimalToQuality(decimal: String) throws -> Int {
     let rate = BigInt(decimal)! * BigInt(ONE_BILLION)!
@@ -109,12 +105,13 @@ public func decimalToQuality(decimal: String) throws -> Int {
 }
 
 /**
- * Converts a quality in "billionths" format to a decimal.
- *
- * @param quality - Quality to convert to decimal.
- * @returns decimal representation of quality.
- * @throws ValidationError when quality is not convertible to decimal format.
- * @category Utilities
+ Converts a quality in "billionths" format to a decimal.
+ - parameters:
+    - quality: Quality to convert to decimal.
+ - returns:
+ decimal representation of quality.
+ - throws:
+ ValidationError when quality is not convertible to decimal format.
  */
 public func qualityToDecimal(quality: Int) throws -> String {
     if !(quality is Int) {
@@ -135,12 +132,13 @@ public func qualityToDecimal(quality: Int) throws -> String {
 }
 
 /**
- * Converts a transfer rate in "billionths" format to a decimal.
- *
- * @param rate - TransferRate to convert to decimal.
- * @returns decimal representation of transfer Rate.
- * @throws ValidationError when it cannot convert from billionths format.
- * @category Utilities
+ Converts a transfer rate in "billionths" format to a decimal.
+ - parameters:
+    - rate: TransferRate to convert to decimal.
+ - returns:
+ decimal representation of transfer Rate.
+ - throws:
+ ValidationError when it cannot convert from billionths format.
  */
 public func transferRateToDecimal(rate: Int) throws -> String {
     if !(rate is Int) {
@@ -160,14 +158,14 @@ public func transferRateToDecimal(rate: Int) throws -> String {
 }
 
 /**
- * Converts a string percent to the "billionths" format for use with QualityIn/
- * QualityOut
- *
- * @param percent - A string percent (i.e. ".034%").
- * @returns A number in the "billionths" format.
- * @throws ValidationError when the percent parameter is not convertible to
- * "billionths" format.
- * @category Utilities
+ Converts a string percent to the "billionths" format for use with QualityIn/
+ QualityOut
+ - parameters:
+    - percent: A string percent (i.e. ".034%").
+ - returns:
+ A number in the "billionths" format.
+ - throws:
+ ValidationError when the percent parameter is not convertible to "billionths" format.
  */
 public func percentToQuality(percent: String) throws -> Int {
     return try decimalToQuality(decimal: percentToDecimal(percent: percent))

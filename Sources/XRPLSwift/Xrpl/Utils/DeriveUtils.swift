@@ -12,9 +12,9 @@ import Foundation
 /**
  Derive an X-Address from a public key and a destination tag.
  - parameters:
- - publicKey: The public key corresponding to an address.
- - tag: A destination tag to encode into an X-address. False indicates no destination tag.
- - test: Whether this address is for use in Testnet.
+    - publicKey: The public key corresponding to an address.
+    - tag: A destination tag to encode into an X-address. False indicates no destination tag.
+    - test: Whether this address is for use in Testnet.
  - returns:
  X-Address.
  */

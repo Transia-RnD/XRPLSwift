@@ -12,34 +12,26 @@ import NIO
 
 private let autofillEventGroup = MultiThreadedEventLoopGroup(numberOfThreads: 4)
 
-/**
- * Autofills fields in a transaction. This will set `Sequence`, `Fee`,
- * `lastLedgerSequence` according to the current state of the server this Client
- * is connected to. It also converts all X-Addresses to classic addresses and
- * flags interfaces into numbers.
- *
- * @param this - A client.
- * @param transaction - A {@link Transaction} in JSON format
- * @param signersCount - The expected number of signers for this transaction.
- * Only used for multisigned transactions.
- * @returns The autofilled transaction.
- */
 public class AutoFillSugar {
-    // Expire unconfirmed transactions after 20 ledger versions, approximately 1 minute, by default
-    // swiftlint:disable:next identifier_name
-    let LEDGER_OFFSET = 20
+    /// Expire unconfirmed transactions after 20 ledger versions, approximately 1 minute, by default
+    let LEDGER_OFFSET = 20 // swiftlint:disable:this identifier_name
     public struct ClassicAccountAndTag {
         public let classicAccount: String
         public let tag: Int? // JM: Int | Bool only false?
     }
 
-    //    func autofill<T: BaseTransaction>(
-    //        client: XrplClient,
-    //        transaction: T,
-    //        signersCount: Int?
-    //    ) async throws -> EventLoopFuture<BaseTransaction> {
-    //
-    //    }
+    /**
+     Autofills fields in a transaction. This will set `Sequence`, `Fee`,
+     `lastLedgerSequence` according to the current state of the server this Client
+     is connected to. It also converts all X-Addresses to classic addresses and
+     flags interfaces into numbers.
+     - parameters:
+        - client: A client.
+        - transaction: A {@link Transaction} in JSON format
+        - signersCount: The expected number of signers for this transaction. Only used for multisigned transactions.
+     - returns
+     The autofilled transaction.
+     */
     func autofill(
         client: XrplClient,
         transaction: [String: AnyObject],
@@ -93,14 +85,12 @@ public class AutoFillSugar {
     ) throws {
         // if X-address is given, convert it to classic address
         let accountAndTag = try getClassicAccountAndTag(account: tx[accountField] as! String)
-        // eslint-disable-next-line no-param-reassign -- param reassign is safe
         tx[accountField] = accountAndTag.classicAccount as AnyObject
 
         if accountAndTag.tag != nil {
             if tx[tagField] != nil && tx[tagField] as! Int != accountAndTag.tag {
                 throw ValidationError("The \(tagField), if present, must match the tag of the \(accountField) X-address")
             }
-            // eslint-disable-next-line no-param-reassign -- param reassign is safe
             tx[tagField] = accountAndTag.tag as AnyObject?
         }
     }

@@ -8,10 +8,11 @@
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/src/sugar/getLedgerIndex.ts
 
 /**
- * Returns the index of the most recently validated ledger.
- *
- * @param this - The Client used to connect to the ledger.
- * @returns The most recently validated ledger index.
+ Returns the index of the most recently validated ledger.
+ - parameters:
+    - client: The Client used to connect to the ledger.
+ - returns
+ The most recently validated ledger index.
  */
 public func getLedgerIndex(client: XrplClient) async throws -> Int {
     let dict: [String: AnyObject] = [

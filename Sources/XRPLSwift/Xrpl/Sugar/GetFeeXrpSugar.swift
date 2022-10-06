@@ -9,18 +9,17 @@
 
 import Foundation
 
-// swiftlint:disable:next identifier_name
-let NUM_DECIMAL_PLACES: Int = 6
-// swiftlint:disable:next identifier_name
-let BASE_10: Int = 10
+let NUM_DECIMAL_PLACES: Int = 6 // swiftlint:disable:this identifier_name
+let BASE_10: Int = 10 // swiftlint:disable:this identifier_name
 
 /**
- * Calculates the current transaction fee for the ledger.
- * Note: This is a public API that can be called directly.
- *
- * @param client - The Client used to connect to the ledger.
- * @param cushion - The fee cushion to use.
- * @returns The transaction fee.
+ Calculates the current transaction fee for the ledger.
+ Note: This is a public API that can be called directly.
+ - parameters:
+    - client: The Client used to connect to the ledger.
+    - cushion: The fee cushion to use.
+ - returns:
+ The transaction fee.
  */
 public func getFeeXrp(
     client: XrplClient,

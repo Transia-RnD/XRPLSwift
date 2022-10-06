@@ -13,10 +13,11 @@ import Foundation
 let HASH_SIZE: Int = 32
 
 /**
- * Compute a sha512Half Hash of a hex string.
- *
- * @param hex - Hex string to hash.
- * @returns Hash of hex.
+ Compute a sha512Half Hash of a hex string.
+ - parameters:
+    - hex: Hex string to hash.
+ - returns:
+ Hash of hex.
  */
 public func sha512Half(hex: String) -> String {
     let hash = Data(hex: hex).sha512()

@@ -29,10 +29,10 @@ class Vector256: SerializedType {
     }
 
     /**
-     * Read a Vector256 object from a BinaryParser
-     *
-     * @param parser BinaryParser to read the hash from
-     * @param hint length of the bytes to read, optional
+     Read a Vector256 object from a BinaryParser
+     - parameters:
+        - parser: BinaryParser to read the hash from
+        - hint: Length of the bytes to read, optional
      */
     override func fromParser(
         parser: BinaryParser,
@@ -47,14 +47,15 @@ class Vector256: SerializedType {
         return Vector256(bytes: byteList)
     }
 
+    /**
+     Return a list of hashes encoded as hex strings.
+     - returns:
+     The JSON representation of this Vector256.
+     - throws:
+     XRPLBinaryCodecException: If the number of bytes in the buffer
+     is not a multiple of the hash length.
+     */
     override func toJson() -> [String] {
-        /* Return a list of hashes encoded as hex strings.
-         Returns:
-         The JSON representation of this Vector256.
-         Raises:
-         XRPLBinaryCodecException: If the number of bytes in the buffer
-         is not a multiple of the hash length.
-         */
         if self.bytes.count % HASH_LENGTH_BYTES != 0 {
             fatalError("Invalid bytes for Vector256.")
             //            throw BinaryError.unknownError(error: "Invalid bytes for Vector256.")

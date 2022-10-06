@@ -38,7 +38,7 @@ class ConsoleLog {
 private let connEventGroup = MultiThreadedEventLoopGroup(numberOfThreads: 4)
 
 private let SECONDS_PER_MINUTE: Int = 60 // swiftlint:disable:this identifier_name
-private let TIMEOUT: Int = 20 // swiftlint:disable:this identifier_name
+private let TIMEOUT: Int = 20
 private let CONNECTION_TIMEOUT: Int = 5 // swiftlint:disable:this identifier_name
 
 public enum WebsocketState: String {
@@ -60,7 +60,7 @@ public class ConnectionOptions {
     public var key: String?
     public var passphrase: String?
     public var certificate: String?
-    public var timeout: Timer?
+    public var timeout: Int?
     public var connectionTimeout: Int = 3600
     public var headers: [String: [String: String]]?
 }
@@ -230,6 +230,8 @@ public class Connection {
         //        ws.setMaxListeners(1000000)
         self.url = url
         self.config = ConnectionOptions()
+        self.config.timeout = TIMEOUT * 1000
+        self.config.connectionTimeout = CONNECTION_TIMEOUT * 1000
         //        self.config = {
         //            self.timeout: TIMEOUT * 1000,
         //        connectionTimeout: CONNECTION_TIMEOUT * 1000,
@@ -289,7 +291,6 @@ public class Connection {
         }
         let client: WebSocketClient = createWebSocket(url: url, config: self.config)!
         try client.connect(scheme: isscheme, host: ishost, port: isport, onUpgrade: { ws -> Void in
-            print("CONNECTED")
             self.ws = ws
             Task {
                 // TODO: This goes after client.connect in js, but swift doesnt(verify) return the ws. we would .wait
@@ -340,7 +341,6 @@ public class Connection {
             promise.succeed(nil)
         }
         if self.ws != nil {
-            print("ON CLOSE")
             promise.succeed(1000)
             //            self.ws.once("close", (code) => resolve(code))
         }
@@ -393,7 +393,6 @@ public class Connection {
             timeout: 10
         )
         //        self.trace("send", message)
-        print("REQUEST: \(message)")
         _ = await websocketSendAsync(ws: ws, message: message)
         return responsePromise
     }
@@ -424,7 +423,6 @@ public class Connection {
             //            }
             return
         }
-        print("RESPONSE: \(dict)")
         //        guard let br = br else {
         //            return
         //        }
@@ -498,7 +496,6 @@ public class Connection {
         //        self.ws.removeAllListeners()
         connectionTimeoutID.invalidate()
         // Add new, long-term connected listeners for messages and errors
-        print("onceOpen")
         self.ws?.onText({ _, message in
             self.onMessage(message: message)
         })
@@ -607,7 +604,7 @@ public class Connection {
      */
     private func startHeartbeatInterval() {
         self.clearHeartbeatInterval()
-        self.heartbeatIntervalID = Timer.scheduledTimer(withTimeInterval: self.config.timeout!.timeInterval, repeats: false) { _ in
+        self.heartbeatIntervalID = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.config.timeout!), repeats: false) { _ in
             Task {
                 await self.heartbeat()
             }

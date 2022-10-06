@@ -27,38 +27,6 @@ public struct XrplError: Error {
     }
 }
 
-public enum XrplError1: Error {
-    case validation(_ desc: String)
-    case connection(_ desc: String)
-    case noPromise(_ desc: String = "")
-    case timeout(_ desc: String = "The request has timed out")
-    case unknown(_ desc: String = "Unknown Error")
-    case invalidFormat(_ desc: String)
-    case responseError(_ desc: String)
-    case decoding(_ desc: String)
-
-    public var localizedDescription: String {
-        switch self {
-        case .validation(let desc):
-            return desc
-        case .connection(let desc):
-            return desc
-        case .noPromise(let desc):
-            return desc
-        case .timeout(let desc):
-            return desc
-        case .unknown(let desc):
-            return desc
-        case .invalidFormat(let desc):
-            return desc
-        case .responseError(let desc):
-            return desc
-        case .decoding(let desc):
-            return desc
-        }
-    }
-}
-
 /**
  * Error thrown when rippled responds with an error.
  *

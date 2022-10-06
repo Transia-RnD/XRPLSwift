@@ -42,54 +42,50 @@ public struct SignatureResult {
 }
 
 /**
- * A utility for deriving a wallet composed of a keypair (publicKey/privateKey).
- * A wallet can be derived from either a seed, mnemonic, or entropy (array of random numbers).
- * It provides functionality to sign/verify transactions offline.
+ A utility for deriving a wallet composed of a keypair (publicKey/privateKey).
+ A wallet can be derived from either a seed, mnemonic, or entropy (array of random numbers).
+ It provides functionality to sign/verify transactions offline.
+ ```swift
+ // Derive a wallet from a bip39 Mnemonic
+ const wallet = Wallet.fromMnemonic(
+   'jewel insect retreat jump claim horse second chef west gossip bone frown exotic embark laundry'
+ )
+ console.log(wallet)
+ // Wallet {
+ // publicKey: '02348F89E9A6A3615BA317F8474A3F51D66221562D3CA32BFA8D21348FF67012B2',
+ // privateKey: '00A8F2E77FC0E05890C1B5088AFE0ECF9D96466A4419B897B1AB383E336E1735A2',
+ // classicAddress: 'rwZiksrExmVkR64pf87Jor4cYbmff47SUm',
+ // seed: undefined
+ // }.
  *
- * @example
- * ```swift
- * // Derive a wallet from a bip39 Mnemonic
- * const wallet = Wallet.fromMnemonic(
- *   'jewel insect retreat jump claim horse second chef west gossip bone frown exotic embark laundry'
- * )
- * console.log(wallet)
- * // Wallet {
- * // publicKey: '02348F89E9A6A3615BA317F8474A3F51D66221562D3CA32BFA8D21348FF67012B2',
- * // privateKey: '00A8F2E77FC0E05890C1B5088AFE0ECF9D96466A4419B897B1AB383E336E1735A2',
- * // classicAddress: 'rwZiksrExmVkR64pf87Jor4cYbmff47SUm',
- * // seed: undefined
- * // }.
+ // Derive a wallet from a base58 encoded seed.
+ const seedWallet = Wallet.fromSeed('ssZkdwURFMBXenJPbrpE14b6noJSu')
+ console.log(seedWallet)
+ // Wallet {
+ // publicKey: '02FE9932A9C4AA2AC9F0ED0F2B89302DE7C2C95F91D782DA3CF06E64E1C1216449',
+ // privateKey: '00445D0A16DD05EFAF6D5AF45E6B8A6DE4170D93C0627021A0B8E705786CBCCFF7',
+ // classicAddress: 'rG88FVLjvYiQaGftSa1cKuE2qNx7aK5ivo',
+ // seed: 'ssZkdwURFMBXenJPbrpE14b6noJSu'
+ // }.
  *
- * // Derive a wallet from a base58 encoded seed.
- * const seedWallet = Wallet.fromSeed('ssZkdwURFMBXenJPbrpE14b6noJSu')
- * console.log(seedWallet)
- * // Wallet {
- * // publicKey: '02FE9932A9C4AA2AC9F0ED0F2B89302DE7C2C95F91D782DA3CF06E64E1C1216449',
- * // privateKey: '00445D0A16DD05EFAF6D5AF45E6B8A6DE4170D93C0627021A0B8E705786CBCCFF7',
- * // classicAddress: 'rG88FVLjvYiQaGftSa1cKuE2qNx7aK5ivo',
- * // seed: 'ssZkdwURFMBXenJPbrpE14b6noJSu'
- * // }.
+ // Sign a JSON Transaction
+  const signed = seedWallet.signTransaction({
+      TransactionType: 'Payment',
+      Account: 'rG88FVLjvYiQaGftSa1cKuE2qNx7aK5ivo'
+      ...........
+ }).
  *
- * // Sign a JSON Transaction
- *  const signed = seedWallet.signTransaction({
- *      TransactionType: 'Payment',
- *      Account: 'rG88FVLjvYiQaGftSa1cKuE2qNx7aK5ivo'
- *      ...........
- * }).
- *
- * console.log(signed)
- * // '1200007321......B01BE1DFF3'.
- * console.log(decode(signed))
- * // {
- * //   TransactionType: 'Payment',
- * //   SigningPubKey: '02FE9932A9C4AA2AC9F0ED0F2B89302DE7C2C95F91D782DA3CF06E64E1C1216449',
- * //   TxnSignature: '3045022100AAD......5B631ABD21171B61B07D304',
- * //   Account: 'rG88FVLjvYiQaGftSa1cKuE2qNx7aK5ivo'
- * //   ...........
- * // }
- * ```
- *
- * @category Signing
+ console.log(signed)
+ // '1200007321......B01BE1DFF3'.
+ console.log(decode(signed))
+ // {
+ //   TransactionType: 'Payment',
+ //   SigningPubKey: '02FE9932A9C4AA2AC9F0ED0F2B89302DE7C2C95F91D782DA3CF06E64E1C1216449',
+ //   TxnSignature: '3045022100AAD......5B631ABD21171B61B07D304',
+ //   Account: 'rG88FVLjvYiQaGftSa1cKuE2qNx7aK5ivo'
+ //   ...........
+ // }
+ ```
  */
 public class Wallet {
     public let publicKey: String
@@ -98,22 +94,21 @@ public class Wallet {
     public let seed: String?
 
     /**
-     * Alias for wallet.classicAddress.
-     *
-     * @returns The wallet's classic address.
+     Alias for wallet.classicAddress.
+     - returns:
+     The wallet's classic address.
      */
     public func address() -> String {
         return self.classicAddress
     }
 
     /**
-     * Creates a new Wallet.
-     *
-     * @param publicKey - The public key for the account.
-     * @param privateKey - The private key used for signing transactions for the account.
-     * @param opts - (Optional) Options to initialize a Wallet.
-     * @param opts.masterAddress - Include if a Wallet uses a Regular Key Pair. It must be the master address of the account.
-     * @param opts.seed - The seed used to derive the account keys.
+     Creates a new Wallet.
+     - parameters:
+        - publicKey: The public key for the account.
+        - privateKey: The private key used for signing transactions for the account.
+        - masterAddress: Include if a Wallet uses a Regular Key Pair. It must be the master address of the account.
+        - seed: The seed used to derive the account keys.
      */
     public init(
         publicKey: String,
@@ -124,16 +119,17 @@ public class Wallet {
         self.publicKey = publicKey
         self.privateKey = privateKey
         self.classicAddress = !(masterAddress ?? "").isEmpty
-            ? try! ensureClassicAddress(account: masterAddress!)
-            : try! Keypairs.deriveAddress(publicKey: publicKey)
+        ? try! ensureClassicAddress(account: masterAddress!)
+        : try! Keypairs.deriveAddress(publicKey: publicKey)
         self.seed = seed
     }
 
     /**
-     * Generates a new Wallet using a generated seed.
-     *
-     * @param algorithm - The digital signature algorithm to generate an address for.
-     * @returns A new Wallet derived from a generated seed.
+     Generates a new Wallet using a generated seed.
+     - parameters:
+        - algorithm: The digital signature algorithm to generate an address for.
+     - returns:
+     A new Wallet derived from a generated seed.
      */
     public static func generate(algorithm: AlgorithmType = .ed25519) -> Wallet {
         let seed: String = try! Keypairs.generateSeed(options: KeypairsOptions(algorithm: algorithm))
@@ -141,13 +137,13 @@ public class Wallet {
     }
 
     /**
-     * Derives a wallet from a seed.
-     *
-     * @param seed - A string used to generate a keypair (publicKey/privateKey) to derive a wallet.
-     * @param opts - (Optional) Options to derive a Wallet.
-     * @param opts.algorithm - The digital signature algorithm to generate an address for.
-     * @param opts.masterAddress - Include if a Wallet uses a Regular Key Pair. It must be the master address of the account.
-     * @returns A Wallet derived from a seed.
+     Derives a wallet from a seed.
+     - parameters:
+        - seed: A string used to generate a keypair (publicKey/privateKey) to derive a wallet.
+        - algorithm: The digital signature algorithm to generate an address for.
+        - masterAddress: Include if a Wallet uses a Regular Key Pair. It must be the master address of the account.
+     - returns:
+     A Wallet derived from a seed.
      */
     public static func fromSeed(
         seed: String,
@@ -157,13 +153,13 @@ public class Wallet {
     }
 
     /**
-     * Derives a wallet from an entropy (array of random numbers).
-     *
-     * @param entropy - An array of random numbers to generate a seed used to derive a wallet.
-     * @param opts - (Optional) Options to derive a Wallet.
-     * @param opts.algorithm - The digital signature algorithm to generate an address for.
-     * @param opts.masterAddress - Include if a Wallet uses a Regular Key Pair. It must be the master address of the account.
-     * @returns A Wallet derived from an entropy.
+     Derives a wallet from an entropy (array of random numbers).
+     - parameters:
+        - entropy: An array of random numbers to generate a seed used to derive a wallet.
+        - algorithm: The digital signature algorithm to generate an address for.
+        - masterAddress: Include if a Wallet uses a Regular Key Pair. It must be the master address of the account.
+     - returns:
+     A Wallet derived from an entropy.
      */
     public static func fromEntropy(
         entropy: Entropy,
@@ -175,19 +171,17 @@ public class Wallet {
     }
 
     /**
-     * Derives a wallet from a bip39 or RFC1751 mnemonic (Defaults to bip39).
-     *
-     * @param mnemonic - A string consisting of words (whitespace delimited) used to derive a wallet.
-     * @param opts - (Optional) Options to derive a Wallet.
-     * @param opts.masterAddress - Include if a Wallet uses a Regular Key Pair. It must be the master address of the account.
-     * @param opts.derivationPath - The path to derive a keypair (publicKey/privateKey). Only used for bip39 conversions.
-     * @param opts.mnemonicEncoding - If set to 'rfc1751', this interprets the mnemonic as a rippled RFC1751 mnemonic like
-     *                          `wallet_propose` generates in rippled. Otherwise the function defaults to bip39 decoding.
-     * @param opts.algorithm - Only used if opts.mnemonicEncoding is 'rfc1751'. Allows the mnemonic to generate its
-     *                         secp256k1 seed, or its ed25519 seed. By default, it will generate the secp256k1 seed
-     *                         to match the rippled `wallet_propose` default algorithm.
-     * @returns A Wallet derived from a mnemonic.
-     * @throws ValidationError if unable to derive private key from mnemonic input.
+     Derives a wallet from a bip39 or RFC1751 mnemonic (Defaults to bip39).
+     - parameters:
+        - mnemonic: A string consisting of words (whitespace delimited) used to derive a wallet.
+        - masterAddress: Include if a Wallet uses a Regular Key Pair. It must be the master address of the account.
+        - derivationPath: The path to derive a keypair (publicKey/privateKey). Only used for bip39 conversions.
+        - mnemonicEncoding: If set to 'rfc1751', this interprets the mnemonic as a rippled RFC1751 mnemonic like `wallet_propose` generates in rippled. Otherwise the function defaults to bip39 decoding.
+        - algorithm: Only used if opts.mnemonicEncoding is 'rfc1751'. Allows the mnemonic to generate its secp256k1 seed, or its ed25519 seed. By default, it will generate the secp256k1 seed to match the rippled `wallet_propose` default algorithm.
+     - returns:
+     A Wallet derived from a mnemonic.
+     - throws:
+     ValidationError if unable to derive private key from mnemonic input.
      */
     public static func fromMnemonic(
         mnemonic: String,
@@ -238,13 +232,13 @@ public class Wallet {
     }
 
     /**
-     * Derives a wallet from a RFC1751 mnemonic, which is how `wallet_propose` encodes mnemonics.
-     *
-     * @param mnemonic - A string consisting of words (whitespace delimited) used to derive a wallet.
-     * @param opts - (Optional) Options to derive a Wallet.
-     * @param opts.masterAddress - Include if a Wallet uses a Regular Key Pair. It must be the master address of the account.
-     * @param opts.algorithm - The digital signature algorithm to generate an address for.
-     * @returns A Wallet derived from a mnemonic.
+     Derives a wallet from a RFC1751 mnemonic, which is how `wallet_propose` encodes mnemonics.
+     - parameters:
+        - mnemonic: A string consisting of words (whitespace delimited) used to derive a wallet.
+        - algorithm: The digital signature algorithm to generate an address for.
+        - masterAddress: Include if a Wallet uses a Regular Key Pair. It must be the master address of the account.
+     - returns:
+     A Wallet derived from a mnemonic.
      */
     private static func fromRFC1751Mnemonic(
         mnemonic: String,
@@ -263,13 +257,13 @@ public class Wallet {
     }
 
     /**
-     * Derive a Wallet from a seed.
-     *
-     * @param seed - The seed used to derive the wallet.
-     * @param opts - (Optional) Options to derive a Wallet.
-     * @param opts.algorithm - The digital signature algorithm to generate an address for.
-     * @param opts.masterAddress - Include if a Wallet uses a Regular Key Pair. It must be the master address of the account.
-     * @returns A Wallet derived from the seed.
+     Derive a Wallet from a seed.
+     - parameters:
+        - seed: The seed used to derive the wallet.
+        - algorithm: The digital signature algorithm to generate an address for.
+        - masterAddress: Include if a Wallet uses a Regular Key Pair. It must be the master address of the account.
+     - returns:
+     A Wallet derived from the seed.
      */
     private static func deriveWallet(
         seed: String,
@@ -285,15 +279,17 @@ public class Wallet {
     }
 
     /**
-     *    multisign?: boolean | string,
-     * Signs a transaction offline.
-     *
-     * @param this - Wallet instance.
-     * @param transaction - A transaction to be signed offline.
-     * @param multisign - Specify true/false to use multisign or actual address (classic/x-address) to make multisign tx request.
-     * @returns A signed transaction.
-     * @throws ValidationError if the transaction is already signed or does not encode/decode to same result.
-     * @throws XrplError if the issued currency being signed is XRP ignoring case.
+     Signs a transaction offline.
+     - parameters:
+        - transaction: A transaction to be signed offline.
+        - multisign: Specify true/false to use multisign or actual address (classic/x-address) to make multisign tx request.
+        - signingFor: The account the transaction is signingFor
+     - returns:
+     A signed transaction.
+     - throws:
+     ValidationError if the transaction is already signed or does not encode/decode to same result.
+     - throws:
+     XrplError if the issued currency being signed is XRP ignoring case.
      */
     public func sign(
         transaction: Transaction,
@@ -358,39 +354,46 @@ public class Wallet {
     }
 
     /**
-     * Verifies a signed transaction offline.
-     *
-     * @param signedTransaction - A signed transaction (hex string of signTransaction result) to be verified offline.
-     * @returns Returns true if a signedTransaction is valid.
+     Verifies a signed transaction offline.
+     - parameters:
+        - signedTransaction: A signed transaction (hex string of signTransaction result) to be verified offline.
+     - returns:
+     Returns true if a signedTransaction is valid.
      */
     public func verifyTransaction(signedTransaction: String) -> Bool {
         let tx = BinaryCodec.decode(buffer: signedTransaction)
         let messageHex: String = try! BinaryCodec.encodeForSigning(json: tx)
         let signature = tx["TxnSignature"] as? String
-        return Keypairs.verify(signature: messageHex.bytes, message: signature!.bytes, publicKey: self.publicKey)
+        return Keypairs.verify(
+            signature: Data(hex: signature!).bytes,
+            message: Data(hex: messageHex).bytes,
+            publicKey: self.publicKey
+        )
     }
 
     /**
-     * Gets an X-address in Testnet/Mainnet format.
-     *
-     * @param tag - A tag to be included within the X-address.
-     * @param isTestnet - A boolean to indicate if X-address should be in Testnet (true) or Mainnet (false) format.
-     * @returns An X-address.
+     Gets an X-address in Testnet/Mainnet format.
+     - parameters:
+        - tag: A tag to be included within the X-address.
+        - isTestnet: A boolean to indicate if X-address should be in Testnet (true) or Mainnet (false) format.
+     - returns:
+     An X-address.
      */
     public func getXAddress(tag: Int? = nil, isTest: Bool = false) -> String {
         return try! AddressCodec.classicAddressToXAddress(classicAddress: self.classicAddress, tag: tag, isTest: isTest)
     }
 
     /**
-     *  Decode a serialized transaction, remove the fields that are added during the signing process,
-     *  and verify that it matches the transaction prior to signing. This gives the user a sanity check
-     *  to ensure that what they try to encode matches the message that will be recieved by rippled.
-     *
-     * @param serialized - A signed and serialized transaction.
-     * @param tx - The transaction prior to signing.
-     * @throws A ValidationError if the transaction does not have a TxnSignature/Signers property, or if
-     * the serialized Transaction desn't match the original transaction.
-     * @throws XrplError if the transaction includes an issued currency which is equivalent to XRP ignoring case.
+     Decode a serialized transaction, remove the fields that are added during the signing process,
+     and verify that it matches the transaction prior to signing. This gives the user a sanity check
+     to ensure that what they try to encode matches the message that will be recieved by rippled.
+     - parameters:
+        - serialized: A signed and serialized transaction.
+        - tx: The transaction prior to signing.
+     - throws:
+     A ValidationError if the transaction does not have a TxnSignature/Signers property, or if the serialized Transaction desn't match the original transaction.
+     - throws:
+     XrplError if the transaction includes an issued currency which is equivalent to XRP ignoring case.
      */
     private func checkTxSerialization(serialized: String, tx: [String: AnyObject]) throws {
         // Decode the serialized transaction:
@@ -398,9 +401,9 @@ public class Wallet {
         //        var txCopy = try tx.toJson()
         var txCopy = tx
 
-        /*
-         * And ensure it is equal to the original tx, except:
-         * - It must have a TxnSignature or Signers (multisign).
+        /**
+         And ensure it is equal to the original tx, except:
+         - It must have a TxnSignature or Signers (multisign).
          */
         if decoded["TxnSignature"] == nil && decoded["Signers"] == nil {
             throw ValidationError("Serialized transaction must have a TxnSignature or Signers property")
@@ -411,16 +414,16 @@ public class Wallet {
         decoded["Signers"] = nil
 
         /*
-         * - If SigningPubKey was not in the original tx, then we should delete it.
-         *   But if it was in the original tx, then we should ensure that it has not been changed.
+         - If SigningPubKey was not in the original tx, then we should delete it.
+           But if it was in the original tx, then we should ensure that it has not been changed.
          */
         if txCopy["SigningPubKey"] == nil {
             decoded["SigningPubKey"] = nil
         }
 
         /*
-         * - Memos have exclusively hex data which should ignore case.
-         *   Since decode goes to upper case, we set all tx memos to be uppercase for the comparison.
+         - Memos have exclusively hex data which should ignore case.
+           Since decode goes to upper case, we set all tx memos to be uppercase for the comparison.
          */
         if let memos = txCopy["Memos"] as? [[String: AnyObject]] {
             txCopy["Memos"] = memos.map { memoclone -> [String: AnyObject] in
@@ -483,13 +486,13 @@ public class Wallet {
 }
 
 /**
- * Signs a transaction with the proper signing encoding.
- *
- * @param tx - A transaction to sign.
- * @param privateKey - A key to sign the transaction with.
- * @param signAs - Multisign only. An account address to include in the Signer field.
- * Can be either a classic address or an XAddress.
- * @returns A signed transaction in the proper format.
+ Signs a transaction with the proper signing encoding.
+ - parameters:
+    - tx: A transaction to sign.
+    - privateKey: A key to sign the transaction with.
+    - signAs: Multisign only. An account address to include in the Signer field. Can be either a classic address or an XAddress.
+ - returns:
+ A signed transaction in the proper format.
  */
 func computeSignature(
     tx: [String: AnyObject],
@@ -510,12 +513,12 @@ func computeSignature(
 }
 
 /**
- * Remove trailing insignificant zeros for non-XRP Payment amount.
- * This resolves the serialization mismatch bug when encoding/decoding a non-XRP Payment transaction
- * with an amount that contains trailing insignificant zeros; for example, '123.4000' would serialize
- * to '123.4' and cause a mismatch.
- *
- * @param tx - The transaction prior to signing.
+ Remove trailing insignificant zeros for non-XRP Payment amount.
+ This resolves the serialization mismatch bug when encoding/decoding a non-XRP Payment transaction
+ with an amount that contains trailing insignificant zeros; for example, '123.4000' would serialize
+ to '123.4' and cause a mismatch.
+ - parameters:
+    - tx: The transaction prior to signing.
  */
 func removeTrailingZeros(tx: inout [String: AnyObject]) {
     if let tt = tx["TransactionType"] as? String, tt == "Payment", let amountValue = tx["amount"] as? String, amountValue.contains(where: { $0 == "." }) {
@@ -525,9 +528,11 @@ func removeTrailingZeros(tx: inout [String: AnyObject]) {
 }
 
 /**
- * Convert an ISO code to a hex string representation
- *
- * @param iso - A 3 letter standard currency code
+ Convert an ISO code to a hex string representation
+ - parameters:
+    - iso: A 3 letter standard currency code
+ - returns:
+ ISO Bytes
  */
 func isoToHex(iso: String) -> String {
     return try! isoToBytes(iso: iso).toHex

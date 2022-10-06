@@ -12,16 +12,17 @@ import Foundation
 
 public class WalletSigner: Wallet {
     /**
-     * Takes several transactions with Signer fields (in object or blob form) and creates a
-     * single transaction with all Signers that then gets signed and returned.
-     *
-     * @param transactions - An array of signed Transactions (in object or blob form) to combine into a single signed Transaction.
-     * @returns A single signed Transaction which has all Signers from transactions within it.
-     * @throws ValidationError if:
-     * - There were no transactions given to sign
-     * - The SigningPubKey field is not the empty string in any given transaction
-     * - Any transaction is missing a Signers field.
-     * @category Signing
+     Takes several transactions with Signer fields (in object or blob form) and creates a
+     single transaction with all Signers that then gets signed and returned.
+     - parameters:
+        - transactions: An array of signed Transactions (in object or blob form) to combine into a single signed Transaction.
+     - returns:
+     A single signed Transaction which has all Signers from transactions within it.
+     - throws:
+     ValidationError if:
+     - There were no transactions given to sign
+     - The SigningPubKey field is not the empty string in any given transaction
+     - Any transaction is missing a Signers field.
      */
     //    public func multisign(transactions: [Transaction] | [String]) -> String {
     public static func multisign(transactions: [Transaction]) throws -> String {
@@ -33,7 +34,7 @@ public class WalletSigner: Wallet {
             let tx: Transaction = getDecodedTransaction(tx: txOrBlob)
             let jsonTx: [String: AnyObject] = try tx.toJson()
             /*
-             * This will throw a more clear error for JS users if any of the supplied transactions has incorrect formatting
+             This will throw a more clear error for JS users if any of the supplied transactions has incorrect formatting
              */
             // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- validate does not accept Transaction type
             try validate(transaction: jsonTx)
@@ -57,13 +58,13 @@ public class WalletSigner: Wallet {
     }
 
     /**
-     * Creates a signature that can be used to redeem a specific amount of XRP from a payment channel.
-     *
-     * @param wallet - The account that will sign for this payment channel.
-     * @param channelId - An id for the payment channel to redeem XRP from.
-     * @param amount - The amount in drops to redeem.
-     * @returns A signature that can be used to redeem a specific amount of XRP from a payment channel.
-     * @category Utilities
+     Creates a signature that can be used to redeem a specific amount of XRP from a payment channel.
+     - parameters:
+        - wallet: The account that will sign for this payment channel.
+        - channelId: An id for the payment channel to redeem XRP from.
+        - amount: The amount in drops to redeem.
+     - returns:
+     A signature that can be used to redeem a specific amount of XRP from a payment channel.
      */
     public static func authorizeChannel(
         wallet: Wallet,
@@ -79,18 +80,15 @@ public class WalletSigner: Wallet {
     }
 
     /**
-     * Verifies that the given transaction has a valid signature based on public-key encryption.
-     *
-     * @param tx - A transaction to verify the signature of. (Can be in object or encoded string format).
-     * @returns Returns true if tx has a valid signature, and returns false otherwise.
-     * @category Utilities
+     Verifies that the given transaction has a valid signature based on public-key encryption.
+     - parameters:
+        - tx: A transaction to verify the signature of. (Can be in object or encoded string format).
+     - returns:
+     Returns true if tx has a valid signature, and returns false otherwise.
      */
     public static func verifySignature(tx: String) -> Bool {
         let decodedTx: Transaction = self.getDecodedTransaction(tx: tx)
         let json: [String: AnyObject] = try! decodedTx.toJson()
-        print(Data(hex: json["TxnSignature"] as! String).bytes.toHex)
-        print(Data(hex: try! BinaryCodec.encodeForSigning(json: json)).bytes.toHex)
-        print(json["SigningPubKey"] as! String)
         return Keypairs.verify(
             signature: Data(hex: json["TxnSignature"] as! String).bytes,
             message: Data(hex: try! BinaryCodec.encodeForSigning(json: json)).bytes,
@@ -108,10 +106,11 @@ public class WalletSigner: Wallet {
     }
 
     /**
-     * The transactions should all be equal except for the 'Signers' field.
-     *
-     * @param transactions - An array of Transactions which are expected to be equal other than 'Signers'.
-     * @throws ValidationError if the transactions are not equal in any field other than 'Signers'.
+     The transactions should all be equal except for the 'Signers' field.
+     - parameters:
+        - transactions: An array of Transactions which are expected to be equal other than 'Signers'.
+     - throws:
+     ValidationError if the transactions are not equal in any field other than 'Signers'.
      */
     static func validateTransactionEquivalence(transactions: [Transaction]) throws {
         //        let exampleTransaction = JSON.stringify({
@@ -142,14 +141,15 @@ public class WalletSigner: Wallet {
     }
 
     /**
-     * If presented in binary form, the Signers array must be sorted based on
-     * the numeric value of the signer addresses, with the lowest value first.
-     * (If submitted as JSON, the submit_multisigned method handles this automatically.)
-     * https://xrpl.org/multi-signing.html.
-     *
-     * @param left - A Signer to compare with.
-     * @param right - A second Signer to compare with.
-     * @returns 1 if left \> right, 0 if left = right, -1 if left \< right, and null if left or right are NaN.
+     If presented in binary form, the Signers array must be sorted based on
+     the numeric value of the signer addresses, with the lowest value first.
+     (If submitted as JSON, the submit_multisigned method handles this automatically.)
+     https://xrpl.org/multi-signing.html.
+     - parameters:
+        - left: A Signer to compare with.
+        - right: A second Signer to compare with.
+     - returns:
+     1 if left \> right, 0 if left = right, -1 if left \< right, and null if left or right are NaN.
      */
     // TODO: Refactor this
     static func compareSigners(left: Signer, right: Signer) -> Int {

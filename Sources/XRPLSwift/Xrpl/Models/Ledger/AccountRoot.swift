@@ -70,7 +70,7 @@ public class AccountRoot: BaseLedgerEntry {
      for the ASCII representation of the domain.
      */
     public let domain: String?
-    //// The md5 hash of an email address.
+    /// The md5 hash of an email address.
     public let emailHash: String?
     /**
      A public key that may be used to send encrypted messages to this account

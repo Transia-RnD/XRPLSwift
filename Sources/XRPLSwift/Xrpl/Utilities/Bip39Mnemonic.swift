@@ -9,6 +9,7 @@ import CryptoSwift
 import Foundation
 
 // https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki
+
 public final class Bip39Mnemonic {
     public enum Strength: Int {
         case normal = 128

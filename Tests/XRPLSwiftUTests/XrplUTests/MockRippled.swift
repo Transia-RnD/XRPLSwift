@@ -146,8 +146,6 @@ class MockRippledSocket {
                 }
             } catch let error as XrplError {
                 if !self.suppressOutput {
-                    // eslint-disable-next-line no-console -- only logger.infoed out on error
-                    //                    console.error(error.message)
                     self.logger.error("\(error.localizedDescription)")
                 }
                 if !request.isEmpty {

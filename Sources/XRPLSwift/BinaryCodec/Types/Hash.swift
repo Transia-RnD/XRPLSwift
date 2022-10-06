@@ -27,10 +27,10 @@ class Hash: SerializedType {
     }
 
     /**
-     * Read a Hash object from a BinaryParser
-     *
-     * @param parser BinaryParser to read the hash from
-     * @param hint length of the bytes to read, optional
+     Read a Hash object from a BinaryParser
+     - parameters:
+        - parser: BinaryParser to read the hash from
+        - hint: Length of the bytes to read, optional
      */
     override func fromParser(
         parser: BinaryParser,
@@ -40,9 +40,9 @@ class Hash: SerializedType {
     }
 
     /**
-     * Overloaded operator for comparing two hash objects
-     *
-     * @param other The Hash to compare this to
+     Overloaded operator for comparing two hash objects
+     - parameters:
+        - other: The Hash to compare this to
      */
     func compareTo(other: Hash) -> Int {
         return 0
@@ -52,7 +52,8 @@ class Hash: SerializedType {
     }
 
     /**
-     * @returns the hex-string representation of this Hash
+     - returns:
+     the hex-string representation of this Hash
      */
     override func str() -> String {
         return self.toHex()
@@ -63,10 +64,11 @@ class Hash: SerializedType {
     //    }
 
     /**
-     * Returns four bits at the specified depth within a hash
-     *
-     * @param depth The depth of the four bits
-     * @returns The number represented by the four bits
+     Returns four bits at the specified depth within a hash
+     - parameters:
+        - depth: The depth of the four bits
+     - returns:
+     The number represented by the four bits
      */
     func nibblet(depth: Int) -> Int {
         let byteIx = depth > 0 ? (depth / 2) | 0 : 0

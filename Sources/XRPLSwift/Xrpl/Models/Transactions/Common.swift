@@ -69,10 +69,11 @@ func isRecord(value: Any) -> Bool {
 }
 
 /**
- * Verify the form and type of an IssuedCurrencyAmount at runtime.
- *
- * @param input - The input to check the form and type of.
- * @returns Whether the IssuedCurrencyAmount is malformed.
+ Verify the form and type of an IssuedCurrencyAmount at runtime.
+ - parameters:
+    - input: The input to check the form and type of.
+ - returns:
+ Whether the IssuedCurrencyAmount is malformed.
  */
 public func isIssuedCurrency(input: Any) -> Bool {
     guard let input = input as? [String: AnyObject] else {
@@ -94,10 +95,11 @@ public func isIssuedCurrency(input: Any) -> Bool {
 }
 
 /**
- * Verify the form and type of an Amount at runtime.
- *
- * @param amount - The object to check the form and type of.
- * @returns Whether the Amount is malformed.
+ Verify the form and type of an Amount at runtime.
+ - parameters:
+    - amount: The object to check the form and type of.
+ - returns:
+ Whether the Amount is malformed.
  */
 public func isAmount(amount: Any) -> Bool {
     if amount is String {
@@ -107,76 +109,76 @@ public func isAmount(amount: Any) -> Bool {
 }
 
 /**
- * Every transaction has the same set of common fields.
+ Every transaction has the same set of common fields.
  */
 public class BaseTransaction: Codable {
-    /** The unique address of the account that initiated the transaction. */
+    /// The unique address of the account that initiated the transaction.
     public var account: String
     /**
-     * The type of transaction. Valid types include: `Payment`, `OfferCreate`,
-     * `SignerListSet`, `EscrowCreate`, `EscrowFinish`, `EscrowCancel`,
-     * `PaymentChannelCreate`, `PaymentChannelFund`, `PaymentChannelClaim`, and
-     * `DepositPreauth`.
+     The type of transaction. Valid types include: `Payment`, `OfferCreate`,
+     `SignerListSet`, `EscrowCreate`, `EscrowFinish`, `EscrowCancel`,
+     `PaymentChannelCreate`, `PaymentChannelFund`, `PaymentChannelClaim`, and
+     `DepositPreauth`.
      */
     public var transactionType: String
     /**
-     * Integer amount of XRP, in drops, to be destroyed as a cost for
-     * distributing this transaction to the network. Some transaction types have
-     * different minimum requirements.
+     Integer amount of XRP, in drops, to be destroyed as a cost for
+     distributing this transaction to the network. Some transaction types have
+     different minimum requirements.
      */
     public var fee: String?
     /**
-     * The sequence number of the account sending the transaction. A transaction
-     * is only valid if the Sequence number is exactly 1 greater than the previous
-     * transaction from the same account. The special case 0 means the transaction
-     * is using a Ticket instead.
+     The sequence number of the account sending the transaction. A transaction
+     is only valid if the Sequence number is exactly 1 greater than the previous
+     transaction from the same account. The special case 0 means the transaction
+     is using a Ticket instead.
      */
     public var sequence: Int?
     /**
-     * Hash value identifying another transaction. If provided, this transaction
-     * is only valid if the sending account's previously-sent transaction matches
-     * the provided hash.
+     Hash value identifying another transaction. If provided, this transaction
+     is only valid if the sending account's previously-sent transaction matches
+     the provided hash.
      */
     public var accountTxnId: String?
-    /** Set of bit-flags for this transaction. */
+    /// Set of bit-flags for this transaction.
     //    public let Flags: Int? | GlobalFlags
     public var flags: Int?
     /**
-     * Highest ledger index this transaction can appear in. Specifying this field
-     * places a strict upper limit on how long the transaction can wait to be
-     * validated or rejected.
+     Highest ledger index this transaction can appear in. Specifying this field
+     places a strict upper limit on how long the transaction can wait to be
+     validated or rejected.
      */
     public var lastLedgerSequence: Int?
     /**
-     * Additional arbitrary information used to identify this transaction.
+     Additional arbitrary information used to identify this transaction.
      */
     public var memos: [MemoWrapper]?
     /**
-     * Array of objects that represent a multi-signature which authorizes this
-     * transaction.
+     Array of objects that represent a multi-signature which authorizes this
+     transaction.
      */
     public var signers: [Signer]?
     /**
-     * Arbitrary integer used to identify the reason for this payment, or a sender
-     * on whose behalf this transaction is made. Conventionally, a refund should
-     * specify the initial payment's SourceTag as the refund payment's
-     * DestinationTag.
+     Arbitrary integer used to identify the reason for this payment, or a sender
+     on whose behalf this transaction is made. Conventionally, a refund should
+     specify the initial payment's SourceTag as the refund payment's
+     DestinationTag.
      */
     public var sourceTag: Int?
     /**
-     * Hex representation of the public key that corresponds to the private key
-     * used to sign this transaction. If an empty string, indicates a
-     * multi-signature is present in the Signers field instead.
+     Hex representation of the public key that corresponds to the private key
+     used to sign this transaction. If an empty string, indicates a
+     multi-signature is present in the Signers field instead.
      */
     public var signingPubKey: String?
     /**
-     * The sequence number of the ticket to use in place of a Sequence number. If
-     * this is provided, Sequence must be 0. Cannot be used with AccountTxnID.
+     The sequence number of the ticket to use in place of a Sequence number. If
+     this is provided, Sequence must be 0. Cannot be used with AccountTxnID.
      */
     public var ticketSequence: Int?
     /**
-     * The signature that verifies this transaction as originating from the
-     * account it says it is from.
+     The signature that verifies this transaction as originating from the
+     account it says it is from.
      */
     public var txnSignature: String?
 
@@ -373,10 +375,11 @@ public func validateBaseTransaction(common: [String: AnyObject]) throws {
 }
 
 /**
- * Parse the value of an amount, expressed either in XRP or as an Issued Currency, into a number.
- *
- * @param amount - An Amount to parse for its value.
- * @returns The parsed amount value, or NaN if the amount count not be parsed.
+ Parse the value of an amount, expressed either in XRP or as an Issued Currency, into a number.
+ - parameters:
+    - amount: An Amount to parse for its value.
+ - returns:
+ The parsed amount value, or NaN if the amount count not be parsed.
  */
 public func parseAmountValue(amount: Any) -> Double? {
     if !isAmount(amount: amount) {
