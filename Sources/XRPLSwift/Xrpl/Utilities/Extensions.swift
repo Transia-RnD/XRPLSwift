@@ -14,6 +14,12 @@ func sha512HalfHash(data: [UInt8]) -> [UInt8] {
     return [UInt8](Data(data).sha512().prefix(through: 31))
 }
 
+extension Array where Element == UInt8 {
+    func sha512Half() -> [UInt8] {
+        return [UInt8](self.sha512().prefix(through: 31))
+    }
+}
+
 extension Data {
     func sha512Half() -> Data {
         Data(self.sha512().prefix(through: 31))

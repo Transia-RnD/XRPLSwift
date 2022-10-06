@@ -22,10 +22,10 @@ public enum AlgorithmType {
 
     var algorithm: SigningAlgorithm.Type {
         switch self {
-        case .ed25519:
-            return ED25519.self
-        case .secp256k1:
-            return SECP256K1.self
+            case .ed25519:
+                return ED25519.self
+            case .secp256k1:
+                return SECP256K1.self
         }
     }
 
@@ -33,10 +33,10 @@ public enum AlgorithmType {
 
     var rawValue: String {
         switch self {
-        case .ed25519:
-            return "ed25519"
-        case .secp256k1:
-            return "secp256k1"
+            case .ed25519:
+                return "ed25519"
+            case .secp256k1:
+                return "secp256k1"
         }
     }
 }
@@ -76,51 +76,53 @@ public class Keypairs {
         //        )
         let entropy: Entropy = options.entropy != nil ? options.entropy! : Entropy()
         switch options.algorithm {
-        case .ed25519:
-            return try! XrplCodec.encodeSeed(entropy: entropy.bytes, type: .ed25519)
-        case .secp256k1:
-            return try! XrplCodec.encodeSeed(entropy: entropy.bytes, type: .secp256k1)
-        case .none:
-            throw KeypairsErrors.unknown
+            case .ed25519:
+                return try! XrplCodec.encodeSeed(entropy: entropy.bytes, type: .ed25519)
+            case .secp256k1:
+                return try! XrplCodec.encodeSeed(entropy: entropy.bytes, type: .secp256k1)
+            case .none:
+                throw KeypairsErrors.unknown
         }
     }
 
     public static func hash(message: String) -> [UInt8] {
-        //      return hashjs.sha512().update(message).digest().slice(0, 32)
-
-        return []
+        print(message.hexToBytes.toHex)
+        print(message.hexToBytes.sha512Half().toHex)
+        return message.hexToBytes.sha512Half()
     }
 
     public static func deriveKeypair(seed: String, isValidator: Bool = false) throws -> KeyPair {
         let (bytes, seedType) = try XrplCodec.decodeSeed(seed: seed)
         let entropy = Entropy(bytes: bytes)
         switch seedType {
-        case .ed25519:
-            let keyPair = try! ED25519.deriveKeyPair(seed: entropy.bytes, isValidator: isValidator)
-            //            let messageToVerify = hash("This test message should verify.")
-            //            let signature = method.sign(messageToVerify, keypair.privateKey)
-            //            /* istanbul ignore if */
-            //            if algorithm.verify(
-            //                signature: signature,
-            //                message: messageToVerify,
-            //                publicKey: keypair.publicKey
-            //            ) != true {
-            //                throw KeyPairError.invalidPrivateKey("derived keypair did not generate verifiable signature")
-            //            }
-            return keyPair
-        case .secp256k1:
-            let keyPair = try! SECP256K1.deriveKeyPair(seed: entropy.bytes, isValidator: isValidator)
-            //            let messageToVerify = hash("This test message should verify.")
-            //            let signature = method.sign(messageToVerify, keypair.privateKey)
-            // istanbul ignore if
-            //            if algorithm.verify(
-            //                signature: signature,
-            //                message: messageToVerify,
-            //                publicKey: keypair.publicKey
-            //            ) != true {
-            //                throw KeyPairError.invalidPrivateKey("derived keypair did not generate verifiable signature")
-            //            }
-            return keyPair
+            case .ed25519:
+                let keypair = try! ED25519.deriveKeyPair(seed: entropy.bytes, isValidator: isValidator)
+                let messageToVerify = hash(message: "This test message should verify.")
+                let signature = self.sign(message: messageToVerify, privateKey: keypair.privateKey)
+                if self.verify(
+                    signature: signature,
+                    message: messageToVerify,
+                    publicKey: keypair.publicKey
+                ) != true {
+                    throw KeypairsErrors.validation("derived keypair did not generate verifiable signature")
+                }
+                return keypair
+            case .secp256k1:
+                let keypair = try! SECP256K1.deriveKeyPair(seed: entropy.bytes, isValidator: isValidator)
+                let messageToVerify = hash(message: "This test message should verify.")
+                let signature = self.sign(message: messageToVerify, privateKey: keypair.privateKey)
+                if self.verify(
+                    signature: signature,
+                    message: messageToVerify,
+                    publicKey: keypair.publicKey
+                ) != true {
+                    throw KeypairsErrors.validation("derived keypair did not generate verifiable signature")
+                }
+                print(keypair.privateKey)
+                print(signature.toHex)
+                print(messageToVerify.toHex)
+                print(keypair.publicKey)
+                return keypair
         }
     }
 
