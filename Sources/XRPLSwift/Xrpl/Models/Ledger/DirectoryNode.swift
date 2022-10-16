@@ -13,13 +13,13 @@ import Foundation
  The DirectoryNode object type provides a list of links to other objects in
  the ledger's state tree.
  */
-open class DirectoryNode: BaseLedgerEntry {
-    var ledgerEntryType: String = "DirectoryNode"
+public class DirectoryNode: BaseLedgerEntry {
+    let ledgerEntryType: String = "DirectoryNode"
     /**
      A bit-map of boolean flags enabled for this directory. Currently, the
      protocol defines no flags for DirectoryNode objects.
      */
-    var flags: Int
+    let flags: Int
     /// The ID of root object for this directory.
     let rootIndex: String
     /// The contents of this Directory: an array of IDs of other objects.

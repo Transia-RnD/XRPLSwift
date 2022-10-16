@@ -33,10 +33,10 @@ class xUInt32: xUInt {
      A new xUInt32.
      */
     override func fromParser(
-        parser: BinaryParser,
-        hint: Int? = nil
+        _ parser: BinaryParser,
+        _ hint: Int? = nil
     ) -> xUInt32 {
-        return try! xUInt32(parser.read(n: WIDTH32))
+        return try! xUInt32(parser.read(WIDTH32))
     }
 
     /*
@@ -48,7 +48,7 @@ class xUInt32: xUInt {
      Raises:
      XRPLBinaryCodecException: If a xUInt32 cannot be constructed.
      */
-    class func from(value: Int) -> xUInt32 {
+    class func from(_ value: Int) -> xUInt32 {
         let valueBytes = Data(bytes: value.data.bytes, count: WIDTH32)
         return xUInt32(valueBytes.bytes.reversed())
     }

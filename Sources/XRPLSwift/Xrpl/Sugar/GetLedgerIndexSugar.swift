@@ -14,7 +14,7 @@
  - returns
  The most recently validated ledger index.
  */
-public func getLedgerIndex(client: XrplClient) async throws -> Int {
+public func getLedgerIndex(_ client: XrplClient) async throws -> Int {
     let dict: [String: AnyObject] = [
         "command": "ledger",
         "ledger_index": "validated"

@@ -37,7 +37,7 @@ let binaryTypes: [String: SerializedType.Type] = [
  - returns:
  The corresponding class object.
  */
-func getTypeByName(name: String) -> SerializedType.Type? {
+func getTypeByName(_ name: String) -> SerializedType.Type? {
     var typeMap: [String: SerializedType.Type] = [:]
     for (name, objectType) in binaryTypes { typeMap[name] = objectType.self }
     return typeMap[name]
@@ -55,7 +55,7 @@ class FieldInstance {
     var name: String
     var header: FieldHeader
     var ordinal: Int
-    var associatedType: SerializedType.Type
+    var associatedType: SerializedType.Type?
 
     /**
      Construct a FieldInstance.
@@ -65,9 +65,9 @@ class FieldInstance {
      - fieldHeader: A FieldHeader object with the typeCode and fieldCode.
      */
     init(
-        fieldInfo: FieldInfo,
-        fieldName: String,
-        fieldHeader: FieldHeader
+        _ fieldInfo: FieldInfo,
+        _ fieldName: String,
+        _ fieldHeader: FieldHeader
     ) {
         self.nth = fieldInfo.nth
         self.isVLEncoded = fieldInfo.isVLEncoded
@@ -77,7 +77,6 @@ class FieldInstance {
         self.name = fieldName
         self.header = fieldHeader
         self.ordinal = header.typeCode << 16 | nth
-        // TODO: this fails
-        self.associatedType = getTypeByName(name: self.type)!
+        self.associatedType = getTypeByName(self.type)
     }
 }

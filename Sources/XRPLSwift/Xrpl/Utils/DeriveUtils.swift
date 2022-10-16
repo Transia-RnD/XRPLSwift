@@ -19,10 +19,10 @@ import Foundation
  X-Address.
  */
 func deriveXAddress(
-    publicKey: String,
-    tag: Int? = nil,
-    test: Bool = false
+    _ publicKey: String,
+    _ tag: Int? = nil,
+    _ test: Bool = false
 ) -> String {
-    let classicAddress = try! Keypairs.deriveAddress(publicKey: publicKey)
+    let classicAddress = try! Keypairs.deriveAddress(publicKey)
     return try! AddressCodec.classicAddressToXAddress(classicAddress: classicAddress, tag: tag, isTest: test)
 }

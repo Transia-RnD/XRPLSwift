@@ -36,7 +36,7 @@ public func fundAccount(
         "Amount": "400000000"
     ] as [String: AnyObject]
     let payment: Transaction = try! Transaction(json)!
-    let opts: SubmitOptions = SubmitOptions(autofill: nil, failHard: nil, wallet: Wallet.fromSeed(seed: masterSecret))
+    let opts: SubmitOptions = SubmitOptions(autofill: nil, failHard: nil, wallet: Wallet.fromSeed(masterSecret))
     let response = try! await client.submit(transaction: payment, opts: opts).wait() as? BaseResponse<SubmitResponse>
     guard let result = response?.result, result.engineResult == "tesSUCCESS" else {
         assertionFailure("Response not successful, \(response?.result?.engineResult)")

@@ -106,7 +106,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         if self.addresses?.count == 1 && account == self.addresses?.last {
             guard let privateKey = try? self.getKeyData(password) else {throw AbstractRippleKeystoreError.invalidPasswordError}
             guard let string: String = String(data: privateKey, encoding: .utf8) else { throw AbstractRippleKeystoreError.invalidPasswordError }
-            return try Wallet.fromSeed(seed: string)
+            return try Wallet.fromSeed(string)
         }
         throw AbstractRippleKeystoreError.invalidAccountError
     }
@@ -180,7 +180,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
             mac: mac.toHexString(),
             version: nil
         )
-        let wallet = Wallet.fromSeed(seed: seed)
+        let wallet = Wallet.fromSeed(seed)
         self.address = wallet.classicAddress
         let keystoreparams = RippleKeystoreParamsV3(
             address: wallet.classicAddress,
@@ -273,7 +273,7 @@ public class RippleKeystoreV3: AbstractRippleKeystore {
         default:
             return nil
         }
-        let decryptedPKString = try Keypairs.deriveKeypair(seed: decryptedPK!.toHex)
+        let decryptedPKString = try Keypairs.deriveKeypair(decryptedPK!.toHex)
         return decryptedPKString.privateKey.data(using: .utf8)
     }
 

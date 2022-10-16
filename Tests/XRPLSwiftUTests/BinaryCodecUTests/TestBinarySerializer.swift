@@ -13,14 +13,14 @@ import XCTest
 final class TestBinarySerializer: XCTestCase {
 
     func testWriteLengthEncoded() {
-        //        [100, 1000, 10000].forEach { _case in
-        [100].forEach { _case in
+        let array: [Int] = [100, 1000, 10000]
+        array.forEach { _case in
             let byteString: String = String(repeating: "A2", count: _case)
-            let blob = try! Blob.from(value: byteString)
+            let blob = try! Blob.from(byteString)
             XCTAssertEqual(blob.bytes.count, _case)
 
             let binarySerializer = BinarySerializer()
-            binarySerializer.writeLengthEncoded(value: blob)
+            binarySerializer.writeLengthEncoded(blob)
             let binaryParser = BinaryParser(hex: binarySerializer.sink.toBytes().toHex)
             let decodedLength = try! binaryParser.readLengthPrefix()
             XCTAssertEqual(_case, decodedLength)

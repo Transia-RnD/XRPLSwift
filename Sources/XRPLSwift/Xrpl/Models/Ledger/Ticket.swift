@@ -14,32 +14,32 @@ import Foundation
  number that has been set aside for future use. You can create new tickets
  with a TicketCreate transaction.
  */
-open class Ticket: BaseLedgerEntry {
-    var ledgerEntryType: String = "Ticket"
+public class Ticket: BaseLedgerEntry {
+    public var ledgerEntryType: String = "Ticket"
     /// The account that owns this Ticket.
-    let account: String
+    public var account: String
     /**
      A bit-map of Boolean flags enabled for this Ticket. Currently, there are
      no flags defined for Tickets.
      */
-    var flags: Int = 0
+    public var flags: Int = 0
     /**
      A hint indicating which page of the owner directory links to this object,
      in case the directory consists of multiple pages.
      */
-    let ownerNode: String
+    public var ownerNode: String
     /**
      The identifying hash of the transaction that most recently modified this
      object.
      */
-    let previousTxnId: String
+    public var previousTxnId: String
     /**
      The index of the ledger that contains the transaction that most recently
      modified this object.
      */
-    let previousTxnLgrSeq: Int
+    public var previousTxnLgrSeq: Int
     /// The Sequence Number this Ticket sets aside.
-    let ticketSequence: Int
+    public var ticketSequence: Int
 
     enum CodingKeys: String, CodingKey {
         case account = "Account"

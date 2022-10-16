@@ -20,35 +20,35 @@ public class EscrowCreate: BaseTransaction {
      aside in escrow. This field is required.
      :meta hide-value:
      */
-    public let amount: Amount
+    public var amount: Amount
 
     /**
      The address that should receive the escrowed XRP when the time or
      condition is met. This field is required.
      :meta hide-value:
      */
-    public let destination: String
+    public var destination: String
 
     /**
      An arbitrary `destination tag
      <https://xrpl.org/source-and-destination-tags.html>`_ that
      identifies the reason for the Escrow, or a hosted recipient to pay.
      */
-    public let destinationTag: Int?
+    public var destinationTag: Int?
 
     /**
      The time, in seconds since the Ripple Epoch, when this escrow expires.
      This value is immutable; the funds can only be returned the sender after
      this time.
      */
-    public let cancelAfter: Int?
+    public var cancelAfter: Int?
 
     /**
      The time, in seconds since the Ripple Epoch, when the escrowed XRP can
      be released to the recipient. This value is immutable; the funds cannot
      move until this time is reached.
      */
-    public let finishAfter: Int?
+    public var finishAfter: Int?
 
     /**
      Hex value representing a `PREIMAGE-SHA-256 crypto-condition
@@ -56,7 +56,7 @@ public class EscrowCreate: BaseTransaction {
      The funds can only be delivered to the recipient if this condition is
      fulfilled.
      */
-    public let condition: String?
+    public var condition: String?
 
     enum CodingKeys: String, CodingKey {
         case amount = "Amount"

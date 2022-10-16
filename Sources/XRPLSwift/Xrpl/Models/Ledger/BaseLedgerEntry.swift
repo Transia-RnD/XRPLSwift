@@ -9,8 +9,8 @@
 
 import Foundation
 
-open class BaseLedgerEntry: Codable {
-    let index: String
+public class BaseLedgerEntry: Codable {
+    public var index: String
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)

@@ -24,6 +24,6 @@ class Hash160: Hash {
     }
 
     override class func getLength() -> Int {
-        return self.WIDTH160
+        return Hash160.WIDTH160
     }
 }

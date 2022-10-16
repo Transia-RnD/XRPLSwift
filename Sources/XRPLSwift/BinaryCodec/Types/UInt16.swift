@@ -33,10 +33,10 @@ class xUInt16: xUInt {
      A new xUInt16.
      */
     override func fromParser(
-        parser: BinaryParser,
-        hint: Int? = nil
+        _ parser: BinaryParser,
+        _ hint: Int? = nil
     ) -> xUInt16 {
-        return try! xUInt16(parser.read(n: WIDTH16))
+        return try! xUInt16(parser.read(WIDTH16))
     }
 
     /*
@@ -48,7 +48,7 @@ class xUInt16: xUInt {
      Raises:
      XRPLBinaryCodecException: If a xUInt16 cannot be constructed.
      */
-    class func from(value: Int) -> xUInt16 {
+    class func from(_ value: Int) -> xUInt16 {
         let valueBytes = Data(bytes: value.data.bytes, count: WIDTH16)
         return xUInt16(valueBytes.bytes.reversed())
     }

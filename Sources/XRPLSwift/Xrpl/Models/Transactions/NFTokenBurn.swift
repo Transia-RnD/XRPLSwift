@@ -19,7 +19,7 @@ import Foundation
  is reduced by one.
  */
 public class NFTokenBurn: BaseTransaction {
-    //    public var account: String
+//    public var account: String
     /**
      Identifies the AccountID that submitted this transaction. The account must
      be the present owner of the token or, if the lsfBurnable flag is set
@@ -28,13 +28,13 @@ public class NFTokenBurn: BaseTransaction {
      :meta hide-value:
      */
 
-    public let nftokenId: String
+    public var nftokenId: String
     /**
      Identifies the NFToken to be burned. This field is required.
      :meta hide-value:
      */
 
-    public let owner: String?
+    public var owner: String?
     /**
      Indicates which account currently owns the token if it is different than
      Account. Only used to burn tokens which have the lsfBurnable flag enabled
@@ -52,7 +52,6 @@ public class NFTokenBurn: BaseTransaction {
         nftokenId: String,
         owner: String? = nil
     ) {
-        //        self.account = account // SUPER INIT
         self.nftokenId = nftokenId
         self.owner = owner
         super.init(account: account, transactionType: "NFTokenBurn")

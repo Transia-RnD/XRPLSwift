@@ -28,26 +28,26 @@ import Foundation
  */
 public class GatewayBalancesRequest: BaseRequest {
     /// The Address to check. This should be the issuing address.
-    public let account: String
+    public var account: String
     /**
      If true, only accept an address or public key for the account parameter.
      Defaults to false.
      */
-    public let strict: Bool?
+    public var strict: Bool?
     /**
      An operational address to exclude from the balances issued, or an array of
      Such addresses.
      */
-    public let hotwallet: String?
-    //    public let hotwallet: String | [String]?
+    public var hotwallet: String?
+    //    public var hotwallet: String | [String]?
 
     /// A 20-byte hex string for the ledger version to use.
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger version to use, or a shortcut string to
      choose a ledger automatically.
      */
-    public let ledgerIndex: LedgerIndex?
+    public var ledgerIndex: LedgerIndex?
 
     enum CodingKeys: String, CodingKey {
         case account = "account"
@@ -115,16 +115,16 @@ public class GatewayBalancesRequest: BaseRequest {
 }
 
 public struct Balance: Codable {
-    public let currency: String
-    public let value: String
+    public var currency: String
+    public var value: String
 }
 
 public struct BaseBalance: Codable {
-    public let balances: [String: [Balance]]
+    public var balances: [String: [Balance]]
 }
 
 public struct BaseCurrency: Codable {
-    public let currency: [String: String]
+    public var currency: [String: String]
 }
 
 /**
@@ -132,41 +132,41 @@ public struct BaseCurrency: Codable {
  */
 public class GatewayBalancesResponse: Codable {
     /// The address of the account that issued the balances.
-    public let account: String
+    public var account: String
     /**
      Total amounts issued to addresses not excluded, as a map of currencies
      to the total value issued.
      */
-    public let obligations: BaseCurrency?
+    public var obligations: BaseCurrency?
     /**
      Amounts issued to the hotwallet addresses from the request. The keys are
      addresses and the values are arrays of currency amounts they hold.
      */
-    public let balances: BaseBalance?
+    public var balances: BaseBalance?
     /**
      Total amounts held that are issued by others. In the recommended
      configuration, the issuing address should have none.
      */
-    public let assets: BaseBalance?
+    public var assets: BaseBalance?
     /**
      The identifying hash of the ledger version that was used to generate
      this response.
      */
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the current in-progress ledger version, which was
      used to retrieve this information.
      */
-    public let ledgerIndex: Int?
+    public var ledgerIndex: Int?
     /**
      The ledger index of the ledger version that was used to generate this
      response.
      */
-    public let ledgerCurrentIndex: Int?
+    public var ledgerCurrentIndex: Int?
     /**
      validated
      */
-    public let validated: Bool?
+    public var validated: Bool?
 
     enum CodingKeys: String, CodingKey {
         case account = "account"

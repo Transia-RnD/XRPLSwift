@@ -20,10 +20,10 @@ final class TestBinaryParser: XCTestCase {
             let firstByte = try binaryParser.peek()
             XCTAssertEqual(firstByte, testBytes[0])
 
-            try binaryParser.skip(n: 3)
+            try binaryParser.skip(3)
             XCTAssertEqual([UInt8](testBytes[3...]), binaryParser.bytes)
 
-            let nextNBytes = try binaryParser.read(n: 2)
+            let nextNBytes = try binaryParser.read(2)
             XCTAssertEqual([UInt8](testBytes[3..<5]), nextNBytes)
         } catch {
             print(error.localizedDescription)
@@ -34,21 +34,21 @@ final class TestBinaryParser: XCTestCase {
     func testIntReadMethods() {
         let testHex: String = "01000200000003"
         let binaryParser = BinaryParser(hex: testHex)
-        let int8 = binaryParser.readUInt8()
-        let int16 = binaryParser.readUInt16()
-        let int32 = binaryParser.readUInt32()
+        let int8 = try! binaryParser.readUInt8()
+        let int16 = try! binaryParser.readUInt16()
+        let int32 = try! binaryParser.readUInt32()
         XCTAssertEqual(int8, 1)
         XCTAssertEqual(int16, 2)
         XCTAssertEqual(int32, 3)
     }
 
     func testReadVariableLength() {
-        //        [100, 1000, 10000].forEach { _case in
-        [100].forEach { _case in
+        let array: [Int] = [100, 1000, 10000]
+        array.forEach { _case in
             let binarySerializer = BinarySerializer()
             let byteString: String = String(repeating: "A2", count: _case)
-            let blob = try! Blob.from(value: byteString)
-            binarySerializer.writeLengthEncoded(value: blob)
+            let blob = try! Blob.from(byteString)
+            binarySerializer.writeLengthEncoded(blob)
 
             // hex string representation of encoded length prefix
             let encodedLength = binarySerializer.sink.toHex()

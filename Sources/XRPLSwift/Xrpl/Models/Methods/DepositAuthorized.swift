@@ -16,16 +16,16 @@ import Foundation
  */
 public class DepositAuthorizedRequest: BaseRequest {
     /// The sender of a possible payment.
-    public let sourceAccount: String
+    public var sourceAccount: String
     /// The recipient of a possible payment.
-    public let destinationAccount: String
+    public var destinationAccount: String
     /// A 20-byte hex string for the ledger version to use.
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger to use, or a shortcut string to choose a
      ledger automatically.
      */
-    public let ledgerIndex: LedgerIndex?
+    public var ledgerIndex: LedgerIndex?
 
     enum CodingKeys: String, CodingKey {
         case sourceAccount = "source_account"
@@ -96,28 +96,28 @@ public class DepositAuthorizedResponse: Codable {
      account does not require Deposit Authorization or the source account is
      preauthorized.
      */
-    public let depositAuthorized: Bool
+    public var depositAuthorized: Bool
     /// The source account specified in the request.
-    public let sourceAccount: String
+    public var sourceAccount: String
     /// The destination account specified in the request.
-    public let destinationAccount: String
+    public var destinationAccount: String
     /**
      The identifying hash of the ledger that was used to generate this
      Response.
      */
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger version that was used to generate this
      Response.
      */
-    public let ledgerIndex: Int?
+    public var ledgerIndex: Int?
     /**
      The ledger index of the current in-progress ledger version, which was
      used to generate this response.
      */
-    public let ledgerCurrentIndex: Int?
+    public var ledgerCurrentIndex: Int?
     /// If true, the information comes from a validated ledger version.
-    public let validated: Bool?
+    public var validated: Bool?
 
     enum CodingKeys: String, CodingKey {
         case depositAuthorized = "deposit_authorized"

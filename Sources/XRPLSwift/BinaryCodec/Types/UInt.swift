@@ -11,8 +11,8 @@ import Foundation
 
 // swiftlint:disable:next type_name
 class xUInt: SerializedType {
-    init(_ bytes: [UInt8]) {
-        super.init(bytes: bytes)
+    override init(_ bytes: [UInt8]) {
+        super.init(bytes)
     }
 
     var value: Int {

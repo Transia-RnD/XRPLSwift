@@ -116,35 +116,35 @@ extension AccountObject {
  */
 public class AccountObjectsRequest: BaseRequest {
     /// A unique identifier for the account, most commonly the account's address.
-    public let account: String
+    public var account: String
     /**
      If included, filter results to include only this type of ledger object.
      The valid types are: Check , DepositPreauth, Escrow, Offer, PayChannel,
      SignerList, Ticket, and RippleState (trust line).
      */
-    public let type: AccountObjectType?
+    public var type: AccountObjectType?
     /**
      If true, the response only includes objects that would block this account
      from being deleted. The default is false.
      */
-    public let deletionBlockersOnly: Bool?
+    public var deletionBlockersOnly: Bool?
     /// A 20-byte hex string for the ledger version to use.
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger to use, or a shortcut string to choose a
      Ledger automatically.
      */
-    public let ledgerIndex: LedgerIndex?
+    public var ledgerIndex: LedgerIndex?
     /**
      The maximum number of objects to include in the results. Must be within
      the inclusive range 10 to 400 on non-admin connections. The default is 200.
      */
-    public let limit: Int?
+    public var limit: Int?
     /**
      Value from a previous paginated response. Resume retrieving data where
      that response left off.
      */
-    public let marker: AnyCodable?
+    public var marker: AnyCodable?
 
     enum CodingKeys: String, CodingKey {
         case account = "account"
@@ -228,41 +228,41 @@ public class AccountObjectsRequest: BaseRequest {
  */
 public class AccountObjectsResponse: Codable {
     /// Unique Address of the account this request corresponds to.
-    public let account: String
+    public var account: String
     /**
      Array of objects owned by this account. Each object is in its raw
      ledger format.
      */
-    public let accountObjects: [AccountObject]
+    public var accountObjects: [AccountObject]
     /**
      The identifying hash of the ledger that was used to generate this
      response.
      */
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger version that was used to generate this
      response.
      */
-    public let ledgerIndex: Int?
+    public var ledgerIndex: Int?
     /**
      The ledger index of the current in-progress ledger version, which was
      used to generate this response.
      */
-    public let ledgerCurrentIndex: Int?
+    public var ledgerCurrentIndex: Int?
     /// The limit that was used in this request, if any.
-    public let limit: Int?
+    public var limit: Int?
     /**
      Server-defined value indicating the response is paginated. Pass this to
      the next call to resume where this call left off. Omitted when there are
      no additional pages after this one.
      */
-    public let marker: AnyCodable?
+    public var marker: AnyCodable?
     /**
      If included and set to true, the information in this response comes from
      a validated ledger version. Otherwise, the information is subject to
      change.
      */
-    public let validated: Bool?
+    public var validated: Bool?
 
     enum CodingKeys: String, CodingKey {
         case account = "account"

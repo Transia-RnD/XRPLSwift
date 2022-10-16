@@ -9,9 +9,9 @@
 
 import Foundation
 
-class DisabledValidator: Codable {
-    let firstLedgerSequence: Int
-    let publicKey: String
+public class DisabledValidator: Codable {
+    public var firstLedgerSequence: Int
+    public var publicKey: String
 
     enum CodingKeys: String, CodingKey {
         case firstLedgerSequence = "FirstLedgerSequence"
@@ -23,22 +23,22 @@ class DisabledValidator: Codable {
  The NegativeUNL object type contains the current status of the Negative UNL,
  a list of trusted validators currently believed to be offline.
  */
-open class NegativeUNL: BaseLedgerEntry {
-    var ledgerEntryType: String = "NegativeUNL"
+public class NegativeUNL: BaseLedgerEntry {
+    public var ledgerEntryType: String = "NegativeUNL"
     /**
      A list of trusted validators that are currently disabled.
      */
-    let disabledValidators: [DisabledValidator]?
+    public var disabledValidators: [DisabledValidator]?
     /**
      The public key of a trusted validator that is scheduled to be disabled in
      the next flag ledger.
      */
-    let validatorToDisable: String?
+    public var validatorToDisable: String?
     /**
      The public key of a trusted validator in the Negative UNL that is
      scheduled to be re-enabled in the next flag ledger.
      */
-    let validatorToReEnable: String?
+    public var validatorToReEnable: String?
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)

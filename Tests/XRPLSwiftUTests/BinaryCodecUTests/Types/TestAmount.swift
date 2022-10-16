@@ -65,17 +65,17 @@ final class TestAmount: XCTestCase {
     func testAssertXrpIsValidPasses() {
         let validZero: String = "0"
         let validAmount: String = "1000"
-        try! verifyXrpValue(xrpValue: validZero)
-        try! verifyXrpValue(xrpValue: validAmount)
+        try! verifyXrpValue(validZero)
+        try! verifyXrpValue(validAmount)
     }
 
     func testAssertXrpIsValidRaises() {
         let invalidAmountLarge: String = "1e20"
         let invalidAmountSmall: String = "1e-7"
         let invalidAmountDecimal: String = "1.234"
-        XCTAssertThrowsError(try verifyXrpValue(xrpValue: invalidAmountLarge))
-        XCTAssertThrowsError(try verifyXrpValue(xrpValue: invalidAmountSmall))
-        XCTAssertThrowsError(try verifyXrpValue(xrpValue: invalidAmountDecimal))
+        XCTAssertThrowsError(try verifyXrpValue(invalidAmountLarge))
+        XCTAssertThrowsError(try verifyXrpValue(invalidAmountSmall))
+        XCTAssertThrowsError(try verifyXrpValue(invalidAmountDecimal))
     }
 
     func testIOUIsValid() {
@@ -96,7 +96,7 @@ final class TestAmount: XCTestCase {
             "2E+2"
         ]
         for v in variables {
-            try! verifyIouValue(issuedCurrencyValue: v)
+            try! verifyIouValue(v)
         }
     }
 
@@ -110,14 +110,14 @@ final class TestAmount: XCTestCase {
 
     func testFromValueIssuedCurrency() {
         for (serialized, json) in IOU_CASES {
-            let amountObject: xAmount = try! xAmount.from(value: json)
+            let amountObject: xAmount = try! xAmount.from(json)
             XCTAssertEqual(amountObject.toHex(), serialized)
         }
     }
 
     func testFromValueXrp() {
         for (json, serialized) in XRP_CASES {
-            let amountObject: xAmount = try! xAmount.from(value: json)
+            let amountObject: xAmount = try! xAmount.from(json)
             XCTAssertEqual(amountObject.toHex(), serialized)
         }
     }
@@ -125,7 +125,7 @@ final class TestAmount: XCTestCase {
     func testToJsonIssuedCurrency() {
         for (serialized, json) in IOU_CASES {
             let parser: BinaryParser = BinaryParser(hex: serialized)
-            let amountObject: xAmount = try! xAmount().fromParser(parser: parser)
+            let amountObject: xAmount = try! xAmount().fromParser(parser)
             let result: Any = amountObject.toJson()
             XCTAssertEqual(result as! [String: String], json)
         }
@@ -134,7 +134,7 @@ final class TestAmount: XCTestCase {
     func testToJsonXrp() {
         for (json, serialized) in XRP_CASES {
             let parser: BinaryParser = BinaryParser(hex: serialized)
-            let amountObject: xAmount = try! xAmount().fromParser(parser: parser)
+            let amountObject: xAmount = try! xAmount().fromParser(parser)
             let result: Any = amountObject.toJson()
             XCTAssertEqual(result as! String, json)
         }

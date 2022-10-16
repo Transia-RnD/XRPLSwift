@@ -29,7 +29,7 @@ public struct LoadDefinitions {
     // swiftlint:disable:next identifier_name
     public var FIELD_HEADER_NAME_MAP: [FieldHeader: String] = [:]
 
-    init(dict: [String: AnyObject]) {
+    init(_ dict: [String: AnyObject]) {
         self.TYPES = dict["TYPES"] as! [String: Int]
         self.TYPE_ORDINAL_MAP = self.TYPES
         self.LEDGER_ENTRY_TYPES = dict["LEDGER_ENTRY_TYPES"] as! [String: Int]
@@ -63,10 +63,10 @@ public struct LoadDefinitions {
         self.LEDGER_ENTRY_TYPES_REVERSE = reverseLE
 
         for field in self.FIELDS {
-            let fieldInfo = FieldInfo(dict: field.value as! NSDictionary)
+            let fieldInfo = FieldInfo(field.value as! NSDictionary)
             let header = FieldHeader(
-                typeCode: self.TYPE_ORDINAL_MAP[fieldInfo.type]!,
-                fieldCode: fieldInfo.nth
+                self.TYPE_ORDINAL_MAP[fieldInfo.type]!,
+                fieldInfo.nth
             )
             self.FIELD_INFO_MAP[field.key] = fieldInfo
             self.FIELD_HEADER_NAME_MAP[header] = field.key
@@ -83,7 +83,7 @@ public struct Definitions {
             let data: Data = serializerDefinitions.data(using: .utf8)!
             let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
             if let jsonResult = jsonResult as? [String: AnyObject] {
-                self.definitions = LoadDefinitions(dict: jsonResult)
+                self.definitions = LoadDefinitions(jsonResult)
             }
         } catch {
             print(error.localizedDescription)
@@ -109,7 +109,7 @@ public struct Definitions {
      Returns:
      The serialization data type for the given field name.
      */
-    func getFieldTypeName(fieldName: String) -> String {
+    func getFieldTypeName(_ fieldName: String) -> String {
         return definitions.FIELD_INFO_MAP[fieldName]!.type
     }
 
@@ -126,8 +126,8 @@ public struct Definitions {
      Raises:
      XRPLBinaryCodecException: If definitions.json is invalid.
      */
-    func getFieldTypeCode(fieldName: String) throws -> Int {
-        let fieldTypeName: String = self.getFieldTypeName(fieldName: fieldName)
+    func getFieldTypeCode(_ fieldName: String) throws -> Int {
+        let fieldTypeName: String = self.getFieldTypeName(fieldName)
         let fieldTypeCode: Int = definitions.TYPE_ORDINAL_MAP[fieldTypeName]!
         //        if (type(of: fieldTypeCode) != type(of: Int.self)) {
         //            throw BinaryError.unknownError(error: "Field type codes in definitions.json must be ints.")
@@ -145,7 +145,7 @@ public struct Definitions {
      Returns:
      The field code associated with the given field.
      */
-    func getFieldCode(fieldName: String) -> Int {
+    func getFieldCode(_ fieldName: String) -> Int {
         return definitions.FIELD_INFO_MAP[fieldName]!.nth
     }
 
@@ -158,10 +158,10 @@ public struct Definitions {
      Returns:
      A FieldHeader object for a field of the given field name.
      */
-    func getFieldHeaderFromName(fieldName: String) -> FieldHeader {
+    func getFieldHeaderFromName(_ fieldName: String) -> FieldHeader {
         return FieldHeader(
-            typeCode: try! self.getFieldTypeCode(fieldName: fieldName),
-            fieldCode: try! self.getFieldCode(fieldName: fieldName)
+            try! self.getFieldTypeCode(fieldName),
+            try! self.getFieldCode(fieldName)
         )
     }
 
@@ -174,7 +174,7 @@ public struct Definitions {
      Returns:
      The name of the field described by the given FieldHeader.
      */
-    func getFieldNameFromHeader(fieldHeader: FieldHeader) -> String {
+    func getFieldNameFromHeader(_ fieldHeader: FieldHeader) -> String {
         return definitions.FIELD_HEADER_NAME_MAP[fieldHeader]!
     }
 
@@ -185,13 +185,13 @@ public struct Definitions {
      Returns:
      A FieldInstance object for the given field name.
      */
-    func getFieldInstance(fieldName: String) -> FieldInstance {
+    func getFieldInstance(_ fieldName: String) -> FieldInstance {
         let info: FieldInfo = definitions.FIELD_INFO_MAP[fieldName]!
-        let fieldHeader = getFieldHeaderFromName(fieldName: fieldName)
+        let fieldHeader = getFieldHeaderFromName(fieldName)
         return FieldInstance(
-            fieldInfo: info,
-            fieldName: fieldName,
-            fieldHeader: fieldHeader
+            info,
+            fieldName,
+            fieldHeader
         )
     }
 
@@ -202,7 +202,7 @@ public struct Definitions {
      Returns:
      An integer representing the given transaction type string in an enum.
      */
-    func getTransactionTypeCode(transactionType: String) -> Int {
+    func getTransactionTypeCode(_ transactionType: String) -> Int {
         return definitions.TRANSACTION_TYPES[transactionType]!
     }
 
@@ -213,7 +213,7 @@ public struct Definitions {
      Returns:
      The string name of the transaction type.
      */
-    func getTransactionTypeName(transactionType: Int) -> String {
+    func getTransactionTypeName(_ transactionType: Int) -> String {
         return definitions.TRANSACTION_TYPES_REVERSE[transactionType]!
     }
 
@@ -225,7 +225,7 @@ public struct Definitions {
      Returns:
      An integer representing the given transaction result type string in an enum.
      */
-    func getTransactionResultCode(transactionResultType: String) -> Int {
+    func getTransactionResultCode(_ transactionResultType: String) -> Int {
         return definitions.TRANSACTION_RESULTS[transactionResultType]!
     }
 
@@ -236,7 +236,7 @@ public struct Definitions {
      Returns:
      The string name of the transaction result type.
      */
-    func getTransactionResultName(transactionResultType: Int) -> String {
+    func getTransactionResultName(_ transactionResultType: Int) -> String {
         return definitions.TRANSACTION_RESULTS_REVERSE[transactionResultType]!
     }
 
@@ -247,7 +247,7 @@ public struct Definitions {
      Returns:
      An integer representing the given ledger entry type string in an enum.
      */
-    func getLedgerEntryTypeCode(ledgerEntryType: String) -> Int {
+    func getLedgerEntryTypeCode(_ ledgerEntryType: String) -> Int {
         return definitions.LEDGER_ENTRY_TYPES[ledgerEntryType]!
     }
 
@@ -258,7 +258,7 @@ public struct Definitions {
      Returns:
      The string name of the ledger entry type.
      */
-    func getLedgerEntryTypeName(ledgerEntryType: Int) -> String {
+    func getLedgerEntryTypeName(_ ledgerEntryType: Int) -> String {
         return definitions.LEDGER_ENTRY_TYPES_REVERSE[ledgerEntryType]!
     }
 }

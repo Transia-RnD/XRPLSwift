@@ -12,7 +12,6 @@ import Foundation
 
 let DROPS_PER_XRP: Double = 1000000.0 // swiftlint:disable:this identifier_name
 let MAX_FRACTION_LENGTH: Int = 6 // swiftlint:disable:this identifier_name
-// let BASE_TEN: Int = 10 // swiftlint:disable:this identifier_name
 let SANITY_CHECK: String = "/^-?[0-9.]+$/u" // swiftlint:disable:this identifier_name
 
 /**
@@ -32,7 +31,7 @@ public func dropsToXrp(_ dropsToConvert: Any) throws -> String {
      */
 
     /// check that the value is valid and actually a number
-    guard dropsToConvert is String, let drops = Decimal(string: dropsToConvert as! String)?.description else {
+    guard let dropsToConvert = dropsToConvert as? String, let drops = Decimal(string: dropsToConvert)?.description else {
         throw ValidationError("dropsToXrp: invalid value '\(dropsToConvert)', should be a Decimal or string-encoded number.")
     }
 
@@ -69,7 +68,7 @@ public func dropsToXrp(_ dropsToConvert: Any) throws -> String {
 public func xrpToDrops(_ xrpToConvert: Any) throws -> String {
     /// Important: specify base BASE_TEN to avoid exponential notation, e.g. '1e-7'.
     /// check that the value is valid and actually a number
-    guard xrpToConvert is String, let xrp = Decimal(string: xrpToConvert as! String)?.description else {
+    guard let xrpToConvert = xrpToConvert as? String, let xrp = Decimal(string: xrpToConvert)?.description else {
         throw ValidationError("xrpToConvert: invalid value '\(xrpToConvert)', should be a Decimal or string-encoded number.")
     }
 

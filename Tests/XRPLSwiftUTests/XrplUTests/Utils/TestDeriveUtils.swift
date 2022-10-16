@@ -17,17 +17,17 @@ final class TestDeriveUtils: XCTestCase {
     func testAddressForKey() {
         XCTAssertEqual(
             deriveXAddress(
-                publicKey: "035332FBA71D705BD5D97014A833BE2BBB25BEFCD3506198E14AFEA241B98C2D06",
-                tag: nil,
-                test: false
+                "035332FBA71D705BD5D97014A833BE2BBB25BEFCD3506198E14AFEA241B98C2D06",
+                nil,
+                false
             ),
             "XVZVpQj8YSVpNyiwXYSqvQoQqgBttTxAZwMcuJd4xteQHyt"
         )
         XCTAssertEqual(
             deriveXAddress(
-                publicKey: "035332FBA71D705BD5D97014A833BE2BBB25BEFCD3506198E14AFEA241B98C2D06",
-                tag: nil,
-                test: true
+                "035332FBA71D705BD5D97014A833BE2BBB25BEFCD3506198E14AFEA241B98C2D06",
+                nil,
+                true
             ),
             "TVVrSWtmQQssgVcmoMBcFQZKKf56QscyWLKnUyiuZW8ALU4"
         )
@@ -36,9 +36,9 @@ final class TestDeriveUtils: XCTestCase {
     func testNoTagNil() {
         XCTAssertEqual(
             deriveXAddress(
-                publicKey: "ED02C98225BD1C79E9A4F95C6978026D300AFB7CA2A34358920BCFBCEBE6AFCD6A",
-                tag: nil,
-                test: false
+                "ED02C98225BD1C79E9A4F95C6978026D300AFB7CA2A34358920BCFBCEBE6AFCD6A",
+                nil,
+                false
             ),
             "X7FbrqVEqdTNoX5qq94rTdarGjeVYmkxi8A1TKAJUnyLL9g"
         )

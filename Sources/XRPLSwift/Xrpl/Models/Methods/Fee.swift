@@ -48,23 +48,23 @@ public struct Drops: Codable {
      The transaction cost required for a reference transaction to be
      included in a ledger under minimum load, represented in drops of XRP.
      */
-    public let baseFee: String
+    public var baseFee: String
     /**
      An approximation of the median transaction cost among transactions.
      Included in the previous validated ledger, represented in drops of XRP.
      */
-    public let medianFee: String
+    public var medianFee: String
     /**
      The minimum transaction cost for a reference transaction to be queued
      for a later ledger, represented in drops of XRP. If greater than
      base_fee, the transaction queue is full.
      */
-    public let minimumFee: String
+    public var minimumFee: String
     /**
      The minimum transaction cost that a reference transaction must pay to
      be included in the current open ledger, represented in drops of XRP.
      */
-    public let openLedgerFee: String
+    public var openLedgerFee: String
 
     enum CodingKeys: String, CodingKey {
         case baseFee = "base_fee"
@@ -79,22 +79,22 @@ public struct Levels: Codable {
      The median transaction cost among transactions in the previous
      validated ledger, represented in fee levels.
      */
-    public let medianLevel: String
+    public var medianLevel: String
     /**
      The minimum transaction cost required to be queued for a future
      ledger, represented in fee levels.
      */
-    public let minimumLevel: String
+    public var minimumLevel: String
     /**
      The minimum transaction cost required to be included in the current
      open ledger, represented in fee levels.
      */
-    public let openLedgerLevel: String
+    public var openLedgerLevel: String
     /**
      The equivalent of the minimum transaction cost, represented in fee
      levels.
      */
-    public let referenceLevel: String
+    public var referenceLevel: String
 
     enum CodingKeys: String, CodingKey {
         case medianLevel = "median_level"
@@ -109,24 +109,24 @@ public struct Levels: Codable {
  */
 public class FeeResponse: Codable {
     /// Number of transactions provisionally included in the in-progress ledger.
-    public let currentLedgerSize: String
+    public var currentLedgerSize: String
     /// Number of transactions currently queued for the next ledger.
-    public let currentQueueSize: String
-    public let drops: Drops
+    public var currentQueueSize: String
+    public var drops: Drops
     /**
      The approximate number of transactions expected to be included in the
      current ledger. This is based on the number of transactions in the
      previous ledger.
      */
-    public let expectedLedgerSize: String
+    public var expectedLedgerSize: String
     /// The Ledger Index of the current open ledger these stats describe.
-    public let ledgerCurrentIndex: Int
-    public let levels: Levels
+    public var ledgerCurrentIndex: Int
+    public var levels: Levels
     /**
      The maximum number of transactions that the transaction queue can
      currently hold.
      */
-    public let maxQueueSize: String
+    public var maxQueueSize: String
 
     enum CodingKeys: String, CodingKey {
         case currentLedgerSize = "current_ledger_size"

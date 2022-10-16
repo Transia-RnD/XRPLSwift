@@ -16,14 +16,14 @@ final class TestFieldIDCodec: XCTestCase {
 
     func testEncode() {
         for test in TestFieldIDCodec.fieldTests {
-            let result: String = try! FieldIdCodec.encode(fieldName: test.name).toHex
+            let result: String = try! FieldIdCodec.encode(test.name).toHex
             XCTAssertEqual(test.expectedHex, result)
         }
     }
 
     func testDecode() {
         for test in TestFieldIDCodec.fieldTests {
-            let result: String = try! FieldIdCodec.decode(fieldId: test.expectedHex)
+            let result: String = try! FieldIdCodec.decode(test.expectedHex)
             XCTAssertEqual(test.name, result)
         }
     }

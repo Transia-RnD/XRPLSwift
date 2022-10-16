@@ -19,16 +19,16 @@ public class AccountNFTsRequest: BaseRequest {
      The unique identifier of an account, typically the account's address. The
      request returns NFTs owned by this account.
      */
-    public let account: String
+    public var account: String
     /**
      Limit the number of NFTokens to retrieve.
      */
-    public let limit: Int?
+    public var limit: Int?
     /**
      Value from a previous paginated response. Resume retrieving data where
      that response left off.
      */
-    public let marker: AnyCodable?
+    public var marker: AnyCodable?
 
     enum CodingKeys: String, CodingKey {
         case account
@@ -85,12 +85,12 @@ public class AccountNFTsRequest: BaseRequest {
  One NFToken that might be returned from an {@link AccountNFTsRequest}.
  */
 public struct AccountNFToken: Codable {
-    public let flags: Int
-    public let issuer: String
-    public let nfTokenID: String
-    public let nfTokenTaxon: Int
-    public let uri: String?
-    public let nftSerial: Int
+    public var flags: Int
+    public var issuer: String
+    public var nfTokenID: String
+    public var nfTokenTaxon: Int
+    public var uri: String?
+    public var nftSerial: Int
 
     enum CodingKeys: String, CodingKey {
         case flags = "Flags"
@@ -109,26 +109,26 @@ public class AccountNFTsResponse: Codable {
     /**
      The account requested.
      */
-    public let account: String
+    public var account: String
     /**
      A list of NFTs owned by the specified account.
      */
-    public let accountNfts: [AccountNFToken]
+    public var accountNfts: [AccountNFToken]
     /**
      The ledger index of the current open ledger, which was used when
      retrieving this information.
      */
-    public let ledgerCurrentIndex: Int
+    public var ledgerCurrentIndex: Int
     /// If true, this data comes from a validated ledger.
-    public let validated: Bool
+    public var validated: Bool
     /// The limit that was used to fulfill this request.
-    public let limit: Int?
+    public var limit: Int?
     /**
      Server-defined value indicating the response is paginated. Pass this to
      the next call to resume where this call left off. Omitted when there are
      No additional pages after this one.
      */
-    public let marker: AnyCodable?
+    public var marker: AnyCodable?
 
     enum CodingKeys: String, CodingKey {
         case account = "account"

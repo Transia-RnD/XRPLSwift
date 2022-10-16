@@ -22,7 +22,7 @@ public class CheckCancel: BaseTransaction {
      hexadecimal string. This field is required.
      :meta hide-value:
      */
-    public let checkId: String
+    public var checkId: String
 
     enum CodingKeys: String, CodingKey {
         case checkId = "CheckID"

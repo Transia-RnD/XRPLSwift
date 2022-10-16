@@ -19,7 +19,7 @@ internal let MAX_IOU_PRECISION: Int = 16
 internal let MAX_DROPS = Decimal(string: "1e17")!
 // swiftlint:disable:next identifier_name
 internal let MIN_XRP = Decimal(string: "1e-6")!
-// swiftlint:disable:next identifier_name
+
 internal let mask = Int(0x00000000ffffffff)
 // swiftlint:disable:next identifier_name
 internal let NOT_XRP_BIT_MASK: Int = 0x80
@@ -31,8 +31,6 @@ internal let ZERO_CURRENCY_AMOUNT_HEX: UInt64 = 0x8000000000000000
 internal let NATIVE_AMOUNT_BYTE_LENGTH: Int = 8
 // swiftlint:disable:next identifier_name
 internal let CURRENCY_AMOUNT_BYTE_LENGTH: Int = 48
-// swiftlint:disable:next identifier_name
-
 // Constants for validating amounts.
 // swiftlint:disable:next identifier_name
 internal let MIN_IOU_MANTISSA = Int(10 ** 15)
@@ -44,7 +42,7 @@ func containsDecimal(string: String) -> Bool {
     return !string.contains(where: { $0 == "." })
 }
 
-func verifyXrpValue(xrpValue: String) throws {
+func verifyXrpValue(_ xrpValue: String) throws {
     /*
      Validates the format of an XRP amount.
      Raises if value is invalid.
@@ -71,7 +69,7 @@ func verifyXrpValue(xrpValue: String) throws {
     }
 }
 
-func verifyIouValue(issuedCurrencyValue: String) throws {
+func verifyIouValue(_ issuedCurrencyValue: String) throws {
     /*
      Validates the format of an issued currency amount value.
      Raises if value is invalid.
@@ -89,15 +87,15 @@ func verifyIouValue(issuedCurrencyValue: String) throws {
     }
     let exponent = decimalValue.exponent
     if
-        (calculatePrecision(value: issuedCurrencyValue) > MAX_IOU_PRECISION)
+        (calculatePrecision(issuedCurrencyValue) > MAX_IOU_PRECISION)
             || (exponent > MAX_IOU_EXPONENT)
             || (exponent < MIN_IOU_EXPONENT) {
         throw BinaryError.unknownError(error: "Decimal precision out of range for issued currency value.")
     }
-    try verifyNoDecimal(decimal: decimalValue)
+    try verifyNoDecimal(decimalValue)
 }
 
-func calculatePrecision(value: String) -> Int {
+func calculatePrecision(_ value: String) -> Int {
     // Calculate the precision of given value as a string.
     let decimalValue = Decimal(string: value)!
     if decimalValue.exponent == decimalValue.asInt {
@@ -106,7 +104,7 @@ func calculatePrecision(value: String) -> Int {
     return decimalValue.digits().count
 }
 
-func verifyNoDecimal(decimal: Decimal) throws {
+func verifyNoDecimal(_ decimal: Decimal) throws {
     /*
      Ensure that the value after being multiplied by the exponent
      does not contain a decimal.
@@ -125,13 +123,13 @@ func verifyNoDecimal(decimal: Decimal) throws {
     }
 }
 
-func serializeIssuedCurrencyValue(value: String) throws -> [UInt8] {
+func serializeIssuedCurrencyValue(_ value: String) throws -> [UInt8] {
     /*
      Serializes the value field of an issued currency amount to its bytes representation.
      :param value: The value to serialize, as a string.
      :return: A bytes object encoding the serialized value.
      */
-    try verifyIouValue(issuedCurrencyValue: value)
+    try verifyIouValue(value)
     let decimalValue = Decimal(string: value)!
     if decimalValue.isZero {
         return try ZERO_CURRENCY_AMOUNT_HEX.data.toArray(type: UInt8.self).reversed()
@@ -182,7 +180,7 @@ func serializeIssuedCurrencyValue(value: String) throws -> [UInt8] {
 //    withUnsafeBytes(of: value.bigEndian, Array.init)
 // }
 
-func serializeXrpAmount(value: String) throws -> [UInt8] {
+func serializeXrpAmount(_ value: String) throws -> [UInt8] {
     /*
      Serializes an XRP amount.
      Args:
@@ -190,13 +188,13 @@ func serializeXrpAmount(value: String) throws -> [UInt8] {
      Returns:
      The bytes representing the serialized XRP amount.
      */
-    try verifyXrpValue(xrpValue: value)
+    try verifyXrpValue(value)
     // set the "is positive" bit (this is backwards from usual two's complement!)
     let valueWithPosBit = Int(value)! | POS_SIGN_BIT_MASK
     return try valueWithPosBit.data.toArray(type: UInt8.self).reversed()
 }
 
-func serializeIssuedCurrencyAmount(value: [String: String]) throws -> [UInt8] {
+func serializeIssuedCurrencyAmount(_ value: [String: String]) throws -> [UInt8] {
     /*
      Serializes an issued currency amount.
      Args:
@@ -205,31 +203,31 @@ func serializeIssuedCurrencyAmount(value: [String: String]) throws -> [UInt8] {
      The bytes representing the serialized issued currency amount.
      */
     let amountString: String = value["value"]!
-    let amountBytes: [UInt8] = try serializeIssuedCurrencyValue(value: amountString)
-    let currencyBytes: [UInt8] = try xCurrency.from(value: value["currency"]!).toBytes()
-    let issuerBytes: [UInt8] = try AccountID.from(value: value["issuer"]!).toBytes()
+    let amountBytes: [UInt8] = try serializeIssuedCurrencyValue(amountString)
+    let currencyBytes: [UInt8] = try xCurrency.from(value["currency"]!).toBytes()
+    let issuerBytes: [UInt8] = try AccountID.from(value["issuer"]!).toBytes()
     return amountBytes + currencyBytes + issuerBytes
 }
 
 // swiftlint:disable:next type_name
 class xAmount: SerializedType {
-    static var defaultAmount = xAmount(bytes: "4000000000000000".hexToBytes)
+    static var defaultAmount = xAmount("4000000000000000".hexToBytes)
 
-    override init(bytes: [UInt8]? = nil) {
-        super.init(bytes: bytes ?? xAmount.defaultAmount.bytes)
+    override init(_ bytes: [UInt8]? = nil) {
+        super.init(bytes ?? xAmount.defaultAmount.bytes)
     }
 
-    static func from(value: String) throws -> xAmount {
-        return try xAmount(bytes: serializeXrpAmount(value: value))
+    static func from(_ value: String) throws -> xAmount {
+        return try xAmount(serializeXrpAmount(value))
     }
 
-    static func from(value: [String: String]) throws -> xAmount {
-        return try xAmount(bytes: serializeIssuedCurrencyAmount(value: value))
+    static func from(_ value: [String: String]) throws -> xAmount {
+        return try xAmount(serializeIssuedCurrencyAmount(value))
     }
 
     override func fromParser(
-        parser: BinaryParser,
-        hint: Int? = nil
+        _ parser: BinaryParser,
+        _ hint: Int? = nil
     ) throws -> xAmount {
         let parserFirstByte = try parser.peek()
         let notXrp: Int = (parserFirstByte != 0 ? Int(parserFirstByte) : 0x00) & 0x80
@@ -239,7 +237,7 @@ class xAmount: SerializedType {
         } else {
             numBytes = NATIVE_AMOUNT_BYTE_LENGTH
         }
-        return xAmount(bytes: try parser.read(n: numBytes))
+        return xAmount(try parser.read(numBytes))
     }
 
     override func toJson() -> Any {
@@ -257,9 +255,9 @@ class xAmount: SerializedType {
         }
 
         let parser = BinaryParser(hex: self.toHex())
-        let valueBytes: [UInt8] = try! parser.read(n: 8)
-        let currency = xCurrency().fromParser(parser: parser)
-        let issuer = AccountID().fromParser(parser: parser)
+        let valueBytes: [UInt8] = try! parser.read(8)
+        let currency = xCurrency().fromParser(parser)
+        let issuer = AccountID().fromParser(parser)
         let byte1: UInt8 = valueBytes[0]
         let byte2: UInt8 = valueBytes[1]
         let isPositive: UInt8 = byte1 & 0x40
@@ -274,7 +272,7 @@ class xAmount: SerializedType {
         } else {
             valueStr = value.description
         }
-        try! verifyIouValue(issuedCurrencyValue: valueStr)
+        try! verifyIouValue(valueStr)
 
         return [
             "value": valueStr,

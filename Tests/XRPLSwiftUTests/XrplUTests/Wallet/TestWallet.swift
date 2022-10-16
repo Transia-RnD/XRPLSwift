@@ -21,7 +21,7 @@ final class TestWallet: XCTestCase {
     let privateKey: String = "00141BA006D3363D2FB2785E8DF4E44D3A49908780CB4FB51F6D217C08C021429F"
 
     func testWalletConstructor() {
-        let masterAddress: String = "rUAi7pipxGpYfPNg3LtPcf2ApiS8aw9A93"
+        let address: String = "rUAi7pipxGpYfPNg3LtPcf2ApiS8aw9A93"
         let regularKeyPair = KeyPair(
             privateKey: "aBRNH5wUurfhZcoyR6nRwDSa95gMBkovBJ8V4cp1C1pM28H7EPL1",
             publicKey: "sh8i92YRnEjJy3fpFkL8txQSCVo79"
@@ -29,12 +29,12 @@ final class TestWallet: XCTestCase {
         let wallet = Wallet(
             publicKey: regularKeyPair.publicKey,
             privateKey: regularKeyPair.privateKey,
-            masterAddress: masterAddress,
+            address: address,
             seed: nil
         )
         XCTAssert(wallet.publicKey == regularKeyPair.publicKey)
         XCTAssert(wallet.privateKey == regularKeyPair.privateKey)
-        XCTAssert(wallet.classicAddress == masterAddress)
+        XCTAssert(wallet.classicAddress == address)
     }
 
     func testWalletGenerateDefault() {
@@ -54,7 +54,7 @@ final class TestWallet: XCTestCase {
 
     func testWalletGenerateSECP256() {
 
-        let wallet = Wallet.generate(algorithm: .secp256k1)
+        let wallet = Wallet.generate(.secp256k1)
 
         //        XCTAssert(wallet.publicKey is String)
         //        XCTAssert(wallet.privateKey is String)
@@ -68,7 +68,7 @@ final class TestWallet: XCTestCase {
 
     func testWalletGenerateED25519() {
 
-        let wallet = Wallet.generate(algorithm: .ed25519)
+        let wallet = Wallet.generate(.ed25519)
 
         //        XCTAssert(wallet.publicKey is String)
         //        XCTAssert(wallet.privateKey is String)
@@ -83,21 +83,21 @@ final class TestWallet: XCTestCase {
 
     func testWalletFromSeed() {
 
-        let wallet = Wallet.fromSeed(seed: seed)
+        let wallet = Wallet.fromSeed(seed)
 
         XCTAssertEqual(wallet.publicKey, publicKey)
         XCTAssertEqual(wallet.privateKey, privateKey)
     }
 
     func testWalletFromSeedSECP256K1() {
-        let wallet = Wallet.fromSeed(seed: seed)
+        let wallet = Wallet.fromSeed(seed)
 
         XCTAssertEqual(wallet.publicKey, publicKey)
         XCTAssertEqual(wallet.privateKey, privateKey)
     }
 
     func testWalletFromSeedED25519() {
-        let wallet = Wallet.fromSeed(seed: seed)
+        let wallet = Wallet.fromSeed(seed)
 
         XCTAssertEqual(wallet.publicKey, publicKey)
         XCTAssertEqual(wallet.privateKey, privateKey)
@@ -175,17 +175,17 @@ final class TestWallet: XCTestCase {
 
     func testWalletFromKeyPair() {
 
-        let masterAddress: String = "rUAi7pipxGpYfPNg3LtPcf2ApiS8aw9A93"
+        let address: String = "rUAi7pipxGpYfPNg3LtPcf2ApiS8aw9A93"
         let seed: String = "sh8i92YRnEjJy3fpFkL8txQSCVo79"
         let keypair: KeyPair = KeyPair(
             privateKey: "004265A28F3E18340A490421D47B2EB8DBC2C0BF2C24CEFEA971B61CED2CABD233",
             publicKey: "03AEEFE1E8ED4BBC009DE996AC03A8C6B5713B1554794056C66E5B8D1753C7DD0E"
         )
         //        let opts: SeedOptions = SeedOptions(masterAddress: masterAddress, algorithm: .ed25519, seed: nil)
-        let wallet: Wallet = Wallet.fromSeed(seed: seed, masterAddress: masterAddress)
+        let wallet: Wallet = Wallet.fromSeed(seed, address)
         XCTAssertEqual(wallet.publicKey, keypair.publicKey)
         XCTAssertEqual(wallet.privateKey, keypair.privateKey)
-        XCTAssertEqual(wallet.classicAddress, masterAddress)
+        XCTAssertEqual(wallet.classicAddress, address)
     }
 }
 
@@ -249,11 +249,11 @@ final class TestWalletFromEntropy: XCTestCase {
 
     func _testWalletGenerateDefault() {
         let opts: SeedOptions = SeedOptions(
-            masterAddress: nil,
+            address: nil,
             algorithm: .ed25519,
             seed: nil
         )
-        let wallet = Wallet.fromEntropy(entropy: entropy, opts: opts)
+        let wallet = Wallet.fromEntropy(entropy, opts)
 
         XCTAssertEqual(wallet.publicKey, publicKeyED)
         XCTAssertEqual(wallet.privateKey, privateKeyED)
@@ -261,11 +261,11 @@ final class TestWalletFromEntropy: XCTestCase {
 
     func _testWalletGenerateSECP256K1() {
         let opts: SeedOptions = SeedOptions(
-            masterAddress: nil,
+            address: nil,
             algorithm: .secp256k1,
             seed: nil
         )
-        let wallet = Wallet.fromEntropy(entropy: entropy, opts: opts)
+        let wallet = Wallet.fromEntropy(entropy, opts)
 
         XCTAssertEqual(wallet.publicKey, publicKey)
         XCTAssertEqual(wallet.privateKey, privateKey)
@@ -273,38 +273,38 @@ final class TestWalletFromEntropy: XCTestCase {
 
     func _testWalletGenerateED25519() {
         let opts: SeedOptions = SeedOptions(
-            masterAddress: nil,
+            address: nil,
             algorithm: .ed25519,
             seed: nil
         )
-        let wallet = Wallet.fromEntropy(entropy: entropy, opts: opts)
+        let wallet = Wallet.fromEntropy(entropy, opts)
 
         XCTAssertEqual(wallet.publicKey, publicKeyED)
         XCTAssertEqual(wallet.privateKey, privateKeyED)
     }
 
     func _testWalletGenerateKeyPair() {
-        let masterAddress = "rUAi7pipxGpYfPNg3LtPcf2ApiS8aw9A93"
+        let address = "rUAi7pipxGpYfPNg3LtPcf2ApiS8aw9A93"
         let opts: SeedOptions = SeedOptions(
-            masterAddress: masterAddress,
+            address: address,
             algorithm: .ed25519,
             seed: nil
         )
-        let wallet = Wallet.fromEntropy(entropy: entropy, opts: opts)
+        let wallet = Wallet.fromEntropy(entropy, opts)
 
         XCTAssertEqual(wallet.publicKey, publicKeyED)
         XCTAssertEqual(wallet.privateKey, privateKeyED)
-        XCTAssertEqual(wallet.classicAddress, masterAddress)
+        XCTAssertEqual(wallet.classicAddress, address)
     }
 }
 
 final class TestWalletSign: XCTestCase {
-    var wallet: Wallet = Wallet.fromSeed(seed: "ss1x3KLrSvfg7irFc1D929WXZ7z9H")
+    var wallet: Wallet = Wallet.fromSeed("ss1x3KLrSvfg7irFc1D929WXZ7z9H")
 
     func testSign() {
         let dict = RequestFixtures.sign()
         let tx: Transaction = try! Transaction(dict)!
-        let result = try! wallet.sign(transaction: tx, multisign: false)
+        let result = try! wallet.sign(tx, false)
         XCTAssertEqual(result.txBlob, ResponseFixtures.sign()["signedTransaction"] as! String)
         XCTAssertEqual(result.hash, "93F6C6CE73C092AA005103223F3A1F557F4C097A2943D96760F6490F04379917")
     }
@@ -333,7 +333,7 @@ final class TestWalletSign: XCTestCase {
             ]
         ] as [String: AnyObject]
         let tx: Transaction = try! Transaction(lowercaseMemoTx)!
-        let result = try! Wallet.fromSeed(seed: seed).sign(transaction: tx)
+        let result = try! Wallet.fromSeed(seed).sign(tx)
         XCTAssertEqual(result.txBlob, "120000228000000023000022B8240000000C2E0000270F201B00D5A36761400000000098968068400000000000000C73210305E09ED602D40AB1AF65646A4007C2DAC17CB6CDACDE301E74FB2D728EA057CF744730450221009C00E8439E017CA622A5A1EE7643E26B4DE9C808DE2ABE45D33479D49A4CEC66022062175BE8733442FA2A4D9A35F85A57D58252AE7B19A66401FE238B36FA28E5A081146C1856D0E36019EA75C56D7E8CBA6E35F9B3F71583147FB49CD110A1C46838788CD12764E3B0F837E0DDF9EA7C1F687474703A2F2F6578616D706C652E636F6D2F6D656D6F2F67656E657269637D0472656E74E1F1")
         XCTAssertEqual(result.hash, "41B9CB78D8E18A796CDD4B0BC6FB0EA19F64C4F25FDE23049197852CAB71D10D")
     }
@@ -341,7 +341,7 @@ final class TestWalletSign: XCTestCase {
     func testSignEscrow() {
         let dict = RequestFixtures.signEscrow()
         let tx: Transaction = try! Transaction(dict)!
-        let result = try! wallet.sign(transaction: tx)
+        let result = try! wallet.sign(tx)
         XCTAssertEqual(result.txBlob, ResponseFixtures.signEscrow()["signedTransaction"] as! String)
         XCTAssertEqual(result.hash, "645B7676DF057E4F5E83F970A18B3751B6813807F1030A8D2F482D02DC885106")
     }
@@ -349,7 +349,7 @@ final class TestWalletSign: XCTestCase {
     func _testSignAsMultisign() {
         let dict = RequestFixtures.signAs()
         let tx: Transaction = try! Transaction(dict)!
-        let result = try! wallet.sign(transaction: tx, multisign: true)
+        let result = try! wallet.sign(tx, true)
         XCTAssertEqual(result.txBlob, ResponseFixtures.signAs()["signedTransaction"] as! String)
         XCTAssertEqual(result.hash, "D8CF5FC93CFE5E131A34599AFB7CE186A5B8D1B9F069E35F4634AD3B27837E35")
     }
@@ -357,7 +357,7 @@ final class TestWalletSign: XCTestCase {
     //    func testSignAsMultisignXAddressNoTag() {
     //        let dict = RequestFixtures.signAs()
     //        let tx: Transaction = try! Transaction(dict)!
-    //        let result = try! wallet.sign(transaction: tx, multisign: wallet.getXAddress())
+    //        let result = try! wallet.sign(tx, multisign: wallet.getXAddress())
     //        XCTAssertEqual(result.txBlob, ResponseFixtures.signAs()["signedTransaction"] as! String)
     //        XCTAssertEqual(result.hash, "D8CF5FC93CFE5E131A34599AFB7CE186A5B8D1B9F069E35F4634AD3B27837E35")
     //    }
@@ -365,23 +365,23 @@ final class TestWalletSign: XCTestCase {
     //    func testSignAsMultisignXAddress() {
     //        let dict = RequestFixtures.signAs()
     //        let tx: Transaction = try! Transaction(dict)!
-    //        let result = try! wallet.sign(transaction: tx, multisign: wallet.getXAddress(0))
+    //        let result = try! wallet.sign(tx, multisign: wallet.getXAddress(0))
     //        XCTAssertEqual(result.txBlob, ResponseFixtures.signAs()["signedTransaction"] as! String)
     //        XCTAssertEqual(result.hash, "D8CF5FC93CFE5E131A34599AFB7CE186A5B8D1B9F069E35F4634AD3B27837E35")
     //    }
 
     func testInvalidAlreadySigned() {
         let tx: Transaction = try! Transaction(RequestFixtures.sign())!
-        let result = try! wallet.sign(transaction: tx, multisign: false)
-        let cloneTx: [String: AnyObject] = BinaryCodec.decode(buffer: result.txBlob)
+        let result = try! wallet.sign(tx, false)
+        let cloneTx: [String: AnyObject] = BinaryCodec.decode(result.txBlob)
         let nextTx = try! Transaction(cloneTx)
-        XCTAssertThrowsError(try wallet.sign(transaction: nextTx!))
+        XCTAssertThrowsError(try wallet.sign(nextTx!))
     }
 
     func testSignEscrowExecuted() {
         let dict = RequestFixtures.signEscrow()
         let tx: Transaction = try! Transaction(dict)!
-        let result = try! wallet.sign(transaction: tx)
+        let result = try! wallet.sign(tx)
         XCTAssertEqual(result.txBlob, ResponseFixtures.signEscrow()["signedTransaction"] as! String)
         XCTAssertEqual(result.hash, "645B7676DF057E4F5E83F970A18B3751B6813807F1030A8D2F482D02DC885106")
     }
@@ -395,8 +395,8 @@ final class TestWalletSign: XCTestCase {
             "Sequence": 1,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        let result = try! wallet.sign(transaction: tx)
-        let decoded: [String: Any] = BinaryCodec.decode(buffer: result.txBlob)
+        let result = try! wallet.sign(tx)
+        let decoded: [String: Any] = BinaryCodec.decode(result.txBlob)
         XCTAssert(decoded["Flags"] == nil)
         XCTAssertEqual(result.txBlob, "1200002400000001614000000001312D0068400000000000000C732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F5447446304402201C0A74EE8ECF5ED83734D7171FB65C01D90D67040DEDCC66414BD546CE302B5802205356843841BFFF60D15F5F5F9FB0AB9D66591778140AB2D137FF576D9DEC44BC8114EE3046A5DDF8422C40DDB93F1D522BB4FE6419158314FDB08D07AAA0EB711793A3027304D688E10C3648")
         XCTAssertEqual(result.hash, "E22186AE9FE477821BF361358174C2B0AC2D3289AA6F7E8C1102B3D270C41204")
@@ -428,8 +428,8 @@ final class TestWalletSign: XCTestCase {
             "LastLedgerSequence": 8820051,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        let result = try! wallet.sign(transaction: tx)
-        let decoded: [String: Any] = BinaryCodec.decode(buffer: result.txBlob)
+        let result = try! wallet.sign(tx)
+        let decoded: [String: Any] = BinaryCodec.decode(result.txBlob)
         let flags = (decoded["Flags"] as! xUInt32).str()
         // TODO: Notice how you have to go str -> Int w/ radix
         // Need to review what exactly is supposed to be returned is it the hex, or the value or the object
@@ -449,7 +449,7 @@ final class TestWalletSign: XCTestCase {
             "Sequence": 23,
             "SigningPubKey": "02F89EAEC7667B30F33D0687BBA86C3FE2A08CCA40A9186C5BDE2DAA6FA97A37D8"
         ] as! [String: AnyObject])!
-        XCTAssertThrowsError(try wallet.sign(transaction: tx))
+        XCTAssertThrowsError(try wallet.sign(tx))
     }
 
     func testSignInvalidHighFee() {
@@ -463,13 +463,13 @@ final class TestWalletSign: XCTestCase {
             "Sequence": 23,
             "SigningPubKey": "02F89EAEC7667B30F33D0687BBA86C3FE2A08CCA40A9186C5BDE2DAA6FA97A37D8"
         ] as! [String: AnyObject])!
-        XCTAssertThrowsError(try wallet.sign(transaction: tx))
+        XCTAssertThrowsError(try wallet.sign(tx))
     }
 
     func testSignTicket() {
         let dict = RequestFixtures.signTicket()
         let tx: Transaction = try! Transaction(dict)!
-        let result = try! wallet.sign(transaction: tx)
+        let result = try! wallet.sign(tx)
         XCTAssertEqual(result.txBlob, ResponseFixtures.signTicket()["signedTransaction"] as! String)
         XCTAssertEqual(result.hash, "0AC60B1E1F063904D9D9D0E9D03F2E9C8D41BC6FC872D5B8BF87E15BBF9669BB")
     }
@@ -499,7 +499,7 @@ final class TestWalletSign: XCTestCase {
             "Sequence": 1,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        let result = try! wallet.sign(transaction: tx)
+        let result = try! wallet.sign(tx)
         XCTAssertEqual(result.txBlob, "12000022800200002400000001201B00EF81E661EC6386F26FC0FFFF0000000000000000000000005553440000000000054F6F784A58F9EFB0A9EB90B83464F9D166461968400000000000000C6940000000000000646AD3504529A0465E2E0000000000000000000000005553440000000000054F6F784A58F9EFB0A9EB90B83464F9D1664619732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F54474463044022049AD75980A5088EBCD768547E06427736BD8C4396B9BD3762CA8C1341BD7A4F9022060C94071C3BDF99FAB4BEB7C0578D6EBEE083157B470699645CCE4738A41D61081145E7B112523F68D2F5E879DB4EAC51C6698A693048314CA6EDC7A28252DAEA6F2045B24F4D7C333E146170112300000000000000000000000005553440000000000054F6F784A58F9EFB0A9EB90B83464F9D166461900")
         XCTAssertEqual(result.hash, "71D0B4AA13277B32E2C2E751566BB0106764881B0CAA049905A0EDAC73257745")
     }
@@ -515,7 +515,7 @@ final class TestWalletSign: XCTestCase {
             "LastLedgerSequence": 8819954,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        let result = try! wallet.sign(transaction: tx)
+        let result = try! wallet.sign(tx)
         XCTAssertEqual(result.txBlob, "12000022800000002400000017201B008694F261400000000000000168400000000000000C732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F54474473045022100E8929B68B137AB2AAB1AD3A4BB253883B0C8C318DC8BB39579375751B8E54AC502206893B2D61244AFE777DAC9FA3D9DDAC7780A9810AF4B322D629784FD626B8CE481145E7B112523F68D2F5E879DB4EAC51C6698A693048314FDB08D07AAA0EB711793A3027304D688E10C3648")
         XCTAssertEqual(result.hash, "AA1D2BDC59E504AA6C2416E864C615FB18042C1AB4457BEB883F7194D8C452B5")
     }
@@ -531,7 +531,7 @@ final class TestWalletSign: XCTestCase {
             "LastLedgerSequence": 8819954,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        XCTAssertThrowsError(try wallet.sign(transaction: tx))
+        XCTAssertThrowsError(try wallet.sign(tx))
     }
 
     func testSignICLowercase() {
@@ -549,7 +549,7 @@ final class TestWalletSign: XCTestCase {
             "LastLedgerSequence": 8819954,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        let result = try! wallet.sign(transaction: icTx)
+        let result = try! wallet.sign(icTx)
         XCTAssertEqual(result.txBlob, "12000022800000002400000017201B008694F261D504625103A72000000000000000000000000000666F6F00000000002E099DD75FDD96EB4A603037844F964832FED86B68400000000000000C732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F54474473045022100D32EBD44F86FB6D0BE239A410B62A73A8B0C26CE3767321913D6FB7BE6FAC2410220430C011C25091DA9CD75E7C99BE406572FBB57B92132E39B4BF873863E744E2E81145E7B112523F68D2F5E879DB4EAC51C6698A693048314FDB08D07AAA0EB711793A3027304D688E10C3648")
         XCTAssertEqual(result.hash, "F822EA1D7B2A3026E4654A9152896652C3843B5690F8A56C4217CB4690C5C95A")
     }
@@ -569,7 +569,7 @@ final class TestWalletSign: XCTestCase {
             "LastLedgerSequence": 8819954,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        let result = try! wallet.sign(transaction: icTx)
+        let result = try! wallet.sign(icTx)
 
         let icTx2: Transaction = try! Transaction([
             "TransactionType": "Payment",
@@ -585,7 +585,7 @@ final class TestWalletSign: XCTestCase {
             "LastLedgerSequence": 8819954,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        let result2 = try! wallet.sign(transaction: icTx2)
+        let result2 = try! wallet.sign(icTx2)
         XCTAssertEqual(result.txBlob, result2.txBlob)
         XCTAssertEqual(result.hash, result2.hash)
     }
@@ -605,7 +605,7 @@ final class TestWalletSign: XCTestCase {
             "LastLedgerSequence": 8819954,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        XCTAssertThrowsError(try wallet.sign(transaction: tx))
+        XCTAssertThrowsError(try wallet.sign(tx))
     }
 
     func testSignValidISOXRPHex() {
@@ -623,7 +623,7 @@ final class TestWalletSign: XCTestCase {
             "LastLedgerSequence": 8819954,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        let result = try! wallet.sign(transaction: tx)
+        let result = try! wallet.sign(tx)
         XCTAssertEqual(result.txBlob, "12000022800000002400000017201B008694F261D504625103A7200000000000000000000000000078727000000000002E099DD75FDD96EB4A603037844F964832FED86B68400000000000000C732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F5447446304402202CD2BE27480860765B1B8DB6C499D299734C533F4FFA66317E46D1ADE5181EB7022066D2C65B975A6A9FEE56AB55211D5F2F65D6F988C8280019211874D11771A05D81145E7B112523F68D2F5E879DB4EAC51C6698A693048314FDB08D07AAA0EB711793A3027304D688E10C3648")
         XCTAssertEqual(result.hash, "1FEAA7894E507E36D73F60DED89852CE28994366879BC7D3D806E4C50D10B1EE")
     }
@@ -643,7 +643,7 @@ final class TestWalletSign: XCTestCase {
             "LastLedgerSequence": 8819954,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        let result = try! wallet.sign(transaction: tx)
+        let result = try! wallet.sign(tx)
         XCTAssertEqual(result.txBlob, "12000022800000002400000017201B008694F261D504625103A720000000000000000000000000002A2A2A00000000002E099DD75FDD96EB4A603037844F964832FED86B68400000000000000C732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F54474463044022073E71588750C3D47D7D9A541F00FB897823DA67ED198D0A74404B6FE6D5E4AB5022021BE798D4159F375EBE13D0545F50EE864DF834D5A9F9A31504212156A57934C81145E7B112523F68D2F5E879DB4EAC51C6698A693048314FDB08D07AAA0EB711793A3027304D688E10C3648")
         XCTAssertEqual(result.hash, "95BF9931C1EA164960FE13A504D5FBAEB1E072C1D291D75B85BA3F22A50346DF")
     }
@@ -663,7 +663,7 @@ final class TestWalletSign: XCTestCase {
             "LastLedgerSequence": 8819954,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        let result = try! wallet.sign(transaction: tx)
+        let result = try! wallet.sign(tx)
         XCTAssertEqual(result.txBlob, "12000022800000002400000017201B008694F261D504625103A720000000000000000000000000002A2A2A00000000002E099DD75FDD96EB4A603037844F964832FED86B68400000000000000C732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F54474463044022073E71588750C3D47D7D9A541F00FB897823DA67ED198D0A74404B6FE6D5E4AB5022021BE798D4159F375EBE13D0545F50EE864DF834D5A9F9A31504212156A57934C81145E7B112523F68D2F5E879DB4EAC51C6698A693048314FDB08D07AAA0EB711793A3027304D688E10C3648")
         XCTAssertEqual(result.hash, "95BF9931C1EA164960FE13A504D5FBAEB1E072C1D291D75B85BA3F22A50346DF")
     }
@@ -683,7 +683,7 @@ final class TestWalletSign: XCTestCase {
             "LastLedgerSequence": 8819954,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        let result = try! wallet.sign(transaction: tx)
+        let result = try! wallet.sign(tx)
         XCTAssertEqual(result.txBlob, "12000022800000002400000017201B008694F261D504625103A72000000000000000000000000000464F4F00000000002E099DD75FDD96EB4A603037844F964832FED86B68400000000000000C732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F5447446304402206EBFC9B8061C3F82D521506CE62B6BBA99995B2175BFE0E1BC516775932AECEB0220172B9CE9C0EFB3F4870E19B79B4E817DD376E5785F034AB792708F92282C65F781145E7B112523F68D2F5E879DB4EAC51C6698A693048314FDB08D07AAA0EB711793A3027304D688E10C3648")
         XCTAssertEqual(result.hash, "6235E5A3CC14DB97F75CAE2A4B5AA9B4134B7AD48D7DD8C15473D81631435FE4")
     }
@@ -703,7 +703,7 @@ final class TestWalletSign: XCTestCase {
             "LastLedgerSequence": 8819954,
             "Fee": "12"
         ] as! [String: AnyObject])!
-        let result = try! wallet.sign(transaction: tx)
+        let result = try! wallet.sign(tx)
         XCTAssertEqual(result.txBlob, "12000022800000002400000017201B008694F261D5045EADB112E000000000000000000000000000464F4F00000000002E099DD75FDD96EB4A603037844F964832FED86B68400000000000000C732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F54474473045022100C0C77D7D6D6453F0C5EDFF61DE60B5D3D6952C8F30D51543560936D72FA103B00220258CBFCEAC4D2DB5CC2B9417EB46225943E9F4B92944B303ADB810002530BFFB81145E7B112523F68D2F5E879DB4EAC51C6698A693048314FDB08D07AAA0EB711793A3027304D688E10C3648")
         XCTAssertEqual(result.hash, "FADCD5EE33C01103AA129FCF0923637D543DB56250CD57A1A308EC386A211CBB")
     }
@@ -727,7 +727,7 @@ final class TestWalletSign: XCTestCase {
                 ]
             ]
         ] as! [String: AnyObject])!
-        let result = try! wallet.sign(transaction: tx)
+        let result = try! wallet.sign(tx)
         XCTAssertEqual(result.txBlob, "12001914013A2200000008202A0000000068400000000000000A732102A8A44DB3D4C73EEEE11DFE54D2029103B776AA8A8D293A91D645977C9DF5F5447446304402203795B6E9D6D0086FB26E2C6B7A8C02D50B8560D45C9D5C80DF271D3349515E5302203B0898A7D8C06243D7C2116D2011ACB68DF3123BB7336D6C27269FD388C12CC07542697066733A2F2F62616679626569676479727A74357366703775646D37687537367568377932366E6634646675796C71616266336F636C67747179353566627A64698114B3263BD0A9BF9DFDBBBBD07F536355FF477BF0E9F9EA7C1F687474703A2F2F6578616D706C652E636F6D2F6D656D6F2F67656E657269637D0472656E74E1F1")
         XCTAssertEqual(result.hash, "2F359B3CFD1CE6D7BFB672F8ADCE98FE964B1FD04CFC337177FB3D8FBE889788")
     }
@@ -751,7 +751,7 @@ final class TestWalletSign: XCTestCase {
                 ]
             ]
         ] as! [String: AnyObject])!
-        XCTAssertThrowsError(try wallet.sign(transaction: tx))
+        XCTAssertThrowsError(try wallet.sign(tx))
     }
 }
 
@@ -765,7 +765,7 @@ final class TestWalletVerify: XCTestCase {
 
     func testVerifySameWallet() {
         let wallet = Wallet(publicKey: publicKey, privateKey: privateKey)
-        let isVerified: Bool = wallet.verifyTransaction(signedTransaction: preparedSigned)
+        let isVerified: Bool = try! wallet.verifyTransaction(preparedSigned)
         XCTAssertEqual(isVerified, true)
     }
 
@@ -775,7 +775,7 @@ final class TestWalletVerify: XCTestCase {
         let diffPrivateKey: String =
             "00ACCD3309DB14D1A4FC9B1DAE608031F4408C85C73EE05E035B7DC8B25840107A"
         let wallet = Wallet(publicKey: diffPublicKey, privateKey: diffPrivateKey)
-        let isVerified: Bool = wallet.verifyTransaction(signedTransaction: preparedSigned)
+        let isVerified: Bool = try! wallet.verifyTransaction(preparedSigned)
         XCTAssertEqual(isVerified, false)
     }
 }
@@ -789,19 +789,19 @@ final class TestWalletGetXAddress: XCTestCase {
 
     func testTestTrue() {
         let wallet: Wallet = Wallet(publicKey: publicKey, privateKey: privateKey)
-        let result = wallet.getXAddress(tag: tag, isTest: true)
+        let result = wallet.getXAddress(tag, true)
         XCTAssertEqual(result, testnetXAddress)
     }
 
     func testTestFalse() {
         let wallet: Wallet = Wallet(publicKey: publicKey, privateKey: privateKey)
-        let result = wallet.getXAddress(tag: tag, isTest: false)
+        let result = wallet.getXAddress(tag, false)
         XCTAssertEqual(result, mainnetXAddress)
     }
 
     func testTestNA() {
         let wallet: Wallet = Wallet(publicKey: publicKey, privateKey: privateKey)
-        let result = wallet.getXAddress(tag: tag)
+        let result = wallet.getXAddress(tag)
         XCTAssertEqual(result, mainnetXAddress)
     }
 }

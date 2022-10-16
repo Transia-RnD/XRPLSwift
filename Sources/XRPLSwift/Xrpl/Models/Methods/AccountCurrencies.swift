@@ -16,20 +16,20 @@ import Foundation
  */
 public class AccountCurrenciesRequest: BaseRequest {
     /// A unique identifier for the account, most commonly the account's address.
-    public let account: String
+    public var account: String
     /// A 20-byte hex string for the ledger version to use.
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger to use, or a shortcut string to choose a
      ledger automatically.
      */
-    public let ledgerIndex: LedgerIndex?
+    public var ledgerIndex: LedgerIndex?
     /**
      If true, then the account field only accepts a public key or XRP Ledger
      address. Otherwise, account can be a secret or passphrase (not
      recommended). The default is false.
      */
-    public let strict: Bool?
+    public var strict: Bool?
 
     enum CodingKeys: String, CodingKey {
         case account = "account"
@@ -98,15 +98,15 @@ public class AccountCurrenciesResponse: Codable {
      The identifying hash of the ledger version used to retrieve this data,
      as hex.
      */
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /// The ledger index of the ledger version used to retrieve this data.
-    public let ledgerIndex: Int
+    public var ledgerIndex: Int
     /// Array of Currency Codes for currencies that this account can receive.
-    public let receiveCurrencies: [String]
+    public var receiveCurrencies: [String]
     /// Array of Currency Codes for currencies that this account can send.
-    public let sendCurrencies: [String]
+    public var sendCurrencies: [String]
     /// If true, this data comes from a validated ledger.
-    public let validated: Bool
+    public var validated: Bool
 
     enum CodingKeys: String, CodingKey {
         case ledgerHash = "ledger_hash"

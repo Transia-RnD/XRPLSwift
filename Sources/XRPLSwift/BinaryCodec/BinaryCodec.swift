@@ -28,8 +28,8 @@ class BinaryCodec {
      - returns:
      The binary-encoded object, as a hexadecimal string.
      */
-    class func encode(json: [String: Any]) throws -> String {
-        return try serializeJson(json: json)
+    class func encode(_ json: [String: Any]) throws -> String {
+        return try serializeJson(json)
     }
 
     /**
@@ -39,9 +39,9 @@ class BinaryCodec {
      - returns:
      The binary-encoded object, as a hexadecimal string.
      */
-    class func encode(data: Data) throws -> String {
+    class func encode(_ data: Data) throws -> String {
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
-        return try serializeJson(json: jsonResult as! [String: Any])
+        return try serializeJson(jsonResult as! [String: Any])
     }
 
     /**
@@ -51,11 +51,12 @@ class BinaryCodec {
      - returns:
      The binary-encoded transaction, ready to be signed.
      */
-    class func encodeForSigning(json: [String: Any]) throws -> String {
+    class func encodeForSigning(_ json: [String: Any]) throws -> String {
         return try serializeJson(
-            json: json,
-            prefix: TRANSACTION_SIGNATURE_PREFIX,
-            signingOnly: true
+            json,
+            TRANSACTION_SIGNATURE_PREFIX,
+            nil,
+            true
         )
     }
 
@@ -67,10 +68,10 @@ class BinaryCodec {
      - returns:
      The binary-encoded claim, ready to be signed.
      */
-    class func encodeForSigningClaim(json: [String: AnyObject]) throws -> String {
+    class func encodeForSigningClaim(_ claim: ChannelClaim) throws -> String {
         let prefix: Data = PAYMENT_CHANNEL_CLAIM_PREFIX
-        let channel: Hash = try Hash256.from(value: json["channel"] as! String)
-        let amount: xUInt64 = try xUInt64.from(value: Int(json["amount"] as! String)!)
+        let channel: Hash = try Hash256.from(claim.channel)
+        let amount: xUInt64 = try xUInt64.from(Int(claim.amount)!)
         let buffer: Data = prefix + channel.bytes + amount.bytes
         return buffer.toHex
     }
@@ -85,13 +86,13 @@ class BinaryCodec {
      - returns:
      A hex string of the encoded transaction.
      */
-    class func encodeForMultisigning(json: [String: Any], signingAccount: String) throws -> String {
-        let signingAccountID = try AccountID.from(value: signingAccount).bytes
+    class func encodeForMultisigning(_ json: [String: Any], _ signingAccount: String) throws -> String {
+        let signingAccountID = try AccountID.from(signingAccount).bytes
         return try serializeJson(
-            json: json,
-            prefix: TRANSACTION_MULTISIG_PREFIX,
-            suffix: Data(signingAccountID),
-            signingOnly: true
+            json,
+            TRANSACTION_MULTISIG_PREFIX,
+            Data(signingAccountID),
+            true
         )
     }
 
@@ -103,9 +104,9 @@ class BinaryCodec {
      - returns:
      A JSON-like dictionary representation of the transaction.
      */
-    class func decode(buffer: String) -> [String: AnyObject] {
+    class func decode(_ buffer: String) -> [String: AnyObject] {
         let parser = BinaryParser(hex: buffer)
-        let parsedType: SerializedType = try! parser.readType(type: STObject.self)
+        let parsedType: SerializedType = try! parser.readType(STObject.self)
         return parsedType.toJson()
     }
 
@@ -120,10 +121,10 @@ class BinaryCodec {
      A hex string of the encoded transaction.
      */
     class func serializeJson(
-        json: [String: Any],
-        prefix: Data? = nil,
-        suffix: Data? = nil,
-        signingOnly: Bool = false
+        _ json: [String: Any],
+        _ prefix: Data? = nil,
+        _ suffix: Data? = nil,
+        _ signingOnly: Bool = false
     ) throws -> String {
         var buffer = Data()
         if let prefix = prefix {

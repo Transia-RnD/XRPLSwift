@@ -149,7 +149,7 @@ public class AccountChannelsRequest: BaseRequest {
 /**
  The expected response from an {@link AccountChannelsRequest}.
  */
-open class AccountChannelsResponse: Codable {
+public class AccountChannelsResponse: Codable {
     /**
      The address of the source/owner of the payment channels. This
      corresponds to the account field of the request.

@@ -12,31 +12,31 @@ import Foundation
 class SerializedType {
     // The base class for all binary codec field types.
 
-    public var bytes: [UInt8] = []
+    var bytes: [UInt8] = []
 
-    init(bytes: [UInt8]) {
+    init(_ bytes: [UInt8]) {
         // Construct a new SerializedType.
         self.bytes = bytes
     }
 
     func fromParser(
-        parser: BinaryParser,
+        _ parser: BinaryParser,
         // hint is Any so that subclasses can choose whether or not to require it.
-        hint: Int?
+        _ hint: Int?
     ) throws -> SerializedType {
         throw BinaryError.notImplemented
-        return try! self.fromParser(parser: parser, hint: hint)
+//        return try! self.fromParser(parser, hint)
     }
 
-    func from(value: SerializedType) throws -> SerializedType {
+    func from(_ value: SerializedType) throws -> SerializedType {
         throw BinaryError.notImplemented
-        return try! self.from(value: value)
+//        return try! self.from(value)
     }
 
     //    static func from(value: SerializedType | JSON | bigInt.BigInteger) -> SerializedType {
-    class func from(value: SerializedType) throws -> SerializedType {
+    class func from(_ value: SerializedType) throws -> SerializedType {
         throw BinaryError.notImplemented
-        return try! self.from(value: value)
+//        return try! self.from(value)
     }
 
     //    func from(value: Data) -> Data {
@@ -47,14 +47,14 @@ class SerializedType {
     //        return Data(hex: value)
     //    }
 
-    func toBytesSink(list: BytesList) -> BytesList {
+    func toBytesSink(_ list: BytesList) -> BytesList {
         /*
          Write the bytes representation of a SerializedType to a bytearray.
          Args:
          bytesink: The bytearray to write self.buffer to.
          Returns: None
          */
-        return list.put(bytesArg: bytes)
+        return list.put(bytes)
     }
 
     func toBytes() -> [UInt8] {
@@ -141,7 +141,7 @@ class SerializedType {
          Returns:
          The hex string representation of the SerializedType's bytes.
          */
-        return bytes.toHexString().uppercased()
+        return bytes.toHex
     }
 
     func len() -> Int {

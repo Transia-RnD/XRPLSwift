@@ -22,7 +22,7 @@ public struct FieldHeader: Hashable {
      - typeCode: The code for this field's serialization type.
      - fieldCode: The sort code that orders fields of the same type.
      */
-    init(typeCode: Int, fieldCode: Int) {
+    init(_ typeCode: Int, _ fieldCode: Int) {
         self.typeCode = typeCode
         self.fieldCode = fieldCode
     }
@@ -30,7 +30,7 @@ public struct FieldHeader: Hashable {
     /**
      Two FieldHeaders are equal if both type code and field_code are the same.
      */
-    func isEqual(other: FieldHeader) -> Bool {
+    func isEqual(_ other: FieldHeader) -> Bool {
         //        if  !isinstance(other, FieldHeader) {
         //            return NotImplemented
         //        }

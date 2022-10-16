@@ -9,6 +9,11 @@
 
 import Foundation
 
+protocol XrplTransaction {
+    associatedtype Model
+    func from(from json: [String: AnyObject]) async throws -> Model
+}
+
 /**
 
  */
@@ -389,8 +394,8 @@ extension Transaction {
  * @category Transaction Models
  */
 public class TransactionAndMetadata: Codable {
-    public let transaction: Transaction
-    public let metadata: TransactionMetadata
+    public var transaction: Transaction
+    public var metadata: TransactionMetadata
 
     //    enum CodingKeys: String, CodingKey {
     //        case transaction = "transaction"
@@ -478,4 +483,10 @@ public func validate(transaction: [String: AnyObject]) throws {
     //    ) {
     //        throw new ValidationError(`Invalid Transaction: ${tx.TransactionType}`)
     //    }
+}
+
+extension Payment {
+    public var asTx: Transaction {
+        return Transaction.payment(self)
+    }
 }

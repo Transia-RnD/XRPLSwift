@@ -11,8 +11,8 @@ import AnyCodable
 import Foundation
 
 public struct TakerAmount: Codable {
-    public let currency: String
-    public let issuer: String?
+    public var currency: String
+    public var issuer: String?
 }
 
 /**
@@ -25,32 +25,32 @@ public class BookOffersRequest: BaseRequest {
      receive, as an object with currency and issuer fields (omit issuer for
      XRP), like currency amounts.
      */
-    public let takerGets: TakerAmount
+    public var takerGets: TakerAmount
     /**
      Specification of which currency the account taking the offer would pay, as
      an object with currency and issuer fields (omit issuer for XRP), like
      currency amounts.
      */
-    public let takerPays: TakerAmount
+    public var takerPays: TakerAmount
 
     /// A 20-byte hex string for the ledger version to use.
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger to use, or a shortcut string to choose a
      ledger automatically.
      */
-    public let ledgerIndex: LedgerIndex?
+    public var ledgerIndex: LedgerIndex?
     /**
      If provided, the server does not provide more than this many offers in the
      results. The total number of results returned may be fewer than the limit,
      because the server omits unfunded offers.
      */
-    public let limit: Int?
+    public var limit: Int?
     /**
      The Address of an account to use as a perspective. Unfunded offers placed
      by this account are always included in the response.
      */
-    public let taker: String?
+    public var taker: String?
 
     enum CodingKeys: String, CodingKey {
         case takerGets = "taker_gets"
@@ -130,23 +130,23 @@ public class BookOffer: Offer {
      represented as a decimal value.) If a trader has multiple offers in the
      same book, only the highest-ranked offer includes this field.
      */
-    public let ownerFunds: String?
+    public var ownerFunds: String?
     /**
      The maximum amount of currency that the taker can get, given the funding
      status of the offer.
      */
-    public let takerGetsFunded: Amount?
+    public var takerGetsFunded: Amount?
     /**
      The maximum amount of currency that the taker would pay, given the funding
      status of the offer.
      */
-    public let takerPaysFunded: Amount?
+    public var takerPaysFunded: Amount?
     /**
      The exchange rate, as the ratio taker_pays divided by taker_gets. For
      fairness, offers that have the same quality are automatically taken
      first-in, first-out.
      */
-    public let quality: String?
+    public var quality: String?
 
     enum CodingKeys: String, CodingKey {
         case ownerFunds = "owner_funds"
@@ -170,23 +170,23 @@ public class BookOffer: Offer {
  */
 public class BookOffersResponse: Codable {
     /// Array of offer objects, each of which has the fields of an Offer object.
-    public let offers: [BookOffer]
+    public var offers: [BookOffer]
     /**
      The ledger index of the current in-progress ledger version, which was
      used to retrieve this information.
      */
-    public let ledgerCurrentIndex: Int?
+    public var ledgerCurrentIndex: Int?
     /**
      The identifying hash of the ledger version that was used when retrieving
      this data, as requested.
      */
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger version that was used when retrieving
      this data, as requested.
      */
-    public let ledgerIndex: Int?
-    public let validated: Bool?
+    public var ledgerIndex: Int?
+    public var validated: Bool?
 
     enum CodingKeys: String, CodingKey {
         case offers = "offers"

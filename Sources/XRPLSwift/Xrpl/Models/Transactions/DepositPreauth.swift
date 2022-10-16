@@ -17,13 +17,13 @@ import Foundation
  */
 public class DepositPreauth: BaseTransaction {
     /// The XRP Ledger address of the sender to preauthorize.
-    public let authorize: String?
+    public var authorize: String?
 
     /**
      The XRP Ledger address of a sender whose preauthorization should be.
      revoked.
      */
-    public let unauthorize: String?
+    public var unauthorize: String?
 
     enum CodingKeys: String, CodingKey {
         case authorize = "Authorize"

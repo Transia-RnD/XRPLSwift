@@ -10,8 +10,8 @@
 import Foundation
 
 public struct SourceCurrencyAmount: Codable {
-    public let currency: String
-    public let issuer: String?
+    public var currency: String
+    public var issuer: String?
 }
 
 /**
@@ -21,32 +21,32 @@ public struct SourceCurrencyAmount: Codable {
  */
 public class RipplePathFindRequest: BaseRequest {
     /// Unique address of the account that would send funds in a transaction.
-    public let sourceAccount: String
+    public var sourceAccount: String
     /// Unique address of the account that would receive funds in a transaction.
-    public let destinationAccount: String
+    public var destinationAccount: String
     /**
      Currency Amount that the destination account would receive in a
      transaction.
      */
-    public let destinationAmount: Amount
+    public var destinationAmount: Amount
     /**
      Currency Amount that would be spent in the transaction. Cannot be used
      with `source_currencies`.
      */
-    public let sendMax: Amount?
+    public var sendMax: Amount?
     /**
      Array of currencies that the source account might want to spend. Each
      entry in the array should be a JSON object with a mandatory currency field
      and optional issuer field, like how currency amounts are specified.
      */
-    public let sourceCurrencies: SourceCurrencyAmount?
+    public var sourceCurrencies: SourceCurrencyAmount?
     /// A 20-byte hex string for the ledger version to use.
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger to use, or a shortcut string to choose a
      ledger automatically.
      */
-    public let ledgerIndex: LedgerIndex?
+    public var ledgerIndex: LedgerIndex?
 
     enum CodingKeys: String, CodingKey {
         case sourceAccount = "source_account"
@@ -91,12 +91,12 @@ public class RipplePathFindRequest: BaseRequest {
 
 public struct PathOption: Codable {
     /// Array of arrays of objects defining payment paths.
-    public let pathsComputed: [Path]
+    public var pathsComputed: [Path]
     /**
      Currency amount that the source would have to send along this path for the
      destination to receive the desired amount.
      */
-    public let sourceAmount: Amount
+    public var sourceAmount: Amount
 }
 
 /**
@@ -108,22 +108,22 @@ public class RipplePathFindResponse: Codable {
      empty, then there are no paths connecting the source and destination
      accounts.
      */
-    public let alternatives: [PathOption]
+    public var alternatives: [PathOption]
     /// Unique address of the account that would receive a payment transaction.
-    public let destinationAccount: String
+    public var destinationAccount: String
     /**
      Array of strings representing the currencies that the destination
      accepts, as 3-letter codes like "USD" or as 40-character hex like
      "015841551A748AD2C1F76FF6ECB0CCCD00000000".
      */
-    public let destinationCurrencies: [String]
-    public let destinationAmount: Amount
-    public let fullReply: Bool?
-    //    public let id: Int? | String
-    public let id: Int?
-    public let ledgerCurrentIndex: Int?
-    public let sourceAccount: String
-    public let validated: Bool
+    public var destinationCurrencies: [String]
+    public var destinationAmount: Amount
+    public var fullReply: Bool?
+    //    public var id: Int? | String
+    public var id: Int?
+    public var ledgerCurrentIndex: Int?
+    public var sourceAccount: String
+    public var validated: Bool
 
     enum CodingKeys: String, CodingKey {
         case alternatives = "alternatives"

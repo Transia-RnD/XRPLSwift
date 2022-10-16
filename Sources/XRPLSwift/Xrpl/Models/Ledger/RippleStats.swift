@@ -12,70 +12,70 @@ import Foundation
 /**
  The RippleState object type connects two accounts in a single currency.
  */
-open class RippleState: BaseLedgerEntry {
-    var ledgerEntryType: String = "RippleState"
+public class RippleState: BaseLedgerEntry {
+    public var ledgerEntryType: String = "RippleState"
     /// A bit-map of boolean options enabled for this object.
-    var flags: Int
+    public var flags: Int
     /**
      The balance of the trust line, from the perspective of the low account. A
      negative balance indicates that the low account has issued currency to the
      high account. The issuer is always the neutral value ACCOUNT_ONE.
      */
-    let balance: IssuedCurrencyAmount
+    public var balance: IssuedCurrencyAmount
     /**
      The limit that the low account has set on the trust line. The issuer is
      the address of the low account that set this limit.
      */
-    let lowLimit: IssuedCurrencyAmount
+    public var lowLimit: IssuedCurrencyAmount
     /**
      The limit that the high account has set on the trust line. The issuer is
      the address of the high account that set this limit.
      */
-    let highLimit: IssuedCurrencyAmount
+    public var highLimit: IssuedCurrencyAmount
     /**
      The identifying hash of the transaction that most recently modified this
      object.
      */
-    let previousTxnId: String
+    public var previousTxnId: String
     /**
      The index of the ledger that contains the transaction that most recently
      modified this object.
      */
-    let previousTxnLgrSeq: Int
+    public var previousTxnLgrSeq: Int
     /**
      A hint indicating which page of the low account's owner directory links to
      this object, in case the directory consists of multiple pages.
      */
-    let lowNode: String?
+    public var lowNode: String?
     /**
      A hint indicating which page of the high account's owner directory links
      to this object, in case the directory consists of multiple pages.
      */
-    let highNode: String?
+    public var highNode: String?
     /**
      The inbound quality set by the low account, as an integer in the implied
      ratio LowQualityIn:1,000,000,000. As a special case, the value 0 is
      equivalent to 1 billion, or face value.
      */
-    let lowQualityIn: Int?
+    public var lowQualityIn: Int?
     /**
      The outbound quality set by the low account, as an integer in the implied
      ratio LowQualityOut:1,000,000,000. As a special case, the value 0 is
      equivalent to 1 billion, or face value.
      */
-    let lowQualityOut: Int?
+    public var lowQualityOut: Int?
     /**
      The inbound quality set by the high account, as an integer in the implied
      ratio HighQualityIn:1,000,000,000. As a special case, the value 0 is
      equivalent to 1 billion, or face value.
      */
-    let highQualityIn: Int?
+    public var highQualityIn: Int?
     /**
      The outbound quality set by the high account, as an integer in the implied
      ratio HighQualityOut:1,000,000,000. As a special case, the value 0 is
      equivalent to 1 billion, or face value.
      */
-    let highQualityOut: Int?
+    public var highQualityOut: Int?
 
     enum CodingKeys: String, CodingKey {
         case flags = "Flags"

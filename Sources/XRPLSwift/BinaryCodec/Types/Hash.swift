@@ -12,12 +12,12 @@ import Foundation
 class Hash: SerializedType {
     internal var width: Int
 
-    init(_ bytes: [UInt8]? = nil) {
+    override init(_ bytes: [UInt8]? = nil) {
         self.width = bytes?.count ?? 0
-        super.init(bytes: bytes ?? [])
+        super.init(bytes ?? [])
     }
 
-    class func from(value: String) throws -> Hash {
+    class func from(_ value: String) throws -> Hash {
         let bytes: [UInt8] = value.hexToBytes
         // TODO: Discuss workaround (Cannot access self in init aka self.getLength() doesnt work)
         if self != Hash.self && bytes.count != self.getLength() {
@@ -33,10 +33,10 @@ class Hash: SerializedType {
         - hint: Length of the bytes to read, optional
      */
     override func fromParser(
-        parser: BinaryParser,
-        hint: Int? = nil
+        _ parser: BinaryParser,
+        _ hint: Int? = nil
     ) -> Hash {
-        return Hash(try! parser.read(n: hint ?? self.width))
+        return Hash(try! parser.read(hint ?? self.width))
     }
 
     /**
@@ -44,7 +44,7 @@ class Hash: SerializedType {
      - parameters:
         - other: The Hash to compare this to
      */
-    func compareTo(other: Hash) -> Int {
+    func compareTo(_ other: Hash) -> Int {
         return 0
         //        return self.bytes.compare(
         //            (this.constructor as typeof Hash).from(other).bytes,
@@ -58,10 +58,6 @@ class Hash: SerializedType {
     override func str() -> String {
         return self.toHex()
     }
-    //
-    //    override func toJson() -> String {
-    //        return self.toJson()
-    //    }
 
     /**
      Returns four bits at the specified depth within a hash
@@ -70,7 +66,7 @@ class Hash: SerializedType {
      - returns:
      The number represented by the four bits
      */
-    func nibblet(depth: Int) -> Int {
+    func nibblet(_ depth: Int) -> Int {
         let byteIx = depth > 0 ? (depth / 2) | 0 : 0
         var bytes: UInt8 = self.bytes[byteIx]
         if depth % 2 == 0 {

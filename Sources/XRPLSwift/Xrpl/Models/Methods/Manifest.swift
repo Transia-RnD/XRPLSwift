@@ -27,7 +27,7 @@ public class ManifestRequest: BaseRequest {
      The base58-encoded public key of the validator to look up. This can be the
      master public key or ephemeral public key.
      */
-    public let publicKey: String
+    public var publicKey: String
 
     enum CodingKeys: String, CodingKey {
         case publicKey = "public_key"
@@ -62,10 +62,10 @@ public class ManifestRequest: BaseRequest {
 }
 
 public class ManifestDetails: Codable {
-    public let domain: String
-    public let ephemeralKey: String
-    public let masterKey: String
-    public let seq: Int
+    public var domain: String
+    public var ephemeralKey: String
+    public var masterKey: String
+    public var seq: Int
 
     enum CodingKeys: String, CodingKey {
         case domain = "domain"
@@ -80,18 +80,18 @@ public class ManifestDetails: Codable {
  */
 public class ManifestResponse: Codable {
     /// The public_key from the request.
-    public let requested: String
+    public var requested: String
     /**
      The data contained in this manifest. Omitted if the server does not have
      A manifest for the public_key from the request.
      */
-    public let details: ManifestDetails?
+    public var details: ManifestDetails?
     /**
      The full manifest data in base64 format. This data is serialized to
      binary before being base64-encoded. Omitted if the server does not have a
      manifest for the public_key from the request.
      */
-    public let manifest: String?
+    public var manifest: String?
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)

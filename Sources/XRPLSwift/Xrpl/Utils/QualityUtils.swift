@@ -12,7 +12,7 @@ let BASE_TEN: Int = 10 // swiftlint:disable:this identifier_name
 let ONE_BILLION: String = "1000000000" // swiftlint:disable:this identifier_name
 let TWO_BILLION: String = "2000000000" // swiftlint:disable:this identifier_name
 
-func percentToDecimal(percent: String) throws -> String {
+func percentToDecimal(_ percent: String) throws -> String {
     if !percent.hasSuffix("%") {
         throw ValidationError("Value \(percent) must end with %")
     }
@@ -35,7 +35,7 @@ func percentToDecimal(percent: String) throws -> String {
  - throws:
  ValidationError when the parameter is not convertible to "billionths" format.
  */
-public func decimalToTransferRate(decimal: String) throws -> Int {
+public func decimalToTransferRate(_ decimal: String) throws -> Int {
     let rate = BigInt(decimal)! * BigInt(ONE_BILLION)! + BigInt(ONE_BILLION)!
     if rate < BigInt(ONE_BILLION)! || rate > BigInt(TWO_BILLION)! {
         throw ValidationError("Decimal value must be between 0 and 1.00.")
@@ -67,8 +67,8 @@ public func decimalToTransferRate(decimal: String) throws -> Int {
  - throws:
  ValidationError when the percent parameter is not convertible to "billionths" format.
  */
-public func percentToTransferRate(percent: String) throws -> Int {
-    return try decimalToTransferRate(decimal: percentToDecimal(percent: percent))
+public func percentToTransferRate(_ percent: String) throws -> Int {
+    return try decimalToTransferRate(percentToDecimal(percent))
 }
 
 /**
@@ -81,7 +81,7 @@ public func percentToTransferRate(percent: String) throws -> Int {
  - throws:
  ValidationError when the parameter is not convertible to "billionths" format.
  */
-public func decimalToQuality(decimal: String) throws -> Int {
+public func decimalToQuality(_ decimal: String) throws -> Int {
     let rate = BigInt(decimal)! * BigInt(ONE_BILLION)!
 
     let billionths = String(rate, radix: BASE_TEN)
@@ -113,7 +113,7 @@ public func decimalToQuality(decimal: String) throws -> Int {
  - throws:
  ValidationError when quality is not convertible to decimal format.
  */
-public func qualityToDecimal(quality: Int) throws -> String {
+public func qualityToDecimal(_ quality: Int) throws -> String {
     if !(quality is Int) {
         throw ValidationError("Quality must be an integer")
     }
@@ -140,7 +140,7 @@ public func qualityToDecimal(quality: Int) throws -> String {
  - throws:
  ValidationError when it cannot convert from billionths format.
  */
-public func transferRateToDecimal(rate: Int) throws -> String {
+public func transferRateToDecimal(_ rate: Int) throws -> String {
     if !(rate is Int) {
         throw ValidationError("Error decoding, transfer Rate must be an integer")
     }
@@ -167,6 +167,6 @@ public func transferRateToDecimal(rate: Int) throws -> String {
  - throws:
  ValidationError when the percent parameter is not convertible to "billionths" format.
  */
-public func percentToQuality(percent: String) throws -> Int {
-    return try decimalToQuality(decimal: percentToDecimal(percent: percent))
+public func percentToQuality(_ percent: String) throws -> Int {
+    return try decimalToQuality(percentToDecimal(percent))
 }

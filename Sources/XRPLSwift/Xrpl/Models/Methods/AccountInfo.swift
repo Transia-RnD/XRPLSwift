@@ -17,30 +17,30 @@ import Foundation
 public class AccountInfoRequest: BaseRequest {
     //    let command: String = "account_info"
     /// A unique identifier for the account, most commonly the account's address.
-    public let account: String
+    public var account: String
     /// A 20-byte hex string for the ledger version to use.
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger to use, or a shortcut string to choose a
      ledger automatically.
      */
-    public let ledgerIndex: LedgerIndex?
+    public var ledgerIndex: LedgerIndex?
     /**
      Whether to get info about this account's queued transactions. Can only be
      used when querying for the data from the current open ledger. Not available
      from servers in Reporting Mode.
      */
-    public let queue: Bool?
+    public var queue: Bool?
     /**
      Request SignerList objects associated with this account.
      */
-    public let signerLists: Bool?
+    public var signerLists: Bool?
     /**
      If true, then the account field only accepts a public key or XRP Ledger
      address. Otherwise, account can be a secret or passphrase (not
      recommended). The default is false.
      */
-    public let strict: Bool?
+    public var strict: Bool?
 
     enum CodingKeys: String, CodingKey {
         case account = "account"
@@ -118,41 +118,41 @@ public struct QueueTransaction: Codable {
      Whether this transaction changes this address's ways of authorizing
      transactions.
      */
-    public let authChange: Bool
+    public var authChange: Bool
     /// The Transaction Cost of this transaction, in drops of XRP.
-    public let fee: String
+    public var fee: String
     /**
      The transaction cost of this transaction, relative to the minimum cost for
      this type of transaction, in fee levels.
      */
-    public let feeLevel: String
+    public var feeLevel: String
     /// The maximum amount of XRP, in drops, this transaction could send or destroy.
-    public let maxSpendDrops: String
+    public var maxSpendDrops: String
     /// The Sequence Number of this transaction.
-    public let seq: Int
+    public var seq: Int
 }
 
 public struct QueueData: Codable {
     /// Number of queued transactions from this address.
-    public let txnCount: Int
+    public var txnCount: Int
     /**
      Whether a transaction in the queue changes this address's ways of
      authorizing transactions. If true, this address can queue no further
      transactions until that transaction has been executed or dropped from the
      queue.
      */
-    public let authChangeQueued: Bool?
+    public var authChangeQueued: Bool?
     /// The lowest Sequence Number among transactions queued by this address.
-    public let lowestSequence: Int?
+    public var lowestSequence: Int?
     /// The highest Sequence Number among transactions queued by this address.
-    public let highestSequence: Int?
+    public var highestSequence: Int?
     /**
      Integer amount of drops of XRP that could be debited from this address if
      every transaction in the queue consumes the maximum amount of XRP possible.
      */
-    public let maxSpendDropsTotal: String?
+    public var maxSpendDropsTotal: String?
     /// Information about each queued transaction from this address.
-    public let transactions: [QueueTransaction]?
+    public var transactions: [QueueTransaction]?
 }
 
 /**
@@ -163,26 +163,26 @@ public class AccountInfoResponse: Codable {
      The AccountRoot ledger object with this account's information, as stored
      in the ledger.
      */
-    public let accountData: AccountRoot
+    public var accountData: AccountRoot
     /**
      Array of SignerList ledger objects associated with this account for
      Multi-Signing. Since an account can own at most one SignerList, this
      array must have exactly one member if it is present.
      */
-    public let signerLists: [SignerList]?
+    public var signerLists: [SignerList]?
     /**
      The ledger index of the current in-progress ledger, which was used when
      retrieving this information.
      */
-    public let ledgerCurrentIndex: Int?
+    public var ledgerCurrentIndex: Int?
     /**
      The ledger index of the ledger version used when retrieving this
      information. The information does not contain any changes from ledger
      versions newer than this one.
      */
     // TODO: Ledger Hash isnt listed on this object, but is returned...
-    public let ledgerIndex: Int?
-    public let ledgerHash: String?
+    public var ledgerIndex: Int?
+    public var ledgerHash: String?
     /**
      Information about queued transactions sent by this account. This
      information describes the state of the local rippled server, which may be
@@ -190,12 +190,12 @@ public class AccountInfoResponse: Codable {
      fields may be omitted because the values are calculated "lazily" by the
      queuing mechanism.
      */
-    public let queueData: QueueData?
+    public var queueData: QueueData?
     /**
      True if this data is from a validated ledger version; if omitted or set
      to false, this data is not final.
      */
-    public let validated: Bool?
+    public var validated: Bool?
 
     private enum CodingKeys: String, CodingKey {
         case accountData = "account_data"

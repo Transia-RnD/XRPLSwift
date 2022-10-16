@@ -8,10 +8,10 @@
 import Foundation
 
 public struct ChannelClaim: Codable {
-    public var amount: Int64
+    public var amount: String
     public var channel: String
 
-    public init(amount: Int64, channel: String) {
+    public init(amount: String, channel: String) {
         self.amount = amount
         self.channel = channel
     }

@@ -47,7 +47,7 @@ public class LedgerCurrentRequest: BaseRequest {
  Response expected from a {@link LedgerCurrentRequest}.
  */
 public class LedgerCurrentResponse: Codable {
-    public let ledgerCurrentIndex: Int
+    public var ledgerCurrentIndex: Int
 
     enum CodingKeys: String, CodingKey {
         case ledgerCurrentIndex = "ledger_current_index"

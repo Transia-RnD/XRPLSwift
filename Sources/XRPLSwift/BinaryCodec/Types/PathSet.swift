@@ -40,38 +40,38 @@ class xPathStep: SerializedType {
         var dataType: Int = 0x00
         var buffer: [UInt8] = []
         if let v = value["account"] as? String {
-            let accountId = try AccountID.from(value: v)
+            let accountId = try AccountID.from(v)
             buffer += accountId.bytes
             dataType |= TYPE_ACCOUNT
         }
         if let v = value["currency"] as? String {
-            let currency = try xCurrency.from(value: v)
+            let currency = try xCurrency.from(v)
             buffer += currency.bytes
             dataType |= TYPE_CURRENCY
         }
         if let v = value["issuer"] as? String {
-            let issuer = try AccountID.from(value: v)
+            let issuer = try AccountID.from(v)
             buffer += issuer.bytes
             dataType |= TYPE_ISSUER
         }
-        return xPathStep(bytes: Data(hex: String(dataType, radix: 16).uppercased()).bytes + buffer)
+        return xPathStep(Data(hex: String(dataType, radix: 16).uppercased()).bytes + buffer)
     }
     class func fromParser(
         parser: BinaryParser,
         hint: Int? = nil
     ) -> SerializedType {
-        let dataType = Int(parser.readUInt8())
+        let dataType = Int(try! parser.readUInt8())
         var buffer: [UInt8] = []
         if (dataType & TYPE_ACCOUNT) != 0 {
-            buffer += try! parser.read(n: AccountID.getLength())
+            buffer += try! parser.read(AccountID.getLength())
         }
         if (dataType & TYPE_CURRENCY) != 0 {
-            buffer += try! parser.read(n: xCurrency.getLength())
+            buffer += try! parser.read(xCurrency.getLength())
         }
         if (dataType & TYPE_ISSUER) != 0 {
-            buffer += try! parser.read(n: AccountID.getLength())
+            buffer += try! parser.read(AccountID.getLength())
         }
-        return xPathStep(bytes: Data(hex: String(dataType, radix: 16).uppercased()).bytes + buffer)
+        return xPathStep(Data(hex: String(dataType, radix: 16).uppercased()).bytes + buffer)
     }
 
     override func toJson() -> [String: AnyObject] {
@@ -83,19 +83,19 @@ class xPathStep: SerializedType {
          is not a multiple of the hash length.
          */
         let parser = BinaryParser(hex: self.toHex())
-        let dataType = Int(parser.readUInt8())
+        let dataType = Int(try! parser.readUInt8())
         var json: [String: AnyObject] = [:]
 
         if (dataType & TYPE_ACCOUNT) != 0 {
-            let accountId: String = AccountID().fromParser(parser: parser).toJson()
+            let accountId: String = AccountID().fromParser(parser).toJson()
             json["account"] = accountId as AnyObject
         }
         if (dataType & TYPE_CURRENCY) != 0 {
-            let currency: String = xCurrency().fromParser(parser: parser).toJson()
+            let currency: String = xCurrency().fromParser(parser).toJson()
             json["currency"] = currency as AnyObject
         }
         if (dataType & TYPE_ISSUER) != 0 {
-            let issuer: String = AccountID().fromParser(parser: parser).toJson()
+            let issuer: String = AccountID().fromParser(parser).toJson()
             json["issuer"] = issuer as AnyObject
         }
         return json
@@ -122,7 +122,7 @@ class xPath: SerializedType {
             let pathstep = try xPathStep.from(value: dict)
             buffer += pathstep.bytes
         }
-        return xPath(bytes: buffer)
+        return xPath(buffer)
     }
 
     class func fromParser(
@@ -137,7 +137,7 @@ class xPath: SerializedType {
                 break
             }
         }
-        return xPath(bytes: buffer)
+        return xPath(buffer)
     }
 
     override func toJson() -> [[String: AnyObject]] {
@@ -162,7 +162,7 @@ class xPathSet: SerializedType {
                 buffer.append(contentsOf: [UInt8(PATH_SEPARATOR_BYTE)])
             }
             buffer[buffer.count - 1] = UInt8(PATHSET_END_BYTE)
-            return xPathSet(bytes: buffer)
+            return xPathSet(buffer)
         }
         throw BinaryError.unknownError(error: "Cannot construct PathSet from given value")
     }
@@ -174,13 +174,13 @@ class xPathSet: SerializedType {
         while !parser.end() {
             let path = xPath.fromParser(parser: parser)
             buffer.append(contentsOf: path.bytes)
-            buffer.append(contentsOf: try parser.read(n: 1))
+            buffer.append(contentsOf: try parser.read(1))
             if buffer[buffer.count - 1] == UInt8(PATHSET_END_BYTE) {
                 break
             }
         }
         // TODO: Review this function
-        return xPathSet(bytes: buffer)
+        return xPathSet(buffer)
     }
 
     override func toJson() -> [[[String: AnyObject]]] {
@@ -190,7 +190,7 @@ class xPathSet: SerializedType {
             let path = xPath.fromParser(parser: pathsetParser)
             let pathJson: [[String: AnyObject]] = path.toJson()
             json.append(pathJson)
-            try! pathsetParser.skip(n: 1)
+            try! pathsetParser.skip(1)
         }
         return json
     }

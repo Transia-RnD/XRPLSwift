@@ -126,8 +126,8 @@ let signingJson: [String: AnyObject] = [
 final class TestBinarySimple: XCTestCase {
 
     func testSimple() {
-        let encoded = try! BinaryCodec.encode(json: TX_JSON)
-        let decoded = BinaryCodec.decode(buffer: encoded)
+        let encoded = try! BinaryCodec.encode(TX_JSON)
+        let decoded = BinaryCodec.decode(encoded)
         XCTAssert(TX_JSON == decoded)
     }
 
@@ -135,41 +135,41 @@ final class TestBinarySimple: XCTestCase {
         var clone = TX_JSON
         clone["Amount"] = "1000" as AnyObject
         clone["Fee"] = "10" as AnyObject
-        XCTAssert(BinaryCodec.decode(buffer: try! BinaryCodec.encode(json: clone)) == clone)
+        XCTAssert(BinaryCodec.decode(try! BinaryCodec.encode(clone)) == clone)
     }
 
     func testInvalidAmountFee() {
         var clone = TX_JSON
         clone["Amount"] = "1000.789" as AnyObject
         clone["Fee"] = "10.123" as AnyObject
-        XCTAssertThrowsError(try BinaryCodec.encode(json: clone))
+        XCTAssertThrowsError(try BinaryCodec.encode(clone))
     }
 
     func testInvalidAmountInvalidFee() {
         var clone = TX_JSON
         clone["Amount"] = "1000.001" as AnyObject
         clone["Fee"] = "10" as AnyObject
-        XCTAssertThrowsError(try BinaryCodec.encode(json: clone))
+        XCTAssertThrowsError(try BinaryCodec.encode(clone))
     }
 
     func testInvalidAmountType() {
         var clone = TX_JSON
         clone["Amount"] = 1000 as AnyObject
-        XCTAssertThrowsError(try BinaryCodec.encode(json: clone))
+        XCTAssertThrowsError(try BinaryCodec.encode(clone))
     }
 
     func testInvalidFeeType() {
         var clone = TX_JSON
         clone["Amount"] = "1000.789" as AnyObject
         clone["Fee"] = 10 as AnyObject
-        XCTAssertThrowsError(try BinaryCodec.encode(json: clone))
+        XCTAssertThrowsError(try BinaryCodec.encode(clone))
     }
 }
 
 final class TestBinaryXAddress: XCTestCase {
 
     func testXaddressEncode() {
-        XCTAssertEqual(try BinaryCodec.encode(json: jsonX1), try BinaryCodec.encode(json: jsonR1))
+        XCTAssertEqual(try BinaryCodec.encode(jsonX1), try BinaryCodec.encode(jsonR1))
     }
 
     // TODO: Compare Any
@@ -178,27 +178,27 @@ final class TestBinaryXAddress: XCTestCase {
     //    }
 
     func testXaddressNullTag() {
-        XCTAssertEqual(try BinaryCodec.encode(json: jsonNullX), try BinaryCodec.encode(json: jsonNullR))
+        XCTAssertEqual(try BinaryCodec.encode(jsonNullX), try BinaryCodec.encode(jsonNullR))
     }
 
     func testXaddressInvalid() {
-        XCTAssertThrowsError(try BinaryCodec.encode(json: jsonInvalidX))
+        XCTAssertThrowsError(try BinaryCodec.encode(jsonInvalidX))
     }
 
     func testXaddressInvalidField() {
-        XCTAssertThrowsError(try BinaryCodec.encode(json: invalidJsonIssuerTagged))
+        XCTAssertThrowsError(try BinaryCodec.encode(invalidJsonIssuerTagged))
     }
 
     func testXaddressXaddrAndMismatchedSourceTag() {
         var invalidJsonXAndSourceTag: [String: Any] = validJsonXAndTags
         invalidJsonXAndSourceTag.merge(["SourceTag": 999]) { (_, new) in new }
-        XCTAssertThrowsError(try BinaryCodec.encode(json: invalidJsonXAndSourceTag))
+        XCTAssertThrowsError(try BinaryCodec.encode(invalidJsonXAndSourceTag))
     }
 
     func testXaddressXaddrAndMismatchedDestTag() {
         var invalidJsonXAndDestTag: [String: Any] = validJsonXAndTags
         invalidJsonXAndDestTag.merge(["DestinationTag": 999]) { (_, new) in new }
-        XCTAssertThrowsError(try BinaryCodec.encode(json: invalidJsonXAndDestTag))
+        XCTAssertThrowsError(try BinaryCodec.encode(invalidJsonXAndDestTag))
     }
 
     func testxaddressXaddrAndMatchingSourceTag() {
@@ -207,7 +207,7 @@ final class TestBinaryXAddress: XCTestCase {
             "Account": "rLs1MzkFWCxTbuAHgjeTZK4fcCDDnf2KRv",
             "Destination": "rso13LJmsQvPzzV3q1keJjn6dLRFJm95F2"
         ]) { (_, new) in new }
-        XCTAssertEqual(try BinaryCodec.encode(json: validJsonXAndTags), try BinaryCodec.encode(json: validJsonNoXTags))
+        XCTAssertEqual(try BinaryCodec.encode(validJsonXAndTags), try BinaryCodec.encode(validJsonNoXTags))
     }
 }
 
@@ -240,15 +240,15 @@ final class TestMainFixtures: XCTestCase {
     func checkBinaryAndJson(test: [String: AnyObject]) {
         let testBinary: String = test["binary"] as! String
         let testJson: [String: AnyObject] = test["json"] as! [String: AnyObject]
-        XCTAssertEqual(try BinaryCodec.encode(json: testJson), testBinary)
+        XCTAssertEqual(try BinaryCodec.encode(testJson), testBinary)
         //        XCTAssertTrue(BinaryCodec.decode(buffer: testBinary) == testJson)
     }
 
     func checkXaddressJsons(test: [String: AnyObject]) {
         let xJson: [String: AnyObject] = test["xjson"] as! [String: AnyObject]
         let rJson: [String: AnyObject] = test["rjson"] as! [String: AnyObject]
-        XCTAssertEqual(try BinaryCodec.encode(json: xJson), try BinaryCodec.encode(json: rJson))
-        XCTAssertTrue(BinaryCodec.decode(buffer: try BinaryCodec.encode(json: xJson)) == rJson)
+        XCTAssertEqual(try BinaryCodec.encode(xJson), try BinaryCodec.encode(rJson))
+        XCTAssertTrue(BinaryCodec.decode(try BinaryCodec.encode(xJson)) == rJson)
     }
 
     func runFixturesTest(filename: String, category: String, testMethod: Any) {
@@ -311,7 +311,7 @@ final class TestMainFixtures: XCTestCase {
     func testWholeObjectFixtures() {
         let wholeObjectTests = DataDrivenFixtures().getWholeObjectTests()
         for wholeObject in wholeObjectTests {
-            XCTAssertEqual(try BinaryCodec.encode(json: wholeObject.txJson), wholeObject.expectedHex)
+            XCTAssertEqual(try BinaryCodec.encode(wholeObject.txJson), wholeObject.expectedHex)
             //            XCTAssertTrue(BinaryCodec.decode(buffer: wholeObject.expectedHex) == wholeObject.txJson)
         }
     }
@@ -322,15 +322,15 @@ final class TestMainSigning: XCTestCase {
 
     func testSingleSigning() {
         let expected: String = "53545800120000228000000024000000016140000000000003E868400000000000000A7321ED5F5AC8B98974A3CA843326D9B88CEBD0560177B973EE0B149F782CFAA06DC66A81145B812C9D57731E27A2DA8B1830195F88EF32A3B68314B5F762798A53D543A014CAF8B297CFF8F2F937E8"
-        XCTAssertEqual(try BinaryCodec.encodeForSigning(json: signingJson), expected)
+        XCTAssertEqual(try BinaryCodec.encodeForSigning(signingJson), expected)
     }
 
     func testClaim() {
         let channel: String = "43904CBFCDCEC530B4037871F86EE90BF799DF8D2E0EA564BC8A3F332E4F5FB1"
         let amount: String = "1000"
-        let json: [String: AnyObject] = ["amount": amount, "channel": channel] as! [String: AnyObject]
+        let claim: ChannelClaim = ChannelClaim(amount: amount, channel: channel)
         let expected: String = "434C4D0043904CBFCDCEC530B4037871F86EE90BF799DF8D2E0EA564BC8A3F332E4F5FB100000000000003E8"
-        XCTAssertEqual(try BinaryCodec.encodeForSigningClaim(json: json), expected)
+        XCTAssertEqual(try BinaryCodec.encodeForSigningClaim(claim), expected)
     }
 
     func testMultisig() {
@@ -339,7 +339,7 @@ final class TestMainSigning: XCTestCase {
         multisigJson.merge(["SigningPubKey": ""]) { (_, new) in new }
         let expected: String = "534D5400120000228000000024000000016140000000000003E868400000000000000A730081145B812C9D57731E27A2DA8B1830195F88EF32A3B68314B5F762798A53D543A014CAF8B297CFF8F2F937E8C0A5ABEF242802EFED4B041E8F2D4A8CC86AE3D1"
         XCTAssertEqual(
-            try BinaryCodec.encodeForMultisigning(json: multisigJson, signingAccount: signingAccount),
+            try BinaryCodec.encodeForMultisigning(multisigJson, signingAccount),
             expected
         )
     }

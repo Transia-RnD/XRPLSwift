@@ -56,7 +56,13 @@ extension Array where Element == PaymentFlags {
     }
 }
 
-public class Payment: BaseTransaction {
+public class Payment: BaseTransaction, XrplTransaction {
+    func from(from json: [String: AnyObject]) async throws -> Payment {
+        return try Payment(json: [:])
+    }
+
+    typealias Model = Payment
+
     /*
      Represents a Payment <https://xrpl.org/payment.html>`_ transaction, which
      sends value from one account to another. (Depending on the path taken, this
@@ -67,39 +73,39 @@ public class Payment: BaseTransaction {
      <http://xrpl.local/payment.html#creating-accounts>`_.
      */
 
-    public let amount: Amount
+    public var amount: Amount
     /*
      The amount of currency to deliver. If the Partial Payment flag is set,
      deliver *up to* this amount instead. This field is required.
      :meta hide-value:
      */
 
-    public let destination: String
+    public var destination: String
     /*
      The address of the account receiving the payment. This field is required.
      :meta hide-value:
      */
 
-    public let destinationTag: Int?
+    public var destinationTag: Int?
     /*
      An arbitrary `destination tag
      <https://xrpl.org/source-and-destination-tags.html>`_ that
      identifies the reason for the Payment, or a hosted recipient to pay.
      */
 
-    public let invoiceId: String?
+    public var invoiceId: String?
     /*
      Arbitrary 256-bit hash representing a specific reason or identifier for
      this Check.
      */
 
-    public let paths: [Path]?
+    public var paths: [Path]?
     /*
      Array of payment paths to be used (for a cross-currency payment). Must be
      omitted for XRP-to-XRP transactions.
      */
 
-    public let sendMax: Amount?
+    public var sendMax: Amount?
     /*
      Maximum amount of source currency this transaction is allowed to cost,
      including `transfer fees <http://xrpl.local/transfer-fees.html>`_,
@@ -108,7 +114,7 @@ public class Payment: BaseTransaction {
      or cross-issue payments. Must be omitted for XRP-to-XRP payments.
      */
 
-    public let deliverMin: Amount?
+    public var deliverMin: Amount?
     /*
      Minimum amount of destination currency this transaction should deliver.
      Only valid if this is a partial payment. If omitted, any positive amount

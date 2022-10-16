@@ -127,17 +127,17 @@ public class LedgerDataResponse: Codable {
      Array of JSON objects containing data from the ledger's state tree,
      as defined below.
      */
-    public let state: [State]
+    public var state: [State]
     /// Unique identifying hash of this ledger version.
-    public let ledgerHash: String
+    public var ledgerHash: String
     /// The ledger index of this ledger version.
-    public let ledgerIndex: Int
+    public var ledgerIndex: Int
     /**
      Server-defined value indicating the response is paginated. Pass this to
      the next call to resume where this call left off.
      */
-    public let marker: AnyCodable?
-    public let validated: Bool?
+    public var marker: AnyCodable?
+    public var validated: Bool?
 
     enum CodingKeys: String, CodingKey {
         case state = "state"

@@ -16,12 +16,12 @@ final class TestAccountID: XCTestCase {
     static let BASE58_ENCODING: String = "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59"
 
     func testFromValueHex() throws {
-        let accountId = try AccountID.from(value: TestAccountID.HEX_ENCODING)
+        let accountId = try AccountID.from(TestAccountID.HEX_ENCODING)
         XCTAssertEqual((accountId.toJson() as Any as! String), TestAccountID.BASE58_ENCODING)
     }
 
     func testFromValueBase58() throws {
-        let accountId = try AccountID.from(value: TestAccountID.BASE58_ENCODING)
+        let accountId = try AccountID.from(TestAccountID.BASE58_ENCODING)
         // Note that I converted the hex to uppercase here...
         // We may want to decide if we want the implemention of `to_hex` in
         // SerializedType to return uppercase hex by default.

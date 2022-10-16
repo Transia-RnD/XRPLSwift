@@ -37,32 +37,32 @@ final class TestDefinitions: XCTestCase {
 
     func testGetFieldTypeName() {
         let expectedFieldTypeName: String = "UInt32"
-        let fieldTypeName: String = Definitions().getFieldTypeName(fieldName: TestDefinitions.testFieldName)
+        let fieldTypeName: String = Definitions().getFieldTypeName(TestDefinitions.testFieldName)
         XCTAssertEqual(expectedFieldTypeName, fieldTypeName)
     }
 
     func testGetFieldTypeCode() {
         let expectedFieldTypeCode: Int = 2
-        let fieldTypeCode: Int = try! Definitions().getFieldTypeCode(fieldName: TestDefinitions.testFieldName)
+        let fieldTypeCode: Int = try! Definitions().getFieldTypeCode(TestDefinitions.testFieldName)
         XCTAssertEqual(expectedFieldTypeCode, fieldTypeCode)
     }
 
     func testGetFieldCode() {
         let expectedFieldCode: Int = 4
-        let fieldCode: Int = Definitions().getFieldCode(fieldName: TestDefinitions.testFieldName)
+        let fieldCode: Int = Definitions().getFieldCode(TestDefinitions.testFieldName)
         XCTAssertEqual(expectedFieldCode, fieldCode)
     }
 
     func testGetFieldHeaderFromName() {
-        let expectedFieldHeader: FieldHeader = FieldHeader(typeCode: 2, fieldCode: 4)
-        let fieldHeader: FieldHeader = Definitions().getFieldHeaderFromName(fieldName: TestDefinitions.testFieldName)
+        let expectedFieldHeader: FieldHeader = FieldHeader(2, 4)
+        let fieldHeader: FieldHeader = Definitions().getFieldHeaderFromName(TestDefinitions.testFieldName)
         XCTAssertEqual(expectedFieldHeader, fieldHeader)
     }
 
     func testGetFieldNameFromHeader() {
         let expectedFieldName: String = TestDefinitions.testFieldName
-        let fieldHeader: FieldHeader = FieldHeader(typeCode: 2, fieldCode: 4)
-        let fieldName = Definitions().getFieldNameFromHeader(fieldHeader: fieldHeader)
+        let fieldHeader: FieldHeader = FieldHeader(2, 4)
+        let fieldName = Definitions().getFieldNameFromHeader(fieldHeader)
         XCTAssertEqual(expectedFieldName, fieldName)
     }
 }

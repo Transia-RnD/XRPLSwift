@@ -18,11 +18,11 @@ final class TestXrplCodec: XCTestCase {
         do {
             let hexStringBytes = hexString.hexToBytes
             let encodeResult = try XrplCodec.encodeSeed(
-                entropy: hexStringBytes,
-                type: .secp256k1
+                hexStringBytes,
+                .secp256k1
             )
             XCTAssert(encodeResult == encodedString)
-            let (decodeResult, encodingType) = try XrplCodec.decodeSeed(seed: encodedString)
+            let (decodeResult, encodingType) = try XrplCodec.decodeSeed(encodedString)
             XCTAssert(decodeResult == hexStringBytes)
             XCTAssert(encodingType == .secp256k1)
         } catch {
@@ -37,11 +37,11 @@ final class TestXrplCodec: XCTestCase {
         do {
             let hexStringBytes = hexString.hexToBytes
             let encodeResult = try XrplCodec.encodeSeed(
-                entropy: hexStringBytes,
-                type: .secp256k1
+                hexStringBytes,
+                .secp256k1
             )
             XCTAssert(encodeResult == encodedString)
-            let (decodeResult, encodingType) = try XrplCodec.decodeSeed(seed: encodedString)
+            let (decodeResult, encodingType) = try XrplCodec.decodeSeed(encodedString)
             XCTAssert(decodeResult == hexStringBytes)
             XCTAssert(encodingType == .secp256k1)
         } catch {
@@ -56,11 +56,11 @@ final class TestXrplCodec: XCTestCase {
         do {
             let hexStringBytes = hexString.hexToBytes
             let encodeResult = try XrplCodec.encodeSeed(
-                entropy: hexStringBytes,
-                type: .secp256k1
+                hexStringBytes,
+                .secp256k1
             )
             XCTAssert(encodeResult == encodedString)
-            let (decodeResult, encodingType) = try XrplCodec.decodeSeed(seed: encodedString)
+            let (decodeResult, encodingType) = try XrplCodec.decodeSeed(encodedString)
             XCTAssert(decodeResult == hexStringBytes)
             XCTAssert(encodingType == .secp256k1)
         } catch {
@@ -75,11 +75,11 @@ final class TestXrplCodec: XCTestCase {
         do {
             let hexStringBytes = hexString.hexToBytes
             let encodeResult = try XrplCodec.encodeSeed(
-                entropy: hexStringBytes,
-                type: .ed25519
+                hexStringBytes,
+                .ed25519
             )
             XCTAssert(encodeResult == encodedString)
-            let (decodeResult, encodingType) = try XrplCodec.decodeSeed(seed: encodedString)
+            let (decodeResult, encodingType) = try XrplCodec.decodeSeed(encodedString)
             XCTAssert(decodeResult == hexStringBytes)
             XCTAssert(encodingType == .ed25519)
         } catch {
@@ -94,11 +94,11 @@ final class TestXrplCodec: XCTestCase {
         do {
             let hexStringBytes = hexString.hexToBytes
             let encodeResult = try XrplCodec.encodeSeed(
-                entropy: hexStringBytes,
-                type: .ed25519
+                hexStringBytes,
+                .ed25519
             )
             XCTAssert(encodeResult == encodedString)
-            let (decodeResult, encodingType) = try XrplCodec.decodeSeed(seed: encodedString)
+            let (decodeResult, encodingType) = try XrplCodec.decodeSeed(encodedString)
             XCTAssert(decodeResult == hexStringBytes)
             XCTAssert(encodingType == .ed25519)
         } catch {
@@ -113,11 +113,11 @@ final class TestXrplCodec: XCTestCase {
         do {
             let hexStringBytes = hexString.hexToBytes
             let encodeResult = try XrplCodec.encodeSeed(
-                entropy: hexStringBytes,
-                type: .ed25519
+                hexStringBytes,
+                .ed25519
             )
             XCTAssert(encodeResult == encodedString)
-            let (decodeResult, encodingType) = try XrplCodec.decodeSeed(seed: encodedString)
+            let (decodeResult, encodingType) = try XrplCodec.decodeSeed(encodedString)
             XCTAssert(decodeResult == hexStringBytes)
             XCTAssert(encodingType == .ed25519)
         } catch {
@@ -131,8 +131,8 @@ final class TestXrplCodec: XCTestCase {
         do {
             let hexStringBytes = hexString.hexToBytes
             _ = try XrplCodec.encodeSeed(
-                entropy: hexStringBytes,
-                type: .secp256k1
+                hexStringBytes,
+                .secp256k1
             )
         } catch {
             XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
@@ -144,8 +144,8 @@ final class TestXrplCodec: XCTestCase {
         do {
             let hexStringBytes = hexString.hexToBytes
             _ = try XrplCodec.encodeSeed(
-                entropy: hexStringBytes,
-                type: .secp256k1
+                hexStringBytes,
+                .secp256k1
             )
         } catch {
             XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
@@ -159,11 +159,9 @@ final class TestXrplCodec: XCTestCase {
         let encodedString: String = "rJrRMgiRgrU6hDF4pgu5DXQdWyPbY35ErN"
         do {
             let hexStringBytes = hexString.hexToBytes
-            let encodeResult = try XrplCodec.encodeClassicAddress(
-                bytes: hexStringBytes
-            )
+            let encodeResult = try XrplCodec.encodeClassicAddress(hexStringBytes)
             XCTAssert(encodeResult == encodedString)
-            let decodeResult = try XrplCodec.decodeClassicAddress(classicAddress: encodedString)
+            let decodeResult = try XrplCodec.decodeClassicAddress(encodedString)
             XCTAssert(decodeResult == hexStringBytes)
         } catch {
             print(error.localizedDescription)
@@ -175,9 +173,7 @@ final class TestXrplCodec: XCTestCase {
         let hexString: String = "ABCDEF"
         do {
             let hexStringBytes = hexString.hexToBytes
-            _ = try XrplCodec.encodeClassicAddress(
-                bytes: hexStringBytes
-            )
+            _ = try XrplCodec.encodeClassicAddress(hexStringBytes)
         } catch {
             XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
         }
@@ -190,11 +186,9 @@ final class TestXrplCodec: XCTestCase {
         let encodedString: String = "n9MXXueo837zYH36DvMc13BwHcqtfAWNJY5czWVbp7uYTj7x17TH"
         do {
             let hexStringBytes = hexString.hexToBytes
-            let encodeResult = try XrplCodec.encodeNodePublicKey(
-                bytes: hexStringBytes
-            )
+            let encodeResult = try XrplCodec.encodeNodePublicKey(hexStringBytes)
             XCTAssert(encodeResult == encodedString)
-            let decodeResult = try XrplCodec.decodeNodePublicKey(nodePublicKey: encodedString)
+            let decodeResult = try XrplCodec.decodeNodePublicKey(encodedString)
             XCTAssert(decodeResult == hexStringBytes)
         } catch {
             print(error.localizedDescription)
@@ -209,11 +203,9 @@ final class TestXrplCodec: XCTestCase {
         let encodedString: String = "aB44YfzW24VDEJQ2UuLPV2PvqcPCSoLnL7y5M1EzhdW4LnK5xMS3"
         do {
             let hexStringBytes = hexString.hexToBytes
-            let encodeResult = try XrplCodec.encodeAccountPublicKey(
-                bytes: hexStringBytes
-            )
+            let encodeResult = try XrplCodec.encodeAccountPublicKey(hexStringBytes)
             XCTAssert(encodeResult == encodedString)
-            let decodeResult = try XrplCodec.decodeAccountPublicKey(accountPublicKey: encodedString)
+            let decodeResult = try XrplCodec.decodeAccountPublicKey(encodedString)
             XCTAssert(decodeResult == hexStringBytes)
         } catch {
             print(error.localizedDescription)

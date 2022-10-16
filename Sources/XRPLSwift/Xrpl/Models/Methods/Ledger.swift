@@ -12,51 +12,51 @@ import Foundation
 
 public class LedgerRequest: BaseRequest {
     /// A 20-byte hex string for the ledger version to use.
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger to use, or a shortcut string to choose a
      ledger automatically.
      */
-    public let ledgerIndex: LedgerIndex?
+    public var ledgerIndex: LedgerIndex?
     /**
      Admin required If true, return full information on the entire ledger.
      Ignored if you did not specify a ledger version. Defaults to false.
      */
-    public let full: Bool?
+    public var full: Bool?
     /**
      Admin required. If true, return information on accounts in the ledger.
      Ignored if you did not specify a ledger version. Defaults to false.
      */
-    public let accounts: Bool?
+    public var accounts: Bool?
     /**
      If true, return information on transactions in the specified ledger
      version. Defaults to false. Ignored if you did not specify a ledger
      version.
      */
-    public let transactions: Bool?
+    public var transactions: Bool?
     /**
      Provide full JSON-formatted information for transaction/account
      information instead of only hashes. Defaults to false. Ignored unless you
      request transactions, accounts, or both.
      */
-    public let expand: Bool?
+    public var expand: Bool?
     /**
      If true, include owner_funds field in the metadata of OfferCreate
      transactions in the response. Defaults to false. Ignored unless
      transactions are included and expand is true.
      */
-    public let ownerFunds: Bool?
+    public var ownerFunds: Bool?
     /**
      If true, and transactions and expand are both also true, return
      transaction information in binary format (hexadecimal string) instead of
      JSON format.
      */
-    public let binary: Bool?
+    public var binary: Bool?
     /**
      If true, and the command is requesting the current ledger, includes an
      array of queued transactions in the results.
      */
-    public let queue: Bool?
+    public var queue: Bool?
 
     enum CodingKeys: String, CodingKey {
         case ledgerHash = "ledger_hash"

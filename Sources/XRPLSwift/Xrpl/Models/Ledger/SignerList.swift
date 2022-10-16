@@ -10,8 +10,8 @@
 import Foundation
 
 public class BaseSignerEntry: Codable {
-    public let account: String
-    public let signerWeight: Int
+    public var account: String
+    public var signerWeight: Int
 
     enum CodingKeys: String, CodingKey {
         case account = "Account"
@@ -26,7 +26,7 @@ public class BaseSignerEntry: Codable {
 }
 
 public class SignerEntry: Codable {
-    public let signerEntry: BaseSignerEntry
+    public var signerEntry: BaseSignerEntry
     enum CodingKeys: String, CodingKey {
         case signerEntry = "SignerEntry"
     }
@@ -38,44 +38,44 @@ public class SignerEntry: Codable {
  can create, replace, or remove a signer list using a SignerListSet
  transaction.
  */
-open class SignerList: BaseLedgerEntry {
-    let ledgerEntryType: String = "SignerList"
+public class SignerList: BaseLedgerEntry {
+    public var ledgerEntryType: String = "SignerList"
     /**
      A bit-map of Boolean flags enabled for this signer list. For more
      information, see SignerList Flags.
      */
-    let flags: Int
+    public var flags: Int
     /**
      The identifying hash of the transaction that most recently modified this
      object.
      */
-    let previousTxnId: String
+    public var previousTxnId: String
     /**
      The index of the ledger that contains the transaction that most recently
      modified this object.
      */
-    let previousTxnLgrSeq: Int
+    public var previousTxnLgrSeq: Int
     /**
      A hint indicating which page of the owner directory links to this object,
      in case the directory consists of multiple pages.
      */
-    let ownerNode: String
+    public var ownerNode: String
     /**
      An array of Signer Entry objects representing the parties who are part of
      this signer list.
      */
-    let signerEntries: [SignerEntry]
+    public var signerEntries: [SignerEntry]
     /**
      An ID for this signer list. Currently always set to 0. If a future
      amendment allows multiple signer lists for an account, this may change.
      */
-    let signerListId: Int
+    public var signerListId: Int
     /**
      A target number for signer weights. To produce a valid signature for the
      owner of this SignerList, the signers must provide valid signatures whose
      weights sum to this value or more.
      */
-    let signerQuorum: Int
+    public var signerQuorum: Int
 
     enum CodingKeys: String, CodingKey {
         case flags = "Flags"

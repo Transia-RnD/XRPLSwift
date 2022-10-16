@@ -14,19 +14,19 @@ import Foundation
  */
 public class ChannelVerifyRequest: BaseRequest {
     /// The amount of XRP, in drops, the provided signature authorizes.
-    public let amount: String
+    public var amount: String
     /**
      The Channel ID of the channel that provides the XRP. This is a
      64-character hexadecimal string.
      */
-    public let channelId: String
+    public var channelId: String
     /**
      The public key of the channel and the key pair that was used to create the
      signature, in hexadecimal or the XRP Ledger's base58 format.
      */
-    public let publicKey: String
+    public var publicKey: String
     /// The signature to verify, in hexadecimal.
-    public let signature: String
+    public var signature: String
 
     enum CodingKeys: String, CodingKey {
         case amount = "amount"
@@ -94,7 +94,7 @@ public class ChannelVerifyResponse: Codable {
      If true, the signature is valid for the stated amount, channel, and
      public key.
      */
-    public let signatureVerified: Bool
+    public var signatureVerified: Bool
 
     enum CodingKeys: String, CodingKey {
         case signatureVerified = "signature_verified"

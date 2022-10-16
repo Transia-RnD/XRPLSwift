@@ -18,9 +18,9 @@ public class FieldIdCodec {
      - returns:
      The serialization data type for the given field name.
      */
-    class func encode(fieldName: String) throws -> Data {
-        let fieldHeader: FieldHeader = Definitions().getFieldHeaderFromName(fieldName: fieldName)
-        return try self.encodeFieldId(fieldHeader: fieldHeader)
+    class func encode(_ fieldName: String) throws -> Data {
+        let fieldHeader: FieldHeader = Definitions().getFieldHeaderFromName(fieldName)
+        return try self.encodeFieldId(fieldHeader)
     }
 
     /**
@@ -30,9 +30,9 @@ public class FieldIdCodec {
      - returns:
      The field name represented by the given field ID.
      */
-    class func decode(fieldId: String) throws -> String {
-        let fieldHeader: FieldHeader = try self.decodeFieldId(fieldId: fieldId)
-        return Definitions().getFieldNameFromHeader(fieldHeader: fieldHeader)
+    class func decode(_ fieldId: String) throws -> String {
+        let fieldHeader: FieldHeader = try self.decodeFieldId(fieldId)
+        return Definitions().getFieldNameFromHeader(fieldHeader)
     }
 
     /**
@@ -43,7 +43,7 @@ public class FieldIdCodec {
      - returns:
      The unique field as data
      */
-    class func encodeFieldId(fieldHeader: FieldHeader) throws -> Data {
+    class func encodeFieldId(_ fieldHeader: FieldHeader) throws -> Data {
         let typeCode = fieldHeader.typeCode
         let fieldCode = fieldHeader.fieldCode
 
@@ -55,29 +55,29 @@ public class FieldIdCodec {
             // high 4 bits is the type_code
             // low 4 bits is the field code
             let combinedCode = (typeCode << 4) | fieldCode
-            return self.uint8ToBytes(i: combinedCode)
+            return self.uint8ToBytes(combinedCode)
         }
         if typeCode >= 16 && fieldCode < 16 {
             // first 4 bits are zeroes
             // next 4 bits is field code
             // next byte is type code
-            let byte1 = self.uint8ToBytes(i: fieldCode)
-            let byte2 = self.uint8ToBytes(i: typeCode)
+            let byte1 = self.uint8ToBytes(fieldCode)
+            let byte2 = self.uint8ToBytes(typeCode)
             return byte1 + byte2
         }
         if typeCode < 16 && fieldCode >= 16 {
             // first 4 bits is type code
             // next 4 bits are zeroes
             // next byte is field code
-            let byte1 = self.uint8ToBytes(i: typeCode << 4)
-            let byte2 = self.uint8ToBytes(i: fieldCode)
+            let byte1 = self.uint8ToBytes(typeCode << 4)
+            let byte2 = self.uint8ToBytes(fieldCode)
             return byte1 + byte2
         } else {  // both are >= 16
             // first byte is all zeroes
             // second byte is type code
             // third byte is field code
-            let byte2 = self.uint8ToBytes(i: typeCode)
-            let byte3 = self.uint8ToBytes(i: fieldCode)
+            let byte2 = self.uint8ToBytes(typeCode)
+            let byte3 = self.uint8ToBytes(fieldCode)
             return [0x0] + byte2 + byte3
         }
     }
@@ -90,12 +90,12 @@ public class FieldIdCodec {
      - returns:
      A FieldHeader object representing the type code and field code of
      */
-    class func decodeFieldId(fieldId: String) throws -> FieldHeader {
+    class func decodeFieldId(_ fieldId: String) throws -> FieldHeader {
         let byteArray = fieldId.hexToBytes
         if byteArray.count == 1 {
             let highBits = byteArray[0] >> 4
             let lowBits = byteArray[0] & 0x0F
-            return FieldHeader(typeCode: Int(highBits), fieldCode: Int(lowBits))
+            return FieldHeader(Int(highBits), Int(lowBits))
         }
         if byteArray.count == 2 {
             let firstByte = byteArray[0]
@@ -103,13 +103,13 @@ public class FieldIdCodec {
             let firstByteHighBits = firstByte >> 4
             let firstByteLowBits = firstByte & 0x0F
             if firstByteHighBits == 0 { // next 4 bits are field code, second byte is type code
-                return FieldHeader(typeCode: Int(secondByte), fieldCode: Int(firstByteLowBits))
+                return FieldHeader(Int(secondByte), Int(firstByteLowBits))
             }
             // Otherwise, next 4 bits are type code, second byte is field code
-            return FieldHeader(typeCode: Int(firstByteHighBits), fieldCode: Int(secondByte))
+            return FieldHeader(Int(firstByteHighBits), Int(secondByte))
         }
         if byteArray.count == 3 {
-            return FieldHeader(typeCode: Int(byteArray[1]), fieldCode: Int(byteArray[2]))
+            return FieldHeader(Int(byteArray[1]), Int(byteArray[2]))
         }
 
         throw BinaryError.unknownError(error: "Field ID must be between 1 and 3 bytes. This field ID contained \(byteArray.count) bytes.")
@@ -122,8 +122,7 @@ public class FieldIdCodec {
      - returns:
      A Data representation of  the FieldId Codec
      */
-    // swiftlint:disable:next identifier_name
-    class func uint8ToBytes(i: Int) -> Data {
+    class func uint8ToBytes(_ i: Int) -> Data {
         return Data(bytes: i.data.bytes, count: 1)
     }
 }

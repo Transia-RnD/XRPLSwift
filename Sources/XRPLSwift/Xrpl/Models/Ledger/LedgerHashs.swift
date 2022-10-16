@@ -14,20 +14,21 @@ import Foundation
  ledger's hash with only the current ledger version and at most one lookup of
  a previous ledger version.
  */
-open class LedgerHashes: BaseLedgerEntry {
-    let ledgerEntryType: String = "LedgerHashes"
+public class LedgerHashes: BaseLedgerEntry {
+    public var ledgerEntryType: String = "LedgerHashes"
     /// The Ledger Index of the last entry in this object's Hashes array.
-    let lastLedgerSequence: Int?
+    public var lastLedgerSequence: Int?
     /**
      An array of up to 256 ledger hashes. The contents depend on which sub-type
      of LedgerHashes object this is.
      */
-    let hashes: [String]
+    public var hashes: [String]
     /**
      A bit-map of boolean flags for this object. No flags are defined for this
      type.
      */
-    var flags: Int
+    public var flags: Int
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         flags = try values.decode(Int.self, forKey: .flags)

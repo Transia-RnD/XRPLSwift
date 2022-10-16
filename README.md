@@ -44,14 +44,14 @@ print(result)
 
 ## Installation and supported versions
 
-### Cocoapods
-
-The `XRPLSwift` library is available on [CocoaPods](https://cocoapods.org/). Install by adding a line to your `Podfile`:
-
-
-```
-pod 'XRPLSwift'
-```
+<!--### Cocoapods-->
+<!---->
+<!--The `XRPLSwift` library is available on [CocoaPods](https://cocoapods.org/). Install by adding a line to your `Podfile`:-->
+<!---->
+<!---->
+<!--```-->
+<!--pod 'XRPLSwift'-->
+<!--```-->
 
 ### Swift Package Manager
 
@@ -65,7 +65,7 @@ import PackageDescription
 let package = Package(
     name: "YOUR_PROJECT_NAME",
     dependencies: [
-    .package(url: "https://github.com/Transia-RnD/XRPLSwift.git", from: "5.6.0"),
+    .package(url: "https://github.com/Transia-RnD/XRPLSwift.git", from: "1.0.0"),
     ]
 )
 ```
@@ -97,7 +97,7 @@ Use `XRPLSwift` to build Swift applications that leverage the [XRP Ledger](https
 * Methods for inspecting accounts — See [XRPL Account Methods](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.account.html) for more information.
 * Codecs for encoding and decoding addresses and other objects — See [Core Codecs](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.core.html) for more information.
 
-## [➡️ Reference Documentation](https://transia-rnd.github.io/XRPLSwift)
+## [➡️ Reference Documentation](https://transia-rnd.github.io/XRPLSwift/documentation/xrplswift/)
 
 See the complete [`XRPLSwift` reference documentation on Read the Docs](https://XRPLSwift.readthedocs.io/en/stable/index.html).
 
@@ -111,8 +111,8 @@ The following sections describe some of the most commonly used modules in the `X
 Use the `XrplClient` library to create a network client for connecting to the XRP Ledger.
 
 ```swift
-let WSS_URL: String = "wss://s1.ripple.com"
-let client: XrplClient = try XrplClient(server: WSS_URL)
+let url: String = "wss://s1.ripple.com"
+let client: XrplClient = try? XrplClient(server: url)
 ```
 
 ### Manage keys and wallets

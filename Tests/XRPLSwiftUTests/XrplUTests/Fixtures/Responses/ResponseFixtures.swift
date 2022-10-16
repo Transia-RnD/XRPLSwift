@@ -69,18 +69,19 @@ final class ResponseFixtures {
         return [:]
     }
 
-    public static func signClaim() -> [String: AnyObject] {
-        do {
-            let data: Data = signClaimFixtureResp.data(using: .utf8)!
-            let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
-            if let jsonResult = jsonResult as? [String: AnyObject] {
-                return jsonResult
-            }
-        } catch {
-            print(error.localizedDescription)
-            fatalError("INVALID JSON RESPONSE FIXTURE")
-        }
-        return [:]
+    public static func signClaim() -> String {
+        return signClaimFixtureResp
+//        do {
+//            let data: Data = signClaimFixtureResp.data(using: .utf8)!
+//            let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+//            if let jsonResult = jsonResult as? [String: AnyObject] {
+//                return jsonResult
+//            }
+//        } catch {
+//            print(error.localizedDescription)
+//            fatalError("INVALID JSON RESPONSE FIXTURE")
+//        }
+//        return [:]
     }
 
     public static func signTicket() -> [String: AnyObject] {

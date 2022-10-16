@@ -20,7 +20,7 @@ public class CheckCreate: BaseTransaction {
      The address of the [account](https://xrpl.org/accounts.html)  that can cash the Check. This field is
      required.
      */
-    public let destination: String
+    public var destination: String
 
     /**
      Maximum amount of source token the Check is allowed to debit the
@@ -29,25 +29,25 @@ public class CheckCreate: BaseTransaction {
      non-XRP tokens). This field is required.
      :meta hide-value:
      */
-    public let sendMax: Amount
+    public var sendMax: Amount
 
     /**
      An arbitrary [destination tag](https://xrpl.org/source-and-destination-tags.html) that
      identifies the reason for the Check, or a hosted recipient to pay.
      */
-    public let destinationTag: Int?
+    public var destinationTag: Int?
 
     /**
      Time after which the Check is no longer valid, in seconds since the
      Ripple Epoch.
      */
-    public let expiration: Int?
+    public var expiration: Int?
 
     /**
      Arbitrary 256-bit hash representing a specific reason or identifier for
      this Check.
      */
-    public let invoiceId: String?
+    public var invoiceId: String?
 
     enum CodingKeys: String, CodingKey {
         case destination = "Destination"

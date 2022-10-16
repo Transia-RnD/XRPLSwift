@@ -15,7 +15,7 @@ let HASH_HEX: Int = 16
 let BYTE_LENGTH: Int = 4
 
 func addressToHex(address: String) -> String {
-    return try! XrplCodec.decodeClassicAddress(classicAddress: address).toHex
+    return try! XrplCodec.decodeClassicAddress(address).toHex
 }
 
 func ledgerSpaceHex(_ name: String) -> String {
