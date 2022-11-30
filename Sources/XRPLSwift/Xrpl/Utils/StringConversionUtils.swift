@@ -18,7 +18,7 @@ import Foundation
  */
 extension String {
     var convertStringToHex: String {
-        return Data(hex: self).toHex
+        return Data(self.utf8).toHex
     }
 }
 
