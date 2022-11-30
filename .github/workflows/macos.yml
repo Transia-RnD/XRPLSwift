@@ -16,9 +16,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: fwal/setup-swift@2040b795e5c453c3a05fcb8316496afc8a74f192
+      - uses: fwal/setup-swift@194625b58a582570f61cc707c3b558086c26b723
         with:
-          swift-version: "5.7"
+          swift-version: "5.7.1"
       - name: Build
         run: swift build --build-tests
       - name: Lint
@@ -30,9 +30,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: fwal/setup-swift@2040b795e5c453c3a05fcb8316496afc8a74f192
+      - uses: fwal/setup-swift@194625b58a582570f61cc707c3b558086c26b723
         with:
-          swift-version: "5.7"
+          swift-version: "5.7.1"
       - name: Build
         run: swift build --build-tests
       - name: Lint
