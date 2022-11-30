@@ -59,7 +59,7 @@ You can use [The Swift Package Manager](https://swift.org/package-manager) to
 install `XRPLSwift` by adding it to your `Package.swift` file:
 
 ```swift
-// swift-tools-version:5.6
+// swift-tools-version:5.7
 import PackageDescription
 
 let package = Package(
