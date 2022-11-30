@@ -53,7 +53,7 @@ public struct KeypairsOptions {
     }
 }
 
-public protocol rKeypairs {
+public protocol XRPLKeypair {
     var privateKey: String { get }
     var publicKey: String { get }
     var address: String { get }
