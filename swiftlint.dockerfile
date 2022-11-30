@@ -5,7 +5,7 @@ FROM cimg/base:2020.05
 LABEL maintainer="dangell@transia.co"
 
 ENV SWIFTLINT_VERSION 0.46.5
-ENV SWIFT_VERSION 5.6.1
+ENV SWIFT_VERSION 5.7.1
 
 USER root
 

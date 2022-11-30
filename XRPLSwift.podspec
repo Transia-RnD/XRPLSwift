@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'XRPLSwift'
-  s.version          = '0.9.9-beta.1'
+  s.version          = '1.0.0'
   s.summary          = 'A Swift API for interacting with the XRP Ledger.'
 
 # This description is used to generate tags and improve search results.
@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '10.0'
   s.watchos.deployment_target = '3.0'
   s.swift_version = '5.1.1'
-  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '5.1.1' }
+  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '5.7.1' }
 
   s.source_files = 'Sources/XRPLSwift/**/*'
 #  s.resources = 'XRPLSwift/Assets/*.xcassets'

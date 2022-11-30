@@ -11,7 +11,7 @@ You must also use `swift` 5.6. You can check your `swift` version with:
 swift -version
 ```
 
-`swift-driver version: 1.45.2 Apple Swift version 5.6.1 (swiftlang-5.6.0.323.66 clang-1316.0.20.12)`
+`swift-driver version: 1.45.2 Apple Swift version 5.7.1 (swiftlang-5.6.0.323.66 clang-1316.0.20.12)`
 
 ### Set up
 

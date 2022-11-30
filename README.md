@@ -77,7 +77,7 @@ Swift, however some features may only be available in iOS/macOS due to a lack of
 libraries (ex. WebSockets).  A test_linux.sh file is included that will run tests in a docker container. All
 contributions must compile on Linux.
 
-The library supports [Swift 5.6](https://www.swift.org/download/) and later.
+The library supports [Swift 5.7.1](https://www.swift.org/download/) and later.
 
 [![Supported Versions](https://img.shields.io/cocoapods/v/XRPLSwift.svg)](https://cocoapods.org/pods/XRPLSwift)
 [![Platforms](https://img.shields.io/badge/platforms-macOS%20%7C%20iOS%20%7C%20watchOS%20%7C%20tvOS%20%7C%20Linux-lightgrey.svg)](https://cocoapods.org/pods/XRPLSwift)
