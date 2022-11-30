@@ -22,7 +22,7 @@ final class TestIEscrowCancel: RippledITestCase {
         try await super.tearDown()
     }
 
-    func _testJson() async {
+    func testJson() async {
         // create the expectation
         let exp = expectation(description: "base")
         // get the most recent close_time from the standalone container for cancel & finish after.
