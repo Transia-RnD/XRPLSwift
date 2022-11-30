@@ -23,10 +23,10 @@ func signPaymentChannelClaim(
     _ amount: String,
     _ privateKey: String
 ) throws -> String {
-    print(try xrpToDrops(amount))
+//    print(try xrpToDrops(amount))
     let channelClaim = ChannelClaim(amount: try xrpToDrops(amount), channel: channel)
     let signingData = try BinaryCodec.encodeForSigningClaim(channelClaim)
-    print(Data(hex: signingData).bytes)
-    print(signingData.bytes)
+//    print(Data(hex: signingData).bytes)
+//    print(signingData.bytes)
     return try Keypairs.sign(signingData.bytes, privateKey).toHex
 }
