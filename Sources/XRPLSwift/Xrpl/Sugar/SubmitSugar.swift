@@ -85,7 +85,7 @@ func submit(
     _ failHard: Bool? = false,
     _ wallet: Wallet?
 ) async throws -> EventLoopFuture<Any> {
-    let signedTx = try await getSignedTx(client, transaction, autofill ?? false, wallet)
+    let signedTx = try await getSignedTx(client, transaction, autofill ?? true, wallet)
     return try await submitRequest(client, signedTx, failHard)
 }
 
@@ -96,7 +96,7 @@ func submit(
     _ failHard: Bool? = false,
     _ wallet: Wallet?
 ) async throws -> EventLoopFuture<Any> {
-    let signedTx = try await getSignedTx(client, transaction, autofill ?? false, wallet)
+    let signedTx = try await getSignedTx(client, transaction, autofill ?? true, wallet)
     return try await submitRequest(client, signedTx, failHard)
 }
 
