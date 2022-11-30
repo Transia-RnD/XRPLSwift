@@ -114,7 +114,6 @@ class MockRippledSocket {
         conn.receiveMessage { (data, context, _, error) in
             self.logger.info("[MOCK] receive")
             var request: [String: AnyObject] = [:]
-            print(request)
             guard let data = data, let context = context else {
                 return
             }
