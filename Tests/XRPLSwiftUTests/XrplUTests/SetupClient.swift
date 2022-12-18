@@ -20,7 +20,7 @@ public class RippledMockTester: XCTestCase {
     public override func setUp() async throws {
         let exp = expectation(description: "base")
         self.mockRippled = MockRippledSocket(port: 9999)
-        self.mockRippled.start()
+        try! self.mockRippled.start()
         self._mockedServerPort = 9999
         self.client = try! XrplClient(server: "ws://localhost:\(9999)")
         _ = try await self.client.connect().wait()

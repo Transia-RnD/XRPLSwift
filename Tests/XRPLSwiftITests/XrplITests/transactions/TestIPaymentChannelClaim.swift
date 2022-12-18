@@ -51,9 +51,9 @@ final class TestIPaymentChannelClaim: RippledITestCase {
             "Account": self.wallet.classicAddress,
             "TransactionType": "PaymentChannelClaim",
             "Channel": hashPaymentChannel(
-                address: self.wallet.classicAddress,
-                dstAddress: wallet2.classicAddress,
-                sequence: transaction?.sequence ?? 0
+                self.wallet.classicAddress,
+                wallet2.classicAddress,
+                transaction?.sequence ?? 0
             ),
             "Amount": "100"
         ] as [String: AnyObject]
