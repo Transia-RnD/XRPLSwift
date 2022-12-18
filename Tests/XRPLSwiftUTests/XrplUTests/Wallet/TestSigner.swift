@@ -206,7 +206,6 @@ final class TestSigner: XCTestCase {
 
     func testValidSignatureBlob() {
         let signedTx = try! self.verifyWallet.sign(self.tx)
-        print(signedTx)
         XCTAssertTrue(try! WalletSigner.verifySignature(signedTx.txBlob))
     }
 
