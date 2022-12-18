@@ -20,12 +20,12 @@ public class SubmitMultisignedRequest: BaseRequest {
      weights of the signatures must be equal or higher than the quorum of the.
      {@link SignerList}.
      */
-    public let txJson: Transaction
+    public var txJson: Transaction
     /**
      If true, and the transaction fails locally, do not retry or relay the
      transaction to other servers.
      */
-    public let failHard: Bool?
+    public var failHard: Bool?
 
     enum CodingKeys: String, CodingKey {
         case txJson = "tx_json"
@@ -82,19 +82,19 @@ public class SubmitMultisignedResponse: Codable {
      Code indicating the preliminary result of the transaction, for example.
      `tesSUCCESS` .
      */
-    public let engineResult: String
+    public var engineResult: String
     /**
      Numeric code indicating the preliminary result of the transaction,
      directly correlated to `engine_result`.
      */
-    public let engineResultCode: Int
+    public var engineResultCode: Int
     /// Human-readable explanation of the preliminary transaction result.
-    public let engineResultMessage: String
+    public var engineResultMessage: String
     /// The complete transaction in hex string format.
-    public let txBlob: String
+    public var txBlob: String
     /// The complete transaction in JSON format.
-    public let txJson: Transaction
-    //    public let tx_json: Transaction & { hash: String? }
+    public var txJson: Transaction
+    //    public var tx_json: Transaction & { hash: String? }
 
     enum CodingKeys: String, CodingKey {
         case engineResult = "engine_result"

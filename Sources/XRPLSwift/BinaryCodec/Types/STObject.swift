@@ -71,34 +71,34 @@ struct AssociatedValue {
 
     func from() throws -> SerializedType? {
         if field.associatedType.self is AccountID.Type {
-            return try AccountID.from(value: xaddressDecoded[field.name]! as! String)
+            return try AccountID.from(xaddressDecoded[field.name]! as! String)
         }
         if field.associatedType.self is xAmount.Type {
             if let value = xaddressDecoded[field.name] as? String {
-                return try xAmount.from(value: value)
+                return try xAmount.from(value)
             }
             if let value = xaddressDecoded[field.name] as? [String: String] {
-                return try xAmount.from(value: value)
+                return try xAmount.from(value)
             }
             throw BinaryError.unknownError(error: "Invalid SerializedType Amount")
         }
         if field.associatedType.self is Blob.Type {
-            return try Blob.from(value: xaddressDecoded[field.name]! as! String)
+            return try Blob.from(xaddressDecoded[field.name]! as! String)
         }
         if field.associatedType.self is xCurrency.Type {
-            return try xCurrency.from(value: xaddressDecoded[field.name]! as! String)
+            return try xCurrency.from(xaddressDecoded[field.name]! as! String)
         }
         if field.associatedType.self is Hash256.Type {
-            return try Hash256.from(value: xaddressDecoded[field.name]! as! String)
+            return try Hash256.from(xaddressDecoded[field.name]! as! String)
         }
         if field.associatedType.self is Hash160.Type {
-            return try Hash160.from(value: xaddressDecoded[field.name]! as! String)
+            return try Hash160.from(xaddressDecoded[field.name]! as! String)
         }
         if field.associatedType.self is Hash128.Type {
-            return try Hash128.from(value: xaddressDecoded[field.name]! as! String)
+            return try Hash128.from(xaddressDecoded[field.name]! as! String)
         }
         if field.associatedType.self is Hash.Type {
-            return try Hash.from(value: xaddressDecoded[field.name]! as! String)
+            return try Hash.from(xaddressDecoded[field.name]! as! String)
         }
         if field.associatedType.self is xPathSet.Type {
             return try xPathSet.from(value: xaddressDecoded[field.name]! as! [[[String: AnyObject]]])
@@ -111,83 +111,83 @@ struct AssociatedValue {
         }
         if field.associatedType.self is xUInt64.Type {
             if let value = xaddressDecoded[field.name] as? String {
-                return try! xUInt64.from(value: value)
+                return try! xUInt64.from(value)
             }
             if let value = xaddressDecoded[field.name] as? Int {
-                return try! xUInt64.from(value: value)
+                return try! xUInt64.from(value)
             }
             throw BinaryError.unknownError(error: "Invalid SerializedType Amount")
         }
         if field.associatedType.self is xUInt32.Type {
-            return xUInt32.from(value: xaddressDecoded[field.name]! as! Int)
+            return xUInt32.from(xaddressDecoded[field.name]! as! Int)
         }
         if field.associatedType.self is xUInt16.Type {
-            return xUInt16.from(value: xaddressDecoded[field.name]! as! Int)
+            return xUInt16.from(xaddressDecoded[field.name]! as! Int)
         }
         if field.associatedType.self is xUInt8.Type {
-            return xUInt8.from(value: xaddressDecoded[field.name]! as! Int)
+            return xUInt8.from(xaddressDecoded[field.name]! as! Int)
         }
         if field.associatedType.self is Vector256.Type {
-            return try Vector256.from(value: xaddressDecoded[field.name]! as! [String])
+            return try Vector256.from(xaddressDecoded[field.name]! as! [String])
         }
         return nil
     }
 
     func fromParser(hint: Int? = nil) -> SerializedType? {
         if field.associatedType.self is AccountID.Type {
-            return AccountID().fromParser(parser: self.parser)
+            return AccountID().fromParser(self.parser)
         }
         if field.associatedType.self is xAmount.Type {
-            return try! xAmount().fromParser(parser: self.parser)
+            return try! xAmount().fromParser(self.parser)
         }
         if field.associatedType.self is Blob.Type {
-            return try! Blob().fromParser(parser: self.parser, hint: hint)
+            return try! Blob().fromParser(self.parser, hint)
         }
         if field.associatedType.self is xCurrency.Type {
-            return try! xCurrency().fromParser(parser: self.parser)
+            return try! xCurrency().fromParser(self.parser)
         }
         if field.associatedType.self is Hash256.Type {
-            return try! Hash256().fromParser(parser: self.parser)
+            return try! Hash256().fromParser(self.parser)
         }
         if field.associatedType.self is Hash160.Type {
-            return try! Hash160().fromParser(parser: self.parser)
+            return try! Hash160().fromParser(self.parser)
         }
         if field.associatedType.self is Hash128.Type {
-            return try! Hash128().fromParser(parser: self.parser)
+            return try! Hash128().fromParser(self.parser)
         }
         if field.associatedType.self is Hash.Type {
-            return try! Hash().fromParser(parser: self.parser)
+            return try! Hash().fromParser(self.parser)
         }
         if field.associatedType.self is xPathSet.Type {
             return try! xPathSet.fromParser(parser: self.parser)
         }
         if field.associatedType.self is STArray.Type {
-            return try! STArray().fromParser(parser: self.self.parser, hint: hint)
+            return try! STArray().fromParser(self.self.parser, hint)
         }
         if field.associatedType.self is STObject.Type {
-            return try! STObject().fromParser(parser: parser, hint: hint)
+            return try! STObject().fromParser(parser, hint)
         }
         if field.associatedType.self is xUInt64.Type {
-            return xUInt64().fromParser(parser: self.parser)
+            return xUInt64().fromParser(self.parser)
         }
         if field.associatedType.self is xUInt32.Type {
-            return xUInt32().fromParser(parser: self.parser)
+            return xUInt32().fromParser(self.parser)
         }
         if field.associatedType.self is xUInt16.Type {
-            return xUInt16().fromParser(parser: self.parser)
+            return xUInt16().fromParser(self.parser)
         }
         if field.associatedType.self is xUInt8.Type {
-            return xUInt8().fromParser(parser: self.parser)
+            return xUInt8().fromParser(self.parser)
         }
         if field.associatedType.self is Vector256.Type {
-            return Vector256().fromParser(parser: self.parser)
+            return Vector256().fromParser(self.parser)
         }
         return nil
     }
 }
 
 func handleXAddress(field: String, xaddress: String) throws -> [String: AnyObject] {
-    let result: FullClassicAddress = try AddressCodec.xAddressToClassicAddress(xAddress: xaddress)
+    let result: FullClassicAddress = try AddressCodec.xAddressToClassicAddress(xaddress)
     let classicAddress = result.classicAddress
     let tag = result.tag
     var tagName: String = ""
@@ -209,13 +209,13 @@ func strToEnum(field: String, value: Any) -> Any {
     // all of these fields have enum values that are used for serialization
     // converts the string name to the corresponding enum code
     if field == "TransactionType", let value = value as? String {
-        return Definitions().getTransactionTypeCode(transactionType: value)
+        return Definitions().getTransactionTypeCode(value)
     }
     if field == "TransactionResult", let value = value as? String {
-        return Definitions().getTransactionResultCode(transactionResultType: value)
+        return Definitions().getTransactionResultCode(value)
     }
     if field == "LedgerEntryType", let value = value as? String {
-        return Definitions().getLedgerEntryTypeCode(ledgerEntryType: value)
+        return Definitions().getLedgerEntryTypeCode(value)
     }
     return value
 }
@@ -223,37 +223,37 @@ func strToEnum(field: String, value: Any) -> Any {
 func enumToStr(field: String, value: Any) -> Any {
     // reverse of the above function
     if field == "TransactionType", let value = value as? Int {
-        return Definitions().getTransactionTypeName(transactionType: value)
+        return Definitions().getTransactionTypeName(value)
     }
     if field == "TransactionResult", let value = value as? Int {
-        return Definitions().getTransactionResultName(transactionResultType: value)
+        return Definitions().getTransactionResultName(value)
     }
     if field == "LedgerEntryType", let value = value as? Int {
-        return Definitions().getLedgerEntryTypeName(ledgerEntryType: value)
+        return Definitions().getLedgerEntryTypeName(value)
     }
     return value
 }
 
 class STObject: SerializedType {
-    init(_ bytes: [UInt8]? = nil) {
-        super.init(bytes: bytes ?? [])
+    override init(_ bytes: [UInt8]? = nil) {
+        super.init(bytes ?? [])
     }
 
     override func fromParser(
-        parser: BinaryParser,
-        hint: Int? = nil
+        _ parser: BinaryParser,
+        _ hint: Int? = nil
     ) -> STObject {
         let serializer = BinarySerializer()
 
         while !parser.end() {
-            let field = parser.readField()
+            let field = try! parser.readField()
             if field.name == OBJECT_END_MARKER {
                 break
             }
-            let associatedValue: SerializedType = try! parser.readFieldValue(field: field)!
-            serializer.writeFieldAndValue(field: field, value: associatedValue)
+            let associatedValue: SerializedType = try! parser.readFieldValue(field)!
+            serializer.writeFieldAndValue(field, associatedValue)
             if field.type == ST_OBJECT {
-                serializer.put(bytes: Data(OBJECT_END_MARKER_BYTE))
+                serializer.put(Data(OBJECT_END_MARKER_BYTE))
             }
         }
 
@@ -266,7 +266,7 @@ class STObject: SerializedType {
         var xaddressDecoded: [String: AnyObject] = [:]
         // swiftlint:disable:next identifier_name
         for (k, v) in value {
-            if v is String && AddressCodec.isValidXAddress(xAddress: v as! String) {
+            if v is String && AddressCodec.isValidXAddress(v as! String) {
                 let handled = try handleXAddress(field: k, xaddress: v as! String)
                 if (
                     handled.contains(where: { $0.key == SOURCE_TAG })
@@ -294,7 +294,7 @@ class STObject: SerializedType {
 
         var sortedKeys: [FieldInstance] = []
         for fieldName in xaddressDecoded {
-            let fieldInstance = Definitions().getFieldInstance(fieldName: fieldName.key)
+            let fieldInstance = Definitions().getFieldInstance(fieldName.key)
             if
                 xaddressDecoded[fieldInstance.name] != nil
                     && fieldInstance.isSerialized {
@@ -332,12 +332,12 @@ class STObject: SerializedType {
             // The Account field must not be a part of the UNLModify pseudotransaction
             // encoding, due to a bug in rippled
             serializer.writeFieldAndValue(
-                field: field,
-                value: associatedValue!,
-                isUNLModifyWorkaround: isUnlModifyWorkaround
+                field,
+                associatedValue!,
+                isUnlModifyWorkaround
             )
             if field.type == ST_OBJECT {
-                _ = serializer.sink.put(bytesArg: OBJECT_END_MARKER_BYTE)
+                _ = serializer.sink.put(OBJECT_END_MARKER_BYTE)
             }
         }
         return STObject(serializer.sink.toBytes())
@@ -348,11 +348,11 @@ class STObject: SerializedType {
         var accumulator: [String: AnyObject] = [:]
 
         while !parser.end() {
-            let field: FieldInstance = parser.readField()
+            let field: FieldInstance = try! parser.readField()
             if field.name == OBJECT_END_MARKER {
                 break
             }
-            let jsonValue: Any = (try! parser.readFieldValue(field: field)! as! SerializedType).toJson()
+            let jsonValue: Any = (try! parser.readFieldValue(field)! as! SerializedType).toJson()
             accumulator[field.name] = enumToStr(field: field.name, value: jsonValue) as AnyObject
         }
         return accumulator

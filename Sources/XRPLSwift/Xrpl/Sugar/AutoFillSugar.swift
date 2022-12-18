@@ -33,28 +33,28 @@ public class AutoFillSugar {
      The autofilled transaction.
      */
     func autofill(
-        client: XrplClient,
-        transaction: [String: AnyObject],
-        signersCount: Int?
+        _ client: XrplClient,
+        _ transaction: [String: AnyObject],
+        _ signersCount: Int?
     ) async throws -> EventLoopFuture<[String: AnyObject]> {
         var tx = transaction
 
-        try setValidAddresses(tx: &tx)
+        try setValidAddresses(&tx)
 
         try setTransactionFlagsToNumber(tx: &tx)
 
         var promises: [Void] = []
         if tx["Sequence"] == nil {
-            await promises.append(self.setNextValidSequenceNumber(client: client, tx: &tx))
+            await promises.append(self.setNextValidSequenceNumber(client, &tx))
         }
         if tx["Fee"] == nil {
-            await promises.append(try self.calculateFeePerTransactionType(client: client, tx: &tx, signersCount: signersCount))
+            await promises.append(try self.calculateFeePerTransactionType(client, &tx, signersCount))
         }
         if tx["LastLedgerSequence"] == nil {
-            await promises.append(try self.setLatestValidatedLedgerSequence(client: client, tx: &tx))
+            await promises.append(try self.setLatestValidatedLedgerSequence(client, &tx))
         }
         if tx["TransactionType"] as! String == "AccountDelete" {
-            await promises.append(try self.checkAccountDeleteBlockers(client: client, tx: &tx))
+            await promises.append(try self.checkAccountDeleteBlockers(client, &tx))
         }
         let promise = autofillEventGroup.next().makePromise(of: [String: AnyObject].self)
         _ = promises.compactMap({ $0 })
@@ -62,29 +62,29 @@ public class AutoFillSugar {
         return promise.futureResult
     }
 
-    func setValidAddresses(tx: inout [String: AnyObject]) throws {
-        try validateAccountAddress(tx: &tx, accountField: "Account", tagField: "SourceTag")
+    func setValidAddresses(_ tx: inout [String: AnyObject]) throws {
+        try validateAccountAddress(&tx, "Account", "SourceTag")
         // eslint-disable-next-line @typescript-eslint/dot-notation -- Destination can exist on Transaction
         if tx["Destination"] != nil {
-            try validateAccountAddress(tx: &tx, accountField: "Destination", tagField: "DestinationTag")
+            try validateAccountAddress(&tx, "Destination", "DestinationTag")
         }
 
         // DepositPreauth:
-        try convertToClassicAddress(tx: &tx, fieldName: "Authorize")
-        try convertToClassicAddress(tx: &tx, fieldName: "Unauthorize")
+        try convertToClassicAddress(&tx, "Authorize")
+        try convertToClassicAddress(&tx, "Unauthorize")
         // EscrowCancel, EscrowFinish:
-        try convertToClassicAddress(tx: &tx, fieldName: "Owner")
+        try convertToClassicAddress(&tx, "Owner")
         // SetRegularKey:
-        try convertToClassicAddress(tx: &tx, fieldName: "RegularKey")
+        try convertToClassicAddress(&tx, "RegularKey")
     }
 
     func validateAccountAddress(
-        tx: inout [String: AnyObject],
-        accountField: String,
-        tagField: String
+        _ tx: inout [String: AnyObject],
+        _ accountField: String,
+        _ tagField: String
     ) throws {
         // if X-address is given, convert it to classic address
-        let accountAndTag = try getClassicAccountAndTag(account: tx[accountField] as! String)
+        let accountAndTag = try getClassicAccountAndTag(tx[accountField] as! String)
         tx[accountField] = accountAndTag.classicAccount as AnyObject
 
         if accountAndTag.tag != nil {
@@ -96,11 +96,11 @@ public class AutoFillSugar {
     }
 
     func getClassicAccountAndTag(
-        account: String,
-        expectedTag: Int? = nil
+        _ account: String,
+        _ expectedTag: Int? = nil
     ) throws -> ClassicAccountAndTag {
-        if AddressCodec.isValidXAddress(xAddress: account) {
-            let classic = try AddressCodec.xAddressToClassicAddress(xAddress: account)
+        if AddressCodec.isValidXAddress(account) {
+            let classic = try AddressCodec.xAddressToClassicAddress(account)
             if expectedTag != nil && classic.tag! != expectedTag! {
                 throw ValidationError("address includes a tag that does not match the tag specified in the transaction")
             }
@@ -115,24 +115,24 @@ public class AutoFillSugar {
         )
     }
 
-    func convertToClassicAddress(tx: inout [String: AnyObject], fieldName: String) throws {
+    func convertToClassicAddress(_ tx: inout [String: AnyObject], _ fieldName: String) throws {
         let account = tx[fieldName] as? String
         if account != nil {
-            let classicAndTag = try getClassicAccountAndTag(account: account!)
+            let classicAndTag = try getClassicAccountAndTag(account!)
             tx[fieldName] = classicAndTag.classicAccount as AnyObject
         }
     }
 
     func setNextValidSequenceNumber(
-        client: XrplClient,
-        tx: inout [String: AnyObject]
+        _ client: XrplClient,
+        _ tx: inout [String: AnyObject]
     ) async {
         let request = AccountInfoRequest(account: tx["Account"] as! String, ledgerIndex: .string("current"))
         let response = try! await client.request(r: request).wait() as? BaseResponse<AccountInfoResponse>
         tx["Sequence"] = response!.result?.accountData.sequence as AnyObject
     }
 
-    func fetchAccountDeleteFee(client: XrplClient) async -> Double {
+    func fetchAccountDeleteFee(_ client: XrplClient) async -> Double {
         let request = ServerStateRequest()
         let response = try! await client.request(request).wait() as? BaseResponse<ServerStateResponse>
         let fee = response!.result?.state.validatedLedger?.reserveIncXrp
@@ -143,12 +143,12 @@ public class AutoFillSugar {
     }
 
     func calculateFeePerTransactionType(
-        client: XrplClient,
-        tx: inout [String: AnyObject],
-        signersCount: Int? = 0
+        _ client: XrplClient,
+        _ tx: inout [String: AnyObject],
+        _ signersCount: Int? = 0
     ) async throws {
         // netFee is usually 0.00001 XRP (10 drops)
-        let netFeeXRP = try await getFeeXrp(client: client)
+        let netFeeXRP = try await getFeeXrp(client)
         let netFeeDrops = try xrpToDrops(netFeeXRP)
         var baseFee = Double(netFeeDrops)
 
@@ -156,13 +156,13 @@ public class AutoFillSugar {
         if tx["TransactionType"] as! String == "EscrowFinish" && tx["Fulfillment"] != nil {
             let fulfillmentBytesSize = Int(ceil(Double((tx["Fulfillment"] as! String).count / 2)))
             // 10 drops × (33 + (Fulfillment size in bytes / 16))
-            let product = Double(scaleValue(value: netFeeDrops, multiplier: 33 + fulfillmentBytesSize / 16))
+            let product = Double(scaleValue(netFeeDrops, 33 + fulfillmentBytesSize / 16))
             baseFee = ceil(Double(product!))
         }
 
         // AccountDelete Transaction
         if tx["TransactionType"] as! String == "AccountDelete" {
-            baseFee = await fetchAccountDeleteFee(client: client)
+            baseFee = await fetchAccountDeleteFee(client)
         }
 
         /*
@@ -170,7 +170,7 @@ public class AutoFillSugar {
          * 10 drops × (1 + Number of Signatures Provided)
          */
         if signersCount! > 0 {
-            baseFee = baseFee! + Double(scaleValue(value: netFeeDrops, multiplier: 1 + signersCount!))!
+            baseFee = baseFee! + Double(scaleValue(netFeeDrops, 1 + signersCount!))!
         }
 
         let maxFeeDrops = try xrpToDrops(client.maxFeeXRP)
@@ -179,21 +179,21 @@ public class AutoFillSugar {
         tx["Fee"] = String(Int(ceil(totalFee!))) as AnyObject
     }
 
-    func scaleValue(value: String, multiplier: Int) -> String {
+    func scaleValue(_ value: String, _ multiplier: Int) -> String {
         return String(Int(value)! * multiplier)
     }
 
     func setLatestValidatedLedgerSequence(
-        client: XrplClient,
-        tx: inout [String: AnyObject]
+        _ client: XrplClient,
+        _ tx: inout [String: AnyObject]
     ) async throws {
         let ledgerSequence = try await client.getLedgerIndex()
         tx["LastLedgerSequence"] = (ledgerSequence + LEDGER_OFFSET) as AnyObject
     }
 
     func checkAccountDeleteBlockers(
-        client: XrplClient,
-        tx: inout [String: AnyObject]
+        _ client: XrplClient,
+        _ tx: inout [String: AnyObject]
     ) async throws {
         let request = try AccountObjectsRequest([
             "command": "account_objects",

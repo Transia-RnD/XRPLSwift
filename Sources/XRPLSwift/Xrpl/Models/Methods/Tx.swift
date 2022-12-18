@@ -102,28 +102,28 @@ public class TxRequest: BaseRequest {
  */
 open class TxResponse: Codable {
     /// The SHA-512 hash of the transaction.
-    public let hash: String
+    public var hash: String
     /// The ledger index of the ledger that includes this transaction.
-    public let ledgerIndex: Int?
+    public var ledgerIndex: Int?
     /// Transaction metadata, which describes the results of the transaction.
-    //    public let meta?: TransactionMetadata | String
-    public let meta: TransactionMetadata?
+    //    public var meta?: TransactionMetadata | String
+    public var meta: TransactionMetadata?
     /**
      If true, this data comes from a validated ledger version; if omitted or.
      Set to false, this data is not final.
      */
-    public let validated: Bool?
+    public var validated: Bool?
     /**
      This number measures the number of seconds since the "Ripple Epoch" of January 1, 2000 (00:00 UTC)
      */
-    public let date: Int?
+    public var date: Int?
     /**
      If true, the server was able to search all of the specified ledger
      versions, and the transaction was in none of them. If false, the server did
      not have all of the specified ledger versions available, so it is not sure.
      If one of them might contain the transaction.
      */
-    public let searchedAll: Bool?
+    public var searchedAll: Bool?
 
     enum CodingKeys: String, CodingKey {
         case hash = "hash"

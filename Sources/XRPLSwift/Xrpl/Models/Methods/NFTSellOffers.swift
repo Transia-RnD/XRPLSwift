@@ -17,7 +17,7 @@ public class NFTSellOffersRequest: BaseRequest {
     /**
      The unique identifier of an NFToken. The request returns buy offers for this NFToken.
      */
-    public let nftId: String
+    public var nftId: String
 
     enum CodingKeys: String, CodingKey {
         case nftId = "nft_id"
@@ -66,11 +66,11 @@ public class NFTSellOffersResponse: Codable {
     /**
      A list of buy offers for the specified NFToken.
      */
-    public let offers: [NFTOffer]
+    public var offers: [NFTOffer]
     /**
      The token ID of the NFToken to which these offers pertain.
      */
-    public let nftId: String
+    public var nftId: String
 
     enum CodingKeys: String, CodingKey {
         case offers = "offers"

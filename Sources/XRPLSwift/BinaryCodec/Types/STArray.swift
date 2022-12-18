@@ -22,20 +22,20 @@ class STArray: SerializedType {
      See `Array Fields <https://xrpl.org/serialization.html#array-fields>`_
      */
 
-    init(_ bytes: [UInt8]? = nil) {
-        super.init(bytes: bytes ?? [])
+    override init(_ bytes: [UInt8]? = nil) {
+        super.init(bytes ?? [])
     }
 
-    override func fromParser(parser: BinaryParser, hint: Int? = nil) -> STArray {
+    override func fromParser(_ parser: BinaryParser, _ hint: Int? = nil) -> STArray {
         var bytestring: [UInt8] = []
 
         while !parser.end() {
-            let field = parser.readField()
+            let field = try! parser.readField()
             if field.name == ARRAY_END_MARKER_NAME {
                 break
             }
             bytestring += field.header.toBytes()
-            bytestring += try! parser.readFieldValue(field: field)!.bytes
+            bytestring += try! parser.readFieldValue(field)!.bytes
             bytestring += _OBJECT_END_MARKER
         }
 
@@ -61,12 +61,12 @@ class STArray: SerializedType {
         var result: [[String: AnyObject]] = []
         let parser = BinaryParser(hex: self.str())
         while !parser.end() {
-            let field = parser.readField()
+            let field = try! parser.readField()
             if field.name == ARRAY_END_MARKER_NAME {
                 break
             }
             var outer: [String: AnyObject] = [:]
-            let copy: [String: Any] = STObject().fromParser(parser: parser).toJson()
+            let copy: [String: Any] = STObject().fromParser(parser).toJson()
             outer[field.name] = copy as AnyObject
             result.append(outer)
         }

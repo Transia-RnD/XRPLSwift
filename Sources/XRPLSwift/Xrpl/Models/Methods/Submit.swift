@@ -16,12 +16,12 @@ import Foundation
  */
 public class SubmitRequest: BaseRequest {
     /// The complete transaction in hex string format.
-    public let txBlob: String
+    public var txBlob: String
     /**
      If true, and the transaction fails locally, do not retry or relay the
      transaction to other servers. The default is false.
      */
-    public let failHard: Bool?
+    public var failHard: Bool?
 
     public init(
         txBlob: String,
@@ -73,65 +73,65 @@ open class SubmitResponse: Codable {
      Text result code indicating the preliminary result of the transaction,
      for example `tesSUCCESS`.
      */
-    public let engineResult: String
+    public var engineResult: String
     /// Numeric version of the result code.
-    public let engineResultCode: Int
+    public var engineResultCode: Int
     /// Human-readable explanation of the transaction's preliminary result.
-    public let engineResultMessage: String
+    public var engineResultMessage: String
     /// The complete transaction in hex string format.
-    public let txBlob: String
+    public var txBlob: String
     /// The complete transaction in JSON format.
-    public let txJson: Transaction
+    public var txJson: Transaction
     /**
      The value true indicates that the transaction was applied, queued,
      broadcast, or kept for later. The value `false` indicates that none of
      those happened, so the transaction cannot possibly succeed as long as you
      do not submit it again and have not already submitted it another time.
      */
-    public let accepted: Bool
+    public var accepted: Bool
     /**
      The next Sequence Number available for the sending account after all
      pending and queued transactions.
      */
-    public let accountSequenceAvailable: Int
+    public var accountSequenceAvailable: Int
     /**
      The next Sequence number for the sending account after all transactions
      that have been provisionally applied, but not transactions in the queue.
      */
-    public let accountSequenceNext: Int
+    public var accountSequenceNext: Int
     /**
      The value true indicates that this transaction was applied to the open
      ledger. In this case, the transaction is likely, but not guaranteed, to
      be validated in the next ledger version.
      */
-    public let applied: Bool
+    public var applied: Bool
     /**
      The value true indicates this transaction was broadcast to peer servers
      in the peer-to-peer XRP Ledger network.
      */
-    public let broadcast: Bool
+    public var broadcast: Bool
     /**
      The value true indicates that the transaction was kept to be retried
      later.
      */
-    public let kept: Bool
+    public var kept: Bool
     /**
      The value true indicates the transaction was put in the Transaction
      Queue, which means it is likely to be included in a future ledger
      version.
      */
-    public let queued: Bool
+    public var queued: Bool
     /**
      The current open ledger cost before processing this transaction
      transactions with a lower cost are likely to be queued.
      */
-    public let openLedgerCost: String
+    public var openLedgerCost: String
     /**
      The ledger index of the newest validated ledger at the time of
      submission. This provides a lower bound on the ledger versions that the
      transaction can appear in as a result of this request.
      */
-    public let validatedLedgerIndex: Int
+    public var validatedLedgerIndex: Int
 
     enum CodingKeys: String, CodingKey {
         case engineResult = "engine_result"

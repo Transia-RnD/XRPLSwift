@@ -28,7 +28,7 @@ final class TestAutoFill: RippledMockTester {
         tx.fee = TestAutoFill.fee
         tx.sequence = TestAutoFill.sequence
         tx.lastLedgerSequence = TestAutoFill.lastLedgerSequence
-        let txResult = try! await AutoFillSugar().autofill(client: self.client, transaction: try tx.toJson(), signersCount: 0)
+        let txResult = try! await AutoFillSugar().autofill(self.client, try tx.toJson(), 0)
         let newTx = try! txResult.wait()
         XCTAssertEqual(newTx["Fee"] as! String, TestAutoFill.fee)
         XCTAssertEqual(newTx["Sequence"] as! Int, TestAutoFill.sequence)

@@ -70,18 +70,18 @@ public struct TrustSetFlagsInterface {
      * Authorize the other party to hold currency issued by this account. (No
      * effect unless using the asfRequireAuth AccountSet flag.) Cannot be unset.
      */
-    public let tfSetfAuth: Bool?
+    public var tfSetfAuth: Bool?
     /**
      * Enable the No Ripple flag, which blocks rippling between two trust lines
      * of the same currency if this flag is enabled on both.
      */
-    public let tfSetNoRipple: Bool?
+    public var tfSetNoRipple: Bool?
     /** Disable the No Ripple flag, allowing rippling on this trust line. */
-    public let tfClearNoRipple: Bool?
+    public var tfClearNoRipple: Bool?
     /** Freeze the trust line. */
-    public let tfSetFreeze: Bool?
+    public var tfSetFreeze: Bool?
     /** Unfreeze the trust line. */
-    public let tfClearFreeze: Bool?
+    public var tfClearFreeze: Bool?
 }
 
 public class TrustSet: BaseTransaction {

@@ -41,7 +41,7 @@ public class RandomRequest: BaseRequest {
  Response expected from a {@link RandomRequest}.
  */
 public class RandomResponse: Codable {
-    public let random: String
+    public var random: String
 
     enum CodingKeys: String, CodingKey {
         case random

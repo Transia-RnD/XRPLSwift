@@ -15,8 +15,8 @@ import Foundation
  */
 class Blob: SerializedType {
     // Construct a new Blob type from a ``bytes`` value.
-    init(_ bytes: [UInt8]? = nil) {
-        super.init(bytes: bytes ?? [])
+    override init(_ bytes: [UInt8]? = nil) {
+        super.init(bytes ?? [])
     }
 
     /**
@@ -27,10 +27,10 @@ class Blob: SerializedType {
      A new Blob.
      */
     override func fromParser(
-        parser: BinaryParser,
-        hint: Int? = nil
+        _ parser: BinaryParser,
+        _ hint: Int? = nil
     ) -> Blob {
-        return Blob(try! parser.read(n: hint!))
+        return Blob(try! parser.read(hint ?? 0))
     }
 
     /**
@@ -41,7 +41,7 @@ class Blob: SerializedType {
      A new Blob.
      - throws: RPLBinaryCodecException: If a Blob cannot be constructed.
      */
-    static func from(value: String) throws -> Blob {
+    static func from(_ value: String) throws -> Blob {
         return Blob(value.hexToBytes)
     }
 }

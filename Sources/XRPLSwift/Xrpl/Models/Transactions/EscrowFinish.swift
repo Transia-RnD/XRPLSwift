@@ -12,22 +12,22 @@ import Foundation
 
 public class EscrowFinish: BaseTransaction {
     /** Address of the source account that funded the held payment. */
-    public let owner: String
+    public var owner: String
     /**
      * Transaction sequence of EscrowFinish transaction that created the held.
      * payment to finish.
      */
-    public let offerSequence: Int
+    public var offerSequence: Int
     /**
      * Hex value matching the previously-supplied PREIMAGE-SHA-256.
      * crypto-condition of the held payment.
      */
-    public let condition: String?
+    public var condition: String?
     /**
      * Hex value of the PREIMAGE-SHA-256 crypto-condition fulfillment matching.
      * the held payment's Condition.
      */
-    public let fulfillment: String?
+    public var fulfillment: String?
 
     enum CodingKeys: String, CodingKey {
         case owner = "Owner"

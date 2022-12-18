@@ -15,7 +15,7 @@ import Foundation
  */
 public class BaseLedger: Codable {
     /// The SHA-512Half of this ledger's state tree information.
-    public let accountHash: String
+    public var accountHash: String
     /// A bit-map of flags relating to the closing of this ledger.
     public var closeFlags: Int
     /**

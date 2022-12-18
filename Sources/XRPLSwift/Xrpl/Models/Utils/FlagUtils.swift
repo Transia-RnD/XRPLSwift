@@ -16,9 +16,7 @@ import Foundation
  - returns:
  An interface with all flags as booleans.
  */
-public func parseAccountRootFlags(
-    flags: Int
-) -> [AccountRootFlags: Bool] {
+public func parseAccountRootFlags(flags: Int) -> [AccountRootFlags: Bool] {
     var flagsInterface: [AccountRootFlags: Bool] = [:]
     AccountRootFlags.allCases.forEach { flag in
         if isFlagEnabled(flags: flags, checkFlag: flag.rawValue) {
@@ -69,9 +67,7 @@ public func setTransactionFlagsToNumber(tx: inout [String: AnyObject]) throws {
     }
 }
 
-func convertAccountSetFlagsToNumber(
-    flags: [AccountSetTfFlags]
-) throws -> Int {
+func convertAccountSetFlagsToNumber(flags: [AccountSetTfFlags]) throws -> Int {
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
         if AccountSetTfFlags(rawValue: flag.rawValue) == nil {
@@ -83,9 +79,7 @@ func convertAccountSetFlagsToNumber(
     }
 }
 
-func convertOfferCreateFlagsToNumber(
-    flags: [OfferCreateFlags]
-) throws -> Int {
+func convertOfferCreateFlagsToNumber(flags: [OfferCreateFlags]) throws -> Int {
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
         if OfferCreateFlags(rawValue: flag.rawValue) == nil {
@@ -97,9 +91,7 @@ func convertOfferCreateFlagsToNumber(
     }
 }
 
-func convertPaymentChannelClaimFlagsToNumber(
-    flags: [PaymentChannelClaimFlag]
-) throws -> Int {
+func convertPaymentChannelClaimFlagsToNumber(flags: [PaymentChannelClaimFlag]) throws -> Int {
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
         if PaymentChannelClaimFlag(rawValue: flag.rawValue) == nil {
@@ -111,9 +103,7 @@ func convertPaymentChannelClaimFlagsToNumber(
     }
 }
 
-func convertPaymentTransactionFlagsToNumber(
-    flags: [PaymentFlags]
-) throws -> Int {
+func convertPaymentTransactionFlagsToNumber(flags: [PaymentFlags]) throws -> Int {
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
         if PaymentFlags(rawValue: flag.rawValue) == nil {
@@ -125,9 +115,7 @@ func convertPaymentTransactionFlagsToNumber(
     }
 }
 
-func convertTrustSetFlagsToNumber(
-    flags: [TrustSetFlag]
-) throws -> Int {
+func convertTrustSetFlagsToNumber(flags: [TrustSetFlag]) throws -> Int {
     let interface = flags.interface
     return try interface.keys.reduce(0) { resultFlags, flag in
         if TrustSetFlag(rawValue: flag.rawValue) == nil {

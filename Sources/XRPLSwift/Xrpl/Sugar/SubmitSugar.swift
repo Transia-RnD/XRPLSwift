@@ -46,9 +46,9 @@ extension SubmitTransaction {
 }
 
 public class SubmitOptions {
-    public var autofill: Bool?
-    public var failHard: Bool?
-    public var wallet: Wallet
+    public let autofill: Bool?
+    public let failHard: Bool?
+    public let wallet: Wallet
 
     public init(
         autofill: Bool?,
@@ -79,14 +79,25 @@ public class SubmitOptions {
  RippledError if submit request fails.
  */
 func submit(
-    client: XrplClient,
-    transaction: Transaction,
-    autofill: Bool? = false,
-    failHard: Bool? = false,
-    wallet: Wallet?
+    _ client: XrplClient,
+    _ transaction: Transaction,
+    _ autofill: Bool? = false,
+    _ failHard: Bool? = false,
+    _ wallet: Wallet?
 ) async throws -> EventLoopFuture<Any> {
-    let signedTx = try await getSignedTx(client: client, transaction: transaction, wallet: wallet)
-    return try await submitRequest(client: client, signedTransaction: signedTx, failHard: failHard)
+    let signedTx = try await getSignedTx(client, transaction, autofill ?? true, wallet)
+    return try await submitRequest(client, signedTx, failHard)
+}
+
+func submit(
+    _ client: XrplClient,
+    _ transaction: String,
+    _ autofill: Bool? = false,
+    _ failHard: Bool? = false,
+    _ wallet: Wallet?
+) async throws -> EventLoopFuture<Any> {
+    let signedTx = try await getSignedTx(client, transaction, autofill ?? true, wallet)
+    return try await submitRequest(client, signedTx, failHard)
 }
 
 /**
@@ -103,25 +114,25 @@ func submit(
  A promise that contains TxResponse, that will return when the transaction has been validated.
  */
 func submitAndWait(
-    this: XrplClient,
+    _ client: XrplClient,
     //  transaction: Transaction | string,
-    transaction: Transaction,
-    opts: SubmitOptions? = nil
+    _ transaction: Transaction,
+    _ opts: SubmitOptions? = nil
     // ) async throws -> EventLoopFuture<TxResponse> {
 ) async throws -> String {
     let signedTx = try await getSignedTx(
-        client: this,
-        transaction: transaction,
-        autofill: (opts?.autofill)!,
-        wallet: opts?.wallet
+        client,
+        transaction,
+        opts?.autofill ?? false,
+        opts?.wallet
     )
 
-    let lastLedger: Int? = getLastLedgerSequence(transaction: signedTx)
+    let lastLedger: Int? = getLastLedgerSequence(signedTx)
     if lastLedger == nil {
         throw ValidationError("Transaction must contain a LastLedgerSequence value for reliable submission.")
     }
 
-    let response = try await submitRequest(client: this, signedTransaction: signedTx, failHard: opts?.failHard)
+    let response = try await submitRequest(client, signedTx, opts?.failHard)
     //    let txHash = opts?.hashes.hashSignedTx(signedTx)
     //    return waitForFinalTransactionOutcome(
     //        this,Int
@@ -134,15 +145,15 @@ func submitAndWait(
 
 // Encodes and submits a signed transaction.
 func submitRequest(
-    client: XrplClient,
-    signedTransaction: Transaction,
-    failHard: Bool? = false
+    _ client: XrplClient,
+    _ signedTransaction: Transaction,
+    _ failHard: Bool? = false
     // ) async throws -> EventLoopFuture<SubmitResponse> {
 ) async throws -> EventLoopFuture<Any> {
-    if !isSigned(transaction: try signedTransaction.toJson()) {
+    if !isSigned(try signedTransaction.toJson()) {
         throw ValidationError("Transaction must be signed")
     }
-    let signedTxEncoded: String = try BinaryCodec.encode(json: signedTransaction.toJson())
+    let signedTxEncoded: String = try BinaryCodec.encode(signedTransaction.toJson())
     let request = SubmitRequest(
         txBlob: signedTxEncoded,
         //        failHard: isAccountDelete(transaction: signedTransaction) || failHard!
@@ -152,12 +163,12 @@ func submitRequest(
 }
 
 func submitRequest(
-    client: XrplClient,
-    signedTransaction: String,
-    failHard: Bool? = false
+    _ client: XrplClient,
+    _ signedTransaction: String,
+    _ failHard: Bool? = false
     // ) async throws -> EventLoopFuture<SubmitResponse> {
 ) async throws -> EventLoopFuture<Any> {
-    if !isSigned(transaction: signedTransaction) {
+    if !isSigned(signedTransaction) {
         throw ValidationError("Transaction must be signed")
     }
 
@@ -231,23 +242,23 @@ func submitRequest(
 // }
 
 // checks if the transaction has been signed
-func isSigned(transaction: String) -> Bool {
-    let tx = BinaryCodec.decode(buffer: transaction)
-    return isSigned(transaction: tx)
+func isSigned(_ transaction: String) -> Bool {
+    let tx = BinaryCodec.decode(transaction)
+    return isSigned(tx)
 }
-func isSigned(transaction: [String: AnyObject]) -> Bool {
+func isSigned(_ transaction: [String: AnyObject]) -> Bool {
     return transaction["SigningPubKey"] != nil || transaction["TxnSignature"] != nil
 }
 
 // initializes a transaction for a submit request
 func getSignedTx(
-    client: XrplClient,
-    transaction: String,
-    autofill: Bool = true,
-    wallet: Wallet?
+    _ client: XrplClient,
+    _ transaction: String,
+    _ autofill: Bool = true,
+    _ wallet: Wallet?
     // ) async throws -> EventLoopFuture<String> {
 ) async throws -> String {
-    if isSigned(transaction: transaction) {
+    if isSigned(transaction) {
         return transaction
     }
 
@@ -255,17 +266,17 @@ func getSignedTx(
         throw ValidationError("Wallet must be provided when submitting an unsigned transaction")
     }
 
-    var tx = BinaryCodec.decode(buffer: transaction)
+    var tx = BinaryCodec.decode(transaction)
     if autofill {
-        tx = try await AutoFillSugar().autofill(client: client, transaction: tx, signersCount: 0).wait()
+        tx = try await AutoFillSugar().autofill(client, tx, 0).wait()
     }
-    return try wallet.sign(transaction: tx, multisign: false).txBlob
+    return try wallet.sign(tx, false).txBlob
 }
 func getSignedTx(
-    client: XrplClient,
-    transaction: Transaction,
-    autofill: Bool = true,
-    wallet: Wallet?
+    _ client: XrplClient,
+    _ transaction: Transaction,
+    _ autofill: Bool = true,
+    _ wallet: Wallet?
 ) async throws -> String {
     //    if isSigned(transaction: transaction) {
     //        return transaction
@@ -276,29 +287,25 @@ func getSignedTx(
     //    var tx = try transaction.toAny() as! BaseTransaction
     var tx = try transaction.toJson() as! [String: AnyObject]
     if autofill {
-        tx = try await AutoFillSugar().autofill(client: client, transaction: tx, signersCount: 0).wait()
+        tx = try await AutoFillSugar().autofill(client, tx, 0).wait()
     }
-    return try wallet.sign(transaction: tx, multisign: false).txBlob
+    return try wallet.sign(tx, false).txBlob
 }
 
 // checks if there is a LastLedgerSequence as a part of the transaction
-func getLastLedgerSequence(
-    transaction: String
-) -> Int? {
-    let tx = BinaryCodec.decode(buffer: transaction)
+func getLastLedgerSequence(_ transaction: String) -> Int? {
+    let tx = BinaryCodec.decode(transaction)
     return tx["LastLedgerSequence"] as? Int
 }
 
 // checks if there is a LastLedgerSequence as a part of the transaction
-func getLastLedgerSequence(
-    transaction: Transaction
-) -> Int? {
+func getLastLedgerSequence(_ transaction: Transaction) -> Int? {
     let tx = try! transaction.toJson() as! [String: AnyObject]
     return tx["LastLedgerSequence"] as? Int
 }
 
 // checks if the transaction is an AccountDelete transaction
-func isAccountDelete(transaction: SubmitTransaction) -> Bool {
+func isAccountDelete(_ transaction: SubmitTransaction) -> Bool {
     //    let tx = transaction is String ? BinaryCodec.decode(transaction) : transaction
     let tx = transaction
     //    return tx.TransactionType == "AccountDelete"

@@ -21,21 +21,21 @@ public class CheckCash: BaseTransaction {
      hexadecimal string. This field is required.
      :meta hide-value:
      */
-    public let checkId: String
+    public var checkId: String
 
     /**
      Redeem the Check for exactly this amount, if possible. The currency must
      match that of the SendMax of the corresponding CheckCreate transaction.
      You must provide either this field or ``DeliverMin``.
      */
-    public let amount: Amount?
+    public var amount: Amount?
 
     /**
      Redeem the Check for at least this amount and for as much as possible.
      The currency must match that of the ``SendMax`` of the corresponding
      CheckCreate transaction. You must provide either this field or ``Amount``.
      */
-    public let deliverMin: Amount?
+    public var deliverMin: Amount?
 
     enum CodingKeys: String, CodingKey {
         case checkId = "CheckID"

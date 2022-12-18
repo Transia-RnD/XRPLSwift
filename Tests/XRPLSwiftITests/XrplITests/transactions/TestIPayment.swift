@@ -42,4 +42,25 @@ final class TestIPayment: RippledITestCase {
         exp.fulfill()
         await waitForExpectations(timeout: TIMEOUT)
     }
+
+    func testModel() async {
+        // create the expectation
+        let exp = expectation(description: "base")
+
+        let wallet2: Wallet = await generateFundedWallet(client: self.client)
+        let json = [
+            "TransactionType": "Payment",
+            "Account": self.wallet.classicAddress,
+            "Destination": wallet2.classicAddress,
+            "Amount": "1000"
+        ] as [String: AnyObject]
+        let tx: Payment = try! Payment(json: json)
+        await testTransaction(
+            client: self.client,
+            transaction: tx.asTx,
+            wallet: self.wallet
+        )
+        exp.fulfill()
+        await waitForExpectations(timeout: TIMEOUT)
+    }
 }

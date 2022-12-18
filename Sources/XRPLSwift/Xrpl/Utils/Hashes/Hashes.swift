@@ -14,8 +14,8 @@ let HASH_HEX: Int = 16
 // swiftlint:disable:next identifier_name
 let BYTE_LENGTH: Int = 4
 
-func addressToHex(address: String) -> String {
-    return try! XrplCodec.decodeClassicAddress(classicAddress: address).toHex
+func addressToHex(_ address: String) -> String {
+    return try! XrplCodec.decodeClassicAddress(address).toHex
 }
 
 func ledgerSpaceHex(_ name: String) -> String {
@@ -155,7 +155,7 @@ extension Character {
 public func hashEscrow(address: String, sequence: Int) -> String {
     return sha512Half(
         hex: ledgerSpaceHex("escrow") +
-            addressToHex(address: address) +
+            addressToHex(address) +
             "00\(sequence.data.toHex)"
     )
 }
@@ -170,14 +170,24 @@ public func hashEscrow(address: String, sequence: Int) -> String {
  * @category Utilities
  */
 public func hashPaymentChannel(
-    address: String,
-    dstAddress: String,
-    sequence: Int
+    _ address: String,
+    _ dstAddress: String,
+    _ sequence: Int
 ) -> String {
     let hexString: String = ledgerSpaceHex("paychan") +
-        addressToHex(address: address) +
-        addressToHex(address: dstAddress) +
-        [UInt8].init(repeating: 0x0, count: BYTE_LENGTH * 2).toHex +
-        String(sequence, radix: HASH_HEX)
+        addressToHex(address) +
+        addressToHex(dstAddress) +
+        String(sequence, radix: HASH_HEX).padding(leftTo: BYTE_LENGTH * 2, withPad: "0")
     return sha512Half(hex: hexString)
+}
+
+extension String {
+   func padding(leftTo paddedLength:Int, withPad pad:String=" ", startingAt padStart:Int=0) -> String {
+      let rightPadded = self.padding(toLength:max(count,paddedLength), withPad:pad, startingAt:padStart)
+      return "".padding(toLength:paddedLength, withPad:rightPadded, startingAt:count % paddedLength)
+   }
+
+   func padding(rightTo paddedLength:Int, withPad pad:String=" ", startingAt padStart:Int=0) -> String {
+      return self.padding(toLength:paddedLength, withPad:pad, startingAt:padStart)
+   }
 }

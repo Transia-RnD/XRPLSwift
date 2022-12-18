@@ -13,19 +13,19 @@ import Foundation
 internal let HASH_LENGTH_BYTES: Int = 32
 
 class Vector256: SerializedType {
-    public static var ZERO256 = Vector256(bytes: Data(bytes: [], count: HASH_LENGTH_BYTES).bytes)
+    public static var ZERO256 = Vector256(Data(bytes: [], count: HASH_LENGTH_BYTES).bytes)
 
-    override init(bytes: [UInt8]? = nil) {
-        super.init(bytes: bytes ?? Vector256.ZERO256.bytes)
+    override init(_ bytes: [UInt8]? = nil) {
+        super.init(bytes ?? Vector256.ZERO256.bytes)
     }
 
-    static func from(value: [String]) throws -> Vector256 {
+    static func from(_ value: [String]) throws -> Vector256 {
         var byteList: [UInt8] = []
         // swiftlint:disable:next identifier_name
         for s in value {
-            byteList.append(contentsOf: try Hash256.from(value: s).bytes)
+            byteList.append(contentsOf: try Hash256.from(s).bytes)
         }
-        return Vector256(bytes: byteList)
+        return Vector256(byteList)
     }
 
     /**
@@ -35,16 +35,16 @@ class Vector256: SerializedType {
         - hint: Length of the bytes to read, optional
      */
     override func fromParser(
-        parser: BinaryParser,
-        hint: Int? = nil
+        _ parser: BinaryParser,
+        _ hint: Int? = nil
     ) -> SerializedType {
         var byteList: [UInt8] = []
         let numBytes = hint != nil ? hint : parser.bytes.count
         let numHashes = Int(numBytes! / HASH_LENGTH_BYTES)
         for i in 0..<numHashes {
-            byteList.append(contentsOf: try Hash256().fromParser(parser: parser).bytes)
+            byteList.append(contentsOf: try Hash256().fromParser(parser).bytes)
         }
-        return Vector256(bytes: byteList)
+        return Vector256(byteList)
     }
 
     /**
@@ -62,7 +62,6 @@ class Vector256: SerializedType {
         }
 
         var hashList: [String] = []
-        // swiftlint:disable:next identifier_name
         for i in stride(from: 0, to: self.bytes.count, by: HASH_LENGTH_BYTES) {
             hashList.append([UInt8](self.bytes[i...i + HASH_LENGTH_BYTES - 1]).toHex)
         }

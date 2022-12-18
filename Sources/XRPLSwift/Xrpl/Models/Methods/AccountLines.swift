@@ -12,39 +12,39 @@ import Foundation
 
 public class Trustline: Codable {
     /// The unique Address of the counterparty to this trust line.
-    public let account: String
+    public var account: String
     /**
      Representation of the numeric balance currently held against this line. A
      positive balance means that the perspective account holds value; a negative
      Balance means that the perspective account owes value.
      */
-    public let balance: String
+    public var balance: String
     /// A Currency Code identifying what currency this trust line can hold.
-    public let currency: String
+    public var currency: String
     /**
      The maximum amount of the given currency that this account is willing to
      owe the peer account.
      */
-    public let limit: String
+    public var limit: String
     /**
      The maximum amount of currency that the issuer account is willing to owe
      the perspective account.
      */
-    public let limitPeer: String
+    public var limitPeer: String
     /**
      Rate at which the account values incoming balances on this trust line, as
      a ratio of this value per 1 billion units. (For example, a value of 500
      million represents a 0.5:1 ratio.) As a special case, 0 is treated as a
      1:1 ratio.
      */
-    public let qualityIn: Int
+    public var qualityIn: Int
     /**
      Rate at which the account values outgoing balances on this trust line, as
      a ratio of this value per 1 billion units. (For example, a value of 500
      million represents a 0.5:1 ratio.) As a special case, 0 is treated as a 1:1
      ratio.
      */
-    public let qualityOut: Int
+    public var qualityOut: Int
     /**
      If true, this account has enabled the No Ripple flag for this trust line.
      If present and false, this account has disabled the No Ripple flag, but,
@@ -52,7 +52,7 @@ public class Trustline: Codable {
      considered the default state. If omitted, the account has the No Ripple
      flag disabled for this trust line and Default Ripple disabled.
      */
-    public let noRipple: Bool?
+    public var noRipple: Bool?
     /**
      If true, the peer account has enabled the No Ripple flag for this trust
      line. If present and false, this account has disabled the No Ripple flag,
@@ -60,18 +60,18 @@ public class Trustline: Codable {
      not considered the default state. If omitted, the account has the No Ripple
      flag disabled for this trust line and Default Ripple disabled.
      */
-    public let noRipplePeer: Bool?
+    public var noRipplePeer: Bool?
     /// If true, this account has authorized this trust line. The default is false.
-    public let authorized: Bool?
+    public var authorized: Bool?
     /// If true, the peer account has authorized this trust line. The default is false.
-    public let peerAuthorized: Bool?
+    public var peerAuthorized: Bool?
     /// If true, this account has frozen this trust line. The default is false.
-    public let freeze: Bool?
+    public var freeze: Bool?
     /**
      If true, the peer account has frozen this trust line. The default is
      false.
      */
-    public let freezePeer: Bool?
+    public var freezePeer: Bool?
 }
 
 /**
@@ -84,29 +84,29 @@ public class Trustline: Codable {
  */
 public class AccountLinesRequest: BaseRequest {
     /// A unique identifier for the account, most commonly the account's Address.
-    public let account: String
+    public var account: String
     /// A 20-byte hex string for the ledger version to use.
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger to use, or a shortcut string to choose a
      ledger automatically.
      */
-    public let ledgerIndex: LedgerIndex?
+    public var ledgerIndex: LedgerIndex?
     /**
      The Address of a second account. If provided, show only lines of trust
      connecting the two accounts.
      */
-    public let peer: Int?
+    public var peer: Int?
     /**
      Limit the number of trust lines to retrieve. The server is not required to
      honor this value. Must be within the inclusive range 10 to 400.
      */
-    public let limit: Int?
+    public var limit: Int?
     /**
      Value from a previous paginated response. Resume retrieving data where
      that response left off.
      */
-    public let marker: AnyCodable?
+    public var marker: AnyCodable?
 
     enum CodingKeys: String, CodingKey {
         case account = "account"
@@ -185,33 +185,33 @@ open class AccountLinesResponse: Codable {
      Unique Address of the account this request corresponds to. This is the
      "perspective account" for purpose of the trust lines.
      */
-    public let account: String
+    public var account: String
     /**
      Array of trust line objects. If the number of trust lines is large, only
      returns up to the limit at a time.
      */
-    public let lines: [Trustline]
+    public var lines: [Trustline]
     /**
      The ledger index of the current open ledger, which was used when
      retrieving this information.
      */
-    public let ledgerCurrentIndex: Int?
+    public var ledgerCurrentIndex: Int?
     /**
      The ledger index of the ledger version that was used when retrieving
      this data.
      */
-    public let ledgerIndex: Int?
+    public var ledgerIndex: Int?
     /**
      The identifying hash the ledger version that was used when retrieving
      this data.
      */
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      Server-defined value indicating the response is paginated. Pass this to
      the next call to resume where this call left off. Omitted when there are
      No additional pages after this one.
      */
-    public let marker: AnyCodable?
+    public var marker: AnyCodable?
 
     enum CodingKeys: String, CodingKey {
         case account = "account"

@@ -16,14 +16,14 @@ import Foundation
  */
 public class TransactionEntryRequest: BaseRequest {
     /// A 20-byte hex string for the ledger version to use.
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger to use, or a shortcut string to choose a
      ledger automatically.
      */
-    public let ledgerIndex: LedgerIndex?
+    public var ledgerIndex: LedgerIndex?
     /// Unique hash of the transaction you are looking up.
-    public let txHash: String
+    public var txHash: String
 
     enum CodingKeys: String, CodingKey {
         case ledgerHash = "ledger_hash"
@@ -86,20 +86,20 @@ public class TransactionEntryResponse: Codable {
      The ledger index of the ledger version the transaction was found in;
      this is the same as the one from the request.
      */
-    public let ledgerIndex: Int
+    public var ledgerIndex: Int
     /**
      The identifying hash of the ledger version the transaction was found in;
      this is the same as the one from the request.
      */
-    public let ledgerHash: String
+    public var ledgerHash: String
     /**
      The transaction metadata, which shows the exact results of the
      transaction in detail.
      */
-    public let metadata: TransactionMetadata
+    public var metadata: TransactionMetadata
     /// JSON representation of the Transaction object.
-    public let txJson: Transaction
-    //    public let txJson: Transaction + ResponseOnlyTxInfo
+    public var txJson: Transaction
+    //    public var txJson: Transaction + ResponseOnlyTxInfo
 
     enum CodingKeys: String, CodingKey {
         case ledgerHash = "ledger_hash"

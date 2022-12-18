@@ -81,7 +81,7 @@ class xCurrency: Hash160 {
         }
     }
 
-    override static func from(value: String) throws -> xCurrency {
+    override static func from(_ value: String) throws -> xCurrency {
         if isIsoCode(value: value) {
             return xCurrency(try isoToBytes(iso: value))
         }
@@ -92,10 +92,10 @@ class xCurrency: Hash160 {
     }
 
     override func fromParser(
-        parser: BinaryParser,
-        hint: Int? = nil
+        _ parser: BinaryParser,
+        _ hint: Int? = nil
     ) -> xCurrency {
-        return xCurrency(try! parser.read(n: hint ?? LENGTH20))
+        return xCurrency(try! parser.read(hint ?? LENGTH20))
     }
 
     override func toJson() -> Any {

@@ -13,21 +13,21 @@ import Foundation
  The FeeSettings object type contains the current base transaction cost and
  reserve amounts as determined by fee voting.
  */
-open class FeeSettings: BaseLedgerEntry {
-    var ledgerEntryType: String = "FeeSettings"
-    var flags: Int
+public class FeeSettings: BaseLedgerEntry {
+    public var ledgerEntryType: String = "FeeSettings"
+    public var flags: Int
 
     /**
      The transaction cost of the "reference transaction" in drops of XRP as
      hexadecimal.
      */
-    let baseFee: String
+    public var baseFee: String
     /// The BaseFee translated into "fee units".
-    let referenceFeeUnits: Int
+    public var referenceFeeUnits: Int
     /// The base reserve for an account in the XRP Ledger, as drops of XRP.
-    let reserveBase: Int
+    public var reserveBase: Int
     /// The incremental owner reserve for owning objects, as drops of XRP.
-    let reserveIncrement: Int
+    public var reserveIncrement: Int
     /**
      A bit-map of boolean flags for this object. No flags are defined for this
      type.

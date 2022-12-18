@@ -88,6 +88,12 @@ public struct IssuedCurrencyAmount: IssuedCurrency, Codable {
         case value
     }
 
+    public init(value: String, issuer: String, currency: String) {
+        self.value = value
+        self.issuer = issuer
+        self.currency = currency
+    }
+
     public init(_ json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
         let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
@@ -139,12 +145,28 @@ extension Amount {
             try ic.encode(to: encoder)
         }
     }
+
+    public init(value: String, issuer: String, currency: String) {
+        self = .ic(IssuedCurrencyAmount(
+            value: value,
+            issuer: issuer,
+            currency: currency
+        ))
+    }
+
+    public init(_ value: IssuedCurrencyAmount) throws {
+        self = .ic(value)
+    }
+
+    public init(_ value: String) throws {
+        self = .string(value)
+    }
 }
 
 public class BaseSigner: Codable {
-    public let account: String
-    public let txnSignature: String
-    public let signingPubKey: String
+    public var account: String
+    public var txnSignature: String
+    public var signingPubKey: String
 
     enum CodingKeys: String, CodingKey {
         case account = "Account"
@@ -165,7 +187,7 @@ public class Signer: Codable {
         case signer = "Signer"
     }
 
-    public let signer: BaseSigner
+    public var signer: BaseSigner
 
     public init(json: [String: AnyObject]) throws {
         let decoder = JSONDecoder()
@@ -176,9 +198,9 @@ public class Signer: Codable {
 }
 
 public class Memo: Codable {
-    public let memoData: String?
-    public let memoType: String?
-    public let memoFormat: String?
+    public var memoData: String?
+    public var memoType: String?
+    public var memoFormat: String?
 
     enum CodingKeys: String, CodingKey {
         case memoData = "MemoData"
@@ -195,7 +217,7 @@ public class Memo: Codable {
 }
 
 public class MemoWrapper: Codable {
-    public let memo: Memo
+    public var memo: Memo
     enum CodingKeys: String, CodingKey {
         case memo = "Memo"
     }
@@ -251,12 +273,12 @@ public typealias Path = [PathStep]
  or an {@link NFTSellOffersRequest}.
  */
 public struct NFTOffer: Codable {
-    public let amount: Amount
-    public let flags: Int
-    public let nftOfferIndex: String
-    public let owner: String
-    public let destination: String?
-    public let expiration: Int?
+    public var amount: Amount
+    public var flags: Int
+    public var nftOfferIndex: String
+    public var owner: String
+    public var destination: String?
+    public var expiration: Int?
 
     enum CodingKeys: String, CodingKey {
         case amount = "amount"
@@ -281,9 +303,9 @@ public struct NFTOffer: Codable {
 import AnyCodable
 
 public struct XRPLWebSocketResponse: Codable {
-    public let id: String
-    public let status: String
-    public let type: String
+    public var id: String
+    public var status: String
+    public var type: String
     private let rresult: AnyCodable
     public var result: [String: AnyObject] {
         return rresult.value as! [String: AnyObject]

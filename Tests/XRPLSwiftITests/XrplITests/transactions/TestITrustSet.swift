@@ -55,8 +55,8 @@ final class TestITrustSet: RippledITestCase {
         let json = [
             "TransactionType": "TrustSet",
             "Account": self.wallet.classicAddress,
-            "QualityIn": try! percentToQuality(percent: "99%"),
-            "QualityOut": try! percentToQuality(percent: "99%"),
+            "QualityIn": try! percentToQuality("99%"),
+            "QualityOut": try! percentToQuality("99%"),
             "LimitAmount": [
                 "currency": "USD",
                 "issuer": wallet2.classicAddress,
@@ -82,8 +82,8 @@ final class TestITrustSet: RippledITestCase {
         let json = [
             "TransactionType": "TrustSet",
             "Account": self.wallet.classicAddress,
-            "QualityIn": try! percentToQuality(percent: "101%"),
-            "QualityOut": try! percentToQuality(percent: "101%"),
+            "QualityIn": try! percentToQuality("101%"),
+            "QualityOut": try! percentToQuality("101%"),
             "LimitAmount": [
                 "currency": "USD",
                 "issuer": wallet2.classicAddress,

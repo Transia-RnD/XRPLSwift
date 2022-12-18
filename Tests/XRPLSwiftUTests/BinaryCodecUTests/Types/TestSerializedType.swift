@@ -34,26 +34,26 @@ final class TestSerializedType: XCTestCase {
         }
         switch fixture.type {
         case "AccountID":
-            XCTAssertEqual(try AccountID.from(value: jsonValue as! String).bytes.toHex, fixture.expectedHex)
+            XCTAssertEqual(try AccountID.from(jsonValue as! String).bytes.toHex, fixture.expectedHex)
         case "Amount":
             if jsonValue is [String: AnyObject] {
                 if !fixture.error.isEmpty {
-                    XCTAssertThrowsError(try xAmount.from(value: jsonValue as! [String: String]))
+                    XCTAssertThrowsError(try xAmount.from(jsonValue as! [String: String]))
                     return
                 }
-                XCTAssertEqual(try xAmount.from(value: jsonValue as! [String: String]).bytes.toHex, fixture.expectedHex)
+                XCTAssertEqual(try xAmount.from(jsonValue as! [String: String]).bytes.toHex, fixture.expectedHex)
             }
             if jsonValue is String {
                 if !fixture.error.isEmpty {
-                    XCTAssertThrowsError(try xAmount.from(value: jsonValue as! String))
+                    XCTAssertThrowsError(try xAmount.from(jsonValue as! String))
                     return
                 }
-                XCTAssertEqual(try xAmount.from(value: jsonValue as! String).bytes.toHex, fixture.expectedHex)
+                XCTAssertEqual(try xAmount.from(jsonValue as! String).bytes.toHex, fixture.expectedHex)
             }
         case "Blob":
-            XCTAssertEqual(try Blob.from(value: jsonValue as! String).bytes.toHex, fixture.expectedHex)
+            XCTAssertEqual(try Blob.from(jsonValue as! String).bytes.toHex, fixture.expectedHex)
         case "Currency":
-            XCTAssertEqual(try xCurrency.from(value: jsonValue as! String).bytes.toHex, fixture.expectedHex)
+            XCTAssertEqual(try xCurrency.from(jsonValue as! String).bytes.toHex, fixture.expectedHex)
         default:
             XCTFail()
         }

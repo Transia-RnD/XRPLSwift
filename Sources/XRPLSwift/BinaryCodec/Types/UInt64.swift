@@ -34,10 +34,10 @@ class xUInt64: xUInt {
      A new xUInt64.
      */
     override func fromParser(
-        parser: BinaryParser,
-        hint: Int? = nil
+        _ parser: BinaryParser,
+        _ hint: Int? = nil
     ) -> xUInt64 {
-        return try! xUInt64(parser.read(n: WIDTH64))
+        return try! xUInt64(parser.read(WIDTH64))
     }
 
     /*
@@ -49,7 +49,7 @@ class xUInt64: xUInt {
      Raises:
      XRPLBinaryCodecException: If a UInt8 cannot be constructed.
      */
-    class func from(value: Int) throws -> xUInt64 {
+    class func from(_ value: Int) throws -> xUInt64 {
         if value < 0 {
             throw BinaryError.unknownError(error: "\(value) must be an unsigned integer")
         }
@@ -57,7 +57,7 @@ class xUInt64: xUInt {
         return xUInt64(valueBytes.bytes.reversed())
     }
 
-    class func from(value: String) throws -> xUInt64 {
+    class func from(_ value: String) throws -> xUInt64 {
         let regex = try! NSRegularExpression(pattern: HEXREGEX64)
         let nsrange = NSRange(value.startIndex..<value.endIndex, in: value)
         if regex.matches(in: value, range: nsrange).isEmpty {

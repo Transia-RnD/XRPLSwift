@@ -20,10 +20,10 @@ import Foundation
  The XRP balance of the account (as a string).
  */
 func getXrpBalance(
-    client: XrplClient,
-    address: String,
-    ledgerHash: String? = nil,
-    ledgerIndex: LedgerIndex? = nil
+    _ client: XrplClient,
+    _ address: String,
+    _ ledgerHash: String? = nil,
+    _ ledgerIndex: LedgerIndex? = nil
 ) async -> String {
     let xrpRequest = AccountInfoRequest(account: address, ledgerHash: ledgerHash, ledgerIndex: ledgerIndex)
     let response = try? await client.request(xrpRequest).wait() as? BaseResponse<AccountInfoResponse>

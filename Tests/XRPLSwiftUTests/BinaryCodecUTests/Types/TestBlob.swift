@@ -16,7 +16,7 @@ final class TestBlob: XCTestCase {
         let value: String = "00AA"
         let valueBytes: [UInt8] = value.hexToBytes
 
-        let blob1: Blob = try! Blob.from(value: value)
+        let blob1: Blob = try! Blob.from(value)
         let blob2: Blob = Blob(valueBytes)
 
         XCTAssertEqual(blob1.toBytes(), blob2.toBytes())

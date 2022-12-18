@@ -40,7 +40,7 @@ public class BytesList {
      - returns:
      this BytesList
      */
-    public func put(bytesArg: [UInt8]) -> BytesList {
+    public func put(_ bytesArg: [UInt8]) -> BytesList {
         let bytes = bytesArg
         self.bytesArray.append(contentsOf: bytes)
         return self
@@ -50,8 +50,8 @@ public class BytesList {
      - parameters:
      - list: The BytesList to write to
      */
-    public func toBytesSink(list: BytesList) {
-        list.put(bytesArg: toBytes())
+    public func toBytesSink(_ list: BytesList) {
+        list.put(toBytes())
     }
     /**
      Put bytes in the BytesList
@@ -86,16 +86,16 @@ public class BinarySerializer {
      - parameters:
      - value: A SerializedType value
      */
-    func write(value: SerializedType) {
-        value.toBytesSink(list: self.sink)
+    func write(_ value: SerializedType) {
+        value.toBytesSink(self.sink)
     }
     /**
      Write bytes to this BinarySerializer
      - parameters:
      - bytes: The bytes to write
      */
-    func put(bytes: Data) {
-        sink.put(bytesArg: [UInt8](bytes))
+    func put(_ bytes: Data) {
+        sink.put([UInt8](bytes))
     }
     /**
      Write a value of a given type to this BinarySerializer
@@ -103,16 +103,16 @@ public class BinarySerializer {
      - type: The type to write
      - value: A value of that type
      */
-    func writeType(type: SerializedType, value: SerializedType) {
-        self.write(value: try! SerializedType.from(value: value))
+    func writeType(_ type: SerializedType, _ value: SerializedType) {
+        self.write(try! SerializedType.from(value))
     }
     /**
      Write BytesList to this BinarySerializer
      - parameters:
      - bl: BytesList to write to BinarySerializer
      */
-    func writeBytesList(bl: BytesList) {
-        bl.toBytesSink(list: self.sink)
+    func writeBytesList(_ bl: BytesList) {
+        bl.toBytesSink(self.sink)
     }
     /**
      Helper function for length-prefixed fields including Blob types
@@ -127,7 +127,7 @@ public class BinarySerializer {
      - returns:
      The byte arrary encoded length
      */
-    func encodeVariableLength(length: Int) -> Data {
+    func encodeVariableLength(_ length: Int) -> Data {
         var len = length
         if length <= _MAX_SINGLE_BYTE_LENGTH {
             return Data(from: UInt8(length))
@@ -153,15 +153,15 @@ public class BinarySerializer {
      - isUnlModifyWorkaround: Does not encode the value; just encodes `00` in its place.
      */
     func writeLengthEncoded(
-        value: SerializedType,
-        isUnlModifyWorkaround: Bool = false
+        _ value: SerializedType,
+        _ isUnlModifyWorkaround: Bool = false
     ) {
         let byteObject = BytesList()
         if !isUnlModifyWorkaround {
-            _ = value.toBytesSink(list: byteObject)
+            _ = value.toBytesSink(byteObject)
         }
-        self.put(bytes: encodeVariableLength(length: byteObject.getLength()))
-        self.writeBytesList(bl: byteObject)
+        self.put(encodeVariableLength(byteObject.getLength()))
+        self.writeBytesList(byteObject)
     }
     /**
      Write field and value to the buffer.
@@ -173,15 +173,15 @@ public class BinarySerializer {
      field in UNLModify pseudotransactions. The default is False.
      */
     func writeFieldAndValue(
-        field: FieldInstance,
-        value: SerializedType,
-        isUNLModifyWorkaround: Bool = false
+        _ field: FieldInstance,
+        _ value: SerializedType,
+        _ isUNLModifyWorkaround: Bool = false
     ) {
-        self.put(bytes: Data(field.header.toBytes()))
+        self.put(Data(field.header.toBytes()))
         if field.isVLEncoded {
-            writeLengthEncoded(value: value, isUnlModifyWorkaround: isUNLModifyWorkaround)
+            writeLengthEncoded(value, isUNLModifyWorkaround)
         } else {
-            self.put(bytes: Data(value.bytes))
+            self.put(Data(value.bytes))
         }
     }
 }

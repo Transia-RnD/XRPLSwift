@@ -61,32 +61,32 @@ final class TestCurrency: XCTestCase {
 
     func testConstructionFromHexStandard() {
         // XRP case
-        let currencyObject: xCurrency = try! xCurrency.from(value: XRP_HEX_CODE)
+        let currencyObject: xCurrency = try! xCurrency.from(XRP_HEX_CODE)
         XCTAssertEqual(currencyObject.toJson(), XRP_ISO)
 
         // General case
-        let currencyObject1: xCurrency = try! xCurrency.from(value: USD_HEX_CODE)
+        let currencyObject1: xCurrency = try! xCurrency.from(USD_HEX_CODE)
         XCTAssertEqual(currencyObject1.toJson(), USD_ISO)
 
     }
 
     func testConstructionFromIsoCodeStandard() {
         // XRP case
-        let currencyObject: xCurrency = try! xCurrency.from(value: XRP_ISO)
+        let currencyObject: xCurrency = try! xCurrency.from(XRP_ISO)
         XCTAssertEqual(currencyObject.toHex(), XRP_HEX_CODE)
 
         // General case
-        let currencyObject1: xCurrency = try! xCurrency.from(value: USD_ISO)
+        let currencyObject1: xCurrency = try! xCurrency.from(USD_ISO)
         XCTAssertEqual(currencyObject1.toHex(), USD_HEX_CODE)
     }
 
     func testConstructionFromHexNonstandard() {
-        let currencyObject: xCurrency = try! xCurrency.from(value: NONSTANDARD_HEX_CODE)
+        let currencyObject: xCurrency = try! xCurrency.from(NONSTANDARD_HEX_CODE)
         XCTAssertEqual(currencyObject.toJson(), NONSTANDARD_HEX_CODE)
     }
 
     func testConstructionFromHexNonrecommended() {
-        let currencyObject: xCurrency = try! xCurrency.from(value: NOT_RECOMMENDED_HEX_CODE)
+        let currencyObject: xCurrency = try! xCurrency.from(NOT_RECOMMENDED_HEX_CODE)
         XCTAssertEqual(currencyObject.toJson(), NOT_RECOMMENDED_HEX_CODE)
     }
 

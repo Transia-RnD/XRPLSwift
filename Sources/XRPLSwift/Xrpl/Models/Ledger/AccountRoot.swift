@@ -34,71 +34,71 @@ public enum AccountRootFlags: Int, CaseIterable {
  The AccountRoot object type describes a single account, its settings, and XRP balance.
  */
 public class AccountRoot: BaseLedgerEntry {
-    public let ledgerEntryType: String = "AccountRoot"
+    public var ledgerEntryType: String = "AccountRoot"
     /// The identifying (classic) address of this account.
-    public let account: String
+    public var account: String
     /// The account's current XRP balance in drops, represented as a string.
-    public let balance: String
+    public var balance: String
     /// A bit-map of boolean flags enabled for this account.
-    public let flags: Int
+    public var flags: Int
     /**
      The number of objects this account owns in the ledger, which contributes
      to its owner reserve.
      */
-    public let ownerCount: Int
+    public var ownerCount: Int
     /**
      The identifying hash of the transaction that most recently modified this
      object.
      */
-    public let previousTxnId: String
+    public var previousTxnId: String
     /**
      The index of the ledger that contains the transaction that most recently
      modified this object.
      */
-    public let previousTxnLgrSeq: Int
+    public var previousTxnLgrSeq: Int
     /// The sequence number of the next valid transaction for this account.
-    public let sequence: Int
+    public var sequence: Int
     /**
      The identifying hash of the transaction most recently sent by this
      account. This field must be enabled to use the AccountTxnID transaction
      field. To enable it, send an AccountSet transaction with the.
      `asfAccountTxnID` flag enabled.
      */
-    public let accountTxnId: String?
+    public var accountTxnId: String?
     /**
      A domain associated with this account. In JSON, this is the hexadecimal
      for the ASCII representation of the domain.
      */
-    public let domain: String?
+    public var domain: String?
     /// The md5 hash of an email address.
-    public let emailHash: String?
+    public var emailHash: String?
     /**
      A public key that may be used to send encrypted messages to this account
      in JSON, uses hexadecimal.
      */
-    public let messageKey: String?
+    public var messageKey: String?
     /**
      The address of a key pair that can be used to sign transactions for this
      account instead of the master key. Use a SetRegularKey transaction to
      change this value.
      */
-    public let regularKey: String?
+    public var regularKey: String?
     /**
      How many Tickets this account owns in the ledger. This is updated
      automatically to ensure that the account stays within the hard limit of 250.
      Tickets at a time.
      */
-    public let ticketCount: Int?
+    public var ticketCount: Int?
     /**
      How many significant digits to use for exchange rates of Offers involving
      currencies issued by this address. Valid values are 3 to 15, inclusive.
      */
-    public let tickSize: Int?
+    public var tickSize: Int?
     /**
      A transfer fee to charge other users for sending currency issued by this
      account to each other.
      */
-    public let transferRate: Int?
+    public var transferRate: Int?
 
     enum CodingKeys: String, CodingKey {
         case ledgerEntryType = "LedgerEntryType"

@@ -18,9 +18,9 @@ import Foundation
  - throws:
  Error if the X-Address has an associated tag.
  */
-public func ensureClassicAddress(account: String) throws -> String {
-    if AddressCodec.isValidXAddress(xAddress: account) {
-        let result: FullClassicAddress = try AddressCodec.xAddressToClassicAddress(xAddress: account)
+public func ensureClassicAddress(_ account: String) throws -> String {
+    if AddressCodec.isValidXAddress(account) {
+        let result: FullClassicAddress = try AddressCodec.xAddressToClassicAddress(account)
         let classicAddress: String? = result.classicAddress
         let tag: Int? = result.tag
         /**

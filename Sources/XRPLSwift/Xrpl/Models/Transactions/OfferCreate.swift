@@ -79,27 +79,27 @@ extension Array where Element == OfferCreateFlags {
  Offers can be partially fulfilled.
  */
 public class OfferCreate: BaseTransaction {
-    public let takerGets: Amount
+    public var takerGets: Amount
     /*
      The amount and type of currency being provided by the sender of this
      transaction. This field is required.
      :meta hide-value:
      */
 
-    public let takerPays: Amount
+    public var takerPays: Amount
     /*
      The amount and type of currency the sender of this transaction wants in
      exchange for the full ``taker_gets`` amount. This field is required.
      :meta hide-value:
      */
 
-    public let expiration: Int?
+    public var expiration: Int?
     /*
      Time after which the offer is no longer active, in seconds since the
      Ripple Epoch.
      */
 
-    public let offerSequence: Int?
+    public var offerSequence: Int?
     /*
      The Sequence number (or Ticket number) of a previous OfferCreate to cancel
      when placing this Offer.

@@ -30,32 +30,32 @@ import Foundation
  */
 public class NoRippleCheckRequest: BaseRequest {
     /// A unique identifier for the account, most commonly the account's address.
-    public let account: String
+    public var account: String
     /**
      Whether the address refers to a gateway or user. Recommendations depend on
      the role of the account. Issuers must have Default Ripple enabled and must
      disable No Ripple on all trust lines. Users should have Default Ripple
      disabled, and should enable No Ripple on all trust lines.
      */
-    //     public let role: "gateway" | "user"
-    public let role: String
+    //     public var role: "gateway" | "user"
+    public var role: String
     /**
      If true, include an array of suggested transactions, as JSON objects,
      that you can sign and submit to fix the problems. Defaults to false.
      */
-    public let transactions: Bool?
+    public var transactions: Bool?
     /**
      The maximum number of trust line problems to include in the results.
      Defaults to 300.
      */
-    public let limit: Int?
+    public var limit: Int?
     /// A 20-byte hex string for the ledger version to use.
-    public let ledgerHash: String?
+    public var ledgerHash: String?
     /**
      The ledger index of the ledger to use, or a shortcut string to choose a
      ledger automatically.
      */
-    public let ledgerIndex: LedgerIndex?
+    public var ledgerIndex: LedgerIndex?
 
     enum CodingKeys: String, CodingKey {
         case account = "account"
@@ -133,14 +133,14 @@ public class NoRippleCheckRequest: BaseRequest {
  */
 public class NoRippleCheckResponse: Codable {
     /// The ledger index of the ledger used to calculate these results.
-    public let ledgerCurrentIndex: Int
+    public var ledgerCurrentIndex: Int
     /**
      Array of strings with human-readable descriptions of the problems.
      This includes up to one entry if the account's Default Ripple setting is
      not as recommended, plus up to limit entries for trust lines whose no
      ripple setting is not as recommended.
      */
-    public let problems: [String]
+    public var problems: [String]
     /**
      If the request specified transactions as true, this is an array of JSON
      objects, each of which is the JSON form of a transaction that should fix
@@ -148,7 +148,7 @@ public class NoRippleCheckResponse: Codable {
      the problems array, and each entry is intended to fix the problem
      described at the same index into that array.
      */
-    public let transactions: [Transaction]
+    public var transactions: [Transaction]
 
     enum CodingKeys: String, CodingKey {
         case ledgerCurrentIndex = "ledger_current_index"

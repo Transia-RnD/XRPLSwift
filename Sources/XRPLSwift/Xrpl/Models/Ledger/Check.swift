@@ -13,65 +13,65 @@ import Foundation
  A Check object describes a check, similar to a paper personal check, which
  can be cashed by its destination to get money from its sender.
  */
-open class Check: BaseLedgerEntry {
+public class Check: BaseLedgerEntry {
     public var ledgerEntryType: String = "Check"
     /// The sender of the Check. Cashing the Check debits this address's balance.
-    public let account: String
+    public var account: String
     /**
      The intended recipient of the Check. Only this address can cash the Check,
      using a CheckCash transaction.
      */
-    public let destination: String
+    public var destination: String
     /**
      A bit-map of boolean flags. No flags are defined for Checks, so this value
      is always 0.
      */
-    public var flags: Int = 0
+    public var flags: Int
     /**
-     A hint indicating which page of the sender's owner directory links to this
+     A hint indicating which page of the sender's owner directory links toty this
      object, in case the directory consists of multiple pages.
      */
-    public let ownerNode: String
+    public var ownerNode: String
     /**
      The identifying hash of the transaction that most recently modified this
      object.
      */
-    public let previousTxnId: String
+    public var previousTxnId: String
     /**
      The index of the ledger that contains the transaction that most recently
      modified this object.
      */
-    public let previousTxnLgrSeq: Int
+    public var previousTxnLgrSeq: Int
     /**
      The maximum amount of currency this Check can debit the sender. If the
      Check is successfully cashed, the destination is credited in the same
      currency for up to this amount.
      */
-    public let sendMax: Amount
+    public var sendMax: Amount
     /// The sequence number of the CheckCreate transaction that created this check.
-    public let sequence: Int
+    public var sequence: Int
     /**
      A hint indicating which page of the destination's owner directory links to
      this object, in case the directory consists of multiple pages.
      */
-    public let destinationNode: String?
+    public var destinationNode: String?
     /**
      An arbitrary tag to further specify the destination for this Check, such
      as a hosted recipient at the destination address.
      */
-    public let destinationTag: Int?
+    public var destinationTag: Int?
     /// Indicates the time after which this Check is considered expired.
-    public let expiration: Int?
+    public var expiration: Int?
     /**
      Arbitrary 256-bit hash provided by the sender as a specific reason or
      identifier for this Check.
      */
-    public let invoiceId: String?
+    public var invoiceId: String?
     /**
      An arbitrary tag to further specify the source for this Check, such as a
      hosted recipient at the sender's address.
      */
-    public let sourceTag: Int?
+    public var sourceTag: Int?
 
     enum CodingKeys: String, CodingKey {
         case account = "Account"

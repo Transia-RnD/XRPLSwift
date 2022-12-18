@@ -44,7 +44,7 @@ public enum NFTokenMintFlags: Int {
  specified by the transaction.
  */
 public class NFTokenMint: BaseTransaction {
-    public let nftokenTaxon: Int
+    public var nftokenTaxon: Int
     /**
      Indicates the taxon associated with this token. The taxon is generally a
      value chosen by the minter of the token and a given taxon may be used for
@@ -54,7 +54,7 @@ public class NFTokenMint: BaseTransaction {
      :meta hide-value:
      */
 
-    public let issuer: String?
+    public var issuer: String?
     /**
      Indicates the account that should be the issuer of this token. This value
      is optional and should only be specified if the account executing the
@@ -63,7 +63,7 @@ public class NFTokenMint: BaseTransaction {
      field must match the `Account`, otherwise the transaction will fail.
      */
 
-    public let transferFee: Int?
+    public var transferFee: Int?
     /**
      Specifies the fee charged by the issuer for secondary sales of the Token,
      if such sales are allowed. Valid values for this field are between 0 and
@@ -72,7 +72,7 @@ public class NFTokenMint: BaseTransaction {
      `tfTransferable` flag is not set.
      */
 
-    public let uri: String?
+    public var uri: String?
     /**
      URI that points to the data and/or metadata associated with the NFT.
      This field need not be an HTTP or HTTPS URL; it could be an IPFS URI, a

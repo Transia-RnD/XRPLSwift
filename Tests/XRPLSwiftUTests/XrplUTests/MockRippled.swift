@@ -114,7 +114,6 @@ class MockRippledSocket {
         conn.receiveMessage { (data, context, _, error) in
             self.logger.info("[MOCK] receive")
             var request: [String: AnyObject] = [:]
-            print(request)
             guard let data = data, let context = context else {
                 return
             }
@@ -291,3 +290,152 @@ class MockRippledSocket {
         }
     }
 }
+
+//import NIOCore
+//import NIOPosix
+//import NIOHTTP1
+//import NIOWebSocket
+//
+//public class WebSocket {
+//    public var channel: NIOCore.Channel?
+//
+//    public init(channel: NIOCore.Channel) {
+//        self.channel = channel
+//    }
+//
+//}
+//
+//class MockRippledSocket {
+//
+//    var logger = Logger()
+//
+//    public var responses: [String: Any] = [:]
+//    public var suppressOutput: Bool = false
+//    public var port: Int
+//    public var group: MultiThreadedEventLoopGroup
+//    public var bootstrap: ServerBootstrap
+//    public var channel: NIOCore.Channel?
+//    public var socket: WebSocket?
+//
+//    public init(port: Int) {
+//        self.port = port
+//        self.group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+//        self.bootstrap = ServerBootstrap(group: self.group)
+//            // Specify the backlog and enable SO_REUSEADDR for the server itself
+//            .serverChannelOption(ChannelOptions.backlog, value: 256)
+//            .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
+//            // Set the handlers that are applied to the accepted Channels
+//            .childChannelInitializer { channel in
+//                // Add the WebSocket upgrade handler to the pipeline
+//                channel.pipeline.addHandler(WebSocketHandshakeHandler())
+//            }
+//            // Enable TCP_NODELAY and SO_REUSEADDR for the accepted Channels
+//            .childChannelOption(ChannelOptions.socket(IPPROTO_TCP, TCP_NODELAY), value: 1)
+//            .childChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
+//            .childChannelOption(ChannelOptions.maxMessagesPerRead, value: 1)
+//            .childChannelOption(ChannelOptions.allowRemoteHalfClosure, value: true)
+//    }
+//
+//    public func start() throws {
+//        self.channel = try self.bootstrap.bind(host: "127.0.0.1", port: self.port).wait()
+//    }
+//
+//    class WebSocketHandshakeHandler: ChannelInboundHandler {
+//        typealias InboundIn = HTTPServerRequestPart
+//        typealias OutboundOut = HTTPServerResponsePart
+//
+//        func channelRead(context: ChannelHandlerContext, data: NIOAny) {
+//            let reqPart = self.unwrapInboundIn(data)
+//
+//            switch reqPart {
+//            case .head(let head):
+//                // Check if the request is a websocket upgrade request
+//                    if head.headers["Upgrade"].contains("websocket") {
+//                    // Create a response for the upgrade request
+//                    let resHead = HTTPResponseHead(version: head.version, status: .switchingProtocols)
+//                    context.write(self.wrapOutboundOut(.head(resHead)), promise: nil)
+//
+//                    // Add the WebSocket upgrade handler to the pipeline
+//                    context.pipeline.addHandler(WebSocketFrameHandler())
+//
+//                    // Remove this handler from the pipeline
+//                    context.pipeline.removeHandler(context: context)
+//                } else {
+//                    // Not a websocket upgrade request, so just pass it through
+//                    context.fireChannelRead(data)
+//                }
+//
+//            default:
+//                // Not a websocket upgrade request, so just pass it through
+//                context.fireChannelRead(data)
+//            }
+//        }
+//    }
+//
+//    class WebSocketFrameHandler: ChannelInboundHandler {
+//        typealias InboundIn = WebSocketFrame
+//        typealias OutboundOut = WebSocketFrame
+//
+//        func channelRead(context: ChannelHandlerContext, data: NIOAny) {
+//            let frame = self.unwrapInboundIn(data)
+//
+//            // Handle the frame
+//            switch frame.opcode {
+//            case .text:
+//                // Echo the text frame back to the client
+//                context.write(self.wrapOutboundOut(frame), promise: nil)
+//
+//            default:
+//                // Ignore other frames
+//                break
+//            }
+//        }
+//    }
+//
+//    /// A handler for the mock rippled server
+//    public class MockRippledHandler: ChannelInboundHandler {
+//        public typealias InboundIn = WebSocketFrame
+//        public typealias OutboundOut = WebSocketFrame
+//
+//        public init() {}
+//
+//        public func channelRead(context: ChannelHandlerContext, data: NIOAny) {
+//            print(type(of: data))
+//            var buffer = unwrapInboundIn(data)
+////            let request = buffer.readString(length: buffer.readableBytes)
+////            let requestJSON = request ?? ""
+////            let requestData = requestJSON.data(using: .utf8)
+////            let requestObject = try? JSONSerialization.jsonObject(with: requestData!, options: [])
+////            let requestDictionary = requestObject as? [String: Any]
+////            let requestId = requestDictionary?["id"] as? Int
+////            let requestCommand = requestDictionary?["command"] as? String
+//
+//        }
+//    }
+//}
+//
+//extension MockRippledSocket {
+//    /**
+//     * Adds a mocked response
+//     * If an object is passed in for `response`, then the response is static for the command
+//     * If a function is passed in for `response`, then the response can be determined by the exact request shape
+//     */
+//    func addResponse(command: String, response: [String: AnyObject]) throws {
+//        if response["type"] == nil && response["error"] == nil {
+//            throw XrplError("Bad response format. Must contain `type` or `error`. \(jsonToString(response))")
+//        }
+//        self.responses[command] = response as AnyObject
+//    }
+//
+//    func getResponse(request: [String: AnyObject]) throws -> [String: AnyObject] {
+//        let command = request["command"] as! String
+//        if self.responses[command] == nil {
+//            throw XrplError("No handler for \(command)")
+//        }
+//        let functionOrObject = self.responses[command]
+//        //        if (typeof functionOrObject == "function") {
+//        //          return functionOrObject(request) as Record<string, unknown>
+//        //        }
+//        return functionOrObject as! [String: AnyObject]
+//    }
+//}

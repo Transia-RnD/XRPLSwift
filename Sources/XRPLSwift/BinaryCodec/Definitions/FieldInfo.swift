@@ -16,7 +16,7 @@ public class FieldInfo {
     public var isSigningField: Bool
     public var type: String
 
-    init(dict: NSDictionary) {
+    init(_ dict: NSDictionary) {
         self.nth = dict["nth"] as! Int
         self.isVLEncoded = dict["isVLEncoded"] as! Bool
         self.isSerialized = dict["isSerialized"] as! Bool

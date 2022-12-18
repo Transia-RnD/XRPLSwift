@@ -44,14 +44,14 @@ print(result)
 
 ## Installation and supported versions
 
-### Cocoapods
-
-The `XRPLSwift` library is available on [CocoaPods](https://cocoapods.org/). Install by adding a line to your `Podfile`:
-
-
-```
-pod 'XRPLSwift'
-```
+<!--### Cocoapods-->
+<!---->
+<!--The `XRPLSwift` library is available on [CocoaPods](https://cocoapods.org/). Install by adding a line to your `Podfile`:-->
+<!---->
+<!---->
+<!--```-->
+<!--pod 'XRPLSwift'-->
+<!--```-->
 
 ### Swift Package Manager
 
@@ -59,13 +59,13 @@ You can use [The Swift Package Manager](https://swift.org/package-manager) to
 install `XRPLSwift` by adding it to your `Package.swift` file:
 
 ```swift
-// swift-tools-version:5.6
+// swift-tools-version:5.7
 import PackageDescription
 
 let package = Package(
     name: "YOUR_PROJECT_NAME",
     dependencies: [
-    .package(url: "https://github.com/Transia-RnD/XRPLSwift.git", from: "5.6.0"),
+    .package(url: "https://github.com/Transia-RnD/XRPLSwift.git", from: "1.0.0"),
     ]
 )
 ```
@@ -77,7 +77,7 @@ Swift, however some features may only be available in iOS/macOS due to a lack of
 libraries (ex. WebSockets).  A test_linux.sh file is included that will run tests in a docker container. All
 contributions must compile on Linux.
 
-The library supports [Swift 5.6](https://www.swift.org/download/) and later.
+The library supports [Swift 5.7.1](https://www.swift.org/download/) and later.
 
 [![Supported Versions](https://img.shields.io/cocoapods/v/XRPLSwift.svg)](https://cocoapods.org/pods/XRPLSwift)
 [![Platforms](https://img.shields.io/badge/platforms-macOS%20%7C%20iOS%20%7C%20watchOS%20%7C%20tvOS%20%7C%20Linux-lightgrey.svg)](https://cocoapods.org/pods/XRPLSwift)
@@ -97,7 +97,7 @@ Use `XRPLSwift` to build Swift applications that leverage the [XRP Ledger](https
 * Methods for inspecting accounts — See [XRPL Account Methods](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.account.html) for more information.
 * Codecs for encoding and decoding addresses and other objects — See [Core Codecs](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.core.html) for more information.
 
-## [➡️ Reference Documentation](https://transia-rnd.github.io/XRPLSwift)
+## [➡️ Reference Documentation](https://transia-rnd.github.io/XRPLSwift/documentation/xrplswift/)
 
 See the complete [`XRPLSwift` reference documentation on Read the Docs](https://XRPLSwift.readthedocs.io/en/stable/index.html).
 
@@ -111,8 +111,8 @@ The following sections describe some of the most commonly used modules in the `X
 Use the `XrplClient` library to create a network client for connecting to the XRP Ledger.
 
 ```swift
-let WSS_URL: String = "wss://s1.ripple.com"
-let client: XrplClient = try XrplClient(server: WSS_URL)
+let url: String = "wss://s1.ripple.com"
+let client: XrplClient = try? XrplClient(server: url)
 ```
 
 ### Manage keys and wallets
@@ -162,7 +162,7 @@ print("Store this in a secure place!")
 **Note:** You can use `Keypairs.sign` to sign transactions but `XRPLSwift` also provides explicit methods for safely signing and submitting transactions. See [Transaction Signing](#transaction-signing) and [XRPL Transaction Methods](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.transaction.html#module-xrpl.transaction) for more information.
 
 
-### Serialize and sign transactions
+<!-- ### Serialize and sign transactions
 
 To securely submit transactions to the XRP Ledger, you need to first serialize data from JSON and other formats into the [XRP Ledger's canonical format](https://xrpl.org/serialization.html), then to [authorize the transaction](https://xrpl.org/transaction-basics.html#authorizing-transactions) by digitally [signing it](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.core.keypairs.html?highlight=sign#xrpl.core.keypairs.sign) with the account's private key. The `XRPLSwift` library provides several methods to simplify this process.
 
@@ -252,7 +252,7 @@ print(myTxPaymentSigned)
 
 // submit the transaction
 let txResponse: BaseResponse<Payment> = sendReliableSubmission(tx: myTxPaymentSigned, client: client)
-```
+``` -->
 
 
 ### Subscribe to ledger updates
@@ -274,7 +274,7 @@ with WebsocketClient(url) as client:
 ```
 
 
-### Asynchronous Code
+<!-- ### Asynchronous Code
 
 This library supports Swift's [`Async`](https://docs.swift.org/3/library/asyncio.html) package, which is used to run asynchronous code. All the async code is in [`Async`](https://XRPLSwift.readthedocs.io/en/stable/source/xrpl.asyncio.html) If you are writing asynchronous code, please note that you will not be able to use any synchronous sugar functions, due to how event loops are handled. However, every synchronous method has a corresponding asynchronous method that you can use.
 
@@ -304,7 +304,7 @@ func submitSampleTransaction() async {
     // submit the transaction
     let txResponse: BaseResponse<Payment> = await sendReliableSubmission(tx: myTxPaymentSigned, client: asyncClient)
 }
-```
+``` -->
 
 ### Encode addresses
 

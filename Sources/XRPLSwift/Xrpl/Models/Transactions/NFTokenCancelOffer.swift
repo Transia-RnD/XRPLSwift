@@ -28,7 +28,7 @@ public class NFTokenCancelOffer: BaseTransaction {
      does not exist. This field is required.
      :meta hide-value:
      */
-    public let nftokenOffers: [String]
+    public var nftokenOffers: [String]
 
     enum CodingKeys: String, CodingKey {
         case nftokenOffers = "NFTokenOffers"

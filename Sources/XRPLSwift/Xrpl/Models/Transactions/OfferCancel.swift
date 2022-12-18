@@ -16,7 +16,7 @@ public class OfferCancel: BaseTransaction {
      <https://xrpl.org/decentralized-exchange.html>`_.
      */
 
-    public let offerSequence: Int
+    public var offerSequence: Int
     /*
      The Sequence number (or Ticket number) of a previous OfferCreate
      transaction. If specified, cancel any Offer object in the ledger that was

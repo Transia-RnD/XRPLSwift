@@ -5,13 +5,13 @@
 ### Requirements
 
 We use Xcode Version 13.4.1 for development - that is the version that our linters require.
-You must also use `swift` 5.6. You can check your `swift` version with:
+You must also use `swift` 5.7. You can check your `swift` version with:
 
 ```bash
 swift -version
 ```
 
-`swift-driver version: 1.45.2 Apple Swift version 5.6.1 (swiftlang-5.6.0.323.66 clang-1316.0.20.12)`
+`swift-driver version: 1.62.15 Apple Swift version 5.7.1 (swiftlang-5.7.1.135.3 clang-1400.0.29.51)`
 
 ### Set up
 

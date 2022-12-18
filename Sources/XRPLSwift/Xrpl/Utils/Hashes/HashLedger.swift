@@ -69,7 +69,7 @@ import Foundation
 // public func hashSignedTx(tx: Transaction | string): string {
 public func hashSignedTx(tx: String) throws -> String {
     let txBlob: String = tx
-    let txObject: [String: AnyObject] = BinaryCodec.decode(buffer: tx)
+    let txObject: [String: AnyObject] = BinaryCodec.decode(tx)
 
     if txObject["TxnSignature"] == nil && txObject["Signers"] == nil {
         throw ValidationError("The transaction must be signed to hash it.")
@@ -80,7 +80,7 @@ public func hashSignedTx(tx: String) throws -> String {
 }
 
 public func hashSignedTx(tx: Transaction) throws -> String {
-    let txBlob: String = try BinaryCodec.encode(json: tx.toJson())
+    let txBlob: String = try BinaryCodec.encode(tx.toJson())
     let txObject: [String: AnyObject] = try tx.toJson()
 
     if txObject["TxnSignature"] == nil && txObject["Signers"] == nil {

@@ -52,16 +52,12 @@ final class TestAddressCodec: XCTestCase {
 
             do {
                 // test
-                let testResult = try AddressCodec.xAddressToClassicAddress(
-                    xAddress: expectedTestXaddress
-                )
+                let testResult = try AddressCodec.xAddressToClassicAddress(expectedTestXaddress)
                 let classicAddressTest = testResult.classicAddress
                 XCTAssert(classicAddressTest == classicAddress)
 
                 // main
-                let mainResult = try AddressCodec.xAddressToClassicAddress(
-                    xAddress: expectedMainXaddress
-                )
+                let mainResult = try AddressCodec.xAddressToClassicAddress(expectedMainXaddress)
                 let classicAddressMain = mainResult.classicAddress
                 XCTAssert(classicAddressMain == classicAddress)
             } catch {
@@ -142,19 +138,19 @@ final class TestAddressCodec: XCTestCase {
 
     func testIsValidXAddress() {
         let xAddress = "X7AcgcsBL6XDcUb289X4mJ8djcdyKaB5hJDWMArnXr61cqZ"
-        let result = AddressCodec.isValidXAddress(xAddress: xAddress)
+        let result = AddressCodec.isValidXAddress(xAddress)
         XCTAssertTrue(result)
     }
 
     func testIsValidXAddressInvalid() {
         let xAddress = "XVLhHMPHU98es4dbozjVtdWzVrDjtV18pX8zeUygYrCgrPh"
-        let result = AddressCodec.isValidXAddress(xAddress: xAddress)
+        let result = AddressCodec.isValidXAddress(xAddress)
         XCTAssertFalse(result)
     }
 
     func testIsValidXAddressEmpty() {
         let xAddress = ""
-        let result = AddressCodec.isValidXAddress(xAddress: xAddress)
+        let result = AddressCodec.isValidXAddress(xAddress)
         XCTAssertFalse(result)
     }
 }

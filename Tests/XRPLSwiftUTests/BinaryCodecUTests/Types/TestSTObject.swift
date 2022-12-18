@@ -47,7 +47,7 @@ final class TestSTObject: XCTestCase {
 
     func testFromParserToJson() {
         let parser: BinaryParser = BinaryParser(hex: self.BUFFER)
-        let transaction: SerializedType = try! STObject().fromParser(parser: parser, hint: nil)
+        let transaction: SerializedType = try! STObject().fromParser(parser, nil)
         let result: [String: Any] = transaction.toJson()
         //        XCTAssertEqual(result, self.EXPECTED_JSON)
     }

@@ -49,8 +49,8 @@ public class LedgerClosedRequest: BaseRequest {
  The response expected from a {@link LedgerClosedRequest}.
  */
 public class LedgerClosedResponse: Codable {
-    public let ledgerHash: String
-    public let ledgerIndex: Int
+    public var ledgerHash: String
+    public var ledgerIndex: Int
 
     enum CodingKeys: String, CodingKey {
         case ledgerHash = "ledger_hash"

@@ -85,10 +85,10 @@ open class RippleBaseResponse: Decodable {
     public var id: Int
     public var status: String?
     public var type: String
-    //    public let warning: String = "load"
-    //    public let warnings: [Warning]?
-    //    public let forwarded: Bool?
-    //    public let apiVersion: Int?
+    //    public var warning: String = "load"
+    //    public var warnings: [Warning]?
+    //    public var forwarded: Bool?
+    //    public var apiVersion: Int?
 
     init(data: Data, decoder: JSONDecoder = JSONDecoder()) throws {
         let decoded = try decoder.decode(RippleBaseResponse.self, from: data)

@@ -40,8 +40,8 @@ public class PingRequest: BaseRequest {
  Response expected from a {@link PingRequest}.
  */
 public class PingResponse: Codable {
-    public let role: String?
-    public let unlimited: Bool?
+    public var role: String?
+    public var unlimited: Bool?
 
     enum CodingKeys: String, CodingKey {
         case role

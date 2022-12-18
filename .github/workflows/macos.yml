@@ -1,0 +1,41 @@
+# This workflow will do a clean install of swift dependencies, build the source code and run tests across different versions of swift
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-swift-with-github-actions
+
+name: Swift CI
+
+on:
+  push:
+    branches: [ main, 1.x ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-lint:
+    strategy:
+      fail-fast: false
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: fwal/setup-swift@194625b58a582570f61cc707c3b558086c26b723
+        with:
+          swift-version: "5.7.1"
+      - name: Build
+        run: swift build --build-tests
+      - name: Lint
+        run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml
+
+  unit:
+    strategy:
+      fail-fast: false
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: fwal/setup-swift@194625b58a582570f61cc707c3b558086c26b723
+        with:
+          swift-version: "5.7.1"
+      - name: Build
+        run: swift build --build-tests
+      - name: Lint
+        run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml
+      - name: Run tests
+        run: swift test --filter XRPLSwiftUTests

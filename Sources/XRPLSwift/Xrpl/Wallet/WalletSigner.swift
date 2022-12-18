@@ -25,13 +25,13 @@ public class WalletSigner: Wallet {
      - Any transaction is missing a Signers field.
      */
     //    public func multisign(transactions: [Transaction] | [String]) -> String {
-    public static func multisign(transactions: [Transaction]) throws -> String {
+    public static func multisign(_ transactions: [Transaction]) throws -> String {
         if transactions.isEmpty {
             throw ValidationError("There were 0 transactions to multisign")
         }
 
         for txOrBlob in transactions {
-            let tx: Transaction = getDecodedTransaction(tx: txOrBlob)
+            let tx: Transaction = getDecodedTransaction(txOrBlob)
             let jsonTx: [String: AnyObject] = try tx.toJson()
             /*
              This will throw a more clear error for JS users if any of the supplied transactions has incorrect formatting
@@ -49,12 +49,12 @@ public class WalletSigner: Wallet {
         }
 
         let decodedTransactions: [Transaction] = transactions.map { tx in
-            return getDecodedTransaction(tx: tx)
+            return getDecodedTransaction(tx)
         }
 
-        try validateTransactionEquivalence(transactions: decodedTransactions)
+        try validateTransactionEquivalence(decodedTransactions)
 
-        return try BinaryCodec.encode(json: getTransactionWithAllSigners(transactions: decodedTransactions).toJson())
+        return try BinaryCodec.encode(getTransactionWithAllSigners(decodedTransactions).toJson())
     }
 
     /**
@@ -67,16 +67,13 @@ public class WalletSigner: Wallet {
      A signature that can be used to redeem a specific amount of XRP from a payment channel.
      */
     public static func authorizeChannel(
-        wallet: Wallet,
-        channelId: String,
-        amount: String
-    ) -> String {
-        let json: [String: AnyObject] = [
-            "channel": channelId,
-            "amount": amount
-        ] as! [String: AnyObject]
-        let signingData = try! BinaryCodec.encodeForSigningClaim(json: json)
-        return Keypairs.sign(message: Data(hex: signingData).bytes, privateKey: wallet.privateKey).toHex
+        _ wallet: Wallet,
+        _ channelId: String,
+        _ amount: String
+    ) throws -> String {
+        let channelClaim = ChannelClaim(amount: try xrpToDrops(amount), channel: channelId)
+        let signingData = try BinaryCodec.encodeForSigningClaim(channelClaim)
+        return try Keypairs.sign(Data(hex: signingData).bytes, wallet.privateKey).toHex
     }
 
     /**
@@ -86,22 +83,22 @@ public class WalletSigner: Wallet {
      - returns:
      Returns true if tx has a valid signature, and returns false otherwise.
      */
-    public static func verifySignature(tx: String) -> Bool {
-        let decodedTx: Transaction = self.getDecodedTransaction(tx: tx)
-        let json: [String: AnyObject] = try! decodedTx.toJson()
-        return Keypairs.verify(
-            signature: Data(hex: json["TxnSignature"] as! String).bytes,
-            message: Data(hex: try! BinaryCodec.encodeForSigning(json: json)).bytes,
-            publicKey: json["SigningPubKey"] as! String
+    public static func verifySignature(_ tx: String) throws -> Bool {
+        let decodedTx: Transaction = self.getDecodedTransaction(tx)
+        let json: [String: AnyObject] = try decodedTx.toJson()
+        return try! Keypairs.verify(
+            Data(hex: json["TxnSignature"] as! String).bytes,
+            Data(hex: try BinaryCodec.encodeForSigning(json)).bytes,
+            json["SigningPubKey"] as! String
         )
     }
-    public static func verifySignature(tx: Transaction) -> Bool {
-        let decodedTx: Transaction = WalletSigner.getDecodedTransaction(tx: tx)
-        let json: [String: AnyObject] = try! decodedTx.toJson()
-        return Keypairs.verify(
-            signature: try! BinaryCodec.encodeForSigning(json: json).bytes,
-            message: (json["TxnSignature"] as! String).bytes,
-            publicKey: json["SigningPubKey"] as! String
+    public static func verifySignature(_ tx: Transaction) throws -> Bool {
+        let decodedTx: Transaction = WalletSigner.getDecodedTransaction(tx)
+        let json: [String: AnyObject] = try decodedTx.toJson()
+        return try! Keypairs.verify(
+            try BinaryCodec.encodeForSigning(json).bytes,
+            (json["TxnSignature"] as! String).bytes,
+            json["SigningPubKey"] as! String
         )
     }
 
@@ -112,7 +109,7 @@ public class WalletSigner: Wallet {
      - throws:
      ValidationError if the transactions are not equal in any field other than 'Signers'.
      */
-    static func validateTransactionEquivalence(transactions: [Transaction]) throws {
+    static func validateTransactionEquivalence(_ transactions: [Transaction]) throws {
         //        let exampleTransaction = JSON.stringify({
         //            ...transactions[0],
         //        Signers: null,
@@ -129,7 +126,7 @@ public class WalletSigner: Wallet {
         }
     }
 
-    static func getTransactionWithAllSigners(transactions: [Transaction]) -> Transaction {
+    static func getTransactionWithAllSigners(_ transactions: [Transaction]) -> Transaction {
         // Signers must be sorted in the combined transaction - See compareSigners' documentation for more details
         let sortedSigners: [Signer] = transactions.compactMap { tx in
             let cloneTx = try! tx.toJson()
@@ -152,33 +149,33 @@ public class WalletSigner: Wallet {
      1 if left \> right, 0 if left = right, -1 if left \< right, and null if left or right are NaN.
      */
     // TODO: Refactor this
-    static func compareSigners(left: Signer, right: Signer) -> Int {
-        if addressToBigNumber(address: left.signer.account) > addressToBigNumber(address: right.signer.account) {
+    static func compareSigners(_ left: Signer, _ right: Signer) -> Int {
+        if addressToBigNumber(left.signer.account) > addressToBigNumber(right.signer.account) {
             return 1
         }
-        if addressToBigNumber(address: left.signer.account) == addressToBigNumber(address: right.signer.account) {
+        if addressToBigNumber(left.signer.account) == addressToBigNumber(right.signer.account) {
             return 0
         }
-        if addressToBigNumber(address: left.signer.account) < addressToBigNumber(address: right.signer.account) {
+        if addressToBigNumber(left.signer.account) < addressToBigNumber(right.signer.account) {
             return -1
         }
         return 0
     }
 
-    static func addressToBigNumber(address: String) -> BigUInt {
-        let hex: String = try! XrplCodec.decodeClassicAddress(classicAddress: address).toHex
+    static func addressToBigNumber(_ address: String) -> BigUInt {
+        let hex: String = try! XrplCodec.decodeClassicAddress(address).toHex
         let numberOfBitsInHex: Int = 16
         return BigUInt(hex, radix: numberOfBitsInHex)!
     }
 
-    static func getDecodedTransaction(tx: String) -> Transaction {
-        let decoded: [String: AnyObject] = BinaryCodec.decode(buffer: tx)
+    static func getDecodedTransaction(_ tx: String) -> Transaction {
+        let decoded: [String: AnyObject] = BinaryCodec.decode(tx)
         return try! Transaction(decoded)!
     }
 
-    static func getDecodedTransaction(tx: Transaction) -> Transaction {
-        let encoded = try! BinaryCodec.encode(json: tx.toJson())
-        let decoded: [String: AnyObject] = BinaryCodec.decode(buffer: encoded)
+    static func getDecodedTransaction(_ tx: Transaction) -> Transaction {
+        let encoded = try! BinaryCodec.encode(tx.toJson())
+        let decoded: [String: AnyObject] = BinaryCodec.decode(encoded)
         return try! Transaction(decoded)!
     }
 }

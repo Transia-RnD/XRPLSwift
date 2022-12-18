@@ -25,7 +25,7 @@ final class TestApi: XCTestCase {
         let options: KeypairsOptions = KeypairsOptions(algorithm: .secp256k1)
         let seed: String = try! Keypairs.generateSeed(options: options)
         XCTAssertEqual(seed[0], "s")
-        let (decodedSeed, decodedAlgorithm): ([UInt8], AlgorithmType) = try! XrplCodec.decodeSeed(seed: seed)
+        let (decodedSeed, decodedAlgorithm): ([UInt8], AlgorithmType) = try! XrplCodec.decodeSeed(seed)
         XCTAssertEqual(decodedAlgorithm, .secp256k1)
         XCTAssertEqual(decodedSeed.count, 16)
     }
@@ -39,27 +39,27 @@ final class TestApi: XCTestCase {
         let options: KeypairsOptions = KeypairsOptions(algorithm: .ed25519)
         let seed: String = try! Keypairs.generateSeed(options: options)
         XCTAssertEqual(seed[0..<3], "sEd")
-        let (decodedSeed, decodedAlgorithm): ([UInt8], AlgorithmType) = try! XrplCodec.decodeSeed(seed: seed)
+        let (decodedSeed, decodedAlgorithm): ([UInt8], AlgorithmType) = try! XrplCodec.decodeSeed(seed)
         XCTAssertEqual(decodedAlgorithm, .ed25519)
         XCTAssertEqual(decodedSeed.count, 16)
     }
 
     func testDeriveKeypairSECP256K1() {
-        let keypair = try! Keypairs.deriveKeypair(seed: TestApi.fixtures.SECP256K1_SEED)
+        let keypair = try! Keypairs.deriveKeypair(TestApi.fixtures.SECP256K1_SEED)
         // Had an issue with the KeyPair Object
         XCTAssertEqual(keypair.privateKey, TestApi.fixtures.SECP256K1_KEYPAIR.privateKey)
         XCTAssertEqual(keypair.publicKey, TestApi.fixtures.SECP256K1_KEYPAIR.publicKey)
     }
 
     func testDeriveKeypairED25519() {
-        let keypair = try! Keypairs.deriveKeypair(seed: TestApi.fixtures.ED25519_SEED)
+        let keypair = try! Keypairs.deriveKeypair(TestApi.fixtures.ED25519_SEED)
         // Had an issue with the KeyPair Object
         XCTAssertEqual(keypair.privateKey, TestApi.fixtures.ED25519_KEYPAIR.privateKey)
         XCTAssertEqual(keypair.publicKey, TestApi.fixtures.ED25519_KEYPAIR.publicKey)
     }
 
     func testDeriveKeypairSECP256K1Validator() {
-        let keypair = try! Keypairs.deriveKeypair(seed: TestApi.fixtures.SECP256K1_SEED, isValidator: true)
+        let keypair = try! Keypairs.deriveKeypair(TestApi.fixtures.SECP256K1_SEED, true)
         // Had an issue with the KeyPair Object
         XCTAssertEqual(keypair.privateKey, TestApi.fixtures.SECP256K1_VALIDATOR_KEYPAIR.privateKey)
         XCTAssertEqual(keypair.publicKey, TestApi.fixtures.SECP256K1_VALIDATOR_KEYPAIR.publicKey)
@@ -74,13 +74,13 @@ final class TestApi: XCTestCase {
     //    }
 
     func testDeriveAddressSECP256K1() {
-        let address = try! Keypairs.deriveAddress(publicKey: TestApi.fixtures.SECP256K1_KEYPAIR.publicKey)
+        let address = try! Keypairs.deriveAddress(TestApi.fixtures.SECP256K1_KEYPAIR.publicKey)
         // Had an issue with the KeyPair Object
         XCTAssertEqual(address, TestApi.fixtures.SECP256K1_ADDRESS)
     }
 
     func testDeriveAddressED25519() {
-        let address = try! Keypairs.deriveAddress(publicKey: TestApi.fixtures.ED25519_KEYPAIR.publicKey)
+        let address = try! Keypairs.deriveAddress(TestApi.fixtures.ED25519_KEYPAIR.publicKey)
         // Had an issue with the KeyPair Object
         XCTAssertEqual(address, TestApi.fixtures.ED25519_ADDRESS)
     }
@@ -89,7 +89,7 @@ final class TestApi: XCTestCase {
         let privateKey = TestApi.fixtures.SECP256K1_KEYPAIR.privateKey
         let message = TestApi.fixtures.SECP256K1_MESSAGE
         let messageHex = message.bytes
-        let signature = Keypairs.sign(message: messageHex, privateKey: privateKey)
+        let signature = try! Keypairs.sign(messageHex, privateKey)
         XCTAssertEqual(signature.toHex, TestApi.fixtures.SECP256K1_SIGNATURE)
     }
 
@@ -98,14 +98,14 @@ final class TestApi: XCTestCase {
         let publicKey = TestApi.fixtures.SECP256K1_KEYPAIR.publicKey
         let message = TestApi.fixtures.SECP256K1_MESSAGE
         let messageBytes = message.bytes
-        XCTAssertTrue(Keypairs.verify(signature: Data(hex: signature).bytes, message: messageBytes, publicKey: publicKey))
+        XCTAssertTrue(try! Keypairs.verify(Data(hex: signature).bytes, messageBytes, publicKey))
     }
 
     func testSignED25519() {
         let privateKey = TestApi.fixtures.ED25519_KEYPAIR.privateKey
         let message = TestApi.fixtures.ED25519_MESSAGE
         let messageHex = message.bytes
-        let signature = Keypairs.sign(message: messageHex, privateKey: privateKey)
+        let signature = try! Keypairs.sign(messageHex, privateKey)
         XCTAssertEqual(signature.toHex, TestApi.fixtures.ED25519_SIGNATURE)
     }
 
@@ -114,7 +114,7 @@ final class TestApi: XCTestCase {
         let publicKey = TestApi.fixtures.ED25519_KEYPAIR.publicKey
         let message = TestApi.fixtures.ED25519_MESSAGE
         let messageHex = message.bytes
-        XCTAssertTrue(Keypairs.verify(signature: Data(hex: signature).bytes, message: messageHex, publicKey: publicKey))
+        XCTAssertTrue(try! Keypairs.verify(Data(hex: signature).bytes, messageHex, publicKey))
     }
 
     //    func testDeriveNodeAddress() {
@@ -125,8 +125,8 @@ final class TestApi: XCTestCase {
 
     func testRandomAddress() {
         let seed = try! Keypairs.generateSeed(options: KeypairsOptions(algorithm: .secp256k1))
-        let keypair = try! Keypairs.deriveKeypair(seed: seed)
-        let address = try! Keypairs.deriveAddress(publicKey: keypair.publicKey)
+        let keypair = try! Keypairs.deriveKeypair(seed)
+        let address = try! Keypairs.deriveAddress(keypair.publicKey)
         XCTAssertEqual(address[0], "r")
     }
 }

@@ -287,7 +287,7 @@ public class Connection {
         // Create the connection timeout, in case the connection hangs longer than expected.
         // Connection listeners: these stay attached only until a connection is done/open.
         guard let url = url, let uri = URL(string: url), let isport = uri.port, let isscheme = uri.scheme, let ishost = uri.host else {
-            throw ConnectionError("Connection: unvalid url")
+            throw ConnectionError("Connection: invalid url")
         }
         let client: WebSocketClient = createWebSocket(url: url, config: self.config)!
         try client.connect(scheme: isscheme, host: ishost, port: isport, onUpgrade: { ws -> Void in

@@ -22,8 +22,8 @@ let BASE_10: Int = 10 // swiftlint:disable:this identifier_name
  The transaction fee.
  */
 public func getFeeXrp(
-    client: XrplClient,
-    cushion: Double? = nil
+    _ client: XrplClient,
+    _ cushion: Double? = nil
 ) async throws -> String {
     let feeCushion = cushion ?? client.feeCushion
 
@@ -38,11 +38,8 @@ public func getFeeXrp(
     }
 
     let baseFeeXrp = Double(baseFee)
-    if serverInfo.loadFactor == nil {
-        // https://github.com/ripple/rippled/issues/3812#issuecomment-816871100
-        serverInfo.loadFactor = 1
-    }
-    var fee = baseFeeXrp * Double(serverInfo.loadFactor!) * feeCushion
+    var loadFactor = serverInfo.loadFactor ?? 1
+    var fee = baseFeeXrp * Double(loadFactor) * feeCushion
     // Cap fee to `client.maxFeeXRP`
     fee = min(fee, Double(client.maxFeeXRP)!)
     // Round fee to 6 decimal places

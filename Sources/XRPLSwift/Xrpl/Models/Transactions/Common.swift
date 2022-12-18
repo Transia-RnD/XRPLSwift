@@ -141,7 +141,7 @@ public class BaseTransaction: Codable {
      */
     public var accountTxnId: String?
     /// Set of bit-flags for this transaction.
-    //    public let Flags: Int? | GlobalFlags
+    //    public var Flags: Int? | GlobalFlags
     public var flags: Int?
     /**
      Highest ledger index this transaction can appear in. Specifying this field
