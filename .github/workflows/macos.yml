@@ -20,7 +20,7 @@ jobs:
         with:
           swift-version: "5.7.1"
       - name: Build
-        run: swift build --build-tests
+        run: swift build
       - name: Lint
         run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml
 
@@ -34,7 +34,7 @@ jobs:
         with:
           swift-version: "5.7.1"
       - name: Build
-        run: swift build --build-tests
+        run: swift build
       - name: Lint
         run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml
       - name: Run tests
