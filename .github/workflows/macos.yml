@@ -11,28 +11,34 @@ on:
 
 jobs:
   build-and-lint:
+    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
     strategy:
-      fail-fast: false
-    runs-on: macos-latest
+      matrix:
+        os: [macos-latest]
+        swift: ["5.6", "5.7"]
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: fwal/setup-swift@194625b58a582570f61cc707c3b558086c26b723
+      - uses: swift-actions/setup-swift@v1
         with:
-          swift-version: "5.7.1"
+          swift-version: ${{ matrix.swift }}
+      - uses: actions/checkout@v3
       - name: Build
         run: swift build
       - name: Lint
         run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml
 
   unit:
+    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
     strategy:
-      fail-fast: false
-    runs-on: macos-latest
+      matrix:
+        os: [macos-latest]
+        swift: ["5.6", "5.7"]
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: fwal/setup-swift@194625b58a582570f61cc707c3b558086c26b723
+      - uses: swift-actions/setup-swift@v1
         with:
-          swift-version: "5.7.1"
+          swift-version: ${{ matrix.swift }}
+      - uses: actions/checkout@v3
       - name: Build
         run: swift build
       - name: Lint
