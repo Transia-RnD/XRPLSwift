@@ -291,6 +291,6 @@ public class AccountObjectsResponse: Codable {
     func toJson() throws -> [String: AnyObject] {
         let data = try JSONEncoder().encode(self)
         let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
-        return jsonResult as! [String: AnyObject]
+        return jsonResult as? [String: AnyObject] ?? [:]
     }
 }
