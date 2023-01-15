@@ -68,6 +68,9 @@ public protocol XRPLKeypair {
     static func decodeSeed(publicKey: String) -> String
 }
 
+/**
+ An implementation of XRP Ledger keypairs & wallet generation using elliptic which supports rfc6979 and eddsa deterministic signatures.
+ */
 public class Keypairs {
     public static func generateSeed(options: KeypairsOptions) throws -> String {
         // swiftlint:disable:next force_unwrapping
@@ -148,8 +151,6 @@ public class Keypairs {
     }
 
     public static func deriveNodeAddress(_ publicKey: String) throws -> String {
-        let _: [UInt8] = try XrplCodec.decodeNodePublicKey(publicKey)
-        //        let accountPublicBytes: [UInt8] = accountPublicFromPublicGenerator(generatorBytes)
-        return ""
+        return try XrplCodec.decodeNodePublicKey(publicKey).toHex
     }
 }

@@ -15,6 +15,9 @@ public struct FullClassicAddress {
     public var isTest = false
 }
 
+/**
+ Functions for encoding and decoding XRP Ledger addresses.
+ */
 public class AddressCodec {
     // swiftlint:disable:next identifier_name
     final var MAX_32_BIT_UNSIGNED_INT: Int = 4294967295

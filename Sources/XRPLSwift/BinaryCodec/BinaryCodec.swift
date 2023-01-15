@@ -20,6 +20,9 @@ let PAYMENT_CHANNEL_CLAIM_PREFIX = Data(numToBytes(num: 0x434C4D00).bytes.revers
 // swiftlint:disable:next identifier_name
 let TRANSACTION_MULTISIG_PREFIX = Data(numToBytes(num: 0x534D5400).bytes.reversed())
 
+/**
+ Functions to encode/decode to/from the ripple binary serialization format
+ */
 class BinaryCodec {
     /**
      Encode a transaction or other object into the canonical binary format.

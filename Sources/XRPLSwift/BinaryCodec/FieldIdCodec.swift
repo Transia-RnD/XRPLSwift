@@ -9,6 +9,9 @@
 
 import Foundation
 
+/**
+ Functions to encode/decode the rippled field from the json dictionary
+ */
 public class FieldIdCodec {
     /**
      This field ID consists of the type code and field code, in 1 to 3 bytes

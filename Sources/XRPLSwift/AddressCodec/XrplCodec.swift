@@ -24,6 +24,9 @@ let _CLASSIC_ADDRESS_LENGTH: Int = 20 // swiftlint:disable:this identifier_name
 let _NODE_PUBLIC_KEY_LENGTH: Int = 33 // swiftlint:disable:this identifier_name
 let _ACCOUNT_PUBLIC_KEY_LENGTH: Int = 33 // swiftlint:disable:this identifier_name
 
+/**
+ Functions for encoding and decoding XRP Ledger objects
+ */
 public class XrplCodec {
     public init() {}
 
