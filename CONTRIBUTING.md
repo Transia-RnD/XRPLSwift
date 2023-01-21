@@ -41,8 +41,8 @@ For integration tests, we use a `rippled` node in standalone mode to test XRPLSw
 ### Unit Tests
 
 ```bash
-swift build -vv
-swift test --filter XRPLSwiftUTests -vv
+swift build
+swift test --filter XRPLSwiftUTests
 ```
 
 ### Integration Tests
@@ -50,8 +50,8 @@ swift test --filter XRPLSwiftUTests -vv
 ```bash
 # sets up the rippled standalone Docker container - you can skip this step if you already have it set up
 docker run -p 6006:6006 -it natenichols/rippled-standalone:latest
-swift build -vv
-swift test --filter XRPLSwiftITests -vv
+swift build
+swift test --filter XRPLSwiftITests
 ```
 
 ## Build the swift/swiftlint docker ci
