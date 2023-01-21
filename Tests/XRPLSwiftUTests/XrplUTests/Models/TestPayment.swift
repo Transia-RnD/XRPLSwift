@@ -7,7 +7,7 @@
 
 import Foundation
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/models/payment.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/models/payment.test.ts
 
 import XCTest
 @testable import XRPLSwift

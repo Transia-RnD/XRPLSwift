@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 7/27/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/client/isConnected.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/client/isConnected.test.ts
 
 import Foundation
 

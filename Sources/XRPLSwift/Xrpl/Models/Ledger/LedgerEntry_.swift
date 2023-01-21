@@ -45,7 +45,7 @@ public enum LedgerEntry: Codable {
     }
 
     init(_ json: [String: AnyObject]) throws {
-        guard let entryType: String = json["LedgerEntry"] as? String else {
+        guard let entryType: String = json["LedgerEntryType"] as? String else {
             throw LedgerEntryCodingError.decoding("Missing Ledger Entry Type")
         }
         if entryType == "AccountRoot", let value = try? LEAccountRoot(json: json) {
@@ -139,7 +139,7 @@ public enum LedgerEntry: Codable {
                 return value
         }
     }
-    
+
     func value() -> String? {
         switch self {
             case .directoryNode:

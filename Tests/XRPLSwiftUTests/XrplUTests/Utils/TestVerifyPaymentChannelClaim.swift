@@ -7,7 +7,7 @@
 
 import Foundation
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/verifyPaymentChannelClaim.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/verifyPaymentChannelClaim.test.ts
 
 import Foundation
 

@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 8/13/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/models/ticketCreate.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/models/ticketCreate.test.ts
 
 import Foundation
 

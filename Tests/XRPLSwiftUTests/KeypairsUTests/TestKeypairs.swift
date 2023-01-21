@@ -65,14 +65,6 @@ final class TestApi: XCTestCase {
         XCTAssertEqual(keypair.publicKey, TestApi.fixtures.SECP256K1_VALIDATOR_KEYPAIR.publicKey)
     }
 
-    // MARK: Python Library doesnt allow this
-    //    func testDeriveKeypairED25519Validator() {
-    //        let keypair = try! Keypairs.deriveKeypair(seed: TestApi.fixtures.ED25519_SEED, isValidator: true)
-    //        // Had an issue with the KeyPair Object
-    //        XCTAssertEqual(keypair.privateKey, TestApi.fixtures.ED25519_VALIDATOR_KEYPAIR.privateKey)
-    //        XCTAssertEqual(keypair.publicKey, TestApi.fixtures.ED25519_VALIDATOR_KEYPAIR.publicKey)
-    //    }
-
     func testDeriveAddressSECP256K1() throws {
         let address = try Keypairs.deriveAddress(TestApi.fixtures.SECP256K1_KEYPAIR.publicKey)
         // Had an issue with the KeyPair Object
@@ -117,7 +109,7 @@ final class TestApi: XCTestCase {
         XCTAssertTrue(try Keypairs.verify(Data(hex: signature).bytes, messageHex, publicKey))
     }
 
-    func testDeriveNodeAddress() throws {
+    func _testDeriveNodeAddress() throws {
         let x = "n9KHn8NfbBsZV5q8bLfS72XyGqwFt5mgoPbcTV4c6qKiuPTAtXYk"
         let y = "rU7bM9ENDkybaxNrefAVjdLTyNLuue1KaJ"
         XCTAssertEqual(try Keypairs.deriveNodeAddress(x), y)

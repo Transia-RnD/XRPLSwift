@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 7/31/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/client/autofill.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/client/autofill.test.ts
 
 import Foundation
 

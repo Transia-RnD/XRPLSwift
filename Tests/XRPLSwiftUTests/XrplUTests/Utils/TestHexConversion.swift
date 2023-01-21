@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 10/14/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/hexConversion.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/hexConversion.test.ts
 
 import Foundation
 

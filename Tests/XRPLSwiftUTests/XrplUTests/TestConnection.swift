@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 7/28/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/connection.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/connection.test.ts
 
 import XCTest
 @testable import XRPLSwift

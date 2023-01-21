@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 6/4/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/models/checkCancel.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/models/checkCancel.test.ts
 
 import XCTest
 @testable import XRPLSwift

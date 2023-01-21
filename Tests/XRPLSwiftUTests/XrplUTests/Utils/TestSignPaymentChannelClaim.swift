@@ -5,9 +5,7 @@
 //  Created by Denis Angell on 10/14/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/signPaymentChannelClaim.ts
-
-import Foundation
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/signPaymentChannelClaim.test.ts
 
 import XCTest
 @testable import XRPLSwift

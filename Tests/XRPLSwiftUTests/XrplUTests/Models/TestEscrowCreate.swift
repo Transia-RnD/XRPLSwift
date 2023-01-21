@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 8/7/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/models/escrowCreate.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/models/escrowCreate.test.ts
 
 import XCTest
 @testable import XRPLSwift

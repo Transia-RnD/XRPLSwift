@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 8/26/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/integration/transactions/escrowCancel.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/integration/transactions/escrowCancel.test.ts
 
 import XCTest
 @testable import XRPLSwift
@@ -58,7 +58,7 @@ final class TestIEscrowCancel: RippledITestCase {
         let response1 = try! await self.client.request(AccountObjectsRequest(result1)).wait() as! BaseResponse<AccountObjectsResponse>
         XCTAssertEqual(response1.result?.accountObjects.count, 1)
 
-        guard let accountObjects = response1.result?.accountObjects, let escrow = accountObjects[0].toAny() as? Escrow else {
+        guard let accountObjects = response1.result?.accountObjects, let escrow = accountObjects[0].toAny() as? LEEscrow else {
             XCTFail()
             return
         }

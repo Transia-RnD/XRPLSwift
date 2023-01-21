@@ -5,6 +5,6 @@
 //  Created by Denis Angell on 10/15/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/getBalanceChanges.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/utils/getBalanceChanges.test.ts
 
 import Foundation

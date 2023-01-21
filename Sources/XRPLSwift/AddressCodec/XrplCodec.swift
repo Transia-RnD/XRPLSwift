@@ -196,7 +196,7 @@ public class XrplCodec {
         return try decode(accountPublicKey, _ACCOUNT_PUBLIC_KEY_PREFIX)
     }
 
-    public static func isValidClassicAddress(classicAddress: String) -> Bool {
+    public static func isValidClassicAddress(_ classicAddress: String) -> Bool {
         do {
             _ = try decodeClassicAddress(classicAddress)
             return true

@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 8/26/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/integration/transactions/depositPreauth.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/integration/transactions/depositPreauth.test.ts
 
 import XCTest
 @testable import XRPLSwift

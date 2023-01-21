@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 8/12/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/models/paymentChannelCreate.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/models/paymentChannelCreate.test.ts
 
 import Foundation
 

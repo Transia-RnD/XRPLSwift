@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 8/20/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/integration/utils.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/integration/utils.test.ts
 
 import Foundation
 @testable import NIO

@@ -66,49 +66,25 @@ final class TestAddressCodec: XCTestCase {
         }
     }
 
-    //     Notes: Tag is a UInt32. Swift will reject the UInt32 if "out of bounds"
-    //    func testClassicAddressToXaddressInvalidTag() {
-    //        let classicAddress = "rGWrZyQqhTp9Xu7G5Pkayo7bXjH4k4QYpf"
-    //        let tag = MAX_32_BIT_UNSIGNED_INT + 1
-    //        do {
-    //            _ = try AddressCodec.classicAddressToXAddress(
-    //                classicAddress: classicAddress,
-    //                tag: UInt32(tag),
-    //                isTest: true
-    //            )
-    //        } catch {
-    //            XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
-    //        }
-    //        do {
-    //            _ = try AddressCodec.classicAddressToXAddress(
-    //                classicAddress: classicAddress,
-    //                tag: UInt32(tag),
-    //                isTest: false
-    //            )
-    //        } catch {
-    //            XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
-    //        }
-    //    }
-
-    //    func testClassicAddressToXaddressBadClassicAddress() {
-    //        let classicAddress = "r"
-    //        do {
-    //            _ = try AddressCodec.classicAddressToXAddress(
-    //                classicAddress: classicAddress,
-    //                isTest: true
-    //            )
-    //        } catch {
-    //            XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
-    //        }
-    //        do {
-    //            _ = try AddressCodec.classicAddressToXAddress(
-    //                classicAddress: classicAddress,
-    //                isTest: false
-    //            )
-    //        } catch {
-    //            XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
-    //        }
-    //    }
+    func testClassicAddressToXaddressBadClassicAddress() {
+        let classicAddress = "r"
+        do {
+            _ = try AddressCodec.classicAddressToXAddress(
+                classicAddress: classicAddress,
+                isTest: true
+            )
+        } catch {
+            XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
+        }
+        do {
+            _ = try AddressCodec.classicAddressToXAddress(
+                classicAddress: classicAddress,
+                isTest: false
+            )
+        } catch {
+            XCTAssertTrue(error is AddressCodecError, "Unexpected error type: \(type(of: error))")
+        }
+    }
 
     func testConvertIsTest() {
         let classicAddress = "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59"
@@ -120,19 +96,19 @@ final class TestAddressCodec: XCTestCase {
 
     func testIsValidClassicAddressSecp256k1() {
         let classicAddress = "rU6K7V3Po4snVhBBaU29sesqs2qTQJWDw1"
-        let result = XrplCodec.isValidClassicAddress(classicAddress: classicAddress)
+        let result = XrplCodec.isValidClassicAddress(classicAddress)
         XCTAssertTrue(result)
     }
 
     func testIsValidClassicAddressEd25519() {
         let classicAddress = "rLUEXYuLiQptky37CqLcm9USQpPiz5rkpD"
-        let result = XrplCodec.isValidClassicAddress(classicAddress: classicAddress)
+        let result = XrplCodec.isValidClassicAddress(classicAddress)
         XCTAssertTrue(result)
     }
 
     func testIsValidClassicAddressInvalid() {
         let classicAddress = "rU6K7V3Po4snVhBBaU29sesqs2qTQJWDw2"
-        let result = XrplCodec.isValidClassicAddress(classicAddress: classicAddress)
+        let result = XrplCodec.isValidClassicAddress(classicAddress)
         XCTAssertFalse(result)
     }
 

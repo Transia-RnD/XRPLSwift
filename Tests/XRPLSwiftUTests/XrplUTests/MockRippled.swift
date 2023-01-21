@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 8/18/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/createMockRippled.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/createMockRippled.test.ts
 
 import Foundation
 import Network

@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 8/20/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/integration/requests/accountOffers.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/integration/requests/accountOffers.test.ts
 
 import XCTest
 @testable import XRPLSwift

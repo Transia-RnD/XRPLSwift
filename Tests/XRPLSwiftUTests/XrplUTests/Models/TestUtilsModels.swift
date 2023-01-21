@@ -5,7 +5,7 @@
 //  Created by Denis Angell on 9/17/22.
 //
 
-// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/models/utils.ts
+// https://github.com/XRPLF/xrpl.js/blob/main/packages/xrpl/test/models/utils.test.ts
 
 import Foundation
 
