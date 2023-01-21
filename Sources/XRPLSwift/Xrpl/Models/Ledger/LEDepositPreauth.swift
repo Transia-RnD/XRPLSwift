@@ -1,5 +1,5 @@
 //
-//  DepositPreauth.swift
+//  LEDepositPreauth.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -13,7 +13,7 @@ import Foundation
  A DepositPreauth object tracks a preauthorization from one account to
  another. DepositPreauth transactions create these objects.
  */
-public class LODepositPreauth: BaseLedgerEntry {
+public class LEDepositPreauth: BaseLedgerEntry {
     public var ledgerEntryType: String = "DepositPreauth"
     /// The account that granted the preauthorization.
     public var account: String
@@ -58,5 +58,18 @@ public class LODepositPreauth: BaseLedgerEntry {
         previousTxnId = try values.decode(String.self, forKey: .previousTxnId)
         previousTxnLgrSeq = try values.decode(Int.self, forKey: .previousTxnLgrSeq)
         try super.init(from: decoder)
+    }
+
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LEDepositPreauth.self, from: data)
+        account = decoded.account
+        authorize = decoded.authorize
+        flags = decoded.flags
+        ownerNode = decoded.ownerNode
+        previousTxnId = decoded.previousTxnId
+        previousTxnLgrSeq = decoded.previousTxnLgrSeq
+        try super.init(json: json)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  AccountRoot.swift
+//  LEAccountRoot.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -33,7 +33,7 @@ public enum AccountRootFlags: Int, CaseIterable {
 /**
  The AccountRoot object type describes a single account, its settings, and XRP balance.
  */
-public class AccountRoot: BaseLedgerEntry {
+public class LEAccountRoot: BaseLedgerEntry {
     public var ledgerEntryType: String = "AccountRoot"
     /// The identifying (classic) address of this account.
     public var account: String
@@ -139,6 +139,28 @@ public class AccountRoot: BaseLedgerEntry {
         try super.init(from: decoder)
     }
 
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LEAccountRoot.self, from: data)
+        account = decoded.account
+        balance = decoded.balance
+        flags = decoded.flags
+        ownerCount = decoded.ownerCount
+        previousTxnId = decoded.previousTxnId
+        previousTxnLgrSeq = decoded.previousTxnLgrSeq
+        sequence = decoded.sequence
+        accountTxnId = decoded.accountTxnId
+        domain = decoded.domain
+        emailHash = decoded.emailHash
+        messageKey = decoded.messageKey
+        regularKey = decoded.regularKey
+        ticketCount = decoded.ticketCount
+        tickSize = decoded.tickSize
+        transferRate = decoded.transferRate
+        try super.init(json: json)
+    }
+
     override public func encode(to encoder: Encoder) throws {
         var values = encoder.container(keyedBy: CodingKeys.self)
         try super.encode(to: encoder)
@@ -164,7 +186,7 @@ public class AccountRoot: BaseLedgerEntry {
         let data = try JSONEncoder().encode(self)
         let jsonObject = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
         guard let jsonResult = jsonObject as? [String: AnyObject] else {
-            throw BinaryCodecErrors.unknownError(error: "Invalid JSON Cast")
+            throw BinaryCodecErrors.unknownError("Invalid JSON Cast")
         }
         return jsonResult
     }

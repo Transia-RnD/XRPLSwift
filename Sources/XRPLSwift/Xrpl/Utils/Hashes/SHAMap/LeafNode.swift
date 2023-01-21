@@ -55,13 +55,13 @@ class LeafNode: HashesNode {
         switch self.type {
         case NodeType.ACCOUNT_STATE:
             let leafPrefix: String = HashPrefix.LEAF_NODE.rawValue.asBigByteArray.toHexString()
-            return sha512Half(hex: leafPrefix + self.data + self.tag)
+            return sha512Half(leafPrefix + self.data + self.tag)
         case NodeType.TRANSACTION_NO_METADATA:
             let txIDPrefix: String = HashPrefix.TRANSACTION_ID.rawValue.asBigByteArray.toHexString()
-            return sha512Half(hex: txIDPrefix + self.data)
+            return sha512Half(txIDPrefix + self.data)
         case NodeType.TRANSACTION_METADATA:
             let txNodePrefix: String = HashPrefix.TRANSACTION_NODE.rawValue.asBigByteArray.toHexString()
-            return sha512Half(hex: txNodePrefix + self.data + self.tag)
+            return sha512Half(txNodePrefix + self.data + self.tag)
         default:
             throw XrplError("Tried to hash a SHAMap node of unknown type.")
         }

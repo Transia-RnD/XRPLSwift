@@ -15,14 +15,14 @@ import Foundation
  PayChannel, a SignerList, a Ticket, or a RippleState.
  */
 public enum AccountObject: Codable {
-    case check(Check)
-    case depositPreauth(DepositPreauth)
-    case escrow(Escrow)
-    case offer(Offer)
-    case paymentChannel(PayChannel)
-    case signerList(SignerList)
-    case ticket(Ticket)
-    case rippleState(RippleState)
+    case check(LECheck)
+    case depositPreauth(LEDepositPreauth)
+    case escrow(LEEscrow)
+    case offer(LEOffer)
+    case paymentChannel(LEPayChannel)
+    case signerList(LESignerList)
+    case ticket(LETicket)
+    case rippleState(LERippleState)
 
     public func toAny() -> Any {
         switch self {
@@ -51,35 +51,35 @@ extension AccountObject {
         case decoding(String)
     }
     public init(from decoder: Decoder) throws {
-        if let value = try? Check(from: decoder) {
+        if let value = try? LECheck(from: decoder) {
             self = .check(value)
             return
         }
-        if let value = try? DepositPreauth(from: decoder) {
+        if let value = try? LEDepositPreauth(from: decoder) {
             self = .depositPreauth(value)
             return
         }
-        if let value = try? Escrow(from: decoder) {
+        if let value = try? LEEscrow(from: decoder) {
             self = .escrow(value)
             return
         }
-        if let value = try? Offer(from: decoder) {
+        if let value = try? LEOffer(from: decoder) {
             self = .offer(value)
             return
         }
-        if let value = try? PayChannel(from: decoder) {
+        if let value = try? LEPayChannel(from: decoder) {
             self = .paymentChannel(value)
             return
         }
-        if let value = try? SignerList(from: decoder) {
+        if let value = try? LESignerList(from: decoder) {
             self = .signerList(value)
             return
         }
-        if let value = try? Ticket(from: decoder) {
+        if let value = try? LETicket(from: decoder) {
             self = .ticket(value)
             return
         }
-        if let value = try? RippleState(from: decoder) {
+        if let value = try? LERippleState(from: decoder) {
             self = .rippleState(value)
             return
         }

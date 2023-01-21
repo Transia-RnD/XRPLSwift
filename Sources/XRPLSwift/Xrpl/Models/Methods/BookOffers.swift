@@ -123,7 +123,7 @@ public class BookOffersRequest: BaseRequest {
     }
 }
 
-public class BookOffer: Offer {
+public class BookOffer: LEOffer {
     /**
      Amount of the TakerGets currency the side placing the offer has available
      to be traded. (XRP is represented as drops; any other currency is

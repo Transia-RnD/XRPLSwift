@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Sha512Half.swift
 //
 //
 //  Created by Denis Angell on 8/6/22.
@@ -19,7 +19,7 @@ let HASH_SIZE: Int = 32
  - returns:
  Hash of hex.
  */
-public func sha512Half(hex: String) -> String {
+public func sha512Half(_ hex: String) -> String {
     let hash = Data(hex: hex).sha512()
     return [UInt8](hash.prefix(through: HASH_SIZE - 1)).toHex
 }

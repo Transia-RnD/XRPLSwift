@@ -1,5 +1,5 @@
 //
-//  SignerList.swift
+//  LESignerList.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -23,6 +23,14 @@ public class BaseSignerEntry: Codable {
         account = try values.decode(String.self, forKey: .account)
         signerWeight = try values.decode(Int.self, forKey: .signerWeight)
     }
+
+    public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(BaseSignerEntry.self, from: data)
+        account = decoded.account
+        signerWeight = decoded.signerWeight
+    }
 }
 
 public class SignerEntry: Codable {
@@ -38,13 +46,18 @@ public class SignerEntry: Codable {
  can create, replace, or remove a signer list using a SignerListSet
  transaction.
  */
-public class SignerList: BaseLedgerEntry {
+public class LESignerList: BaseLedgerEntry {
     public var ledgerEntryType: String = "SignerList"
     /**
      A bit-map of Boolean flags enabled for this signer list. For more
      information, see SignerList Flags.
      */
     public var flags: Int
+    /**
+     A hint indicating which page of the owner directory links to this object,
+     in case the directory consists of multiple pages.
+     */
+    public var ownerNode: String
     /**
      The identifying hash of the transaction that most recently modified this
      object.
@@ -55,11 +68,6 @@ public class SignerList: BaseLedgerEntry {
      modified this object.
      */
     public var previousTxnLgrSeq: Int
-    /**
-     A hint indicating which page of the owner directory links to this object,
-     in case the directory consists of multiple pages.
-     */
-    public var ownerNode: String
     /**
      An array of Signer Entry objects representing the parties who are part of
      this signer list.
@@ -90,13 +98,27 @@ public class SignerList: BaseLedgerEntry {
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         flags = try values.decode(Int.self, forKey: .flags)
+        ownerNode = try values.decode(String.self, forKey: .ownerNode)
         previousTxnId = try values.decode(String.self, forKey: .previousTxnId)
         previousTxnLgrSeq = try values.decode(Int.self, forKey: .previousTxnLgrSeq)
-        ownerNode = try values.decode(String.self, forKey: .ownerNode)
         signerEntries = try values.decode([SignerEntry].self, forKey: .signerEntries)
         signerListId = try values.decode(Int.self, forKey: .signerListId)
         signerQuorum = try values.decode(Int.self, forKey: .signerQuorum)
         try super.init(from: decoder)
+    }
+
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LESignerList.self, from: data)
+        flags = decoded.flags
+        ownerNode = decoded.ownerNode
+        previousTxnId = decoded.previousTxnId
+        previousTxnLgrSeq = decoded.previousTxnLgrSeq
+        signerEntries = decoded.signerEntries
+        signerListId = decoded.signerListId
+        signerQuorum = decoded.signerQuorum
+        try super.init(json: json)
     }
 }
 

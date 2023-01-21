@@ -163,13 +163,13 @@ public class AccountInfoResponse: Codable {
      The AccountRoot ledger object with this account's information, as stored
      in the ledger.
      */
-    public var accountData: AccountRoot
+    public var accountData: LEAccountRoot
     /**
      Array of SignerList ledger objects associated with this account for
      Multi-Signing. Since an account can own at most one SignerList, this
      array must have exactly one member if it is present.
      */
-    public var signerLists: [SignerList]?
+    public var signerLists: [LESignerList]?
     /**
      The ledger index of the current in-progress ledger, which was used when
      retrieving this information.
@@ -209,8 +209,8 @@ public class AccountInfoResponse: Codable {
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        accountData = try values.decode(AccountRoot.self, forKey: .accountData)
-        signerLists = try values.decodeIfPresent([SignerList].self, forKey: .signerLists)
+        accountData = try values.decode(LEAccountRoot.self, forKey: .accountData)
+        signerLists = try values.decodeIfPresent([LESignerList].self, forKey: .signerLists)
         ledgerCurrentIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerCurrentIndex)
         ledgerIndex = try values.decodeIfPresent(Int.self, forKey: .ledgerIndex)
         ledgerHash = try values.decodeIfPresent(String.self, forKey: .ledgerHash)

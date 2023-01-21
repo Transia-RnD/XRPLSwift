@@ -17,7 +17,7 @@ let SANITY_CHECK: String = "/^-?[0-9.]+$/u" // swiftlint:disable:this identifier
 /**
  Convert Drops to XRP.
  - parameters:
-    - dropsToConvert: Drops to convert to XRP. This can be a string, number, or BigNumber.
+    - dropsToConvert: Drops to convert to XRP. This can be a string, number, or Decimal.
  - returns:
  Amount in XRP.
  - throws:
@@ -25,7 +25,7 @@ let SANITY_CHECK: String = "/^-?[0-9.]+$/u" // swiftlint:disable:this identifier
  */
 public func dropsToXrp(_ dropsToConvert: Any) throws -> String {
     /**
-     Converting to BigNumber and then back to string should remove any
+     Converting to Decimal and then back to string should remove any
      decimal point followed by zeros, e.g. '1.00'.
      Important: specify base BASE_10 to avoid exponential notation, e.g. '1e-7'.
      */
@@ -42,7 +42,7 @@ public func dropsToXrp(_ dropsToConvert: Any) throws -> String {
 
     /**
      This should never happen; the value has already been
-     validated above. This just ensures BigNumber did not do
+     validated above. This just ensures Decimal did not do
      something unexpected.
      */
     //  if (!SANITY_CHECK.exec(drops)) {
@@ -74,7 +74,7 @@ public func xrpToDrops(_ xrpToConvert: Any) throws -> String {
 
     /**
      This should never happen; the value has already been
-     validated above. This just ensures BigNumber did not do
+     validated above. This just ensures Decimal did not do
      something unexpected.
      */
     //  if (!SANITY_CHECK.exec(xrp)) {

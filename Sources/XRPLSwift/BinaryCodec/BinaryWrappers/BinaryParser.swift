@@ -198,8 +198,8 @@ public class BinaryParser {
      */
     func readField() throws -> FieldInstance {
         let fieldHeader: FieldHeader = try self.readFieldHeader()
-        let fieldName: String = Definitions().getFieldNameFromHeader(fieldHeader)
-        return Definitions().getFieldInstance(fieldName)
+        let fieldName: String = try Definitions().getFieldNameFromHeader(fieldHeader)
+        return try Definitions().getFieldInstance(fieldName)
     }
 
     /**
@@ -279,7 +279,7 @@ public class BinaryParser {
     func readFieldValue(_ field: FieldInstance) throws -> SerializedType? {
         let associatedValue = AssociatedValue(field: field, parser: self)
         let sizeHint: Int? = field.isVLEncoded ? try self.readLengthPrefix() : nil
-        guard let value = associatedValue.fromParser(hint: sizeHint), !value.bytes.isEmpty else {
+        guard let value = try associatedValue.fromParser(hint: sizeHint), !value.bytes.isEmpty else {
             throw BinaryError.unknownError(error: "fromParser for (\(field.name), \(field.type) -> nil ")
         }
         return value

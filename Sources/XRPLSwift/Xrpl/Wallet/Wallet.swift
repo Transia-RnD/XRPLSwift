@@ -296,7 +296,7 @@ public class Wallet {
         _ multisign: Bool = false,
         _ signingFor: String? = nil
     ) throws -> SignatureResult {
-        let tx = try! transaction.toJson()
+        let tx = try transaction.toJson()
         return try self.sign(tx, multisign, signingFor)
     }
 
@@ -350,7 +350,7 @@ public class Wallet {
         }
         let serialized = try BinaryCodec.encode(txToSignAndEncode)
         try self.checkTxSerialization(serialized, transaction)
-        return SignatureResult(txBlob: serialized, hash: try hashSignedTx(tx: serialized))
+        return SignatureResult(txBlob: serialized, hash: try HashLedger.hashSignedTx(serialized))
     }
 
     /**

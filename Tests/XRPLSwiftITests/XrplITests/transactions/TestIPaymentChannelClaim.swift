@@ -22,7 +22,7 @@ final class TestIPaymentChannelClaim: RippledITestCase {
         try await super.tearDown()
     }
 
-    func _testJson() async {
+    func _testJson() async throws {
         // create the expectation
         let exp = expectation(description: "base")
 
@@ -50,7 +50,7 @@ final class TestIPaymentChannelClaim: RippledITestCase {
         let jsonTx2 = [
             "Account": self.wallet.classicAddress,
             "TransactionType": "PaymentChannelClaim",
-            "Channel": hashPaymentChannel(
+            "Channel": try hashPaymentChannel(
                 self.wallet.classicAddress,
                 wallet2.classicAddress,
                 transaction?.sequence ?? 0

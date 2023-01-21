@@ -1,5 +1,5 @@
 //
-//  FeeSettings.swift
+//  LEFeeSettings.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -13,7 +13,7 @@ import Foundation
  The FeeSettings object type contains the current base transaction cost and
  reserve amounts as determined by fee voting.
  */
-public class FeeSettings: BaseLedgerEntry {
+public class LEFeeSettings: BaseLedgerEntry {
     public var ledgerEntryType: String = "FeeSettings"
     public var flags: Int
 
@@ -32,6 +32,15 @@ public class FeeSettings: BaseLedgerEntry {
      A bit-map of boolean flags for this object. No flags are defined for this
      type.
      */
+
+    enum CodingKeys: String, CodingKey {
+        case flags = "Flags"
+        case baseFee = "BaseFee"
+        case referenceFeeUnits = "ReferenceFeeUnits"
+        case reserveBase = "ReserveBase"
+        case reserveIncrement = "ReserveIncrement"
+    }
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         flags = try values.decode(Int.self, forKey: .flags)
@@ -42,11 +51,15 @@ public class FeeSettings: BaseLedgerEntry {
         try super.init(from: decoder)
     }
 
-    enum CodingKeys: String, CodingKey {
-        case flags = "Flags"
-        case baseFee = "BaseFee"
-        case referenceFeeUnits = "ReferenceFeeUnits"
-        case reserveBase = "ReserveBase"
-        case reserveIncrement = "ReserveIncrement"
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LEFeeSettings.self, from: data)
+        flags = decoded.flags
+        baseFee = decoded.baseFee
+        referenceFeeUnits = decoded.referenceFeeUnits
+        reserveBase = decoded.reserveBase
+        reserveIncrement = decoded.reserveIncrement
+        try super.init(json: json)
     }
 }

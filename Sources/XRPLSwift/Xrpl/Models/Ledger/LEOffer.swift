@@ -1,5 +1,5 @@
 //
-//  Offer.swift
+//  LEOffer.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -9,7 +9,7 @@
 
 import Foundation
 
-public class Offer: BaseLedgerEntry {
+public class LEOffer: BaseLedgerEntry {
     public var ledgerEntryType: String = "Offer"
     /// A bit-map of boolean flags enabled for this Offer.
     public var flags: Int
@@ -80,6 +80,24 @@ public class Offer: BaseLedgerEntry {
         previousTxnLgrSeq = try values.decode(Int.self, forKey: .previousTxnLgrSeq)
         expiration = try? values.decode(Int.self, forKey: .expiration)
         try super.init(from: decoder)
+    }
+
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LEOffer.self, from: data)
+        flags = decoded.flags
+        account = decoded.account
+        sequence = decoded.sequence
+        takerPays = decoded.takerPays
+        takerGets = decoded.takerGets
+        bookDirectory = decoded.bookDirectory
+        bookNode = decoded.bookNode
+        ownerNode = decoded.ownerNode
+        previousTxnId = decoded.previousTxnId
+        previousTxnLgrSeq = decoded.previousTxnLgrSeq
+        expiration = decoded.expiration
+        try super.init(json: json)
     }
 }
 

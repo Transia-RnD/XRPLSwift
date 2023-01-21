@@ -14,5 +14,5 @@ public enum BinaryCodecErrors: Error {
     case valueError
     case unsupportedAddress
     case checksumFails
-    case unknownError(error: String)
+    case unknownError(_ error: String)
 }

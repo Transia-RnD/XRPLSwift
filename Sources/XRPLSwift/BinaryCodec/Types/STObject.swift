@@ -133,39 +133,39 @@ struct AssociatedValue {
         return nil
     }
 
-    func fromParser(hint: Int? = nil) -> SerializedType? {
+    func fromParser(hint: Int? = nil) throws -> SerializedType? {
         if field.associatedType.self is AccountID.Type {
             return AccountID().fromParser(self.parser)
         }
         if field.associatedType.self is xAmount.Type {
-            return try! xAmount().fromParser(self.parser)
+            return try xAmount().fromParser(self.parser)
         }
         if field.associatedType.self is Blob.Type {
-            return try! Blob().fromParser(self.parser, hint)
+            return try Blob().fromParser(self.parser, hint)
         }
         if field.associatedType.self is xCurrency.Type {
-            return try! xCurrency().fromParser(self.parser)
+            return try xCurrency().fromParser(self.parser)
         }
         if field.associatedType.self is Hash256.Type {
-            return try! Hash256().fromParser(self.parser)
+            return try Hash256().fromParser(self.parser)
         }
         if field.associatedType.self is Hash160.Type {
-            return try! Hash160().fromParser(self.parser)
+            return try Hash160().fromParser(self.parser)
         }
         if field.associatedType.self is Hash128.Type {
-            return try! Hash128().fromParser(self.parser)
+            return try Hash128().fromParser(self.parser)
         }
         if field.associatedType.self is Hash.Type {
-            return try! Hash().fromParser(self.parser)
+            return try Hash().fromParser(self.parser)
         }
         if field.associatedType.self is xPathSet.Type {
-            return try! xPathSet.fromParser(parser: self.parser)
+            return try xPathSet.fromParser(parser: self.parser)
         }
         if field.associatedType.self is STArray.Type {
-            return try! STArray().fromParser(self.self.parser, hint)
+            return try STArray().fromParser(self.self.parser, hint)
         }
         if field.associatedType.self is STObject.Type {
-            return try! STObject().fromParser(parser, hint)
+            return try STObject().fromParser(parser, hint)
         }
         if field.associatedType.self is xUInt64.Type {
             return xUInt64().fromParser(self.parser)
@@ -294,7 +294,7 @@ class STObject: SerializedType {
 
         var sortedKeys: [FieldInstance] = []
         for fieldName in xaddressDecoded {
-            let fieldInstance = Definitions().getFieldInstance(fieldName.key)
+            let fieldInstance = try Definitions().getFieldInstance(fieldName.key)
             if
                 xaddressDecoded[fieldInstance.name] != nil
                     && fieldInstance.isSerialized {

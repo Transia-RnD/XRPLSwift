@@ -1,5 +1,5 @@
 //
-//  LedgerHashes.swift
+//  LELedgerHashes.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -14,7 +14,7 @@ import Foundation
  ledger's hash with only the current ledger version and at most one lookup of
  a previous ledger version.
  */
-public class LedgerHashes: BaseLedgerEntry {
+public class LELedgerHashes: BaseLedgerEntry {
     public var ledgerEntryType: String = "LedgerHashes"
     /// The Ledger Index of the last entry in this object's Hashes array.
     public var lastLedgerSequence: Int?
@@ -29,18 +29,27 @@ public class LedgerHashes: BaseLedgerEntry {
      */
     public var flags: Int
 
+    enum CodingKeys: String, CodingKey {
+        case flags = "Flags"
+        case lastLedgerSequence = "LastLedgerSequence"
+        case hashes = "Hashes"
+    }
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         flags = try values.decode(Int.self, forKey: .flags)
-
         lastLedgerSequence = try values.decode(Int.self, forKey: .lastLedgerSequence)
         hashes = try values.decode([String].self, forKey: .hashes)
         try super.init(from: decoder)
     }
 
-    enum CodingKeys: String, CodingKey {
-        case flags = "Flags"
-        case lastLedgerSequence = "LastLedgerSequence"
-        case hashes = "Hashes"
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LELedgerHashes.self, from: data)
+        flags = decoded.flags
+        lastLedgerSequence = decoded.lastLedgerSequence
+        hashes = decoded.hashes
+        try super.init(json: json)
     }
 }

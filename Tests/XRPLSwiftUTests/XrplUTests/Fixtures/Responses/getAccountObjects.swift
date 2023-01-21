@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  getAccountObjects.swift
 //
 //
 //  Created by Denis Angell on 7/28/22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-let accountObjectFixture = """
+let getAccountObjectsFixtureResp = """
 {
   "account": "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",
   "account_objects": [

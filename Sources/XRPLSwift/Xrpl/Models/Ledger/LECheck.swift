@@ -1,5 +1,5 @@
 //
-//  Check.swift
+//  LECheck.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -13,7 +13,7 @@ import Foundation
  A Check object describes a check, similar to a paper personal check, which
  can be cashed by its destination to get money from its sender.
  */
-public class Check: BaseLedgerEntry {
+public class LECheck: BaseLedgerEntry {
     public var ledgerEntryType: String = "Check"
     /// The sender of the Check. Cashing the Check debits this address's balance.
     public var account: String
@@ -105,5 +105,25 @@ public class Check: BaseLedgerEntry {
         invoiceId = try? values.decode(String.self, forKey: .invoiceId)
         sourceTag = try? values.decode(Int.self, forKey: .sourceTag)
         try super.init(from: decoder)
+    }
+
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LECheck.self, from: data)
+        account = decoded.account
+        destination = decoded.destination
+        flags = decoded.flags
+        ownerNode = decoded.ownerNode
+        previousTxnId = decoded.previousTxnId
+        previousTxnLgrSeq = decoded.previousTxnLgrSeq
+        sendMax = decoded.sendMax
+        sequence = decoded.sequence
+        destinationTag = decoded.destinationTag
+        destinationNode = decoded.destinationNode
+        expiration = decoded.expiration
+        invoiceId = decoded.invoiceId
+        sourceTag = decoded.sourceTag
+        try super.init(json: json)
     }
 }

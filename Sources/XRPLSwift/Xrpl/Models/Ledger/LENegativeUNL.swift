@@ -1,5 +1,5 @@
 //
-//  NegativeUNL.swift
+//  LENegativeUNL.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -23,7 +23,7 @@ public class DisabledValidator: Codable {
  The NegativeUNL object type contains the current status of the Negative UNL,
  a list of trusted validators currently believed to be offline.
  */
-public class NegativeUNL: BaseLedgerEntry {
+public class LENegativeUNL: BaseLedgerEntry {
     public var ledgerEntryType: String = "NegativeUNL"
     /**
      A list of trusted validators that are currently disabled.
@@ -40,6 +40,12 @@ public class NegativeUNL: BaseLedgerEntry {
      */
     public var validatorToReEnable: String?
 
+    enum CodingKeys: String, CodingKey {
+        case disabledValidators = "DisabledValidators"
+        case validatorToDisable = "ValidatorToDisable"
+        case validatorToReEnable = "ValidatorToReEnable"
+    }
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         disabledValidators = try values.decode([DisabledValidator].self, forKey: .disabledValidators)
@@ -48,9 +54,13 @@ public class NegativeUNL: BaseLedgerEntry {
         try super.init(from: decoder)
     }
 
-    enum CodingKeys: String, CodingKey {
-        case disabledValidators = "DisabledValidators"
-        case validatorToDisable = "ValidatorToDisable"
-        case validatorToReEnable = "ValidatorToReEnable"
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LENegativeUNL.self, from: data)
+        disabledValidators = decoded.disabledValidators
+        validatorToDisable = decoded.validatorToDisable
+        validatorToReEnable = decoded.validatorToReEnable
+        try super.init(json: json)
     }
 }

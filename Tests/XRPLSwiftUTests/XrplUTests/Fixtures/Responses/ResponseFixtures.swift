@@ -14,7 +14,7 @@ final class Fixtures4Testing {
 
     init() {
         do {
-            let data: Data = accountObjectFixture.data(using: .utf8)!
+            let data: Data = getAccountObjectsFixtureResp.data(using: .utf8)!
             let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
             if let jsonResult = jsonResult as? [String: AnyObject] {
                 self.ACCOUNT_OBJECTS = jsonResult
@@ -26,6 +26,20 @@ final class Fixtures4Testing {
 }
 
 final class ResponseFixtures {
+
+    public static func getLedgerFull() -> [String: AnyObject] {
+        do {
+            let data: Data = getLedgerFullFixtureResp.data(using: .utf8)!
+            let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+            if let jsonResult = jsonResult as? [String: AnyObject] {
+                return jsonResult
+            }
+        } catch {
+            print(error.localizedDescription)
+            fatalError("INVALID JSON RESPONSE FIXTURE")
+        }
+        return [:]
+    }
 
     public static func sign() -> [String: AnyObject] {
         do {

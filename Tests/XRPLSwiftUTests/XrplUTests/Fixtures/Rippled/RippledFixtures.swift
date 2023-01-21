@@ -66,3 +66,34 @@ final class RippledFixtures {
         return [:]
     }
 }
+
+final class RippledTxFixtures {
+
+    public static func offerCreateSell() -> [String: AnyObject] {
+        do {
+            let data: Data = rippledTxOfferCreateSellJson.data(using: .utf8)!
+            let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+            if let jsonResult = jsonResult as? [String: AnyObject] {
+                return jsonResult
+            }
+        } catch {
+            print(error.localizedDescription)
+            fatalError("INVALID JSON RESPONSE FIXTURE")
+        }
+        return [:]
+    }
+
+    public static func offerCreateSellTx() -> [String: AnyObject] {
+        do {
+            let data: Data = rippledTxOfferCreateSellTxJson.data(using: .utf8)!
+            let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+            if let jsonResult = jsonResult as? [String: AnyObject] {
+                return jsonResult
+            }
+        } catch {
+            print(error.localizedDescription)
+            fatalError("INVALID JSON RESPONSE FIXTURE")
+        }
+        return [:]
+    }
+}

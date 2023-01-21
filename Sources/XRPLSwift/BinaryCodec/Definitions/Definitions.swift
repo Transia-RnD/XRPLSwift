@@ -174,8 +174,11 @@ public struct Definitions {
      Returns:
      The name of the field described by the given FieldHeader.
      */
-    func getFieldNameFromHeader(_ fieldHeader: FieldHeader) -> String {
-        return definitions.FIELD_HEADER_NAME_MAP[fieldHeader]!
+    func getFieldNameFromHeader(_ fieldHeader: FieldHeader) throws -> String {
+        guard let fieldHeaderNameMap = definitions.FIELD_HEADER_NAME_MAP[fieldHeader] else {
+            throw BinaryCodecErrors.unknownError("Could not construct field header name map from \(fieldHeader)")
+        }
+        return fieldHeaderNameMap
     }
 
     /*
@@ -185,8 +188,10 @@ public struct Definitions {
      Returns:
      A FieldInstance object for the given field name.
      */
-    func getFieldInstance(_ fieldName: String) -> FieldInstance {
-        let info: FieldInfo = definitions.FIELD_INFO_MAP[fieldName]!
+    func getFieldInstance(_ fieldName: String) throws -> FieldInstance {
+        guard let info: FieldInfo = definitions.FIELD_INFO_MAP[fieldName] else {
+            throw BinaryCodecErrors.unknownError("Field Info not found for \(fieldName)")
+        }
         let fieldHeader = getFieldHeaderFromName(fieldName)
         return FieldInstance(
             info,

@@ -1,5 +1,5 @@
 //
-//  PayChannel.swift
+//  LEPayChannel.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -16,7 +16,7 @@ import Foundation
  only be paid out to a specific destination address until the channel is
  closed.
  */
-public class PayChannel: BaseLedgerEntry {
+public class LEPayChannel: BaseLedgerEntry {
     public var ledgerEntryType: String = "PayChannel"
     /**
      The source address that owns this payment channel. This comes from the
@@ -148,5 +148,27 @@ public class PayChannel: BaseLedgerEntry {
         destinationTag = try? values.decode(Int.self, forKey: .destinationTag)
         destinationNode = try? values.decode(Int.self, forKey: .destinationNode)
         try super.init(from: decoder)
+    }
+
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LEPayChannel.self, from: data)
+        account = decoded.account
+        destination = decoded.destination
+        amount = decoded.amount
+        balance = decoded.balance
+        publicKey = decoded.publicKey
+        settleDelay = decoded.settleDelay
+        ownerNode = decoded.ownerNode
+        previousTxnId = decoded.previousTxnId
+        previousTxnLgrSeq = decoded.previousTxnLgrSeq
+        flags = decoded.flags
+        expiration = decoded.expiration
+        cancelAfter = decoded.cancelAfter
+        sourceTag = decoded.sourceTag
+        destinationTag = decoded.destinationTag
+        destinationNode = decoded.destinationNode
+        try super.init(json: json)
     }
 }

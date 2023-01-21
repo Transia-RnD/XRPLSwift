@@ -35,7 +35,7 @@ public class FieldIdCodec {
      */
     class func decode(_ fieldId: String) throws -> String {
         let fieldHeader: FieldHeader = try self.decodeFieldId(fieldId)
-        return Definitions().getFieldNameFromHeader(fieldHeader)
+        return try Definitions().getFieldNameFromHeader(fieldHeader)
     }
 
     /**

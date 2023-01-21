@@ -1,5 +1,5 @@
 //
-//  DirectoryNode.swift
+//  LEDirectoryNode.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -13,7 +13,7 @@ import Foundation
  The DirectoryNode object type provides a list of links to other objects in
  the ledger's state tree.
  */
-public class DirectoryNode: BaseLedgerEntry {
+public class LEDirectoryNode: BaseLedgerEntry {
     let ledgerEntryType: String = "DirectoryNode"
     /**
      A bit-map of boolean flags enabled for this directory. Currently, the
@@ -51,6 +51,19 @@ public class DirectoryNode: BaseLedgerEntry {
     /// The issuer of the TakerGets amount from the offers in this directory.
     let takerGetsIssuer: String?
 
+    enum CodingKeys: String, CodingKey {
+        case flags = "Flags"
+        case rootIndex = "RootIndex"
+        case indexes = "Indexes"
+        case indexNext = "IndexNext"
+        case indexPrevious = "IndexPrevious"
+        case owner = "Owner"
+        case takerPaysCurrency = "TakerPaysCurrency"
+        case takerPaysIssuer = "TakerPaysIssuer"
+        case takerGetsCurrency = "TakerGetsCurrency"
+        case takerGetsIssuer = "TakerGetsIssuer"
+    }
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         flags = try values.decode(Int.self, forKey: .flags)
@@ -66,16 +79,20 @@ public class DirectoryNode: BaseLedgerEntry {
         try super.init(from: decoder)
     }
 
-    enum CodingKeys: String, CodingKey {
-        case flags = "Flags"
-        case rootIndex = "RootIndex"
-        case indexes = "Indexes"
-        case indexNext = "IndexNext"
-        case indexPrevious = "IndexPrevious"
-        case owner = "Owner"
-        case takerPaysCurrency = "TakerPaysCurrency"
-        case takerPaysIssuer = "TakerPaysIssuer"
-        case takerGetsCurrency = "TakerGetsCurrency"
-        case takerGetsIssuer = "TakerGetsIssuer"
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LEDirectoryNode.self, from: data)
+        flags = decoded.flags
+        rootIndex = decoded.rootIndex
+        indexes = decoded.indexes
+        indexNext = decoded.indexNext
+        indexPrevious = decoded.indexPrevious
+        owner = decoded.owner
+        takerPaysCurrency = decoded.takerPaysCurrency
+        takerPaysIssuer = decoded.takerPaysIssuer
+        takerGetsCurrency = decoded.takerGetsCurrency
+        takerGetsIssuer = decoded.takerGetsIssuer
+        try super.init(json: json)
     }
 }

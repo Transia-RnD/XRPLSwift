@@ -1,5 +1,5 @@
 //
-//  Escrow.swift
+//  LEEscrow.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -11,7 +11,7 @@ import Foundation
  The Escrow object type represents a held payment of XRP waiting to be
  executed or canceled.
  */
-public class Escrow: BaseLedgerEntry {
+public class LEEscrow: BaseLedgerEntry {
     public var ledgerEntryType: String = "Escrow"
     /**
      The address of the owner (sender) of this held payment. This is the
@@ -109,5 +109,25 @@ public class Escrow: BaseLedgerEntry {
         destinationTag = try? values.decode(Int.self, forKey: .destinationTag)
         destinationNode = try? values.decode(String.self, forKey: .destinationNode)
         try super.init(from: decoder)
+    }
+
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LEEscrow.self, from: data)
+        account = decoded.account
+        destination = decoded.destination
+        amount = decoded.amount
+        flags = decoded.flags
+        ownerNode = decoded.ownerNode
+        previousTxnId = decoded.previousTxnId
+        previousTxnLgrSeq = decoded.previousTxnLgrSeq
+        condition = decoded.condition
+        cancelAfter = decoded.cancelAfter
+        finishAfter = decoded.finishAfter
+        sourceTag = decoded.sourceTag
+        destinationTag = decoded.destinationTag
+        destinationNode = decoded.destinationNode
+        try super.init(json: json)
     }
 }

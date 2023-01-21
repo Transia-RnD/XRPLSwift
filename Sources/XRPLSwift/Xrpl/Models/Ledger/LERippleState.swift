@@ -1,5 +1,5 @@
 //
-//  RippleState.swift
+//  LERippleState.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -12,7 +12,7 @@ import Foundation
 /**
  The RippleState object type connects two accounts in a single currency.
  */
-public class RippleState: BaseLedgerEntry {
+public class LERippleState: BaseLedgerEntry {
     public var ledgerEntryType: String = "RippleState"
     /// A bit-map of boolean options enabled for this object.
     public var flags: Int
@@ -107,6 +107,25 @@ public class RippleState: BaseLedgerEntry {
         highQualityIn = try? values.decode(Int.self, forKey: .highQualityIn)
         highQualityOut = try? values.decode(Int.self, forKey: .highQualityOut)
         try super.init(from: decoder)
+    }
+
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LERippleState.self, from: data)
+        flags = decoded.flags
+        balance = decoded.balance
+        lowLimit = decoded.lowLimit
+        highLimit = decoded.highLimit
+        previousTxnId = decoded.previousTxnId
+        previousTxnLgrSeq = decoded.previousTxnLgrSeq
+        lowNode = decoded.lowNode
+        highNode = decoded.highNode
+        lowQualityIn = decoded.lowQualityIn
+        lowQualityOut = decoded.lowQualityOut
+        highQualityIn = decoded.highQualityIn
+        highQualityOut = decoded.highQualityOut
+        try super.init(json: json)
     }
 }
 

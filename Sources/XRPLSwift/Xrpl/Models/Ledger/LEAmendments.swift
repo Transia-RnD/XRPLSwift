@@ -31,7 +31,7 @@ public class Majority: Codable {
  The Amendments object type contains a list of Amendments that are currently
  active.
  */
-public class Amendments: Codable {
+public class LEAmendments: BaseLedgerEntry {
     public var ledgerEntryType: String = "Amendments"
     /**
      Array of 256-bit amendment IDs for all currently-enabled amendments. If
@@ -54,5 +54,23 @@ public class Amendments: Codable {
         case amendments = "Amendments"
         case majorities = "Majorities"
         case flags = "Flags"
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        amendments = try values.decode([String].self, forKey: .amendments)
+        majorities = try values.decode([Majority].self, forKey: .majorities)
+        flags = try values.decode(Int.self, forKey: .flags)
+        try super.init(from: decoder)
+    }
+
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LEAmendments.self, from: data)
+        amendments = decoded.amendments
+        majorities = decoded.majorities
+        flags = decoded.flags
+        try super.init(json: json)
     }
 }

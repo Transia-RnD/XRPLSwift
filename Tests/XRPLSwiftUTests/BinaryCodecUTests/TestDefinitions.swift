@@ -41,9 +41,9 @@ final class TestDefinitions: XCTestCase {
         XCTAssertEqual(expectedFieldTypeName, fieldTypeName)
     }
 
-    func testGetFieldTypeCode() {
+    func testGetFieldTypeCode() throws {
         let expectedFieldTypeCode: Int = 2
-        let fieldTypeCode: Int = try! Definitions().getFieldTypeCode(TestDefinitions.testFieldName)
+        let fieldTypeCode: Int = try Definitions().getFieldTypeCode(TestDefinitions.testFieldName)
         XCTAssertEqual(expectedFieldTypeCode, fieldTypeCode)
     }
 
@@ -59,10 +59,10 @@ final class TestDefinitions: XCTestCase {
         XCTAssertEqual(expectedFieldHeader, fieldHeader)
     }
 
-    func testGetFieldNameFromHeader() {
+    func testGetFieldNameFromHeader() throws {
         let expectedFieldName: String = TestDefinitions.testFieldName
         let fieldHeader: FieldHeader = FieldHeader(2, 4)
-        let fieldName = Definitions().getFieldNameFromHeader(fieldHeader)
+        let fieldName = try Definitions().getFieldNameFromHeader(fieldHeader)
         XCTAssertEqual(expectedFieldName, fieldName)
     }
 }

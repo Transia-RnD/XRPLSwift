@@ -49,7 +49,7 @@ final class TestICheckCash: RippledITestCase {
         ] as [String: AnyObject]
         let response1 = try! await self.client.request(AccountObjectsRequest(result1)).wait() as! BaseResponse<AccountObjectsResponse>
         XCTAssertEqual(response1.result?.accountObjects.count, 1)
-        guard let result1 = response1.result, let check = result1.accountObjects[0].toAny() as? Check else {
+        guard let result1 = response1.result, let check = result1.accountObjects[0].toAny() as? LECheck else {
             XCTFail()
             return
         }

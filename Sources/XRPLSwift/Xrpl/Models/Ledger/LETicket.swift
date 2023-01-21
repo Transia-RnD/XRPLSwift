@@ -1,5 +1,5 @@
 //
-//  Ticket.swift
+//  LETicket.swift
 //
 //
 //  Created by Denis Angell on 7/30/22.
@@ -14,7 +14,7 @@ import Foundation
  number that has been set aside for future use. You can create new tickets
  with a TicketCreate transaction.
  */
-public class Ticket: BaseLedgerEntry {
+public class LETicket: BaseLedgerEntry {
     public var ledgerEntryType: String = "Ticket"
     /// The account that owns this Ticket.
     public var account: String
@@ -59,5 +59,18 @@ public class Ticket: BaseLedgerEntry {
         previousTxnLgrSeq = try values.decode(Int.self, forKey: .previousTxnLgrSeq)
         ticketSequence = try values.decode(Int.self, forKey: .ticketSequence)
         try super.init(from: decoder)
+    }
+
+    override public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(LETicket.self, from: data)
+        account = decoded.account
+        flags = decoded.flags
+        ownerNode = decoded.ownerNode
+        previousTxnId = decoded.previousTxnId
+        previousTxnLgrSeq = decoded.previousTxnLgrSeq
+        ticketSequence = decoded.ticketSequence
+        try super.init(json: json)
     }
 }

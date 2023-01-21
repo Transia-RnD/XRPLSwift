@@ -86,6 +86,26 @@ public class BaseLedger: Codable {
         case transactions = "transactions"
         case accountState = "account_state"
     }
+
+    public init(json: [String: AnyObject]) throws {
+        let decoder = JSONDecoder()
+        let data: Data = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+        let decoded = try decoder.decode(BaseLedger.self, from: data)
+        accountHash = decoded.accountHash
+        closeFlags = decoded.closeFlags
+        closeTime = decoded.closeTime
+        closeTimeHuman = decoded.closeTimeHuman
+        closeTimeResolution = decoded.closeTimeResolution
+        closed = decoded.closed
+        ledgerHash = decoded.ledgerHash
+        ledgerIndex = decoded.ledgerIndex
+        parentCloseTime = decoded.parentCloseTime
+        parentHash = decoded.parentHash
+        totalCoins = decoded.totalCoins
+        transactionHash = decoded.transactionHash
+        transactions = decoded.transactions
+        accountState = decoded.accountState
+    }
 }
 
 public enum BaseLedgerWrapper: Codable {
@@ -106,6 +126,14 @@ extension BaseLedgerWrapper {
             return
         }
         throw CodingError.decoding("Invalid BaseLedgerWrapper: BaseLedgerWrapper should be string or dict")
+    }
+
+    public init(_ json: [String: AnyObject]) throws {
+        self = .transaction(try BaseTransaction(json: json))
+    }
+
+    public init(_ string: String) throws {
+        self = .string(string)
     }
 
     public func encode(to encoder: Encoder) throws {
