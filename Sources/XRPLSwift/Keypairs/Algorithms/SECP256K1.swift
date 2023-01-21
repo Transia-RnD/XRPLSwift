@@ -188,6 +188,24 @@ internal class SECP256K1: SigningAlgorithm {
             return false
         }
     }
+
+    static func getPublicKey(publicKey: [UInt8]) throws -> String {
+        let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_SIGN))
+        var _pubKeyData = Data(publicKey)
+        var pubKey = secp256k1_pubkey()
+        let resultParsePublicKey = secp256k1_ec_pubkey_parse(
+            ctx!,
+            &pubKey,
+            _pubKeyData.getPointer(),
+            _pubKeyData.count
+        )
+        if resultParsePublicKey == 0 {
+            secp256k1_context_destroy(ctx)
+            throw SigningError.invalidPublicKey
+        }
+
+        return Data(from: pubKey.data).toHex
+    }
 }
 
 private extension Data {

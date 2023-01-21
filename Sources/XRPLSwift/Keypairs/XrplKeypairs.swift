@@ -151,6 +151,8 @@ public class Keypairs {
     }
 
     public static func deriveNodeAddress(_ publicKey: String) throws -> String {
-        return try XrplCodec.decodeNodePublicKey(publicKey).toHex
+        let generatorBytes: [UInt8] = try XrplCodec.decodeNodePublicKey(publicKey)
+        let accountPublicHex = try SECP256K1.getPublicKey(publicKey: generatorBytes)
+        return try deriveAddressFromBytes(Data(hex: accountPublicHex))
     }
 }
