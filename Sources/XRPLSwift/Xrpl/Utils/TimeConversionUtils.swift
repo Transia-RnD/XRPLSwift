@@ -34,7 +34,11 @@ func unixTimeToRippleTime(_ timestamp: Int) -> Int {
 /// - Parameter rippleTime: Is the number of seconds since Ripple Epoch (1/1/2000 GMT).
 /// - Returns: Iso8601 international standard date format.
 func rippleTimeToISOTime(_ rippleTime: Int) -> String {
-    return Date(timeIntervalSince1970: TimeInterval(rippleTimeToUnixTime(rippleTime))).description
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    formatter.timeZone = TimeZone(abbreviation: "UTC")
+    let timestamp = TimeInterval(rippleTimeToUnixTime(rippleTime))
+    return formatter.string(from: Date(timeIntervalSince1970: timestamp / 1000))
 }
 
 /// Convert an ISO8601 timestmap to a ripple timestamp.
@@ -44,6 +48,7 @@ func rippleTimeToISOTime(_ rippleTime: Int) -> String {
 func isoTimeToRippleTime(_ iso8601: String) -> Int {
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    formatter.timeZone = TimeZone(abbreviation: "UTC")
     let date = formatter.date(from: iso8601)
     return unixTimeToRippleTime(Int((date ?? Date()).timeIntervalSince1970 * 1000))
 }

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  TestTimeConversion.swift
 //  
 //
 //  Created by Denis Angell on 10/15/22.
@@ -10,22 +10,22 @@
 import XCTest
 @testable import XRPLSwift
 
-class TimeConversionTests: XCTestCase {
+class TestTimeConversion: XCTestCase {
     func testRippleTimeToISOTime() {
         let rippleTime: Int = 0
-        let isoTime = "2000-01-01T00:00:00.000Z"
+        let isoTime = "2000-01-01T00:00:00+0000"
         XCTAssertEqual(rippleTimeToISOTime(rippleTime), isoTime)
     }
 
     func testISOTimeToRippleTime() {
         let rippleTime: Int = 0
-        let isoTime = "2000-01-01T00:00:00.000Z"
+        let isoTime = "2000-01-01T00:00:00+0000"
         XCTAssertEqual(isoTimeToRippleTime(isoTime), rippleTime)
     }
 
     func testISOTimeToRippleTimeFromDate() {
         let rippleTime: Int = 0
-        let isoTime = "2000-01-01T00:00:00.000Z"
+        let isoTime = "2000-01-01T00:00:00+0000"
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         let date = formatter.date(from: isoTime)!
