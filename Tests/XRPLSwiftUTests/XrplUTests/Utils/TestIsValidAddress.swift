@@ -10,7 +10,7 @@
 import XCTest
 @testable import XRPLSwift
 
-final class XRPLKitTests: XCTestCase {
+final class TestIsValidAddress: XCTestCase {
     func testIsValidAddress() {
         XCTAssertTrue(XrplCodec.isValidClassicAddress("r3rhWeE31Jt5sWmi4QiGLMZnY3ENgqw96W"))
         XCTAssertFalse(XrplCodec.isValidClassicAddress("r3rhWeE31Jt5sWmi4QiGLMZnY3ENhqw96W"))
