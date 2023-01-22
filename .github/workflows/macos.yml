@@ -44,4 +44,4 @@ jobs:
       - name: Lint
         run: swiftlint lint --config Plugins/SwiftLintPlugin/swiftlint.yml
       - name: Run tests
-        run: swift test --filter XRPLSwiftUTests
+        run: swift test --filter XRPLSwiftUTests -Xswiftc -enable-testing
